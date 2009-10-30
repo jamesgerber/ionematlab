@@ -1,0 +1,22 @@
+function [Long,Lat]=InferLongLat(Data)
+%INFERLONGLAT constructs long and lat vectors for map
+if nargin==0
+    help(mfilename);
+    return
+end
+
+  [Nrow,Ncol]=size(Data);
+
+  %the next two lines are a lazy way to get Long to take on the
+  %values of the centers of the bins
+  tmp=linspace(-1,1,2*Nrow+1);
+  Long=180*tmp(2:2:end).';
+  
+  tmp=linspace(-1,1,2*Ncol+1);
+  Lat=-90*tmp(2:2:end).';
+  
+  
+  %warning(['Have constructed Lat and Long with assumption that data' ...
+%	   ' spans the globe.  It would be better to put in code that' ...
+%	   ' looks to see if the dimensions are "standard" (e.g. 5' ...
+%	   ' minutes) and if so use "standard" Lat/Long definitions.']);

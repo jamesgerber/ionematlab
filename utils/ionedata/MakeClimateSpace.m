@@ -74,46 +74,57 @@ if length(WaterBins)==1
   WaterBins(end+1)=WaterBins(end)+ (WaterBins(end)-WaterBins(end-1));
 end
 
-NT=length(TempBins)-1;
+
 if iscell(WaterBins)
     NW=length(WaterBins);
 else
     NW=length(WaterBins)-1;
 end
 
+if iscell(TempBins)
+    NT=length(TempBins);
+else
+    NT=length(TempBins)-1;
+end
+
 
 for mW=1:NW
-  for mT=1:NT
-    ClimateBinNumber=(mW-1)*NT+mT;
-    
-    
-    if iscell(WaterBins)
-        WaterBinsThisTempBin=WaterBins{mT};
-        Wmin=WaterBinsThisTempBin(mW);
-        Wmax=WaterBinsThisTempBin(mW+1);
-    else
-        % Water variable limits
-        Wmin=WaterBins(mW);
-        Wmax=WaterBins(mW+1);
+    for mT=1:NT
+        ClimateBinNumber=(mW-1)*NT+mT;
+               
+        if iscell(WaterBins)
+            WaterBinsThisTempBin=WaterBins{mT};
+            Wmin=WaterBinsThisTempBin(mW);
+            Wmax=WaterBinsThisTempBin(mW+1);
+        else
+            % Water variable limits
+            Wmin=WaterBins(mW);
+            Wmax=WaterBins(mW+1);
+        end
+         
+        %Temperature variable limits        
+        if iscell(TempBins)
+            TempBinsThisWaterBin=TempBins{mW};
+            Tmin=TempBinsThisWaterBin(mT);
+            Tmax=TempBinsThisWaterBin(mT+1);
+        else
+            Tmin=TempBins(mT);
+            Tmax=TempBins(mT+1);
+        end
+               
+        % who fits?
+        jj=find( T >= Tmin & T <Tmax & W >= Wmin & W <Wmax);
+        
+        ClimateBinVector(jj)=ClimateBinNumber;
+        ClimateDefs{ClimateBinNumber}=...
+            ['Bin No ' int2str(ClimateBinNumber) '.   ' ...
+            num2str(Tmin) '< ' TempDataName ' <= ' num2str(Tmax) ',   ' ...
+            num2str(Wmin) '< ' WaterDataName ' <= ' num2str(Wmax) ];
+        CDS(ClimateBinNumber).GDDmin=Wmin;
+        CDS(ClimateBinNumber).GDDmax=Wmax;
+        CDS(ClimateBinNumber).Precmin=Tmin;
+        CDS(ClimateBinNumber).Precmax=Tmax;
     end
-    
-    %Temperature variable limits
-    Tmin=TempBins(mT);
-    Tmax=TempBins(mT+1);
-    
-    % who fits?
-    jj=find( T >= Tmin & T <Tmax & W >= Wmin & W <Wmax);
-    
-    ClimateBinVector(jj)=ClimateBinNumber;
-    ClimateDefs{ClimateBinNumber}=...
-	['Bin No ' int2str(ClimateBinNumber) '.   ' ...
-	 num2str(Tmin) '< ' TempDataName ' <= ' num2str(Tmax) ',   ' ...   
-	 num2str(Wmin) '< ' WaterDataName ' <= ' num2str(Wmax) ];	
- CDS(ClimateBinNumber).GDDmin=Wmin;
- CDS(ClimateBinNumber).GDDmax=Wmax;
- CDS(ClimateBinNumber).Precmin=Tmin;
- CDS(ClimateBinNumber).Precmax=Tmax;
-  end
 end
 
 ii=1:prod(size(BinMatrix));

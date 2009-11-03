@@ -3,7 +3,7 @@ function OutputFig(Hfig,FileName)
 %
 % SYNTAX
 % OutputFig('Force') will force priting w/o querying user.
-%
+% 
 % OutputFig('Force','FileName')
 % OutputFig(gcf,'FileName')
 
@@ -14,8 +14,19 @@ end
 
 if nargin>0
     if ischar(Hfig)
-        ForcePlots=1;
-        Hfig=gcf;
+        switch(Hfig)
+            case {'force','Force'}
+                ForcePlots=1;
+                Hfig=gcf;
+            case 'Initialize'
+                uicontrol('String','OutputFig','Callback', ...
+                    'OutputFig;','position',[695 10 80 20]);  
+                Hfig=gcf;
+                ForcePlots=0;
+                return
+            otherwise
+                error('don''t know this argument to Hfig')
+        end
     else
         ForcePlots=0;
     end

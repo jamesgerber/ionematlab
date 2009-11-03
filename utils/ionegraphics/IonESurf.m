@@ -26,6 +26,8 @@ if nargin<5
     TitleStr=InputVariableName;
 end
 
+CanMap=CheckForMappingToolbox;
+
 
 if nargin==1
   % only one argument in.  Either user is simply passing in a big array and
@@ -80,7 +82,33 @@ hfig=figure;
 pos=get(hfig,'Position');
 pos=pos.*[1 1 1.5 .9];
 set(hfig,'Position',pos);
-h=surface(RedLong,RedLat,double(RedData.'));
+set(hfig,'Tag','IonEFigure');
+
+% Establish a UserDataStructure
+
+
+
+if CanMap==0
+  h=surface(RedLong,RedLat,double(RedData.'));
+  UserDataStructure.WestWorldEdge=-180;
+  UserDataStructure.EastWorldEdge=180;
+  UserDataStructure.NorthWorldEdge=90;
+  UserDataStructure.NorthWorldEdge=-90;
+  UserDataStructure.ZoomLongDelta=(5);
+  UserDataStructure.ZoomLatDelta=(2.5);  
+else
+  axesm('mercator')
+  [lat2D,lon2D]=meshgrat(RedLat,RedLong);  
+  h=surfm(lat2D,lon2D,double(RedData.'));
+  UserDataStructure.WestWorldEdge=-pi;
+  UserDataStructure.EastWorldEdge=pi;
+  UserDataStructure.NorthWorldEdge=pi;
+  UserDataStructure.NorthWorldEdge=-pi;
+  UserDataStructure.ZoomLongDelta=(5*pi/180);
+  UserDataStructure.ZoomLatDelta=(2.5*pi/180);  
+end
+
+set(gca,'Tag','IonEAxis')
 shading flat
 ht=title(TitleStr);
 set(ht,'interpreter','none');
@@ -91,8 +119,10 @@ WorldSummary('Initialize');
 ZoomToMax('Initialize');
 ZoomToMin('Initialize');
 MakeReducedDataSets('Initialize');
-AddCoastCallback('Initialize')
-
+AddCoastCallback('Initialize');
+ZoomToContinent('Initialize');
+PropagateLimits('Initialize');
+OutputFig('Initialize');
 
 
 if exist('NoDataStructure');
@@ -105,3 +135,4 @@ zoom on
 if nargout==1
     varargout{1}=h;
 end
+

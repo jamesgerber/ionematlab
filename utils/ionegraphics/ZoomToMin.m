@@ -31,15 +31,38 @@ switch(InputFlag)
             xx=xx{end};
             yy=yy{end};
         end
+        % little bit of code to handle z being all zeros (if mapping
+        % toolbox was used)
         
-        ii=find(~isnan(z) & z~=0);
-                
+        if length(unique(z))==1
+            z=get(hc(end),'CData');
+        end
+        
+        ii=find(isnan(xx) | isnan(yy));       
+        z(ii)=max(max(z(ii)))+1;   
+        % assign maximal values here ... this 
+        %makes sure that we don't sneak by with a NaN
+        % this is necessary because the mapping toolbox pads the x and y 
+        % matrices with NaNs 
+        
         [minval,RowIndex,ColumnIndex]=max2d(-z);
         
         LongVal=xx(ColumnIndex);
         LatVal=yy(RowIndex);
         
-        axis([LongVal-5 LongVal+5 LatVal-5 LatVal+5]);
+        %% need to find out how much user wants us to zoom by.  It's
+        %% encoded in the userdatastructure in the figure window.
+        try
+            UDS=get(gcbf,'UserData');
+            DeltaLong=UDS.ZoomLongDelta;
+            DeltaLat=UDS.ZoomLatDelta;
+        catch
+            DeltaLong=2.5;
+            DeltaLat=2.5;
+        end
+        
+        axis([LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
+  
         
         [CountryNumber,CountryName]=GetCountry5min(LongVal,LatVal);    ;
         

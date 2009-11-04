@@ -13,4 +13,3 @@ catch
   CanMap=0;
 end
 
-CanMap=0;

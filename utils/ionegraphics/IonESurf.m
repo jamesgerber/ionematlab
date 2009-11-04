@@ -108,6 +108,8 @@ else
   UserDataStructure.ZoomLatDelta=(2.5*pi/180);  
 end
 
+set(hfig,'UserData',UserDataStructure);
+
 set(gca,'Tag','IonEAxis')
 shading flat
 ht=title(TitleStr);

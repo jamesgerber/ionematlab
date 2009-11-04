@@ -12,9 +12,6 @@ switch(InputFlag)
     case 'Initialize'
         uicontrol('String','Zoom to min','Callback', ...
             'ZoomToMin(''ZoomIn'')','position',[180 10 80 20]);
-      %  uicontrol('String','Zoom Out','Callback', ...
-      %      'ZoomToMin(''ZoomOut'');','position',[260 10 60 20]);
-        
     case 'ZoomIn'
         % find minimum, zoom in       
         
@@ -47,8 +44,13 @@ switch(InputFlag)
         
         [minval,RowIndex,ColumnIndex]=max2d(-z);
         
-        LongVal=xx(ColumnIndex);
-        LatVal=yy(RowIndex);
+        if ndims(xx)==1
+            LongVal=xx(ColumnIndex);
+            LatVal=yy(RowIndex);
+        else
+            LongVal=xx(RowIndex,ColumnIndex);
+            LatVal=yy(RowIndex,ColumnIndex);
+        end
         
         %% need to find out how much user wants us to zoom by.  It's
         %% encoded in the userdatastructure in the figure window.
@@ -68,12 +70,8 @@ switch(InputFlag)
         
         disp(CountryName)
         
-        
-    case 'ZoomOut'
-        ha=get(gcbf,'CurrentAxes');
-        
-        axes(ha);
-        axis([-180 180 -90 90]);
+       
+
     otherwise
         error('syntax error in ZoomToMin.m')
         

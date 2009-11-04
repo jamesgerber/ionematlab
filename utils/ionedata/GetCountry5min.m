@@ -67,6 +67,22 @@ end
 
 
 
+%% possibly need to correct longlist, latlist if we are using the mapping
+%% toolbox.
+try
+    CanMap=CheckForMappingToolbox;
+    if CanMap==1;
+        longlist=longlist*(180/pi);
+        latlist=latlist*(90/pi);
+    end
+catch
+    disp(['problem with Mapping Toolbox check in ' mfilename])
+end
+
+
+
+
+
 for j=1:length(longlist);
   ilong=iclosest(long,longlist(j));
   ilat=iclosest(lat,latlist(j));  

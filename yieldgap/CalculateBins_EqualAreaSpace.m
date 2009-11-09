@@ -1,5 +1,5 @@
-function [GDDBinEdgesCell,PrecBinEdges]= ...
-    CalculateBins_GloballyEqualAreaSpace(GDD,Prec,Area,N,PercentToDrop);
+function [GDDBinEdges,PrecBinEdges]= ...
+    CalculateBins_EqualAreaSpace(GDD,Prec,Area,N,PercentToDrop);
 %   CalculateBins_EqualAreaSpace
 %
 %     SYNTAX:
@@ -7,10 +7,9 @@ function [GDDBinEdgesCell,PrecBinEdges]= ...
 %
 %
 
-% first Prec Bins
+% first GDD Bins
 
-
-IndicesWeCareAbout=find(CropMaskLogical & Prec < 1e15 & isfinite(Prec));
+IndicesWeCareAbout=find(CropMaskLogical & Prec < 1e15);
 
 
 x=GDD(IndicesWeCareAbout);
@@ -18,29 +17,8 @@ y=Prec(IndicesWeCareAbout);
 A=Area(IndicesWeCareAbout);
 p=PercentToDrop/100;
 
+[GDDBinEdges]=GetBins(x,A,N,p,'GDD');
 [PrecBinEdges]=GetBins(y,A,N,p,'Prec');
-
-% now have PrecBinEdges.
-
-%for each PrecBin, let's get a set of GDDBins
-
-for j=1:length(PrecBinEdges)-1;
-% note that it is the same procedure as above, except that now when
-% we get indiceswecareabout it will be limit to those within each
-% precipitation bin.
-  IndicesWeCareAbout=find(CropMaskLogical & Prec < 1e15  & ...
-       isfinite(Prec) & isfinite(GDD) &...
-			  Prec >=PrecBinEdges(j) & Prec < PrecBinEdges(j+1));
-  x=GDD(IndicesWeCareAbout);
-  y=Prec(IndicesWeCareAbout);
-  A=Area(IndicesWeCareAbout);
-  GDDBinEdgesCell{j}=GetBins(x,A,N,p,'GDD');  
-end
-
-
-
-
-
 
 function [xbins]=GetBins(x,y,N,p,str);
 [xsort,ii]=sort(x);

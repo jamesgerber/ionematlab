@@ -8,6 +8,10 @@ function OutputList=continent(InputList);
 %
 %
 %%http://www.worldatlas.com/cntycont.htm
+if nargin==0
+    help(mfilename)
+    return
+end
 
 if iscell(InputList)
   for j=1:length(InputList);

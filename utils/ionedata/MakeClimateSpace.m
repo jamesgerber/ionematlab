@@ -64,15 +64,17 @@ ClimateBinVector=(1:length(T))*0;
 
 %% Determin bins
 
-if length(TempBins)==1
-  [N,TempBins]=hist(T,TempBins);
-  TempBins(end+1)=TempBins(end)+ (TempBins(end)-TempBins(end-1));
-end
-
-if length(WaterBins)==1
-  [N,WaterBins]=hist(W,WaterBins);
-  WaterBins(end+1)=WaterBins(end)+ (WaterBins(end)-WaterBins(end-1));
-end
+% COMMENT THIS OUT: WE NO LONGER PASS IN NUMBER OF BINS AND ASK THIS CODE
+% TO SPACE THEM EQUALLY
+% if length(TempBins)==1
+%   [N,TempBins]=hist(T,TempBins);
+%   TempBins(end+1)=TempBins(end)+ (TempBins(end)-TempBins(end-1));
+% end
+% 
+% if length(WaterBins)==1
+%   [N,WaterBins]=hist(W,WaterBins);
+%   WaterBins(end+1)=WaterBins(end)+ (WaterBins(end)-WaterBins(end-1));
+% end
 
 
 if iscell(WaterBins)

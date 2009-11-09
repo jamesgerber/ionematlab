@@ -5,7 +5,7 @@ function fattenplot(hfig)
 %  Ocean Power Technologies, Inc.
 %
 
-[AllInfo,RevisionNo]=GetSVNInfo;
+%[AllInfo,RevisionNo]=GetSVNInfo;
 
 if ~exist('hfig')
     hfig=gcf;

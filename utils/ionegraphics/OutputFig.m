@@ -34,23 +34,28 @@ end
 
 if nargin==2
     InitGuess=FileName;
+    MakeSafe=0;
 else
     InitGuess=get(get(gca,'Title'),'String');
+    MakeSafe=1;
 end
 
 
 figure(Hfig); %Make sure this figure is on top. 
 
-try
 
-    InitGuess=strrep(InitGuess,' ','_');
-    InitGuess=strrep(InitGuess,'.','_');
-    InitGuess=strrep(InitGuess,':','_');
-    InitGuess=strrep(InitGuess,'/','_');
-    InitGuess=strrep(InitGuess,',','_');
+try
+    InitGuess=strrep(InitGuess,' ','');
+    if MakeSafe==1
+        InitGuess=strrep(InitGuess,'.','_');
+        InitGuess=strrep(InitGuess,':','_');
+        InitGuess=strrep(InitGuess,'/','_');
+        InitGuess=strrep(InitGuess,',','_');
+    end
 catch
     InitGuess='Figure';
 end
+
 
 if ForcePlots==0
     [filename,pathname]=uiputfile('*.png','Choose File Name',InitGuess);

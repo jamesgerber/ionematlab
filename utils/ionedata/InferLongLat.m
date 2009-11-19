@@ -1,5 +1,9 @@
 function [Long,Lat]=InferLongLat(Data)
 %INFERLONGLAT constructs long and lat vectors for map
+%
+%  Syntax
+% [Long,Lat]=InferLongLat(Data)
+
 if nargin==0
     help(mfilename);
     return

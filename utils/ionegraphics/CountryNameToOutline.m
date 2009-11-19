@@ -29,11 +29,11 @@ function [Outline,CountryCodeList,OutputCountryNameList]=CountryNameToOutline(Co
 %  See Also  LoadPolitBoundary_5min
 %
 
-if nargin==0 & nargout==0
+if nargin==0 && nargout==0
   help(mfilename)
   return
 end
-MakeOutlineBinary=0;
+MakeOutlineBinary=1;
 if nargin==1 
   if strmatch(lower(CountryNameList),'version');
     [CountryCodeList]=GetSVNInfo;
@@ -114,6 +114,6 @@ end
 
 
 if MakeOutlineBinary==1;
-  Outline(Outline==0)=NaN;
+  Outline(Outline==0)=0;
   Outline(Outline>0)=1;
 end

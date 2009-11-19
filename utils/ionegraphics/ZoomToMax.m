@@ -39,21 +39,19 @@ switch(InputFlag)
         end
         
         
-        
-            
-        ii=find(isnan(xx) | isnan(yy));       
-        z(ii)=min(min(z(ii)))-1;   
-        % assign minimal values here ... this 
-        % this is necessary because the mapping toolbox pads the x and y 
-        % matrices with NaNs 
-        
-        
-        [maxval,RowIndex,ColumnIndex]=max2d(z);
-        
-        if ndims(xx)==1
+        if isvector(xx)==1
+            [maxval,RowIndex,ColumnIndex]=max2d(z);
             LongVal=xx(ColumnIndex);
             LatVal=yy(RowIndex);
         else
+            ii=find(isnan(xx) | isnan(yy));
+            z(ii)=min(min(z(ii)))-1;
+            % assign maximal values here ... this
+            %makes sure that we don't sneak by with a NaN
+            % this is necessary because the mapping toolbox pads the x and y
+            % matrices with NaNs
+            
+            [maxval,RowIndex,ColumnIndex]=max2d(z);
             LongVal=xx(RowIndex,ColumnIndex);
             LatVal=yy(RowIndex,ColumnIndex);
         end

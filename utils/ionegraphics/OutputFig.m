@@ -20,7 +20,7 @@ if nargin>0
                 Hfig=gcf;
             case 'Initialize'
                 uicontrol('String','OutputFig','Callback', ...
-                    'OutputFig;','position',[695 10 80 20]);  
+                    'OutputFig;','position',[730 10 80 20]);  
                 Hfig=gcf;
                 ForcePlots=0;
                 return

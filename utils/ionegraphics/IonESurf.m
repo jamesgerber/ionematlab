@@ -66,22 +66,27 @@ if nargin==1
   end
 end
 
-
-
-
-%if length(Long)<=2160
-%    disp([' data is 10 min or coarser.  not downsampling.']);
-    RedLong=Long;
-    RedLat=Lat;
-    RedData=Data;
-%else
-%    [RedLong,RedLat,RedData]=DownMap(Long,Lat,Data);
-%end
+RedLong=Long;
+RedLat=Lat;
+RedData=Data;
 
 hfig=figure;
-pos=get(hfig,'Position');
-pos=pos.*[1 1 1.5 .9];
-set(hfig,'Position',pos);
+
+% calculate place to put figure
+if hfig <30
+    XStart=100+30*hfig;
+    YStart=800-20*hfig;
+else
+    XStart=100;
+    YStart=800;
+end
+
+set(hfig,'position',[XStart YStart 842   349]);
+
+%mps=get(0,'MonitorPositions');
+
+%pos=pos.*[1 1 1.5 .9];
+%set(hfig,'Position',pos);
 set(hfig,'Tag','IonEFigure');
 
 % Establish a UserDataStructure
@@ -97,7 +102,7 @@ if CanMap==0
   UserDataStructure.ZoomLongDelta=(5);
   UserDataStructure.ZoomLatDelta=(2.5);  
 else
-  axesm('mercator')
+  axesm('robinson')
   [lat2D,lon2D]=meshgrat(RedLat,RedLong);  
   h=surfm(lat2D,lon2D,double(RedData.'));
   UserDataStructure.WestWorldEdge=-pi;
@@ -107,7 +112,8 @@ else
   UserDataStructure.ZoomLongDelta=(5*pi/180);
   UserDataStructure.ZoomLatDelta=(2.5*pi/180);  
 end
-
+UserDataStructure.SurfaceHandle=h;
+UserDataStructure.DataAxisHandle=gca;
 set(hfig,'UserData',UserDataStructure);
 
 set(gca,'Tag','IonEAxis')
@@ -135,6 +141,6 @@ end
 set(gcf,'Renderer','zbuffer')
 zoom on
 if nargout==1
-    varargout{1}=h;
+    varargout{1}=hfig;
 end
 

@@ -24,17 +24,24 @@ switch(InputFlag)
         xx=get(hc,'XData');
         yy=get(hc,'YData');
         z=get(hc,'ZData');
+        if iscell(z)
+            z=z{end};
+            xx=xx{end};
+            yy=yy{end};
+        end
+        
         ii=find(~isnan(z) & z~=0);
         
         
         [maxval,RowIndex,ColumnIndex]=max2d(z)
-        
-        LongVal=xx(ColumnIndex);
-        LatVal=yy(RowIndex);
-        
-        
+        if isvector(xx)
+            LongVal=xx(ColumnIndex);
+            LatVal=yy(RowIndex);
+        else
+            LongVal=xx(RowIndex,ColumnIndex);
+            LatVal=yy(RowIndex,ColumnIndex);
+        end
         [CountryNumber,CountryName]=GetCountry5min(LongVal,LatVal);
-        
         
         figure
         h1=subplot(321);
@@ -62,8 +69,7 @@ switch(InputFlag)
         subplot(323)
         hist(z(ii),40);
         title(['Data histogram'])
-        
-        
+         
         subplot(122);
         % keyboard
         
@@ -82,9 +88,7 @@ switch(InputFlag)
         end
         plot(avgval,deg,maxval,deg)
         legend('average','maximum')
-        
-        
-        
+         
         h3=subplot(325);
         hf=get(gcbf,'children');
         for j=1:length(hf);
@@ -94,9 +98,7 @@ switch(InputFlag)
                 Units=get(hyl,'String');
             else
                 Units='';
-            end
-            
-            
+            end          
         end
         x=.1;
         y=.95;

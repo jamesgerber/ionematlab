@@ -132,6 +132,11 @@ ZoomToContinent('Initialize');
 PropagateLimits('Initialize');
 OutputFig('Initialize');
 
+if CheckForMappingToolbox;
+    ChangeProjection('Initialize');
+end
+
+
 
 if exist('NoDataStructure');
     set(hfig,'UserData',NoDataStructure);

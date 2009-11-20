@@ -20,12 +20,9 @@ catch
 end
 
 if CanMap==0
-    plot(long,lat,'k')
-else
-    disp(['do not know how to add a coast map'])
-%    [x,y]=mfwdtran(lat,long);
-%    plotm(long*(pi/180),lat*(pi/90),'k');
-%    plotm(y*180/pi,x*180/pi,'k');
+    plot(long,lat,'m')
+else  
+    plotm(lat,long,'m');
 end
 
 if holdstatus==0

@@ -1,8 +1,8 @@
 function  CanMap=CheckForMappingToolbox;
 % CHECKFORMAPPINGTOOLBOX - check to see if mapping toolbox is available
 S=license('inuse','map_toolbox');
-CanMap=0
-return
+%CanMap=0
+
 try
   if isequal(S.feature,'map_toolbox')
     CanMap=1;

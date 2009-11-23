@@ -18,7 +18,7 @@ function OutputStructure=YieldGapFunction(FlagStructure)
 %  FS.QuietFlag=0;
 %  FS.MakeGlobalMaps=1;
 %  FS.MakeBinWeightedYieldGapPlotFlag=1;
-%
+%  FS.ClimateLibraryDir='../ClimateSpaces';
 % OutputStructure=YieldGapFunction(FS);
 %
 %
@@ -139,9 +139,9 @@ ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
     WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
 
 if QuietFlag==0
-    disp(['Loading /Users/jsgerber/sandbox/jsg003_YieldGapWork/ClimateSpaces/' ClimateMaskFile]);
+    disp(['Loading ClimateLibraryDir/' ClimateMaskFile]);
 end
-load(['/Users/jsgerber/sandbox/jsg003_YieldGapWork/ClimateSpaces/' ClimateMaskFile]);
+load([ClimateLibraryDir '/' ClimateMaskFile]);
 
 ClimateMask=BinMatrix;
 

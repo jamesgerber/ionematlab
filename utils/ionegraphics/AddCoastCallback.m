@@ -12,7 +12,7 @@ switch(InputFlag)
     case 'Initialize'
        
         uicontrol('String','Add Coastline','Callback', ...
-            'AddCoastCallBack(''AddCoast'')','position',[430 10 80 20]);
+            'AddCoastCallBack(''AddCoast'')','position',NextButtonCoords);
         
     case 'AddCoast'
         % find maximum, zoom in       

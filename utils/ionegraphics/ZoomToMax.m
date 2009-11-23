@@ -11,14 +11,15 @@ InputFlag=varargin{1};
 switch(InputFlag)
     case 'Initialize'
         uicontrol('String','Zoom to max','Callback', ...
-            'ZoomToMax(''ZoomIn'')','position',[90 10 80 20]);
+            'ZoomToMax(''ZoomIn'')','position',NextButtonCoords);
         uicontrol('String','Zoom Out','Callback', ...
-            'ZoomToMax(''ZoomOut'');','position',[270 10 60 20]);
+            'ZoomToMax(''ZoomOut'');','position',NextButtonCoords);
         
     case 'ZoomIn'
         % find maximum, zoom in       
         
-        ha=get(gcbf,'CurrentAxes');
+        UDS=get(gcbf,'UserData');
+        ha=UDS.DataAxisHandle;
         Xlim=get(ha,'XLim');
         Ylim=get(ha,'YLim');
         hc=get(ha,'Child');
@@ -67,9 +68,9 @@ switch(InputFlag)
             DeltaLat=2.5;
         end
         
-        axis([LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
+        axis(UDS.DataAxisHandle,[LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
         
-        [CountryNumber,CountryName]=GetCountry5min(LongVal,LatVal)    ;
+        [CountryNumber,CountryName]=GetCountry(LongVal,LatVal)    ;
         
         disp(CountryName)
         
@@ -83,7 +84,8 @@ switch(InputFlag)
             CanMap=0;
         end
         
-        ha=get(gcbf,'CurrentAxes');
+        UDS=get(gcbf,'UserData');
+        ha=UDS.DataAxisHandle;
         
         axes(ha);
         if CanMap==0

@@ -81,7 +81,7 @@ else
     YStart=800;
 end
 
-set(hfig,'position',[XStart YStart 842   349]);
+set(hfig,'position',[XStart YStart 842  440]);
 
 %mps=get(0,'MonitorPositions');
 
@@ -95,34 +95,44 @@ set(hfig,'Tag','IonEFigure');
 
 if CanMap==0
   h=surface(RedLong,RedLat,double(RedData.'));
+  set(gca,'Position',[0.1800    0.1100    0.6750    0.8150]);
+  UserDataStructure.DataAxisHandle=gca;
+
   UserDataStructure.WestWorldEdge=-180;
   UserDataStructure.EastWorldEdge=180;
   UserDataStructure.NorthWorldEdge=90;
-  UserDataStructure.NorthWorldEdge=-90;
+  UserDataStructure.SouthWorldEdge=-90;
   UserDataStructure.ZoomLongDelta=(5);
-  UserDataStructure.ZoomLatDelta=(2.5);  
+  UserDataStructure.ZoomLatDelta=(2.5);
+  UserDataStructure.ScaleToDegrees=1;
 else
   axesm('robinson')
   [lat2D,lon2D]=meshgrat(RedLat,RedLong);  
   h=surfm(lat2D,lon2D,double(RedData.'));
+  set(gca,'Position',[0.1800    0.1100    0.6750    0.8150]);
+  UserDataStructure.DataAxisHandle=gca;
   UserDataStructure.WestWorldEdge=-pi;
   UserDataStructure.EastWorldEdge=pi;
   UserDataStructure.NorthWorldEdge=pi;
-  UserDataStructure.NorthWorldEdge=-pi;
+  UserDataStructure.SouthWorldEdge=-pi;
   UserDataStructure.ZoomLongDelta=(5*pi/180);
-  UserDataStructure.ZoomLatDelta=(2.5*pi/180);  
+  UserDataStructure.ZoomLatDelta=(2.5*pi/180);
+  UserDataStructure.ScaleToDegrees=180/pi;
 end
 UserDataStructure.SurfaceHandle=h;
-UserDataStructure.DataAxisHandle=gca;
-set(hfig,'UserData',UserDataStructure);
-
+axes(UserDataStructure.DataAxisHandle);
 set(gca,'Tag','IonEAxis')
 shading flat
 ht=title(TitleStr);
 set(ht,'interpreter','none');
-hcb=colorbar;
+hcb=colorbar('peer',UserDataStructure.DataAxisHandle,'SouthOutside');
 hy=get(hcb,'YLabel');
 set(hy,'String',Units);
+
+
+% now make graphics
+clear NextButtonCoords
+
 WorldSummary('Initialize');
 ZoomToMax('Initialize');
 ZoomToMin('Initialize');
@@ -131,6 +141,22 @@ AddCoastCallback('Initialize');
 ZoomToContinent('Initialize');
 PropagateLimits('Initialize');
 OutputFig('Initialize');
+IonEButtonDownFunctions('Initialize');
+
+
+%% Add Console
+position=NextButtonCoords;
+position(4)=100;
+ConsoleAxisHandle=axes('units','pixels','Position',position);
+set(ConsoleAxisHandle,'units','normalized'); %this is the default
+set(ConsoleAxisHandle,'visible','off');
+UserDataStructure.ConsoleAxisHandle=ConsoleAxisHandle;
+set(hfig,'UserData',UserDataStructure);
+
+% make dataaxis current
+
+axes(UserDataStructure.DataAxisHandle);
+
 
 if CheckForMappingToolbox;
     ChangeProjection('Initialize');

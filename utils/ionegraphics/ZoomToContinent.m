@@ -11,7 +11,7 @@ InputFlag=varargin{1};
 switch(InputFlag)
     case 'Initialize'
         uicontrol('style','popupmenu','String','pick a continent|North America|Europe|Asia|Africa|South America|Australia|World','Callback', ...
-            'ZoomToContinent(''ZoomIn'')','position',[515 10 100 20]);	
+            'ZoomToContinent(''ZoomIn'')','position',NextButtonCoords);	
 
     case 'ZoomIn'
  

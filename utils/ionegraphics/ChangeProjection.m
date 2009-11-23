@@ -34,11 +34,6 @@ switch(InputFlag)
             
             
             setm(gca,'mapproj',key(Val,:))
-            cf
-            %%% wait !!!!  I think that there is no way to change an
-            %%% existing projection. This code will probably never be used.
-
-                
         end
     otherwise
     error(['syntax error in ' mfilename])

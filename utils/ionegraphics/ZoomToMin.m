@@ -11,11 +11,12 @@ InputFlag=varargin{1};
 switch(InputFlag)
     case 'Initialize'
         uicontrol('String','Zoom to min','Callback', ...
-            'ZoomToMin(''ZoomIn'')','position',[180 10 80 20]);
+            'ZoomToMin(''ZoomIn'')','position',NextButtonCoords);
     case 'ZoomIn'
         % find minimum, zoom in       
         
-        ha=get(gcbf,'CurrentAxes');
+    UDS=get(gcbf,'UserData');
+        ha=UDS.DataAxisHandle;
         Xlim=get(ha,'XLim');
         Ylim=get(ha,'YLim');
         hc=get(ha,'Child');
@@ -65,7 +66,7 @@ switch(InputFlag)
             DeltaLat=2.5;
         end
         
-        axis([LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
+        axis(UDS.DataAxisHandle,[LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
   
         
         [CountryNumber,CountryName]=GetCountry5min(LongVal,LatVal);    ;

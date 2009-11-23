@@ -14,21 +14,30 @@ InputFlag=varargin{1};
 switch(InputFlag)
     case 'Initialize'
         uicontrol('String','Summary','Callback', ...
-            'WorldSummary(''MakeSummary'')','position',[20 10 60 20]);
+            'WorldSummary(''MakeSummary'')','position',NextButtonCoords);
     case 'MakeSummary'
         
         ha=get(gcbf,'CurrentAxes');
         Xlim=get(ha,'XLim');
         Ylim=get(ha,'YLim');
-        hc=get(ha,'Child');
-        xx=get(hc,'XData');
-        yy=get(hc,'YData');
-        z=get(hc,'ZData');
-        if iscell(z)
-            z=z{end};
-            xx=xx{end};
-            yy=yy{end};
-        end
+        %         hc=get(ha,'Child');
+        %
+        %             for j=1:length(hc)
+        %                 if isequal(get(hc(j),'type'),'surface')
+        %
+        %                     xx=get(hc(j),'XData');
+        %                     yy=get(hc(j),'YData');
+        %                     z=get(hc(j),'ZData');
+        %                     % check to see if z is all zeros.  If so, we want
+        %                     % cdata.
+        %                     ii=find(~isnan(z) & z~=0);
+        %                     if isempty(ii)
+        %                         z=get(hc(j),'CData');
+        %                     end
+        %                 end
+        %             end
+        
+        [xx,yy,z]=GetSurfaceDataFromAxes(ha);
         
         ii=find(~isnan(z) & z~=0);
         
@@ -69,26 +78,34 @@ switch(InputFlag)
         subplot(323)
         hist(z(ii),40);
         title(['Data histogram'])
-         
+        
         subplot(122);
         % keyboard
+        UserDataStructure=get(gcbf,'UserData');
+        Scale= UserDataStructure.ScaleToDegrees;
         
         deg=-87.5:5:87.5;
         for m=1:length(deg);
-            ii=find( yy > deg(m)-2.5 & yy <= deg(m)+2.5);
-            zonestrip=z(ii,:);
+            ii=find( yy*Scale > deg(m)-2.5 & yy*Scale <= deg(m)+2.5);
+            if isvector(xx)
+                zonestrip=z(ii,:);
+            else
+                zonestrip=z(ii);
+            end
             jj=find(~isnan(zonestrip) & zonestrip~=0);
             if isempty(jj)
-                avgval(m)=0;
-                maxval(m)=0;
+                avgval(m)=NaN;
+                maxval(m)=NaN;
+                minval(m)=NaN;
             else
-                avgval(m)=mean(zonestrip(jj));
-                maxval(m)=max(zonestrip(jj));
+                avgval(m)=mean(mean(zonestrip(jj)));
+                maxval(m)=max(max(zonestrip(jj)));
+                minval(m)=min(min(zonestrip(jj)));
             end
         end
-        plot(avgval,deg,maxval,deg)
-        legend('average','maximum')
-         
+        plot(avgval,deg,maxval,deg,'--',minval,deg,'-.')
+        legend('average','maximum','minimum')
+        
         h3=subplot(325);
         hf=get(gcbf,'children');
         for j=1:length(hf);
@@ -98,7 +115,7 @@ switch(InputFlag)
                 Units=get(hyl,'String');
             else
                 Units='';
-            end          
+            end
         end
         x=.1;
         y=.95;

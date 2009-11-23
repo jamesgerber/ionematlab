@@ -20,7 +20,7 @@ catch
 end
 
 if CanMap==0
-    plot(long,lat,'m')
+    plot(long,lat,'k')
 else  
     plotm(lat,long,'m');
 end

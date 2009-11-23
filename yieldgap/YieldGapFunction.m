@@ -1,9 +1,28 @@
-%function YieldGapFunction(FlagStructure)
+function OutputStructure=YieldGapFunction(FlagStructure)
 %% YieldGapFunction   New Yield Gap Work - J. Gerber, N. Mueller
 %
 %  SYNTAX
 %      YieldGapFunction  Will compute yield gaps according to
 %      default settings.
+%
+%
+%  Example
+%
+%  FS.PercentileForMaxYield=95;
+%  FS.MinNumberHectares=10;
+%  FS.CropNo=5;
+%  FS.WetFlag='TMI';
+%  FS.ClimateSpaceRev='F';
+%  FS.ClimateSpaceN=10;
+%  FS.ibinlist=0;
+%  FS.QuietFlag=0;
+%  FS.MakeGlobalMaps=1;
+%  FS.MakeBinWeightedYieldGapPlotFlag=1;
+%
+% OutputStructure=YieldGapFunction(FS);
+%
+%
+%
 
 
 %% Set Default Flags
@@ -23,7 +42,7 @@ MinNumberYieldValues=1;
 HeatFlag='GDD';
 %WetFlag='TMI';
 
-
+QuietFlag=0;  %if 1, be quiet.
 
 OutputBinDQ=0;
 BinDQFileName='BinDataQuality';
@@ -33,34 +52,32 @@ MakeBinPlots=0;
 MakeAllBinsBoxPlot=0;
 MinNumPointsAllBinsBoxPlot=200;
 ibinlist=0;   %if 0, do all bins.
-MakeGlobalMaps=1;  % These are yield maps
+MakeGlobalMaps=0;  % These are yield maps
 SurfacePlotOfAreaInClimateSpaceFlag=0;
 DistributionOfAreaPlotFlag=0;
 MakePotentialYieldMapFlag=0;  %if "2" then only do calculation
 PredictYieldPlots=0; %regressiony things
 PointsPerBinPlotsFlag=0;
 PercentileForMaxYield=95;
-MakeBinWeightedYieldGapPlotFlag=1;
+MakeBinWeightedYieldGapPlotFlag=0;
 
 % Now override defaults with FlagStructure
 
+clear j
 
 
+if nargin==1
+    expandstructure(FlagStructure)  %Cheating with matlab.  step through with
+                                    %debugger to understand.
+end
 
-%if nargin==1
-%expandstructure(FlagStructure)  %Cheating with matlab.  step through with
-%                                %debugger to understand.
-%end
-
-
+N  =ClimateSpaceN;
+Rev=ClimateSpaceRev;
 
 %%% Preliminaries
 
-% Get Area per grid cell (sort of silly ... should probably just put
-% analytical expression into a function)
-
-[Long,Lat,FiveMinGridCellAreas]=OpenNetCDF(['/Users/jsgerber/sandbox/jsg003_YieldGapWork/' ...
-    'YieldGap/area_ha_5min.nc']);
+% Get Area per grid cell 
+[Long,Lat,FiveMinGridCellAreas]=GetFiveMinGridCellAreas;
 [Lat2d,Long2d]=meshgrid(Lat,Long);
 
 
@@ -84,8 +101,9 @@ end
 [DS,NS]=CSV_to_structure('crops.csv');
 
 %for j=1:length(NS.col1);
-%%%%%%%% Crop specific
+
 j=CropNo
+%%%%%%%% Crop specific
 cropname=NS.col1{j};
 cropfilename=NS.col2{j};
 croppath=NS.col3{j};
@@ -93,6 +111,10 @@ suitpath=NS.col4{j};
 suitbins=NS.col5(j);
 cropconv=NS.col6(j);
 areafilter=NS.col7(j);
+
+if QuietFlag==0
+    disp(['Working on ' cropname]);
+end
 
 %% read in crop netCDF file, extract area fraction.
 CropData=OpenNetCDF(croppath);
@@ -116,7 +138,9 @@ Nstr=int2str(N);
 ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
     WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
 
-disp(['Loading /Users/jsgerber/sandbox/jsg003_YieldGapWork/ClimateSpaces/' ClimateMaskFile]);
+if QuietFlag==0
+    disp(['Loading /Users/jsgerber/sandbox/jsg003_YieldGapWork/ClimateSpaces/' ClimateMaskFile]);
+end
 load(['/Users/jsgerber/sandbox/jsg003_YieldGapWork/ClimateSpaces/' ClimateMaskFile]);
 
 ClimateMask=BinMatrix;
@@ -167,11 +191,15 @@ TotalYield=NaN*ones(1,N^2);
 TotalArea=NaN*ones(1,N^2);
 
 clear TotalAreaPerBin NumDataPointsPerBin
-disp(['Working through' int2str(length(ListOfBins)) ' bins.']);
+if QuietFlag==0
+    disp(['Working through' int2str(length(ListOfBins)) ' bins.']);
+end
+    
 for ibin=ListOfBins(:)';
+ if QuietFlag==0
     disp(' ')
     disp(['Calculating yield gap for bin # ' int2str(ibin)]);
-    
+ end
     %%% SECTION TO LIMIT BINS.  First we limit datapoints in the bin
     %%% (i.e. because of area of a particular datapoint is too small.)
     %%% next, we will decide if we are going to throw out the entire
@@ -423,11 +451,16 @@ if MakeBinWeightedYieldGapPlotFlag==1;
     Outline=CountryNameToOutline('Ukraine');
     Bins=unique(BinMatrix(find(Outline==1)));
     jj=logical(BinMatrix*0);
-    for j=1:length(Bins)
-        jj=(jj | BinMatrix==Bins(j));
+    for k=1:length(Bins)
+        jj=(jj | BinMatrix==Bins(k));
     end
     Weight=jj*0;
     Weight(jj)=1;
    % BrightnessPlot(Long,Lat,YieldGapArray,Weight);
     WinterAddRedPlot(Long,Lat,YieldGapArray,Weight);
 end
+
+OutputStructure.YieldGapArray=YieldGapArray;
+OutputStructure.potentialyield=potentialyield;
+OutputStructure.ClimateMask=ClimateMask;
+OutputStructure.ClimateMaskFile=ClimateMaskFile;

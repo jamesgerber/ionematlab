@@ -46,11 +46,12 @@ switch(InputFlag)
        alims=[-180 180 -90 90];
      end
      
+     UD=get(gcbf,'UserData');
      if CanMap==1
-         setm(gca,'maplonlimit',[alims(1) alims(2)]);
-         setm(gca,'maplatlimit',[alims(3) alims(4)])
+         setm(UD.DataAxisHandle,'maplonlimit',[alims(1) alims(2)]);
+         setm(UD.DataAxisHandle,'maplatlimit',[alims(3) alims(4)])
      else
-         axis(alims);
+         axis(UD.DataAxisHandle,alims);
      end
      
      

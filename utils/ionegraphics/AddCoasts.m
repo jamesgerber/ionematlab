@@ -7,7 +7,10 @@ end
 
 hax=gca;
 
-load coast
+SystemGlobals
+%load coast
+
+load(ADMINBOUNDARY_VECTORMAP)
 
 holdstatus=ishold;
 hold on
@@ -20,10 +23,12 @@ catch
 end
 
 if CanMap==0
-    plot(long,lat,'k')
+    hp=plot(long,lat,'k')
+    hp=plot(long+.01,lat+.01,'w')
 else  
-    plotm(lat,long,'m');
+    hp=plotm(lat,long,'m');
 end
+set(gcf,'renderer','zbuffer');
 
 if holdstatus==0
   hold off

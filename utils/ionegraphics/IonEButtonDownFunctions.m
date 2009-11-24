@@ -84,6 +84,8 @@ if strcmp(get(src,'SelectionType'),'normal')
      %now new text
      hc=UDS.ConsoleAxisHandle;
      axes(hc)
+     set(hc,'xlim',[0 1]);
+     set(hc,'ylim',[0 1]);
      ht=text(0.02,.2,['Country=' CountryName]);
      set(ht,'Tag','IonEConsoleText');
      ht=text(0.02,.4,['Value = ' num2str(zvalue)]);

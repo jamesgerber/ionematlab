@@ -17,8 +17,32 @@ if nargout==0
     return
 end
 
+
+
 if nargin==0
-    [filename,pathname]=uigetfile('*.nc','Pick a NetCDF file');
+    InitialGuess='*.nc';
+    CallUIGetfile=1;
+else
+    
+    % are we just a .nc away from something we can read?  If so, append it, and
+    % keep going.   Purists - avert your eyes.
+    if exist([FileName '.nc']) ==2
+        FileName=[FileName '.nc'];
+    end
+    
+    %look and see if FileName exists.
+    if exist(FileName)==2;
+        % it exists.  Don't call UIGetFile below.
+        CallUIGetfile=0;
+    else
+        CallUIGetfile=1;
+        InitialGuess=(FileName);
+    end
+end
+
+if CallUIGetfile==1
+    %we are going to have to call
+    [filename,pathname]=uigetfile('*.nc','Pick a NetCDF file',InitialGuess);
     FileName=[pathname filesep filename];
 end
 

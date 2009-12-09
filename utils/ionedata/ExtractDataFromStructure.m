@@ -21,9 +21,17 @@ NDS=rmfield(DS,a{ii});
 %% Units
 ii=strmatch('units',lower(a));
 if isempty(ii)
-  Units='';
-  else
-Units=getfield(DS,a{ii});
+    Units='';
+else
+    Units=getfield(DS,a{ii});
+end
+
+
+%% if there is a missing value, replace with NaN
+ii=strmatch('missing_value',lower(a));
+if ~isempty(ii)
+    MissingValue=getfield(DS,a{ii});
+    Data(find(Data==MissingValue))=NaN;
 end
 
 %% Longitude 

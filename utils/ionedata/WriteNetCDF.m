@@ -104,10 +104,10 @@ TimeDim=netcdf.defDim(ncid,'time',NTime);
 
 
 
-LongVarID=netcdf.defVar(ncid,'Longitude','double',LongDim);
-LatVarID=netcdf.defVar(ncid,'Latitude','double',LatDim);
-LevelVarID=netcdf.defVar(ncid,'Level','double',LevelDim);
-TimeVarID=netcdf.defVar(ncid,'Time','double',TimeDim);
+LongVarID=netcdf.defVar(ncid,'longitude','double',LongDim);
+LatVarID=netcdf.defVar(ncid,'latitude','double',LatDim);
+LevelVarID=netcdf.defVar(ncid,'level','double',LevelDim);
+TimeVarID=netcdf.defVar(ncid,'time','double',TimeDim);
 DataVarID=netcdf.defVar(ncid,DataName,DataVarType,[LongDim LatDim ...
 		    LevelDim TimeDim]);
 

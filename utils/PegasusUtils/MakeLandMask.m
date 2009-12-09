@@ -37,7 +37,7 @@ Data=single(LogicalMask);
 
 DAS.title='Land Mask For Pegasus';
 DAS.information=['Created on ' date '. 1=to analyze, 0=ignore'];
-DAS.missing_value='9e20';
+DAS.missing_value=9.e+20;
 DAS.units='none';
 
 WriteNetCDF(Long,Lat,Data,'surta',FileName,DAS);

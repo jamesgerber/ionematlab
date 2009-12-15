@@ -26,3 +26,4 @@ ADMINBOUNDARYMAP_5min_key=[IoneDataDir 'AdminBoundary/PolitBoundary_Aug09.csv'];
 LANDMASK_5MIN= [IoneDataDir 'LandMask/LandMaskRev1.nc'];
 AREAMAP_5MIN=[IoneDataDir 'misc/area_ha_5min.nc'];
 ADMINBOUNDARY_VECTORMAP=[IoneDataDir 'AdminBoundary/WorldLevel0Coasts_RevAr0.mat'];
+DERIVEDCLIMATEDATAPATH=[IoneDataDir 'Climate/WorldClimDerivedData/'];

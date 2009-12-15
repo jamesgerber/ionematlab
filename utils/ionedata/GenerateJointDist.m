@@ -1,5 +1,6 @@
-function [jp,xbins,ybins]=GenerateJointDist(X,Y,XBinEdges,YBinEdges);
+function [jp,xbins,ybins]=GenerateJointDist(X,Y,XBinEdges,YBinEdges,Weight);
 % GENERATEJOINTDIST - Generate joint distribution of two vectors
+%
 %  [jp,xbins,ybins]=GenerateJointDist(X,Y,XBinEdges,YBinEdges);
 %
 %
@@ -16,6 +17,7 @@ function [jp,xbins,ybins]=GenerateJointDist(X,Y,XBinEdges,YBinEdges);
 %
 %   See Also:  SelectUniformBins
 %
+
  
 if nargin==0
     help(mfilename)
@@ -26,6 +28,11 @@ if nargin==2
     XBinEdges=10;
     YBinEdges=10;
 end
+
+if nargin<5
+    Weight=ones(size(X));
+end
+
 
 if length(XBinEdges)==1
   [N,XBinEdges]=hist(X,XBinEdges);
@@ -43,9 +50,38 @@ NY=length(YBinEdges)-1;
 
 for j=1:NX;
    ii=find( X>(XBinEdges(j)) & X<=(XBinEdges(j+1)));
-   [N]=histc(Y(ii),YBinEdges);  %want a column vector
-   jp(j,1:NY)=N(1:end-1);
+   [N]=histc(Y(ii),YBinEdges);  %want a column vector 
+   % note that N is length NY+1.  This is due to the way that histc works
+   % it will always end in 0 if there are no points on the final bin edge
+   % vector.  it's bec you're specifying, for example, 11 numbers for 10
+   % bins.     
+   
+   
+   jp(j,1:NY)=N(1:end-1);  %This is the non-weighted version
+   
+   % now the weighty part.
+   Wx=Weight(ii);  %Wx is the weight to be associated with this particular slice in X.
+   %now we have to figure out how to partition in Y.
+   Yslice=Y(ii);
+   
+   % need to rework the bins
+   for m=1:length(YBinEdges)-1
+       kk=find( Yslice>(YBinEdges(m)) & Yslice<=(YBinEdges(m+1)));
+       N(m)=length(kk);
+       WeightedN(m)=sum(Wx(kk));
+   end
+   N(end+1)=0;   %to give a length consistent with histc output
+   N=N(:);
+   WeightedN(end+1)=0;
+   WeightedN=WeightedN(:);
+   % sanity check:  This N should equal the N from the histc(Y) command.
+   % It does.  
+   
+   jpweighted(j,1:NY)=WeightedN(1:end-1);  %This is the non-weighted version
+   clear WeightedN N
 end
+
+jp=jpweighted;
 
 
 xbins=(XBinEdges(1:end-1)+XBinEdges(2:end))/2;
@@ -55,9 +91,8 @@ ybins=(YBinEdges(1:end-1)+YBinEdges(2:end))/2;
 if nargout==0
     figure
     set(gcf,'renderer','zbuffer')
-    cs=surface(xbins,ybins,jp.');
+    cs=surface(xbins,ybins,jpweighted.');
     colorbar
     title('Joint distribution')
     shading flat
-
 end

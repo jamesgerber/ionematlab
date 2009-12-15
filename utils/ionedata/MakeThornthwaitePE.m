@@ -22,17 +22,6 @@ function [TE,TMI,PEmonthly]= MakeThornthwaitePE(tmean,annualmeanprec);
 %       WriteNetCDF(Long,Lat,TE,DataName,FileName,DAS);
 %       end
 
-%       DAS.Description=['Precipitation on Growing Degree Days based on ' ...
-%       'Tmin= ' num2str(Tmin)]
-%       DataName=['PrecWhenGDD' num2str(Tmin)];
-%       FileName=['PrecWhenGDD' num2str(Tmin) '.nc'];
-%       WriteNetCDF(Long,Lat,PrecwhenGDD,DataName,FileName,DAS);
-%       DAS.Description=['Growing Season Length based on ' ...
-%       'Tmin= ' num2str(Tmin)]
-%       DataName=['GSL' num2str(Tmin)];
-%       FileName=['GSL' num2str(Tmin) '.nc'];
-%       WriteNetCDF(Long,Lat,GSL,DataName,FileName,DAS);
-%       end
 
 if nargin<2;help(mfilename);return;end
 

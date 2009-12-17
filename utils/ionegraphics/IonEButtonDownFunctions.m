@@ -93,7 +93,8 @@ if strcmp(get(src,'SelectionType'),'normal')
      ht=text(0.02,.6,['Lat = ' num2str(y)]);
      set(ht,'Tag','IonEConsoleText');
      ht=text(0.02,.8,['Lon = ' num2str(x)]);
-     set(ht,'Tag','IonEConsoleText');     
+     set(ht,'Tag','IonEConsoleText'); 
+     axes(UDS.DataAxisHandle);  %make data axis handle current
 end
 
 
@@ -171,5 +172,6 @@ if strcmp(get(src,'SelectionType'),'normal')
          lowerval=min(min(z(iy,ix)));
          upperval=max(max(z(iy,ix)));
      %else
-      caxis([UDS.DataAxisHandle],[lowerval upperval]);   
+      caxis([UDS.DataAxisHandle],[lowerval upperval]);
+      axes(UDS.DataAxisHandle); %make data axis handle current
 end

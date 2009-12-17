@@ -14,7 +14,7 @@ for m=1:length(HeaderLines)
     headerline=fgetl(fid);
     
     VC=GetStrings(headerline);  %function below.
-    FieldNameStructure(m).Vector=VC
+    FieldNameStructure(m).Vector=VC;
     
 end
 

@@ -35,7 +35,7 @@ end
 % Now consider first line
 xline=fgetl(fid);
 
-VC=GetStrings(xline)
+VC=GetStrings(xline);
 
 dvals=str2double(VC);
 
@@ -61,10 +61,10 @@ end
 end
 %now can read the whole thing using textscan
 
-fclose(fid)
-fid=fopen(FileName)
+fclose(fid);
+fid=fopen(FileName);
 C=textscan(fid,formatstring,'Delimiter',',','HeaderLines',HeaderLines);
-fclose(fid)
+fclose(fid);
 
 
 %% OK.  Now have everything.  Assemble into DS (Output Structure).

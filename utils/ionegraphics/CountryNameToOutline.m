@@ -12,6 +12,13 @@ function [Outline,CountryCodeList,OutputCountryNameList]=CountryNameToOutline(Co
 %        [Outline,CountryCodeList,OutputCountryNameList]=CountryNameToOutli
 %        ne(CountryNameList);
 %
+%
+%        If CountryNameList is a single string, then Outline will be a
+%        logical array.  
+%
+%        If CountryNameList is a cell array (even if it only contains a 
+%        single string,) then Outline will be an array with CountryCodes. 
+%
 % Examples
 %  
 %
@@ -26,6 +33,10 @@ function [Outline,CountryCodeList,OutputCountryNameList]=CountryNameToOutline(Co
 % [Outline,Codes,Names]=CountryNameToOutline;
 % Will return Outline of all countries, with codes and names.
 % 
+% [Outline]=CountryNameToOutline('China'); Returns a logical%
+%
+% [Outline]=CountryNameToOutline({'China'}); Returns China country code.
+%
 %  See Also  LoadPolitBoundary_5min
 %
 
@@ -33,7 +44,7 @@ if nargin==0 && nargout==0
   help(mfilename)
   return
 end
-MakeOutlineBinary=1;
+MakeOutlineBinary=0;
 if nargin==1 
   if strmatch(lower(CountryNameList),'version');
     [CountryCodeList]=GetSVNInfo;
@@ -116,4 +127,5 @@ end
 if MakeOutlineBinary==1;
   Outline(Outline==0)=0;
   Outline(Outline>0)=1;
+  Outline=logical(Outline);
 end

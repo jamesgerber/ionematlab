@@ -22,6 +22,11 @@ catch
 end
 
 fid=fopen(ADMINBOUNDARYMAP_5min_key);
+
+if fid==-1
+    error(['Did not find file ' ADMINBOUNDARYMAP_5min_key]);
+end
+
 C=textscan(fid,'%f%s','Delimiter',',','HeaderLines',1);
 fclose(fid);
 UnitCodes=C{1};

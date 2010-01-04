@@ -1,5 +1,24 @@
 function OutString=MakeSafeString(InString);
 %MakeSafeString - make a string safe for being a fieldname
+%
+%   MakeSafeString(QUESTIONABLEFILENAME)
+%
+%    MakeSafeString
+%
+%    Example
+%    MakeSafeString('Bad-FileName!')
+%    MakeSafeString('5ReallyBadFileName\/ "-=This"')
+%    MakeSafeString('')
+%    MakeSafeString('')
+%    clear MakeSafeString
+%    MakeSafeString('')
+
+% jsg  Dec 2009
+
+if nargin==0
+    help(mfilename)
+    return
+end
 
 persistent NoColumnNameCounter
 if isempty(NoColumnNameCounter)
@@ -18,8 +37,8 @@ end
 
 x=InString;
 x=strrep(x,'/','_');
+x=strrep(x,'!','');
 x=strrep(x,'\','_');
-x=strrep(x,' ','');
 x=strrep(x,'"','');
 x=strrep(x,'=','_eq_');
 x=strrep(x,'-','_');

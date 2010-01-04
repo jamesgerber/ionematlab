@@ -1,8 +1,28 @@
 function DS=ReadGenericCSV(FileName,HeaderLines);
 % ReadGenericCSV - Read in a CSV file - whatever is in the columns
+%
+%  Syntax
+%
+%     DS=ReadGenericCSV(FileName);   this will assume a single
+%     header line
+%
+%     DS=ReadGenericCSV(FileName,HeaderLines);  
+% 
+%   ReadGenericCSV will read in a CSV file, and make a structure,
+%   where each field of the structure corresponds to one of the columns.
+%
+%   The number of columns will be determined by the number of
+%   commas after the header (as determined by HeaderLines)   This
+%   way, if there are extra commas in the header, the data field
+%   names may be messed up, but the data will be extracted.
+%
 
 % first get headers, then figure out what the individual columns look like
 
+if nargin==0
+    help(mfilename)
+    return
+end
 
 if nargin==1
     HeaderLines=1;
@@ -12,10 +32,8 @@ fid=fopen(FileName);
 
 for m=1:length(HeaderLines)
     headerline=fgetl(fid);
-    
     VC=GetStrings(headerline);  %function below.
     FieldNameStructure(m).Vector=VC;
-    
 end
 
 % Now go through the structures and concatenate everything to get
@@ -26,10 +44,6 @@ if length(FieldNameStructure)>1
         ' unique field names']);
     FieldNameStructure=FieldNameStructure(1);
 end
-
-
-
-
 
     
 % Now consider first line

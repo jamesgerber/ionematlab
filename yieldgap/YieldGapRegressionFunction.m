@@ -206,7 +206,7 @@ caxis([0 max(TotalAreaThisSlice)]);
 ubertitle(['Yield vs GDD.  TMI bins.  Crop = ' cropname]);
 
 
-OutputStructure=[];
+OutputStructure.YieldGapArray=YieldGapArray;
 
 
 

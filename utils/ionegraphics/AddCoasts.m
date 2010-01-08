@@ -8,9 +8,12 @@ end
 hax=gca;
 
 SystemGlobals
-load coast
 
-%load(ADMINBOUNDARY_VECTORMAP)
+try
+    load(ADMINBOUNDARY_VECTORMAP)
+catch   
+    load coast
+end
 
 holdstatus=ishold;
 hold on

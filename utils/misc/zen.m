@@ -4,4 +4,5 @@
 close all
 clear all
 clc
-why
+disp('why?')
+ionewhy

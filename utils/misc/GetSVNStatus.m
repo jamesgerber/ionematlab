@@ -21,6 +21,12 @@ if s==1
     error(['problem with subversion command.  '])
 end
 
+if isempty(w)
+    disp(['Subversion repository up to date'])
+    SVNStatus='';
+    return
+end
+
 if strmatch(w,'working copy') | s==1
     error(['problem with subversion'])
 end

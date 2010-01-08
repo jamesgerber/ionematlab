@@ -1,18 +1,18 @@
-function SVNStatus=GetSVNStatus;
+function SVNStatus=GetSVNStatus(varargin);
 % GetSVNStatus - get SVN status from the subversion repository
 %
 %       Syntax
-%          SVNStatus=GetSVNStatus
+%          GETSVNSTATUS - will tell user the results of SVN status command
+%          and also print out a help message with syntax of commands to
+%          bring repository up to date
 %
-%          GetSVNStatus with no output arguments will force the user to
-%          acknowledge that there is some code that isn't checked in.
-%
-%
-%   Example:
+%          SVNStatus=GetSVNStatus('confirm') will force user to choose to
+%          proceed if repository is not up to date.
 %
 
+%  jsg
+%  IonE - Jan 2010
 
-%
 
 fullpath=which(mfilename);
 [s,w]=unix(['svn status ' fullpath(1:end-25)]);
@@ -33,46 +33,49 @@ end
 
 SVNStatus=w;
 
-if nargout==0 &~isempty(w)
+if length(findstr(w,'?')>0)
+    disp(['you may need to execute these lines from terminal:'])
+    
     w
     % break out w
     ii=find(w==w(end));  %take advantage of fact that w ends with return
     if isempty(ii)
-        error   
+        error
     end
     
     iiStart=ones(size(ii));
     iiStart(2:end)=ii(1:end-1)+1;
     iiEnd=ii-1;
-    
-     end
-    
+    for j=1:length(ii)
+        
+        ThisLine=w(iiStart(j):iiEnd(j));
+        if ThisLine(1)=='?'
+            disp(['svn add ' ThisLine(2:end)])
+        end
+    end
+    disp([' '])
+end
+
+disp('You may need to run this from a terminal window: ');
+disp(['svn commit ' fullpath(1:end-25) ' -m "message here"']);
+disp(['svn update ' fullpath(1:end-25)]);
+disp([' '])
+
+
+if ~isempty(w) & nargin>0 & isequal(lower(varargin{1}),'confirm')
     
     ButtonName = questdlg('Matlab code not checked in.  Proceed?', ...
         'Some Matlab code not checked in', ...
-        'Yes', 'Help','Help');
+        'Yes', 'No','Yes');
     switch ButtonName,
         case 'Yes',
             disp('OK');
-        case 'Help',
+        case 'No',
             
-            if length(findstr(w,'?')>0)
-                disp(['you may need to execute these lines from terminal:'])
-                
-                for j=1:length(ii)
-                
-                    ThisLine=w(iiStart(j):iiEnd(j));
-                    if ThisLine(1)=='?'
-                        disp(['svn add ' ThisLine(2:end)])
-                    end
-                end
-            disp([' '])    
-            end
-            
-
-            disp('You may need to run this from a terminal window: ');
-            disp(['svn commit ' fullpath(1:end-25) ' -m "message here"']);
-            disp(['svn update ' fullpath(1:end-25)]);
             error('crashing ...')
     end % switch
 end
+
+
+
+

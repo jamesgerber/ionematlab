@@ -102,7 +102,7 @@ end
 
 %for j=1:length(NS.col1);
 
-j=CropNo
+j=CropNo;
 %%%%%%%% Crop specific
 cropname=NS.col1{j};
 cropfilename=NS.col2{j};
@@ -112,6 +112,9 @@ suitbins=NS.col5(j);
 cropconv=NS.col6(j);
 areafilter=NS.col7(j);
 
+systemglobals
+croppath=[IoneDataDir '/Crops2000/crops/' croppath];
+
 if QuietFlag==0
     disp(['Working on ' cropname]);
 end
@@ -119,7 +122,7 @@ end
 %% read in crop netCDF file, extract area fraction.
 CropData=OpenNetCDF(croppath);
 AreaFraction=CropData.Data(:,:,1);
-AreaFraction(find(AreaFraction>1e10))=NaN;
+AreaFraction(AreaFraction>1e10)=NaN;
 
 Yield=CropData.Data(:,:,2);
 clear CropData
@@ -152,7 +155,7 @@ end
 
 %%% Calculate 5% of bin areas.  only care about areas with Yield Data.
 
-ii=find(isfinite(Production) & Yield < 1e10 & Yield>0);
+ii= isfinite(Production) & Yield < 1e10 & Yield>0;
 
 AreaValues=CultivatedArea(ii);
 AVsort=sort(AreaValues);
@@ -372,7 +375,7 @@ for ibin=ListOfBins(:)';
         
         %%
         %            potentialyield(
-        iihighyield=find(BinFilter & Yield >= Yield90);
+        iihighyield= BinFilter & Yield >= Yield90;
         iilowyield=find(BinFilter & Yield < Yield90);
         potentialyield(iilowyield)=Yield90; %not necessarily 90.
         %potentialyield(iihighyield)=Yield(iihighyield); %not necessarily 90.
@@ -460,6 +463,7 @@ if MakeBinWeightedYieldGapPlotFlag==1;
     WinterAddRedPlot(Long,Lat,YieldGapArray,Weight);
 end
 
+OutputStructure.Yield=Yield;
 OutputStructure.YieldGapArray=YieldGapArray;
 OutputStructure.potentialyield=potentialyield;
 OutputStructure.ClimateMask=ClimateMask;

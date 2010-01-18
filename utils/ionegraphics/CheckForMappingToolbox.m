@@ -1,6 +1,7 @@
 function  CanMap=CheckForMappingToolbox;
 % CHECKFORMAPPINGTOOLBOX - check to see if mapping toolbox is available
-
+CanMap=0
+return
 %%S=license('inuse','map_toolbox');
 result = license('checkout','map_toolbox');
 try

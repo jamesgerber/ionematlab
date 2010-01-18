@@ -18,7 +18,8 @@ function [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo;
 %    DAS.LastChangeRevNo=LastChangeRevNo;
 %    DAS.ProcessingDate=datestr(now);
 %    save SavedDataFile DataToSave DAS
-
+%
+%       See Also: GetSVNStatus
 %  
 [ST,I]=dbstack('-completenames');
 if length(ST)>0
@@ -40,4 +41,9 @@ if length(ST)>0
 else
     error(['problem with dbstack...was this called from command line?'])
 end
+
+if nargout==0
+    disp(['Revision of ' mfilename ' is' num2str(RevNo) ]);
+end
+
     

@@ -38,6 +38,11 @@ if nargin==2
 else
     InitGuess=get(get(gca,'Title'),'String');
     MakeSafe=1;
+    
+    if iscell(InitGuess)
+        InitGuess=InitGuess{1};
+    end
+    
 end
 
 
@@ -46,6 +51,7 @@ figure(Hfig); %Make sure this figure is on top.
 
 try
     InitGuess=strrep(InitGuess,' ','');
+        
     if MakeSafe==1
         InitGuess=strrep(InitGuess,'.','_');
         InitGuess=strrep(InitGuess,':','_');

@@ -1,4 +1,4 @@
-function SVNStatus=GetSVNStatus(varargin);
+function varargout=GetSVNStatus(varargin);
 % GetSVNStatus - get SVN status from the subversion repository
 %
 %       Syntax
@@ -9,10 +9,12 @@ function SVNStatus=GetSVNStatus(varargin);
 %          SVNStatus=GetSVNStatus('confirm') will force user to choose to
 %          proceed if repository is not up to date.
 %
+%
+%       See Also: GetSVNInfo
+
 
 %  jsg
 %  IonE - Jan 2010
-
 
 fullpath=which(mfilename);
 [s,w]=unix(['svn status ' fullpath(1:end-25)]);
@@ -31,12 +33,18 @@ if strmatch(w,'working copy') | s==1
     error(['problem with subversion'])
 end
 
-SVNStatus=w;
+if nargout==1
+varargout{1}=w;
+end
+
+disp(['output from SVN command']);
+w
+
+
 
 if length(findstr(w,'?')>0)
-    disp(['you may need to execute these lines from terminal:'])
-    
-    w
+    disp(['you may need to execute these lines from terminal:'])    
+
     % break out w
     ii=find(w==w(end));  %take advantage of fact that w ends with return
     if isempty(ii)

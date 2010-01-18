@@ -20,7 +20,7 @@ end
 switch(InputFlag)
     case 'Initialize'
         uicontrol('style','popupmenu','String',CallbackString,'Callback', ...
-            'ChangeProjection(''ChangeProjectionCallback'')','position',[20 35 100 20]);
+            'ChangeProjection(''ChangeProjectionCallback'')','position',NextButtonCoords);
         
     case 'ChangeProjectionCallback'
         

@@ -98,6 +98,9 @@ suitpath=NS.col4{j};
 suitbins=NS.col5(j);
 cropconv=NS.col6(j);
 areafilter=NS.col7(j);
+systemglobals
+croppath=[IoneDataDir '/Crops2000/crops/' croppath];
+
 
 if QuietFlag==0
     disp(['Working on ' cropname]);

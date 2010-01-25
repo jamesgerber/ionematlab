@@ -66,7 +66,7 @@
         untex
         
         
-         ii=find(isfinite(w));
+        ii=find(isfinite(w));
         [a,b,c,Rsq]=WeightedLinearLeastSquares(y(ii),G(ii),M(ii),w(ii)*0+1)
         figure
         scatter3(G,M,y,'filled');

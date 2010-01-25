@@ -62,6 +62,6 @@ b30=[b1+0.5*b2]/1.5;
 c30=cd30./b30;
 c30(LogicalBulkSkip | LogicalCarbonSkip)=-99;
 DAS.Description='Average of top 30 cm';
-WriteNetCDF(Long,Lat,c_avg,'Data','TOTC_30.nc',DAS);
+WriteNetCDF(Long,Lat,c30,'Data','TOTC_30.nc',DAS);
 
 

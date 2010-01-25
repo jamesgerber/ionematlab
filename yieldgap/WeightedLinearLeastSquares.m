@@ -1,14 +1,19 @@
 function [a,b,c,Rsq]=WeightedLinearLeastSquares(y,G,M,W)
+% WeightedLinearLeastSquares - Weighted Linear Least Squares
 %
 %
+%   Syntax
+%       [a,b,c,Rsq]=WeightedLinearLeastSquares(y,X1,X2,W);
+%
+%       
 
 y=y(:);
 G=G(:);
 M=M(:);
 W=W(:);
 if length(W)==1;
-  W=W*ones(size(y));
-  end
+    W=W*ones(size(y));
+end
 
 gy=sum(y.*G.*W);
 gg=sum(G.*G.*W);

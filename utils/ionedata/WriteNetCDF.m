@@ -6,6 +6,9 @@ function WriteNetCDF(Long,Lat,Data,DataName,FileName,DataAttributeStructure);
 %
 %            WriteNetCDF(Long,Lat,Data,DataName,FileName,DataAttributeStructure);
 %
+%            WriteNetCDF(Data,DataName,FileName);  This syntax will infer
+%            Long and Lat
+% 
 %  DataAttributeStructure is a structure whose field names are the
 %  names of attributes of the data variable, and whose values are
 %  the values of the attributes
@@ -47,28 +50,54 @@ if nargin==0
   return
 end
 
-if nargin <6
+
+
+
+if min(size(Long))>1
+    
+
+    
+    % first argument is a matrix.  User was too lazy to pass in Long/Lat.
+    % Infer Long/Lat, and rename all the matrices so the rest of the code
+    % works.
+    
+    if nargin==4
+        DataAttributeStructure=DataName;
+    end
+    
+    FileName=Data;
+    DataName=Lat;
+    Data=Long;  % Long was the data matrix.  rename it.
+    [Long,Lat]=InferLongLat(Data);  %now make Long and Lat.
+    
+
+    
+
+end
+
+if ~exist('DataAttributeStructure')
   DataAttributeStructure=[];
 end
 
 
+
 if exist(FileName,'file')==2
     disp(['putting up a question dialog'])
-ButtonName = questdlg([FileName ' exists.  Proceed?'], ...
-                         'File appears to exist',...
-                         'Overwrite', 'Try Again', 'Cancel', 'Cancel');
-   switch ButtonName,
-     case 'Overwrite',
-      dos(['rm ' FileName]);
-    case 'Try Again',
-     WriteNetCDF(Long,Lat,Data,DataName,FileName, ...
-		 DataAttributeStructure);
-     return
-    case 'Cancel'
-     return
-   end
-   
-     
+    ButtonName = questdlg([FileName ' exists.  Proceed?'], ...
+        'File appears to exist',...
+        'Overwrite', 'Try Again', 'Cancel', 'Cancel');
+    switch ButtonName,
+        case 'Overwrite',
+            dos(['rm ' FileName]);
+        case 'Try Again',
+            WriteNetCDF(Long,Lat,Data,DataName,FileName, ...
+                DataAttributeStructure);
+            return
+        case 'Cancel'
+            return
+    end
+    
+    
 
 end
 

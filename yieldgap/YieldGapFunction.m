@@ -468,3 +468,7 @@ OutputStructure.YieldGapArray=YieldGapArray;
 OutputStructure.potentialyield=potentialyield;
 OutputStructure.ClimateMask=ClimateMask;
 OutputStructure.ClimateMaskFile=ClimateMaskFile;
+OutputStructure.Area=CultivatedArea;
+OutputStructure.cropname=cropname;
+OutputStructure.ClimateDefs=ClimateDefs;
+OutputStructure.CDS=CDS;

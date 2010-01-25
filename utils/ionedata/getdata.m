@@ -66,6 +66,10 @@ switch lower(DataString)
   case 'bulk5'
   S=OpenNetCDF([IoneDataDir 'ISRICProcessed/BULK_LevelD5']);    
  
+   case {'percapitagdp'}
+  S=OpenNetCDF([IoneDataDir 'misc/PerCapitaGDPv10.nc']);    
+
+  
  otherwise
   error([' haven''t coded in ' DataString]);
 end

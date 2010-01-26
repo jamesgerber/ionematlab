@@ -13,11 +13,11 @@ function OutputStructure=YieldGapFunction(FlagStructure)
 %  FS.CropNo=5;
 %  FS.WetFlag='TMI';
 %  FS.ClimateSpaceRev='F';
-%  FS.ClimateSpaceN=10;
+%  FS.ClimateSpaceN=5;
 %  FS.ibinlist=0;
 %  FS.QuietFlag=0;
 %  FS.MakeGlobalMaps=1;
-%  FS.MakeBinWeightedYieldGapPlotFlag=1;
+%  FS.MakeBinWeightedYieldGapPlotFlag=0;
 %  FS.ClimateLibraryDir='../ClimateSpaces';
 % OutputStructure=YieldGapFunction(FS);
 %
@@ -60,7 +60,7 @@ PredictYieldPlots=0; %regressiony things
 PointsPerBinPlotsFlag=0;
 PercentileForMaxYield=95;
 MakeBinWeightedYieldGapPlotFlag=0;
-
+MakeGlobalMapsSoil=1
 % Now override defaults with FlagStructure
 
 clear j
@@ -423,6 +423,11 @@ end
 if MakeGlobalMaps==1
     MakeGlobalMapsScript
 end
+
+if MakeGlobalMapsSoil==1
+    MakeGlobalMapsScriptSoil
+end
+
 if PredictYieldPlots==1
     PredictYieldRegressionPlots;
 end

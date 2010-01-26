@@ -72,6 +72,7 @@ if ~strcmp(lower(Var1Name(1:3)),'lat');
     error('Dimension 1 is not longitude.  Try OpenGeneralNETCDF')
 end
 
+netcdf.close(ncid);
 
 ncid=netcdf.open(FileName,'NOWRITE');
 Long=netcdf.GetVar(ncid,0);
@@ -100,7 +101,7 @@ switch nargout
                 DS=setfield(DS,lower(ThisName),ThisValue);
             end
         catch
-            DS.Title=FileName;
+        %    DS.Title=FileName;
         end
         
         
@@ -113,4 +114,3 @@ switch nargout
         error
 end
 
-netcdf.close(ncid);

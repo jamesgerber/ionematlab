@@ -50,13 +50,8 @@ if nargin==0
   return
 end
 
-
-
-
 if min(size(Long))>1
-    
-
-    
+      
     % first argument is a matrix.  User was too lazy to pass in Long/Lat.
     % Infer Long/Lat, and rename all the matrices so the rest of the code
     % works.

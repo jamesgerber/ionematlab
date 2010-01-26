@@ -61,6 +61,10 @@ end
 
 %% Title
 ii=strmatch('title',lower(a));
+if length(ii)>1
+    ii=ii(1);
+end
+
 if ~isempty(ii)
   TitleStr=getfield(DS,a{ii});
 else

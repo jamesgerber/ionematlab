@@ -9,7 +9,7 @@ if nargin==0
     return
 end
 
-  [Nrow,Ncol]=size(Data);
+  [Nrow,Ncol,Level]=size(Data);
 
   %the next two lines are a lazy way to get Long to take on the
   %values of the centers of the bins

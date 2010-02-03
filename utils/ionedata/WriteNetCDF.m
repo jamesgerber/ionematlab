@@ -172,7 +172,7 @@ netcdf.endDef(ncid);
 %now can write data ...
 netcdf.putVar(ncid,LongVarID,Long);
 netcdf.putVar(ncid,LatVarID,Lat);
-netcdf.putVar(ncid,LevelVarID,1);
+netcdf.putVar(ncid,LevelVarID,1:NLevel);
 netcdf.putVar(ncid,TimeVarID,1:NTime);
 netcdf.putVar(ncid,DataVarID,Data);
 

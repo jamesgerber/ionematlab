@@ -3,9 +3,10 @@ clear DAS
 % Get crop information section
 [Long,Lat,FiveMinGridCellAreas]=OpenNetCDF(['/Users/jsgerber/sandbox/jsg003_YieldGapWork/' ...
     'YieldGap/area_ha_5min.nc']);
-  
-[Long,Lat,cSQI]=...
-    OpenNetCDF('/Users/jsgerber/sandbox/jsg003_YieldGapWork/HWSD_CategoricalCSQI.nc');
+
+csqirev='Br2';
+
+[Long,Lat,cSQI]=getdata(['HWSD_CategoricalCSQI_' csqirev]);
     
 for N=[5 10]
     for jcrop=[5 7 8 10 ]
@@ -78,7 +79,7 @@ for N=[5 10]
                 end
                 
                 FileName=['ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
-                    'x' int2str(N) '_RevG'];
+                    'x' int2str(N) '_RevG' '_soilrev' csqirev];
                 
                 
                 if exist([FileName '.nc'])==2

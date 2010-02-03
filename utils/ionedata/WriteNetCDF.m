@@ -1,10 +1,14 @@
-function WriteNetCDF(Long,Lat,Data,DataName,FileName,DataAttributeStructure);
+function WriteNetCDF(Long,Lat,Data,DataName,FileName,DataAttributeStructure,Force);
 %  WRITENETCDF(Long,Lat,Data,DataName,FileName,DataAttributeStructure);
 % 
 %   SYNTAX:
 %            WriteNetCDF(Long,Lat,Data,DataName,FileName);
 %
 %            WriteNetCDF(Long,Lat,Data,DataName,FileName,DataAttributeStructure);
+%
+%            WriteNetCDF(Long,Lat,Data,DataName,FileName, ...
+%                        DataAttributeStructure,Force);
+%            
 %
 %            WriteNetCDF(Data,DataName,FileName);  This syntax will infer
 %            Long and Lat
@@ -50,6 +54,8 @@ if nargin==0
   return
 end
 
+
+
 if min(size(Long))>1
       
     % first argument is a matrix.  User was too lazy to pass in Long/Lat.
@@ -60,40 +66,65 @@ if min(size(Long))>1
         DataAttributeStructure=DataName;
     end
     
+    if nargin==5
+        DataAttributeStructure=DataName;
+        Force=FileName;
+    end
+       
+    
     FileName=Data;
     DataName=Lat;
     Data=Long;  % Long was the data matrix.  rename it.
     [Long,Lat]=InferLongLat(Data);  %now make Long and Lat.
-    
-
-    
-
 end
 
 if ~exist('DataAttributeStructure')
   DataAttributeStructure=[];
 end
 
+if ~exist('Force')
+  Force='hedge';
+end
+
+switch lower(Force)
+    case 'force'
+        ForceWrite=1;
+    case 'query'
+        ForceWrite=0;  %do not force writing.  Look to see if file exists.
+    case 'hedge'
+        ForceWrite=2;  %overwrite, but pause 5 seconds
+        
+end
+
 
 
 if exist(FileName,'file')==2
-    disp(['putting up a question dialog'])
-    ButtonName = questdlg([FileName ' exists.  Proceed?'], ...
-        'File appears to exist',...
-        'Overwrite', 'Try Again', 'Cancel', 'Cancel');
-    switch ButtonName,
-        case 'Overwrite',
+    if ForceWrite==0
+        disp(['putting up a question dialog'])
+        ButtonName = questdlg([FileName ' exists.  Proceed?'], ...
+            'File appears to exist',...
+            'Overwrite', 'Try Again', 'Cancel', 'Cancel');
+        switch ButtonName,
+            case 'Overwrite',
+                dos(['rm ' FileName]);
+            case 'Try Again',
+                WriteNetCDF(Long,Lat,Data,DataName,FileName, ...
+                    DataAttributeStructure,'query');
+                return
+            case 'Cancel'
+                return
+        end
+    else
+        if ForceWrite==1
             dos(['rm ' FileName]);
-        case 'Try Again',
-            WriteNetCDF(Long,Lat,Data,DataName,FileName, ...
-                DataAttributeStructure);
-            return
-        case 'Cancel'
-            return
+        elseif ForceWrite==2
+            disp(['About to overwrite ' FileName ])
+            pause(4)
+            dos(['rm ' FileName]);
+        else
+            error(['problem in ' mfilename])
+        end
     end
-    
-    
-
 end
 
 % determine data class of Data

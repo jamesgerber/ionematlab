@@ -67,9 +67,25 @@ switch lower(DataString)
   S=OpenNetCDF([IoneDataDir 'ISRICProcessed/BULK_LevelD5']);    
  
    case {'percapitagdp'}
-  S=OpenNetCDF([IoneDataDir 'misc/PerCapitaGDPv10.nc']);    
+       S=OpenNetCDF([IoneDataDir 'misc/PerCapitaGDPv10.nc']);
 
-  
+       
+    case {'hwsd_categoricalcsqi','categoricalcsqi','csqi'}
+        S=OpenNetCDF([IoneDataDir 'harmonisedsoils/HWSD_CategoricalCSQI.nc']);
+
+          case {'hwsd_categoricalcsqi_ar1'}
+        S=OpenNetCDF([IoneDataDir 'harmonisedsoils/HWSD_CategoricalCSQI_Ar1.nc']);
+
+                    case {'hwsd_categoricalcsqi_ar2'}
+        S=OpenNetCDF([IoneDataDir 'harmonisedsoils/HWSD_CategoricalCSQI_Ar2.nc']);
+
+case {'hwsd_categoricalcsqi_br1'}
+        S=OpenNetCDF([IoneDataDir 'harmonisedsoils/HWSD_CategoricalCSQI_br1.nc']);
+
+        case {'hwsd_categoricalcsqi_br2'}
+        S=OpenNetCDF([IoneDataDir 'harmonisedsoils/HWSD_CategoricalCSQI_br2.nc']);
+
+      
  otherwise
   error([' haven''t coded in ' DataString]);
 end

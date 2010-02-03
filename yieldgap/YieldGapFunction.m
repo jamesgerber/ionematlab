@@ -60,7 +60,7 @@ PredictYieldPlots=0; %regressiony things
 PointsPerBinPlotsFlag=0;
 PercentileForMaxYield=95;
 MakeBinWeightedYieldGapPlotFlag=0;
-MakeGlobalMapsSoil=1
+MakeGlobalMapsSoil=0;
 % Now override defaults with FlagStructure
 
 clear j
@@ -126,7 +126,7 @@ AreaFraction(AreaFraction>1e10)=NaN;
 
 Yield=CropData.Data(:,:,2);
 clear CropData
-cropname=strrep(cropname,' ','_');
+%cropname=strrep(cropname,' ','_');
 CultivatedArea=AreaFraction.*FiveMinGridCellAreas;
 Production=CultivatedArea.*Yield;
 
@@ -198,10 +198,14 @@ if QuietFlag==0
     disp(['Working through' int2str(length(ListOfBins)) ' bins.']);
 end
     
+
+LogicalArrayOfGridPointsInABin=logical(zeros(size(Yield)));
+
 for ibin=ListOfBins(:)';
  if QuietFlag==0
     disp(' ')
-    disp(['Calculating yield gap for bin # ' int2str(ibin)]);
+    disp(['Calculating yield gap for bin # ' int2str(ibin) ...
+        ' (' ClimateDefs{ibin} ')']);
  end
     %%% SECTION TO LIMIT BINS.  First we limit datapoints in the bin
     %%% (i.e. because of area of a particular datapoint is too small.)
@@ -220,17 +224,21 @@ for ibin=ListOfBins(:)';
     
     switch IndividualAreaMethod
         case 'none'
-            IndicesToKeep=find(BinFilter  );
+            IndicesToKeep=(BinFilter  );
         case 'fixed'
-            IndicesToKeep=find( BinFilter  & CultivatedArea >= areafilter);
+            IndicesToKeep=( BinFilter  & CultivatedArea >= areafilter);
         case 'AllBinFifthPercentile'
-            IndicesToKeep=find( BinFilter  & CultivatedArea >= FifthPercentileArea);
+            IndicesToKeep=( BinFilter  & CultivatedArea >= FifthPercentileArea);
         case 'NathansOmegaFueledBrainChild'
             
         otherwise
             error('don''t know how to filter area this way')
             
     end
+    
+    
+
+    
     
     
     % Now we have our binfilter (i.e. those points which are in the bin
@@ -243,6 +251,11 @@ for ibin=ListOfBins(:)';
     BinFilteredIndices=AllIndices(IndicesToKeep);
     LatCol=Lat2d(IndicesToKeep);
     LongCol=Long2d(IndicesToKeep);
+    
+    LogicalArrayOfGridPointsInABin=(LogicalArrayOfGridPointsInABin | ...
+        IndicesToKeep);
+
+    IndicesToKeep=find(IndicesToKeep);
     
     
     % make vectors of
@@ -397,6 +410,9 @@ for ibin=ListOfBins(:)';
     end
     
     
+    VectorOfPotentialYields(ibin)=Yield90;
+
+    
 end
 if OutputBinDQ==1
     fclose(fid);
@@ -469,11 +485,14 @@ if MakeBinWeightedYieldGapPlotFlag==1;
 end
 
 OutputStructure.Yield=Yield;
-OutputStructure.YieldGapArray=YieldGapArray;
-OutputStructure.potentialyield=potentialyield;
-OutputStructure.ClimateMask=ClimateMask;
+OutputStructure.YieldGapArray=single(YieldGapArray);
+OutputStructure.potentialyield=single(potentialyield);
+OutputStructure.ClimateMask=int8(ClimateMask);
 OutputStructure.ClimateMaskFile=ClimateMaskFile;
 OutputStructure.Area=CultivatedArea;
 OutputStructure.cropname=cropname;
 OutputStructure.ClimateDefs=ClimateDefs;
 OutputStructure.CDS=CDS;
+OutputStructure.VectorOfPotentialYields=VectorOfPotentialYields;
+OutputStructure.LogicalArrayOfGridPointsInABin=...
+    LogicalArrayOfGridPointsInABin;

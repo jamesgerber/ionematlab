@@ -164,7 +164,17 @@ if length(Row)==1
 end
 
 if length(Row)>1
-    error(['found two exact matches.  problem with input files.'])
+    switch(Input(1:min(6,end)))
+        case 'israel'
+            Row=Row(1);
+            return
+        case 'serbia'
+            Row=Row(2);
+            return
+        otherwise
+            
+            error(['found two exact matches.  problem with input files.'])
+    end
 end
 
 % now remove constraint of exactness

@@ -4,8 +4,22 @@ function [NeighborCodesSage,NeighborNamesSage] = NearestNeighbor(SageCountryCode
 %
 
 
-SAGE2=shaperead('./SageAdmin/disscntry');
+%% prepwork
 
+persistent  SAGE2
+
+if isempty(SAGE2)
+
+    SystemGlobals;
+    load([IonEDataDir 'AdminBoundary2005/Vector_ArcGISShapefile/gladmin_agg.mat')
+
+    for j=1:length(SAGE2);
+        S3{j}=SAGE2(j).CNTRY_NAME
+
+%SageCountryCode=StandardCountryNames(SageCountryCode,'sage3','sagecountry');
+
+
+j=findstr(
 
 for j=1:235
     

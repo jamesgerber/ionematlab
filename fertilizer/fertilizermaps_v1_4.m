@@ -12,7 +12,7 @@
 %    Added capability to scale this output to FAO total consumption.
 
 % Record the version number
-verno = '1.3';
+verno = '1_5';
 disp(['You are running version ' verno ' of fertilizermaps'])
 
 tic
@@ -100,39 +100,33 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
     % don't have data yet), Level 2 = Monfreda harvested area
     
     disp(['Initializing netcdf files for ' nutrient])
-    for c = 1:length(croplist);
-        % in this section, start going through croplist.  for each crop,
-        % make an array with -9 where there is crop area.  will also save 
-        % crop area in second level
-        
-        appratemap = nan(4320,2160);
-        cropname = croplist{c};
-        disp(['working on ' cropname]);
-        x = ([cropname '_5min.nc']);
-        path = [IoneDataDir 'Crops2000/crops/' x];
-        [DS] = OpenNetCDF(path);
-        tmp = DS.Data(:,:,1);
-        tmp(tmp > 100) = NaN;
-        ii = find(tmp < 2 & tmp > 0);
-        appratemap(ii) = -9; % put -9 where we know we have crop data ...
-        % but we do not know the application rate
-        tmp = DS.Data(:,:,1);
-        tmp(tmp > 2) = NaN;
-        appratemap(:,:,2) = tmp; % save M3 harvested area for this crop to
-        % the second level
-        appratemap=single(appratemap);
-        
-        clear DAS
-        titlestr = [cropname '_' nutrient '_apprate_ver' verno];
-        filestr = [cropname '_' nutrient '_apprate_ver' verno '.nc'];
-        unitstr = ['tons/ha ' nutrient ' applied to ' cropname ' area'];
-        DAS.units=unitstr;
-        DAS.title=titlestr;
-        DAS.missing_value=-9e10;
-        DAS.underscoreFillValue=-9e10;
-        %     WriteNetCDF(appratemap,titlestr,filestr,DAS,'Force');
-        DataStoreGateway(appratemap,titlestr,filestr,DAS,'Force');
-    end
+%     for c = 1:length(croplist);
+%         % in this section, start going through croplist.  for each crop,
+%         % make an array with -9 where there is crop area.  will also save
+%         % crop area in second level
+%         
+%         appratemap = nan(4320,2160);
+%         cropname = croplist{c};
+%         disp(['working on ' cropname]);
+%         x = ([cropname '_5min.nc']);
+%         path = [IoneDataDir 'Crops2000/crops/' x];
+%         [DS] = OpenNetCDF(path);
+%         tmp = DS.Data(:,:,1);
+%         tmp(tmp > 100) = NaN;
+%         ii = find(tmp < 2 & tmp > 0);
+%         appratemap(ii) = -9; % put -9 where we know we have crop data ...
+%         % but we do not know the application rate
+%         tmp = DS.Data(:,:,1);
+%         tmp(tmp > 2) = NaN;
+%         appratemap(:,:,2) = tmp; % save M3 harvested area for this crop to
+%         % the second level
+%         appratemap=single(appratemap);
+%         
+%         
+%         titlestr = [cropname '_' nutrient '_ver' verno];
+%         DataStoreGateway([titlestr '_rate'],appratemap(:,:,1));
+%         DataStoreGateway([titlestr '_area'],appratemap(:,:,2));
+%     end
     
     % Loop through data list
     
@@ -225,16 +219,16 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
                             disp(['Applying application rate data to ' ...
                                 'the ' cropname ' map']);
                             
-                            filestr = [cropname '_' nutrient '_apprate_ver' verno '.nc'];
-                            DS = OpenNetCDF(filestr);
-                            appratemap = DS.Data(:,:,1);
+                            filestr = [cropname '_' nutrient '_ver' verno '.nc'];
+                            titlestr = [cropname '_' nutrient '_ver' verno '.nc'];
+                            %%%%    DS = OpenNetCDF(filestr);
+                            appratemap=DataStoreGateway([titlestr '_rate']);
+                            
+                            %%%%    appratemap = DS.Data(:,:,1);
+                            
                             ii = find(appratemap > -10 & outline > 0);
                             appratemap(ii) = countrydata;
-                            DS.Data(:,:,1) = appratemap;
-                            % write the netcdf again
-                            titlestr = [cropname '_' nutrient '_apprate_ver' verno];
-                            filestr = [cropname '_' nutrient '_apprate_ver' verno '.nc'];
-                            WriteNetCDF(DS.Data,titlestr,filestr,DS,'Force');
+                            DataStoreGateway(appratemap,[titlestr '_rate']);
                         end
                         
                     case 4
@@ -275,7 +269,7 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
             uniquerates(tmp) = [];
             
             if uniquerates == -9;
-                 sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
+                sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
                 [NeighborCodesSage,NeighborNamesSage,AvgDistance] ...
                     = NearestNeighbor(countrycode);
                 
@@ -328,7 +322,7 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
                         
                         ii = find(ctry_appratemap == -9);
                         appratemap(ii) = avgneighbor;
-
+                        
                     end
                     
                 else
@@ -341,7 +335,7 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
         titlestr = [cropname '_' nutrient '_apprate_ver' verno];
         filestr = [cropname '_' nutrient '_apprate_ver' verno '.nc'];
         WriteNetCDF(DS.Data,titlestr,filestr,DS,'Force');
-
+        
     end
     
     % Match everything up with FAO consumption & save total nutrient

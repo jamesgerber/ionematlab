@@ -30,9 +30,20 @@ if isempty(InString);
     InString=['NoName' int2str(NoColumnNameCounter)];
 end
 
-if ~isempty(str2num(InString(1)))
-    % 1st character is a number.  Prepend a "Val"
-    InString=['Val' InString];
+
+tmp=str2num(InString(1));
+
+if ~isempty(tmp)
+   
+    
+    if isreal(tmp)
+        % 1st character is a number.  Prepend a "Val"
+         InString=['Val' InString]; 
+    else
+       % that first character is "i" or "j" ... that's not what we are
+        % worried about.  do nothing.
+    end
+    
 end
 
 x=InString;

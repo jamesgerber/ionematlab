@@ -73,20 +73,42 @@ for k=1:235
             X=C.X;
             Y=C.Y;
             
-            [xx,iax,ibx]=intersect(x,X);
-            [yy,iay,iby]=intersect(y,Y);
-            
-            jj=intersect(iax,iay);
-            kk=intersect(ibx,iby);
             
             
             
-            if length(jj) > 1 & length(kk) > 1
-                % now see if first value of kk
-                OverlapVals=zeros(size(x));
-                for m=1:length(kk)
-                    OverlapVals=OverlapVals |( X(kk(m))==x & Y(kk(m))==y);
-                end
+% % % %             [xx,iax,ibx]=intersect(x,X);
+% % % %             [yy,iay,iby]=intersect(y,Y);
+% % % %             
+% % % %             jj=intersect(iax,iay);
+% % % %             kk=intersect(ibx,iby);
+% % % %             
+            
+ kk=1:length(Y);
+ jj=1:length(y);
+ 
+ 
+ if length(kk) < length(jj)
+            
+     OverlapVals=zeros(size(x));
+     for m=1:length(kk)
+         
+         OverlapVals=OverlapVals |( closeto(X(kk(m)),x,.1) & ...
+             closeto(Y(kk(m)),y,.1));
+     end
+                
+ else
+     OverlapVals=zeros(size(X));
+     for m=1:length(jj)
+         
+         OverlapVals=OverlapVals |( closeto(X,x(jj(m)),.1) & ...
+             closeto(Y,y(jj(m)),.1));
+     end
+     
+     
+ end
+ 
+                
+                
                 N=length(find(OverlapVals));
                 if any(OverlapVals)
                     disp(['overlap between ' S.CNTRY_NAME ' and ' C.CNTRY_NAME ...
@@ -98,7 +120,7 @@ for k=1:235
                     
                     
                 end
-            end
+
             
             
         end

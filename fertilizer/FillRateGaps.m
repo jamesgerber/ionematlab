@@ -1,4 +1,4 @@
-
+load /Library/IonE/data/misc/SageNeighborhood_Ver10.mat 
     disp('Begin filling application rate gaps from neighboring countries')
     for c = 1:length(croplist)
         cropname = croplist{c};

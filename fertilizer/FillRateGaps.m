@@ -52,7 +52,7 @@ for c = 1:length(croplist)
     for k = 1:length(ctries_wodata);
         countrycode =  ctries_wodata{k}
         
-        [avgneighbor,Neighbors,appratemap]=GetApprateFromNeighbors(...
+        [appratemap]=GetApprateFromNeighbors(...
             countrycode,co_codes,co_outlines,co_numbers,ctries_withdata,appratemap);
         
 % % %         sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
@@ -176,8 +176,14 @@ for c = 1:length(croplist)
     titlestr = [cropname '_' nutrient '_ver' verno ];
     appratemap=DataStoreGateway([titlestr '_rate']);
     areamap=DataStoreGateway([titlestr '_area']);
+    ii = isnan(areamap);
+    areamap(ii) = 0; % not sure if we want to keep this going to zero ...
+    
     
     appratemap = appratemap .* scalingmap;
+    ii = isnan(appratemap);
+    appratemap(ii) = 0; % not sure if we want to keep this going to zero ...
+    
     
     Data=appratemap;
     Data(:,:,2)=areamap;

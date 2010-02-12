@@ -106,7 +106,7 @@ if CanMap==0
   UserDataStructure.ZoomLatDelta=(2.5);
   UserDataStructure.ScaleToDegrees=1;
 else
-  axesm('robinson')
+  hm=axesm('robinson')
   [lat2D,lon2D]=meshgrat(RedLat,RedLong);  
   h=surfm(lat2D,lon2D,double(RedData.'));
   set(gca,'Position',[0.1800    0.1100    0.6750    0.8150]);

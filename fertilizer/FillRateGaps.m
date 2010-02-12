@@ -52,29 +52,29 @@ for c = 1:length(croplist)
     for k = 1:length(ctries_wodata);
         countrycode =  ctries_wodata{k}
         
-        [avgneighbor,Neighbors]=GetApprateFromNeighbors(...
+        [avgneighbor,Neighbors,appratemap]=GetApprateFromNeighbors(...
             countrycode,co_codes,co_outlines,co_numbers,ctries_withdata,appratemap);
         
-        sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
-        
-        neighborlist = [];
-        for k = 1:length(Neighbors);
-            tmp = Neighbors{k};
-            neighborlist = [neighborlist '; ' tmp];
-        end
-        disp(['Filling in data for ' sagecountryname ' with' ...
-            ' average application rate data from ' neighborlist]);
-        
-        ii = strmatch(countrycode, co_codes);
-        tmp = co_numbers(ii);
-        ii = find(co_outlines == tmp);
-        outline = zeros(4320,2160);
-        outline(ii) = 1;
-        
-        ctry_appratemap=appratemap .* outline;
-        
-        ii = find(ctry_appratemap == -9);
-        appratemap(ii) = avgneighbor;
+% % %         sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
+% % %         
+% % %         neighborlist = [];
+% % %         for k = 1:length(Neighbors);
+% % %             tmp = Neighbors{k};
+% % %             neighborlist = [neighborlist '; ' tmp];
+% % %         end
+% % %         disp(['Filling in data for ' sagecountryname ' with' ...
+% % %             ' average application rate data from ' neighborlist]);
+% % %         
+% % %         ii = strmatch(countrycode, co_codes);
+% % %         tmp = co_numbers(ii);
+% % %         ii = find(co_outlines == tmp);
+% % %         outline = zeros(4320,2160);
+% % %         outline(ii) = 1;
+% % %         
+% % %         ctry_appratemap=appratemap .* outline;
+% % %         
+% % %         ii = find(ctry_appratemap == -9);
+% % %         appratemap(ii) = avgneighbor;
         
     end
     DataStoreGateway([titlestr '_rate'],appratemap);

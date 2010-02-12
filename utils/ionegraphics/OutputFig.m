@@ -46,6 +46,16 @@ else
 end
 
 
+
+% Is this figure made by IonESurf?  If so, expand the data axis
+fud=get(Hfig,'UserData');
+
+
+if isequal(get(Hfig,'tag'),'IonEFigure')
+    storepos=get(fud.DataAxisHandle,'position');
+    set(fud.DataAxisHandle,'position',[0.025 .2 0.95 .8])
+end
+
 figure(Hfig); %Make sure this figure is on top. 
 
 
@@ -78,9 +88,12 @@ set(gcf,'PaperPositionMode','auto');
 drawnow;
 
 disp(['Saving ' FileName '.png']);
-print('-dpng',FileName);
-%print('-djpeg90',[FileName]);
+print('-dpng','-r600',FileName);
 
 set(Hfig,'PaperPositionMode',ppm)
+
+if isequal(get(Hfig,'tag'),'IonEFigure')
+    set(fud.DataAxisHandle,'position',storepos)
+end
 
 showui;

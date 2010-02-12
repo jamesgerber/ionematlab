@@ -73,7 +73,11 @@ end
 
 SystemGlobals
 try
-   
+    
+  if isequal('SageCountryCode','CIV')
+      disp(['need to fix cote d''ivoire'])
+      
+  end
     persistent A
     if isempty(A)
         A=load([IoneDataDir '/misc/SageNeighborhood_Ver10']);
@@ -183,4 +187,19 @@ catch
     NeighborNamesSage=ListOfNeighbors;
     DistanceProxy=AvgDistance;
 end
+
+%  condition data
+% RemoveSPF  (Paracel Islands)
+
+ii=strmatch('XPF',NeighborCodesSage);
+
+
+if ~isempty(ii);
+    jj=1:length(NeighborCodesSage);
+    kk=setdiff(jj,ii);
+    NeighborCodesSage=NeighborCodesSage(kk);
+    NeighborNamesSage=NeighborNamesSage(kk);
+    DistanceProxy=DistanceProxy(kk);
+end
+
 

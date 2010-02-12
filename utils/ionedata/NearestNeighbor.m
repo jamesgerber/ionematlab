@@ -17,6 +17,11 @@ function [NeighborCodesSage,NeighborNamesSage,DistanceProxy] ...
 %  [NeighborCodesSage,NeighborNamesSage,AvgDistance] ...
 %    =NearestNeighbor('MEX',2)
 %
+%
+%   % if the list S3 has 235 sage codes ...
+%   for j=1:S3;
+%[NeighborCodesSage{j},NeighborNamesSage{j},AvgDistance{j}]  =
+%NearestNeighbor(S3{j});
 %  See Also StandardCountryNames
 
 %% prepwork

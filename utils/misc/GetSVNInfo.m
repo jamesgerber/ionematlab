@@ -24,7 +24,7 @@ function [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo;
 [ST,I]=dbstack('-completenames');
 if length(ST)>0
 
-    [s,d]=unix(['/opt/subversion/bin/svn info ' ST(end).file]);
+    [s,d]=unix(['/usr/bin/svn info ' ST(end).file]);
     AllInfo=d;
     
     ii= find(d==sprintf('\n'));

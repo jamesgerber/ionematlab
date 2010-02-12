@@ -1,4 +1,4 @@
-function [avgneighbor,Neighbors,appratemap]=GetApprateFromNeighbors(...
+function [appratemap]=GetApprateFromNeighbors(...
     countrycode,co_codes,co_outlines,co_numbers,ctries_withdata,appratemap)
 
 % function [avgneighbor,neighbors]=GetApprateFromNeighbors(...
@@ -67,7 +67,7 @@ if length(Neighbors)>0
         ii = find(co_outlines == tmp);
         outline = zeros(4320,2160);
         outline(ii) = 1;
-        
+        ctry_appratemap = appratemap .* outline;
         ii = find(ctry_appratemap == -9);
         appratemap(ii) = avgneighbor;
         
@@ -81,7 +81,7 @@ if length(Neighbors)>0
         ii = find(co_outlines == tmp);
         outline = zeros(4320,2160);
         outline(ii) = 1;
-        
+        ctry_appratemap = appratemap .* outline;
         ii = find(ctry_appratemap == -9);
         appratemap(ii) = 0;
         
@@ -92,7 +92,12 @@ else % this shouldn't happen
     
     disp(['WARNING: No neighbors available for ' sagecountryname ...
         '; filling in application rate data with zeros']);
-    
+    ii = strmatch(countrycode, co_codes);
+        tmp = co_numbers(ii);
+        ii = find(co_outlines == tmp);
+        outline = zeros(4320,2160);
+        outline(ii) = 1;
+        ctry_appratemap = appratemap .* outline;
     ii = find(ctry_appratemap == -9);
     appratemap(ii) = 0;
 end

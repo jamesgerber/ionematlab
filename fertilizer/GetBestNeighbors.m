@@ -10,10 +10,19 @@ function Neighbors=GetBestNeighbors(CountryCode,RecursionLevel,GoodCountries);
      GoodCountries=[];
  end
  
-  
+ 
  
  [NeighborCodesSage,NeighborNamesSage,AvgDistance] ...
-                    = NearestNeighbor(CountryCode,RecursionLevel);
+     = NearestNeighbor(CountryCode,RecursionLevel);
+ 
+ 
+ if isempty(NeighborCodesSage);
+     Neighbors='';
+     return
+ end
+ 
+ 
+ 
  FirstLevelNeighborCodes=NeighborCodesSage;
  ISO3Neighbors=StandardCountryNames(NeighborCodesSage,'sage3','ISO3');
  ISO3Self=StandardCountryNames(CountryCode,'sage3','ISO3'); 

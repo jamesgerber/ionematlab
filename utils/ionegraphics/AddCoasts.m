@@ -29,7 +29,7 @@ if CanMap==0
     hp=plot(long,lat,'k')
     hp=plot(long+.01,lat+.01,'w')
 else  
-    hp=plotm(lat,long,'m');
+    hp=plotm(lat,long,'k');
 end
 set(gcf,'renderer','zbuffer');
 

@@ -168,7 +168,7 @@ if length(Row)>1
         case 'israel'
             Row=Row(1);
             return
-        case 'serbia'
+        case {'SRM','serbia'}
             Row=Row(2);
             return
         otherwise

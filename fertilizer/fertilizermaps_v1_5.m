@@ -48,6 +48,12 @@ cropinput = ReadGenericCSV('proxylist.csv');
 datalist = cropinput.datalist;
 proxylist = cropinput.proxylist;
 faoinput = ReadGenericCSV('FAO_0307avg.csv');
+
+fao_ctries = unique(faoinput.ctry_codes);
+fao_ctries = fao_ctries(2:length(fao_ctries)); % NOTE: DOING THIS B/C
+
+
+
 disp('Reading input netCDF files')
 SystemGlobals;
 path = [IoneDataDir 'misc/area_ha_5min.nc'];
@@ -149,7 +155,7 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
     
     % Loop through data list
     
-    for datano = 89:length(datalist)
+    for datano = 1:length(datalist)
         dataentry = datalist{datano};
         
         disp(['Working on ' dataentry ' ' nutrient ' data'])
@@ -180,13 +186,13 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
         end
         
         % cycle through the countries
-        for k = 1:length(countrycodes)
-            countrycode = countrycodes{k};
+        for k = 1:length(fao_ctries)
+            countrycode = fao_ctries{k};
             % Find the rows with data for this country:
-  %%%BAD%%%          ctryrows = strmatch(countrycode, inputfile.ctry_code);
+            %%%BAD%%%          ctryrows = strmatch(countrycode, inputfile.ctry_code);
  
-  ctryrows=htable.get(countrycode);
-  % Create a list for ctryrows minus the data type row, country
+            ctryrows=htable.get(countrycode);
+            % Create a list for ctryrows minus the data type row, country
             % data row, and data source row
             subnationalrows = ctryrows;
             subnationalrows([1, 2, 3]) = [];

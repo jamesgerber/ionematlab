@@ -10,9 +10,14 @@ load /Library/IonE/data/misc/SageNeighborhood_Ver10.mat
         ii = find(appratemap < -100);
         appratemap(ii) = 0;
         
-        for k = 1:length(countrycodes)
-            k
-            countrycode = countrycodes{k};
+        ctries_wodata = {};
+        ctries_withdata = {};
+        
+        % loop through all ctries to find out if they are missing data (-9)
+        
+        for k = 1:length(fao_ctries)
+            
+            countrycode = fao_ctries{k};
             
             ii = strmatch(countrycode, co_codes);
             tmp = co_numbers(ii);
@@ -26,37 +31,46 @@ load /Library/IonE/data/misc/SageNeighborhood_Ver10.mat
             uniquerates = unique(ratetemp);
             tmp = find(uniquerates == 0);
             uniquerates(tmp) = [];
-            
+                        
             if uniquerates == -9;
+                % it is ... let's add it to missing data list
+                ctries_wodata{end+1} = countrycode;
+            else
+                ctries_withdata{end+1} = countrycode;
+            end
+        end
+        
+        % now we know who is missing data ... need to fill in gaps from
+        % neighbors
+        
+        for k = 1:length(ctries_wodata);
+            countrycode =  ctries_wodata{k}
+            
+            Apprate=GetApprateFromNeighbors(...
+                countrycode,co_codes,co_outlines,co_numbers,ctries_withdata);
+       
+            
+            
+            
+            
+            
+            
+        end
+        
+            
+            
+               
+               
+               
                 sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
-                [NeighborCodesSage,NeighborNamesSage,AvgDistance] ...
-                    = NearestNeighbor(countrycode);
+               
                 
-                if ~isempty(NeighborCodesSage) % if there are neighbors
-                    ratelist = [];
+                if length(NeighborCodesSage)>0% there are neighbors
                     
-                    for m = 1:length(NeighborCodesSage)
-                        m
-                        neighborcode = NeighborCodesSage{m}
-                        
-                        ii = strmatch(neighborcode, co_codes);
-                        tmp = co_numbers(ii);
-                        ii = find(co_outlines == tmp);
-                        outline = zeros(4320,2160);
-                        outline(ii) = 1;
-                        
-                        ctry_appratemap = appratemap .* outline;
-                        ii = find(isfinite(ctry_appratemap));
-                        tmp = ctry_appratemap(ii);
-                        
-                        ii = find(tmp == -9);
-                        tmp(ii) = [];
-                        ii = find(tmp == 0);
-                        tmp(ii) = [];
-                        
-                        ratelist = [ratelist tmp];
-                        
-                    end
+                   
+                    
+                    
+                  
                     
                     if ~isempty(ratelist)
                         

@@ -1,4 +1,4 @@
-load /Library/IonE/data/misc/SageNeighborhood_Ver10.mat
+load ([IoneDataDir 'misc/SageNeighborhood_Ver10.mat'])
 disp('Begin filling application rate gaps from neighboring countries')
 for c = 1:length(croplist)
     cropname = croplist{c};
@@ -11,72 +11,77 @@ for c = 1:length(croplist)
     
     ctries_wodata = {};
     ctries_withdata = {};
+    ctries_nocrop = {};
     
     % loop through all ctries to find out if they are missing data (-9)
     
     for k = 1:length(fao_ctries)
-        if ~isempty(NeighborCodesSage) % if there are neighbors
-            ratelist = [];
-            
-            countrycode = fao_ctries{k};
-            
-            ii = strmatch(countrycode, co_codes);
-            tmp = co_numbers(ii);
-            ii = find(co_outlines == tmp);
-            outline = zeros(4320,2160);
-            outline(ii) = 1;
-            
-            ratetemp=appratemap .* outline;
-            ratetemp=ratetemp(CropMaskIndices);
-            ratetemp=ratetemp(~isnan(ratetemp));
-            uniquerates = unique(ratetemp);
-            tmp = find(uniquerates == 0);
-            uniquerates(tmp) = [];
-            
-            if uniquerates == -9;
-                % it is ... let's add it to missing data list
-                ctries_wodata{end+1} = countrycode;
+        
+        ratelist = [];
+        
+        countrycode = fao_ctries{k};
+        
+        ii = strmatch(countrycode, co_codes);
+        tmp = co_numbers(ii);
+        ii = find(co_outlines == tmp);
+        outline = zeros(4320,2160);
+        outline(ii) = 1;
+        
+        ratetemp=appratemap .* outline;
+        ratetemp=ratetemp(CropMaskIndices);
+        ratetemp=ratetemp(~isnan(ratetemp));
+        uniquerates = unique(ratetemp);
+        tmp = find(uniquerates == 0);
+        uniquerates(tmp) = [];
+        
+        if uniquerates == -9;
+            % it is ... let's add it to missing data list
+            ctries_wodata{end+1} = countrycode;
+        else
+            if isempty(uniquerates)
+                ctries_nocrop{end+1} = countrycode;
             else
                 ctries_withdata{end+1} = countrycode;
             end
         end
-        
-        % now we know who is missing data ... need to fill in gaps from
-        % neighbors
-        
-        for k = 1:length(ctries_wodata);
-            countrycode =  ctries_wodata{k}
-            
-            [avgneighbor,Neighbors]=GetApprateFromNeighbors(...
-                countrycode,co_codes,co_outlines,co_numbers,ctries_withdata);
-            
-            sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
-            
-            neighborlist = [];
-            for k = 1:length(Neighbors);
-                tmp = Neighbors{k};
-                neighborlist = [neighborlist '; ' tmp];
-            end
-            disp(['Filling in data for ' sagecountryname ' with' ...
-                ' average application rate data from ' neighborlist]);
-            
-            ii = strmatch(countrycode, co_codes);
-            tmp = co_numbers(ii);
-            ii = find(co_outlines == tmp);
-            outline = zeros(4320,2160);
-            outline(ii) = 1;
-            
-            ctry_appratemap=appratemap .* outline;
-            
-            ii = find(ctry_appratemap == -9);
-            appratemap(ii) = avgneighbor;
-            
-            
-        end
     end
     
+    % now we know who is missing data ... need to fill in gaps from
+    % neighbors
+    
+    for k = 1:length(ctries_wodata);
+        countrycode =  ctries_wodata{k}
+        
+        [avgneighbor,Neighbors]=GetApprateFromNeighbors(...
+            countrycode,co_codes,co_outlines,co_numbers,ctries_withdata,appratemap);
+        
+        sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
+        
+        neighborlist = [];
+        for k = 1:length(Neighbors);
+            tmp = Neighbors{k};
+            neighborlist = [neighborlist '; ' tmp];
+        end
+        disp(['Filling in data for ' sagecountryname ' with' ...
+            ' average application rate data from ' neighborlist]);
+        
+        ii = strmatch(countrycode, co_codes);
+        tmp = co_numbers(ii);
+        ii = find(co_outlines == tmp);
+        outline = zeros(4320,2160);
+        outline(ii) = 1;
+        
+        ctry_appratemap=appratemap .* outline;
+        
+        ii = find(ctry_appratemap == -9);
+        appratemap(ii) = avgneighbor;
+        
+    end
     DataStoreGateway([titlestr '_rate'],appratemap);
 end
+
+
+
 
 % Match everything up with FAO consumption & save total nutrient
 % application

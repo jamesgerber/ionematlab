@@ -1,4 +1,4 @@
-load ([IoneDataDir 'misc/SageNeighborhood_Ver10.mat'])
+%load ([IoneDataDir 'misc/SageNeighborhood_Ver10.mat'])
 disp('Begin filling application rate gaps from neighboring countries')
 for c = 1:length(croplist)
     cropname = croplist{c};
@@ -50,9 +50,9 @@ for c = 1:length(croplist)
     % neighbors
     
     for k = 1:length(ctries_wodata);
-        countrycode =  ctries_wodata{k}
+        countrycode =  ctries_wodata{k};
         
-        [appratemap]=GetApprateFromNeighbors(...
+        [appratemap]=GetApprateFromSimilar(...
             countrycode,co_codes,co_outlines,co_numbers,ctries_withdata,appratemap);
         
 % % %         sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')

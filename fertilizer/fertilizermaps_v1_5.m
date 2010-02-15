@@ -1,4 +1,4 @@
-% fertilizermaps_v1_3.m
+% fertilizermaps_v1_5.m
 %
 % A program to make maps of subnational fertilizer application by crop and
 % by nutrient. Written by Nathan Mueller.
@@ -21,7 +21,7 @@ disp('Reading input CSV files')
 % ReadGenericCSV.m converts a CSV file into a MATLAB structure where each
 % column of the CSV file becomes an element of the structure.
 %load fertinput;
-% % % % inputfile = ReadGenericCSV('subnationalfert2.csv');
+inputfile = ReadGenericCSV('subnationalfert2.csv');
 
 
 
@@ -36,7 +36,7 @@ if ~exist('htable')
     htable = java.util.Properties;
     
     for j=1:length(countrycodes);
-        ii=strmatch(countrycodes{j},inputfile.ctry_code)
+        ii=strmatch(countrycodes{j},inputfile.ctry_code);
         htable.put(countrycodes{j},ii);
     end
 end

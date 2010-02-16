@@ -45,6 +45,7 @@ function varargout=StandardCountryNames(Input,NameForm,OutputForm);
 
 fid=fopen('SCN_GADMandSAGEV10.txt');
 C=textscan(fid,'%s%s%s%s%s%s%s%s%s','Delimiter',tab,'HeaderLines',2);
+fclose(fid);
 SageCountry=C{1};
 SageRegion=C{2};
 SageContinent=C{3};

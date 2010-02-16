@@ -16,15 +16,30 @@ end
 
 disp(['Trying to fill in data for ' sagecountryname]);
 
-str = pwd;
-cd ../;
-load WBIinfo;
-cd(str);
+persistent WBIhtable
+
+
+if isempty(WBIhtable)
+    str = pwd;
+    cd ../;
+    load WBIinfo;
+    cd(str);
+    
+    WBIhtable = java.util.Properties;
+    for j=1:length(WBI_Clist);
+        WBIhtable.put(WBI_Clist{j},WBI_Ilist{j});
+    end
+end
+
+
+
 
 % get the income level for this country
-ii = strmatch(countrycode,WBI_Clist);
-incomelevel = WBI_Ilist(ii);
-incomelevel = incomelevel{1};
+% % ii = strmatch(countrycode,WBI_Clist);
+% % incomelevel = WBI_Ilist(ii);
+% % incomelevel = incomelevel{1};
+
+incomelevel = WBIhtable.get(countrycode)
 
 ratelist = [];
 similar = {};
@@ -33,8 +48,9 @@ similar = {};
 
 for c = 1:length(ctries_withdata)
     datactry = ctries_withdata{c};
-    ii = strmatch(datactry,WBI_Clist);
-    tmp = WBI_Ilist(ii);
+    tmp = WBIhtable.get(datactry);
+% %     ii = strmatch(datactry,WBI_Clist);
+% %     tmp = WBI_Ilist(ii);
     
     % if the income levels match, add to ratelist (and similar list)
     tmp2 = strmatch(incomelevel,tmp);

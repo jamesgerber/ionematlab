@@ -126,8 +126,10 @@ shading flat
 ht=title(TitleStr);
 set(ht,'interpreter','none');
 hcb=colorbar('peer',UserDataStructure.DataAxisHandle,'SouthOutside');
-hy=get(hcb,'YLabel');
+hy=get(hcb,'XLabel');
 set(hy,'String',Units);
+set(hy,'FontWeight','Bold')
+UserDataStructure.ColorbarStringHandle=hy;
 
 
 % now make graphics

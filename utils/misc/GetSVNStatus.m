@@ -24,6 +24,7 @@ if s==1
 end
 
 if isempty(w)
+    disp('');
     disp(['Local changes are checked into subversion repository'])
     disp(['WARNING!  SERVER MAY HAVE NEWER FILES AND YOU NEED TO UPDATE!'])
     SVNStatus='';

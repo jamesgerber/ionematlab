@@ -1,111 +1,113 @@
-%load ([IoneDataDir 'misc/SageNeighborhood_Ver10.mat'])
-disp('Begin filling application rate gaps from neighboring countries')
-for c = 1:length(croplist)
-    cropname = croplist{c};
-    disp(['Filling in data for ' cropname]);
-    titlestr = [cropname '_' nutrient '_ver' verno ];
-    appratemap=DataStoreGateway([titlestr '_rate']);
-    
-    ii = find(appratemap < -100);
-    appratemap(ii) = 0;
-    
-    ctries_wodata = {};
-    ctries_withdata = {};
-    ctries_nocrop = {};
-    
-    % loop through all ctries to find out if they are missing data (-9)
-    
-    for k = 1:length(fao_ctries)
-        
-        ratelist = [];
-        
-        countrycode = fao_ctries{k};
-        
-        ii = strmatch(countrycode, co_codes);
-        tmp = co_numbers(ii);
-        ii = find(co_outlines == tmp);
-        outline = zeros(4320,2160);
-        outline(ii) = 1;
-        
-        ratetemp=appratemap .* outline;
-        ratetemp=ratetemp(CropMaskIndices);
-        ratetemp=ratetemp(~isnan(ratetemp));
-        uniquerates = unique(ratetemp);
-        tmp = find(uniquerates == 0);
-        uniquerates(tmp) = [];
-        
-        if uniquerates == -9;
-            % it is ... let's add it to missing data list
-            ctries_wodata{end+1} = countrycode;
-        else
-            if isempty(uniquerates)
-                ctries_nocrop{end+1} = countrycode;
-            else
-                ctries_withdata{end+1} = countrycode;
-            end
-        end
-    end
-    
-    % now we know who is missing data ... need to fill in gaps from
-    % neighbors
-    
-    for k = 1:length(ctries_wodata);
-        countrycode =  ctries_wodata{k};
-        
-        [appratemap]=GetApprateFromSimilar(...
-            countrycode,co_codes,co_outlines,co_numbers,ctries_withdata,appratemap);
-        
-% % %         sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
-% % %         
-% % %         neighborlist = [];
-% % %         for k = 1:length(Neighbors);
-% % %             tmp = Neighbors{k};
-% % %             neighborlist = [neighborlist '; ' tmp];
-% % %         end
-% % %         disp(['Filling in data for ' sagecountryname ' with' ...
-% % %             ' average application rate data from ' neighborlist]);
-% % %         
-% % %         ii = strmatch(countrycode, co_codes);
-% % %         tmp = co_numbers(ii);
-% % %         ii = find(co_outlines == tmp);
-% % %         outline = zeros(4320,2160);
-% % %         outline(ii) = 1;
-% % %         
-% % %         ctry_appratemap=appratemap .* outline;
-% % %         
-% % %         ii = find(ctry_appratemap == -9);
-% % %         appratemap(ii) = avgneighbor;
-        
-    end
-    DataStoreGateway([titlestr '_rate'],appratemap);
-end
+% % % % %load ([IoneDataDir 'misc/SageNeighborhood_Ver10.mat'])
+% % % % disp('Begin filling application rate gaps from neighboring countries')
+% % % % for c = 129:length(croplist)
+% % % %     cropname = croplist{c};
+% % % %     disp(['Filling in data for ' cropname]);
+% % % %     titlestr = [cropname '_' nutrient '_ver' verno ];
+% % % %     appratemap=DataStoreGateway([titlestr '_rate']);
+% % % %     
+% % % %     ii = find(appratemap < -100);
+% % % %     appratemap(ii) = 0;
+% % % %     
+% % % %     ctries_wodata = {};
+% % % %     ctries_withdata = {};
+% % % %     ctries_nocrop = {};
+% % % %     
+% % % %     % loop through all ctries to find out if they are missing data (-9)
+% % % %     
+% % % %     for k = 1:length(fao_ctries)
+% % % %         
+% % % %         ratelist = [];
+% % % %         
+% % % %         countrycode = fao_ctries{k};
+% % % %         
+% % % %         ii = strmatch(countrycode, co_codes);
+% % % %         tmp = co_numbers(ii);
+% % % %         ii = find(co_outlines == tmp);
+% % % %         outline = zeros(4320,2160);
+% % % %         outline(ii) = 1;
+% % % %         
+% % % %         ratetemp=appratemap .* outline;
+% % % %         ratetemp=ratetemp(CropMaskIndices);
+% % % %         ratetemp=ratetemp(~isnan(ratetemp));
+% % % %         uniquerates = unique(ratetemp);
+% % % %         tmp = find(uniquerates == 0);
+% % % %         uniquerates(tmp) = [];
+% % % %         
+% % % %         if uniquerates == -9;
+% % % %             % it is ... let's add it to missing data list
+% % % %             ctries_wodata{end+1} = countrycode;
+% % % %         else
+% % % %             if isempty(uniquerates)
+% % % %                 ctries_nocrop{end+1} = countrycode;
+% % % %             else
+% % % %                 ctries_withdata{end+1} = countrycode;
+% % % %             end
+% % % %         end
+% % % %     end
+% % % %     
+% % % %     % now we know who is missing data ... need to fill in gaps from
+% % % %     % neighbors
+% % % %     
+% % % %     for k = 1:length(ctries_wodata);
+% % % %         countrycode =  ctries_wodata{k};
+% % % %         
+% % % %         [appratemap]=GetApprateFromSimilar(...
+% % % %             countrycode,co_codes,co_outlines,co_numbers,ctries_withdata,appratemap);
+% % % %         
+% % % % % % %         sagecountryname=StandardCountryNames(countrycode,'sage3','sagecountry')
+% % % % % % %         
+% % % % % % %         neighborlist = [];
+% % % % % % %         for k = 1:length(Neighbors);
+% % % % % % %             tmp = Neighbors{k};
+% % % % % % %             neighborlist = [neighborlist '; ' tmp];
+% % % % % % %         end
+% % % % % % %         disp(['Filling in data for ' sagecountryname ' with' ...
+% % % % % % %             ' average application rate data from ' neighborlist]);
+% % % % % % %         
+% % % % % % %         ii = strmatch(countrycode, co_codes);
+% % % % % % %         tmp = co_numbers(ii);
+% % % % % % %         ii = find(co_outlines == tmp);
+% % % % % % %         outline = zeros(4320,2160);
+% % % % % % %         outline(ii) = 1;
+% % % % % % %         
+% % % % % % %         ctry_appratemap=appratemap .* outline;
+% % % % % % %         
+% % % % % % %         ii = find(ctry_appratemap == -9);
+% % % % % % %         appratemap(ii) = avgneighbor;
+% % % %         
+% % % %     end
+% % % %     DataStoreGateway([titlestr '_rate'],appratemap);
+% % % % end
+% % % % 
+% % % % 
+% % % % 
+% % % % 
+% % % % % Match everything up with FAO consumption & save total nutrient
+% % % % % application
+% % % % 
+% % % % disp('Match everything up with FAO consumption');
+% % % % scalingmap = ones(4320,2160);
+% % % % 
+% % % % fao_ctries = unique(faoinput.ctry_codes);
+% % % % fao_ctries = fao_ctries(2:length(fao_ctries)); % NOTE: DOING THIS B/C
+% % % % % MATLAB PUTS A WEIRD '' ENTRY IN THE FAO_CTRIES LIST WHEN IT IS READ
+% % % % % IN. NOT SURE HOW ELSE TO FIX THIS.
 
 
-
-
-% Match everything up with FAO consumption & save total nutrient
-% application
-
-disp('Match everything up with FAO consumption');
-scalingmap = ones(4320,2160);
-
-fao_ctries = unique(faoinput.ctry_codes);
-fao_ctries = fao_ctries(2:length(fao_ctries)); % NOTE: DOING THIS B/C
-% MATLAB PUTS A WEIRD '' ENTRY IN THE FAO_CTRIES LIST WHEN IT IS READ
-% IN. NOT SURE HOW ELSE TO FIX THIS.
-
-for k = 1:length(fao_ctries)
+%%%%%%%%%%%%NEED TO CHANGE BACK!!!!!!!!!!!!!!!!
+for k = 57:length(fao_ctries)
     countrycode = fao_ctries{k};
     
     % Find the rows with data for this country:
     ctryrows = strmatch(countrycode, faoinput.ctry_codes);
+    country = faoinput.countries{ctryrows(1)};
     % Find the row with the nutrient of interest:
     tmp = strmatch(nutrient, faoinput.nutrient(ctryrows));
+    if tmp > 0
     datarow = ctryrows(tmp);
-    country = faoinput.countries{datarow};
     disp(['Calculating the total ' nutrient  ...
         ' consumption for ' country]);
-    
     faoavg = faoinput.avg_0307(datarow);
     
     % Now build an outline for this country
@@ -151,6 +153,9 @@ for k = 1:length(fao_ctries)
         scalar = str2double(faoavg) ./ country_consumption;
         scalingmap(ii) = scalar;
     end
+    else
+        disp(['No ' nutrient ' entry for ' country]);
+    end
     
 end
 
@@ -183,7 +188,7 @@ for c = 1:length(croplist)
     appratemap = appratemap .* scalingmap;
     ii = isnan(appratemap);
     appratemap(ii) = 0; % not sure if we want to keep this going to zero ...
-    
+    DataStoreGateway([titlestr '_rate'],appratemap);
     
     Data=appratemap;
     Data(:,:,2)=areamap;
@@ -204,7 +209,7 @@ for c = 1:length(croplist)
     
     cd('netcdfs');
     
-    WriteNetCDF(DS.Data,titlestr,filestr,DAS,'Force');
+    WriteNetCDF(Data,titlestr,filestr,DAS,'Force');
     
     % go back to 'regular' output folder
     cd ../;
@@ -254,6 +259,6 @@ WriteNetCDF(totalnutrientmap,titlestr,filestr,DAS);
 cd ../;
 
 % save the outputstructure for this nutrient
-eval(['save ' nutrient '_outputdata = outputstructure;']);
+eval(['save ' nutrient '_outputdata outputstructure;']);
 
 

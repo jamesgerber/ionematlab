@@ -95,8 +95,7 @@
 % % % % % IN. NOT SURE HOW ELSE TO FIX THIS.
 
 
-%%%%%%%%%%%%NEED TO CHANGE BACK!!!!!!!!!!!!!!!!
-for k = 57:length(fao_ctries)
+for k = 1:length(fao_ctries)
     countrycode = fao_ctries{k};
     
     % Find the rows with data for this country:
@@ -141,7 +140,7 @@ for k = 57:length(fao_ctries)
         jj = find(isnan(areamap)); % put all no data and -9 values to zero
         areamap(jj) = 0;
         
-        crop_consmap = (areamap.*appratemap.*outline);
+        crop_consmap = (areamap.*gridcellareas.*appratemap.*outline);
         crop_cons = sum(sum(crop_consmap));
         
         country_consumption = country_consumption + crop_cons;
@@ -150,7 +149,8 @@ for k = 57:length(fao_ctries)
     % make sure we aren't dividing by zero ...
     if country_consumption == 0;
     else
-        scalar = str2double(faoavg) ./ country_consumption;
+        tmp = str2double(faoavg) * 1000 % put FAO data in terms of kg        
+        scalar = tmp ./ country_consumption;
         scalingmap(ii) = scalar;
     end
     else
@@ -174,8 +174,7 @@ mkdir('netcdfs');
 for c = 1:length(croplist)
     cropname = croplist{c};
     disp(['Scaling ' cropname ' data to ensure FAO consistency']);
-    
-    
+        
     cropname = croplist{c};
     
     titlestr = [cropname '_' nutrient '_ver' verno ];
@@ -184,35 +183,34 @@ for c = 1:length(croplist)
     ii = isnan(areamap);
     areamap(ii) = 0; % not sure if we want to keep this going to zero ...
     
-    
     appratemap = appratemap .* scalingmap;
     ii = isnan(appratemap);
     appratemap(ii) = 0; % not sure if we want to keep this going to zero ...
-    DataStoreGateway([titlestr '_rate'],appratemap);
-    
-    Data=appratemap;
-    Data(:,:,2)=areamap;
-    Data(:,:,3) = scalingmap; % save the scaling map to level 3 for
-    % reference purposes
-    titlestr = [cropname '_' nutrient '_apprate_ver' verno];
-    filestr = [cropname '_' nutrient '_apprate_ver' verno '.nc'];
-    clear DAS
-    titlestr = [nutrient '_apprate_ver' verno];
-    filestr = [nutrient '_apprate_ver' verno '.nc'];
-    unitstr = ['tons/ha ' nutrient];
-    DAS.units=unitstr;
-    DAS.title=titlestr;
-    DAS.missing_value=-9e10;
-    DAS.underscoreFillValue=-9e10;
-    
-    % go to netcdf output folder and write data
-    
-    cd('netcdfs');
-    
-    WriteNetCDF(Data,titlestr,filestr,DAS,'Force');
-    
-    % go back to 'regular' output folder
-    cd ../;
+    DataStoreGateway([titlestr '_scaledrate'],appratemap);
+% % %     
+% % %     Data=appratemap;
+% % %     Data(:,:,2)=areamap;
+% % %     Data(:,:,3) = scalingmap; % save the scaling map to level 3 for
+% % %     % reference purposes
+% % %     titlestr = [cropname '_' nutrient '_apprate_ver' verno];
+% % %     filestr = [cropname '_' nutrient '_apprate_ver' verno '.nc'];
+% % %     clear DAS
+% % %     titlestr = [nutrient '_apprate_ver' verno];
+% % %     filestr = [nutrient '_apprate_ver' verno '.nc'];
+% % %     unitstr = ['tons/ha ' nutrient];
+% % %     DAS.units=unitstr;
+% % %     DAS.title=titlestr;
+% % %     DAS.missing_value=-9e10;
+% % %     DAS.underscoreFillValue=-9e10;
+% % %     
+% % %     % go to netcdf output folder and write data
+% % %     
+% % %     cd('netcdfs');
+% % %     
+% % %     WriteNetCDF(Data,titlestr,filestr,DAS,'Force');
+% % %     
+% % %     % go back to 'regular' output folder
+% % %     cd ../;
     
     % find total nutrient application
     

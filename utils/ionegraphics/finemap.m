@@ -1,4 +1,4 @@
-function varargout=finemap(cmap,lowercolor);
+function varargout=finemap(cmap,lowercolor,uppercolor);
 % FINEMAP - interpolate the colormap finely and put blue on the bottom
 %
 %  Syntax
@@ -6,12 +6,24 @@ function varargout=finemap(cmap,lowercolor);
 %
 %    finemap(colormap,lowercolor);
 %
-%    colormap may be a colormap, or a text string
+%    colormap may be a colormap, or a text string, or '' for the default
 %
-%    lowercolor may be '' (empty) or 'aqua'
+%    lowercolor may be '' (empty) or 'aqua' or 'robin'
 %
 %    'DesertToGreen2'
 %    'GreenToDesert2'
+%    Also some colormpas that Jon wrote:
+%    jfblue-red
+%    jfbrown-green.tiff
+%    jfcayenne
+%    jfclover
+%    jfmaroon
+%    jfmocha-ocean
+%    jfmocha
+%    jfmoss
+%    jfocean
+%    jfplum
+%    jftangerine
 %    colormap may be one of the built-in matlab colormaps (see below)
 %
 %  
@@ -34,32 +46,56 @@ function varargout=finemap(cmap,lowercolor);
 %    winter     - Shades of blue and green color map.
 %    summer     - Shades of green and yellow color map.
 
-if nargin==0
+if nargin==0 | isempty(cmap)
     cmap='DesertToGreen2';
 end
 
 if nargin<2
-    lowercolor='aqua';
+    lowercolor='robin';
 end
+
+if nargin~=3
+    uppercolor='default';
+end
+
 
 if ~isnumeric(cmap)
     cmap=StringToMap(cmap);
 end
 
 switch lowercolor
-    case ''
+    case {'','default'}
         lc=[];
     case 'aqua'
         lc=[    0.0352    0.4258    0.5195];
     case 'blue'
         lc=[127/255 1 212/255];
+    case 'black'
+        lc=[0 0 0];
+            case 'white'
+        lc=[1 1 1];
+    case 'robin'
+        lc=[        0.5977    0.7969    0.9961];
     otherwise
         error(['don''t know this lowercolor bound'])
 end
+
+switch uppercolor
+    case {'','default'}
+        uc=[];
+    case 'black'
+        uc=[0 0 0];
+    otherwise
+        error
+        
+end
+
 map=cmap;
 
+InterpStep=length(map)/2048; % somewhat arbitrary ...
+
 x=1:length(map);
-xx=1:.1:x(end);
+xx=1:InterpStep:x(end);
 
 for j=1:3;
   mapp(:,j)=interp1(x,map(:,j),xx);
@@ -69,6 +105,11 @@ if ~isempty(lc)
     mapp(2:end+1,:)=mapp;
     mapp(1,:)=lc;
 end
+
+if ~isempty(uc)
+    mapp(end,:)=uc;
+end
+
 
 
 if nargout==0
@@ -83,16 +124,29 @@ end
 function cmap=StringToMap(str);
 
 try
+    % first try matlab's built in functions (or any functions on the path)
     cmap=colormap(str)
 catch
-    switch str
-        case {'DesertToGreen2','deserttogreen2'}
+                SystemGlobals
+
+        try
+
+            cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/' str '.tiff']);
+        catch 
+        
+            switch lower(str)
+                case {'DesertToGreen2','deserttogreen2'}
             SystemGlobals
-            cmap=ReadTiffCmap([IoneDataDir '/misc/DesertToGreen2.tiff']);
-        case {'GreenToDesert2','greentodesert2'}
+            cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
+                case {'GreenToDesert2','greentodesert2'}
             SystemGlobals
-            [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/DesertToGreen2.tiff']);
+            [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
+                case {'jfclover'}
+                    SystemGlobals
+                    cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/jfclover.tiff']);
+                    
         otherwise
             error([' don''t know this colormap '])
+            end
     end
 end

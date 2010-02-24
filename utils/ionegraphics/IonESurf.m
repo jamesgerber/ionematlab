@@ -70,6 +70,12 @@ RedLong=Long;
 RedLat=Lat;
 RedData=Data;
 
+
+%% invert data to conform with matlab standard
+
+RedLat=RedLat(end:-1:1);
+RedData=RedData(:,end:-1:1);
+
 hfig=figure;
 
 % calculate place to put figure
@@ -81,8 +87,10 @@ else
     YStart=800;
 end
 
-set(hfig,'position',[XStart YStart 842  440]);
-
+pos=get(hfig,'position');
+newpos=[XStart YStart pos(3)*1.5 pos(4)*(0.9)];
+%set(hfig,'position',[XStart YStart 842  440]);
+set(hfig,'position',newpos);
 %mps=get(0,'MonitorPositions');
 
 %pos=pos.*[1 1 1.5 .9];
@@ -92,6 +100,7 @@ set(hfig,'Tag','IonEFigure');
 % Establish a UserDataStructure
 
 
+meshmflag=1;
 
 if CanMap==0
   h=surface(RedLong,RedLat,double(RedData.'));
@@ -107,9 +116,20 @@ if CanMap==0
   UserDataStructure.ScaleToDegrees=1;
 else
   hm=axesm('robinson')
-  [lat2D,lon2D]=meshgrat(RedLat,RedLong);  
-  h=surfm(lat2D,lon2D,double(RedData.'));
-  set(gca,'Position',[0.1800    0.1100    0.6750    0.8150]);
+
+  
+  if meshmflag==0
+      [lat2D,lon2D]=meshgrat(RedLat,RedLong);
+      h=surfm(lat2D,lon2D,double(RedData.'));
+  else  
+      NumPointsPerDegree=12*numel(RedLat)/2160;
+      R=[NumPointsPerDegree,90,-180];
+      h=meshm(double(RedData.'),R);
+  end
+shading flat;
+  
+  
+ % set(gca,'Position',[0.1800    0.1100    0.6750    0.8150]);
   UserDataStructure.DataAxisHandle=gca;
   UserDataStructure.WestWorldEdge=-pi;
   UserDataStructure.EastWorldEdge=pi;
@@ -130,6 +150,8 @@ hy=get(hcb,'XLabel');
 set(hy,'String',Units);
 set(hy,'FontWeight','Bold')
 UserDataStructure.ColorbarStringHandle=hy;
+UserDataStructure.ColorbarHandle=hcb;
+
 
 
 % now make graphics
@@ -157,7 +179,7 @@ set(hfig,'UserData',UserDataStructure);
 
 % make dataaxis current
 
-axes(UserDataStructure.DataAxisHandle);
+%axes(UserDataStructure.DataAxisHandle);
 
 
 if CheckForMappingToolbox;

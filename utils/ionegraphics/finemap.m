@@ -125,7 +125,7 @@ function cmap=StringToMap(str);
 
 try
     % first try matlab's built in functions (or any functions on the path)
-    cmap=colormap(str)
+    cmap=colormap(str);
 catch
                 SystemGlobals
 

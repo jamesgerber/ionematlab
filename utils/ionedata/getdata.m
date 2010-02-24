@@ -12,6 +12,11 @@ function varargout=getdata(DataString,matrixflag);
 %   [Data]=getdata(DataString,1)
 %
 %   If there are three outputs, matrixflag will be ignored. 
+%
+%  Example
+%
+%    [Long,Lat,Crop]=getdata('croparea');
+%    [Long,Lat,totc]=getdata('totc1');
 if nargin==0 | nargout==0
   help(mfilename)
   return
@@ -24,9 +29,14 @@ end
 
 SystemGlobals
 switch lower(DataString)
- case 'tmi'
+ case {'croparea','cropdata'}
+  S=OpenNetCDF([IoneDataDir 'Crops2000/' ...
+		    'Cropland2000_5min.nc']);
+        
+         case 'tmi'
   S=OpenNetCDF([IoneDataDir 'Climate/' ...
 		    'WorldClimDerivedData/TMI.nc']);
+        
  case 'gdd0'
   S=OpenNetCDF([IoneDataDir 'Climate/' ...
 		    'WorldClimDerivedData/GDD0.nc']);

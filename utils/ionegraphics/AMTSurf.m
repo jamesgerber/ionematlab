@@ -33,13 +33,13 @@ if length(ii)>0
     Data(ii)=0;
 end
 
-
+SystemGlobals
 surf=AMTPlot(Data,Title,coloraxis);
 
 %amtfinemap
 finemap(colormap,'white')
 
-GRAY=imread('darkrobin.tif');
+GRAY=imread([IoneDataDir 'misc/darkrobin.tif']);
 saveas(surf,['~/.AMTSURFtmp.tif']);
 COLOR=imread(['~/.AMTSURFtmp.tif']);
 

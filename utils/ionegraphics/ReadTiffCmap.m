@@ -1,5 +1,12 @@
 function [colormap,reversecolormap]=ReadTiffCmap(FileName);
-% READTIFFCMAP
+% READTIFFCMAP  Read in a tiff file colorbar preview
+%
+%  SYNTAX
+%   [colormap,reversecolormap]=ReadTiffCmap('MyColorBar.tiff');
+%  
+%   See finemap for a list of 'standard' colorbars
+%
+%   See also finemap
 
 if nargin==0 & nargout==0
   help(mfilename);

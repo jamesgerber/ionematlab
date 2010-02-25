@@ -140,7 +140,7 @@ shading flat;
   UserDataStructure.ScaleToDegrees=180/pi;
 end
 UserDataStructure.SurfaceHandle=h;
-axes(UserDataStructure.DataAxisHandle);
+%axes(UserDataStructure.DataAxisHandle);
 set(gca,'Tag','IonEAxis')
 shading flat
 ht=title(TitleStr);
@@ -179,8 +179,9 @@ set(hfig,'UserData',UserDataStructure);
 
 % make dataaxis current
 
-%axes(UserDataStructure.DataAxisHandle);
-
+vis=get(UserDataStructure.DataAxisHandle,'visible');
+set(UserDataStructure.DataAxisHandle,'visible',vis);
+axes(UserDataStructure.DataAxisHandle);
 
 if CheckForMappingToolbox;
     ChangeProjection('Initialize');

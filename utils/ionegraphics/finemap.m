@@ -11,7 +11,8 @@ function varargout=finemap(cmap,lowercolor,uppercolor);
 %    lowercolor may be '' (empty) or 'aqua' or 'robin'
 %
 %    'DesertToGreen2'
-%    'GreenToDesert2'
+%
+%  This code will look in ../Library/IonE/data/misc/Colormaps
 %    Also some colormpas that Jon wrote:
 %    jfblue-red
 %    jfbrown-green.tiff

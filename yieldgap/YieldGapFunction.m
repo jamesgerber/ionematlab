@@ -493,6 +493,16 @@ OutputStructure.Area=CultivatedArea;
 OutputStructure.cropname=cropname;
 OutputStructure.ClimateDefs=ClimateDefs;
 OutputStructure.CDS=CDS;
+OutputStructure.MaxYield=Yield90;
 OutputStructure.VectorOfPotentialYields=VectorOfPotentialYields;
 OutputStructure.LogicalArrayOfGridPointsInABin=...
     LogicalArrayOfGridPointsInABin;
+OutputStructure.InputStructureRecord=FlagStructure;
+
+[RevNo,RevString,LastChangeRevNo,LCRString,AI]=GetSVNInfo;
+RevData.CodeRevisionNo=RevNo;
+RevData.CodeRevisionString=RevString;
+RevData.LastChangeRevNo=LastChangeRevNo;
+RevData.ProcessingDate=datestr(now);
+OutputStructure.RevData=RevData;
+     

@@ -47,6 +47,15 @@ function varargout=finemap(cmap,lowercolor,uppercolor);
 %    winter     - Shades of blue and green color map.
 %    summer     - Shades of green and yellow color map.
 
+
+if nargin==1 & isstr(cmap) & isequal(lower(cmap),'version')
+
+    [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo;
+        varargout{1}=AllInfo;
+        return
+end
+
+
 if nargin==0 | isempty(cmap)
     cmap='DesertToGreen2';
 end

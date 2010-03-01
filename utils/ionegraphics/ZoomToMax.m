@@ -37,6 +37,8 @@ switch(InputFlag)
         
         if length(unique(z))==1
             z=get(hc(end),'CData');
+            xx=UDS.Long;
+            yy=UDS.Lat;
         end
         
         
@@ -60,15 +62,30 @@ switch(InputFlag)
         %% need to find out how much user wants us to zoom by.  It's
         %% encoded in the userdatastructure in the figure window.
         try
-            UDS=get(gcbf,'UserData');
-            DeltaLong=UDS.ZoomLongDelta;
-            DeltaLat=UDS.ZoomLatDelta;
+
+            DeltaLong=UDS.ZoomLongDelta*10;
+            DeltaLat=UDS.ZoomLatDelta*10;
         catch
             DeltaLong=2.5;
             DeltaLat=2.5;
         end
         
-        axis(UDS.DataAxisHandle,[LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
+        
+        if UDS.MapToolboxFig==1
+      %      setm(UDS.DataAxisHandle,'maplonlimit',[LongVal-DeltaLong LongVal+DeltaLong]);
+      %      setm(UDS.DataAxisHandle,'maplatlimit',[LatVal-DeltaLat LatVal+DeltaLat])
+            
+            setm(UDS.DataAxisHandle,'Origin',[LatVal LongVal 0])
+              setm(UDS.DataAxisHandle,'FLonLimit',[LongVal-DeltaLong LongVal+DeltaLong]);
+            setm(UDS.DataAxisHandle,'FLatLimit',[LatVal-DeltaLat LatVal+DeltaLat])
+          
+        else
+            axis(UDS.DataAxisHandle,...
+                [LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
+        end
+        
+        
+
         
         [CountryNumber,CountryName]=GetCountry(LongVal,LatVal)    ;
         

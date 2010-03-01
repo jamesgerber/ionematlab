@@ -11,6 +11,10 @@ if nargin<3
 end
 
 if nargin<4
+    coloraxis=[];
+end
+
+if isempty(coloraxis)
     ii=find(Data~=0  & isfinite(Data));
     tmp01=Data(ii);
 

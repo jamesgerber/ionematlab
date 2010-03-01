@@ -25,6 +25,35 @@ function OutputStructure=YieldGapFunction(FlagStructure)
 %
 
 
+
+%%% first look to see if we can automatically load in file.  If not, create
+%%% and save
+FS=FlagStructure;
+try
+    SystemGlobals
+    FileName=[IoneDataDir 'YieldGap/YieldGap_CropNo' int2str(FS.CropNo) ...
+        '_ClimateSpaceRev'  FS.ClimateSpaceRev ...
+        '_' num2str(FS.ClimateSpaceN) '.mat'];
+catch
+    error(['Prob. defining filename.  need CropNo, ClimateSpaceRev, ClimateSpaceN']);
+end
+if exist(FileName)==2;
+    load(FileName,'FS','OS');
+    [RevNo]=GetSVNInfo;
+    if ~isequal(RevNo,OS.RevData.CodeRevisionNo);
+        warning([ mfilename ' revision no = ' num2str(RevNo) ' Stored file made with ' ...
+            num2str(OS.RevData.CodeRevisionNo)]);
+    end
+    
+OutputStructure=OS;    
+    
+else
+
+    
+    
+
+
+
 %% Set Default Flags
 ApplyAreaFilterFlag=1;
 
@@ -505,4 +534,5 @@ RevData.CodeRevisionString=RevString;
 RevData.LastChangeRevNo=LastChangeRevNo;
 RevData.ProcessingDate=datestr(now);
 OutputStructure.RevData=RevData;
+end
      

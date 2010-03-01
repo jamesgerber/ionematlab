@@ -114,6 +114,7 @@ if CanMap==0
   UserDataStructure.ZoomLongDelta=(5);
   UserDataStructure.ZoomLatDelta=(2.5);
   UserDataStructure.ScaleToDegrees=1;
+  UserDataStructure.MapToolboxFig=0;
 else
   hm=axesm('robinson')
 
@@ -131,6 +132,8 @@ shading flat;
   
  % set(gca,'Position',[0.1800    0.1100    0.6750    0.8150]);
   UserDataStructure.DataAxisHandle=gca;
+  UserDataStructure.MapHandle=hm;
+  UserDataStructure.SurfHandle=h;
   UserDataStructure.WestWorldEdge=-pi;
   UserDataStructure.EastWorldEdge=pi;
   UserDataStructure.NorthWorldEdge=pi;
@@ -138,7 +141,11 @@ shading flat;
   UserDataStructure.ZoomLongDelta=(5*pi/180);
   UserDataStructure.ZoomLatDelta=(2.5*pi/180);
   UserDataStructure.ScaleToDegrees=180/pi;
+  UserDataStructure.MapToolboxFig=1;
 end
+
+UserDataStructure.Lat=RedLat;
+UserDataStructure.Long=RedLong;
 UserDataStructure.SurfaceHandle=h;
 %axes(UserDataStructure.DataAxisHandle);
 set(gca,'Tag','IonEAxis')

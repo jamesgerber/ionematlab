@@ -16,6 +16,7 @@ function varargout=finemap(cmap,lowercolor,uppercolor);
 %    Also some colormpas that Jon wrote:
 %    jfblue-red
 %    jfbrown-green.tiff
+%    jfgreen-brown
 %    jfcayenne
 %    jfclover
 %    jfmaroon
@@ -154,7 +155,10 @@ catch
                 case {'jfclover'}
                     SystemGlobals
                     cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/jfclover.tiff']);
-                    
+              case {'jfgreen-brown'}
+                    SystemGlobals
+                    [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/colormaps/jfbrown-green.tiff']);
+                  
         otherwise
             error([' don''t know this colormap '])
             end

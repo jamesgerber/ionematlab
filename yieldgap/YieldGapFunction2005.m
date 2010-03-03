@@ -31,7 +31,7 @@ function OutputStructure=YieldGapFunction(FlagStructure)
 FS=FlagStructure;
 try
     SystemGlobals
-    FileName=[IoneDataDir 'YieldGap/YieldGap_CropNo' int2str(FS.CropNo) ...
+    FileName=[IoneDataDir 'YieldGap2005/YieldGap_CropNo' int2str(FS.CropNo) ...
         '_ClimateSpaceRev'  FS.ClimateSpaceRev ...
         '_' num2str(FS.ClimateSpaceN) '.mat'];
 catch
@@ -118,6 +118,7 @@ else
     AllIndices=1:9331200;
     
     %% Don't allow for BoxPlot or Bin PLots if ibinlist is 0
+    
     if ibinlist==0
         if MakeBoxPlot==1
             disp('turning off BoxPlots')
@@ -156,7 +157,13 @@ else
     AreaFraction=CropData.Data(:,:,1);
     AreaFraction(AreaFraction>1e10)=NaN;
     
-    Yield=CropData.Data(:,:,2);
+    %%% now read in 2005 Yields
+    %Yield=CropData.Data(:,:,2);
+    yieldpath=[IoneDataDir '/yield2005/2005' cropname '.nc'];
+    yielddata=OpenNetCDF(yieldpath);
+    Yield=yielddata.Data;
+    
+    
     clear CropData
     %cropname=strrep(cropname,' ','_');
     CultivatedArea=AreaFraction.*FiveMinGridCellAreas;

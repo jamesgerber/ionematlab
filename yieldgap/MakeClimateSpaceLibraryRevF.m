@@ -5,8 +5,8 @@ clear DAS
     'YieldGap/area_ha_5min.nc']);
   
 
-for N=[10]
-    for jcrop=[1:18]
+for N=[5 10]
+    for jcrop=[21]
         for jwf=4;
             for jhf=1
                 

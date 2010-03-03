@@ -26,8 +26,8 @@ catch
 end
 
 if CanMap==0
-    hp=plot(long,lat,'k')
     hp=plot(long+.01,lat+.01,'w')
+    hp=plot(long,lat,'k')
 else  
     hp=plotm(lat,long,'k');
 end

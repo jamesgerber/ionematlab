@@ -4,13 +4,21 @@ function varargout=finemap(cmap,lowercolor,uppercolor);
 %  Syntax
 %
 %
-%    finemap(colormap,lowercolor);
+%    finemap(colormap,lowercolor,uppercolor);
 %
 %    colormap may be a colormap, or a text string, or '' for the default
 %
 %    lowercolor may be '' (empty) or 'aqua' or 'robin'
 %
-%    'DesertToGreen2'
+%    uppercolor may be '' 'white' 'black' 'robin'
+%
+%
+%    if first three characters of colormap are 'rev', then the colormap
+%    will be reversed:  e.g. finemap('revjfcayenne') will use a reversed
+%    version of the 'jfcayenne' colormap.
+%
+%   Other colormaps include
+%  'DesertToGreen2'
 %
 %  This code will look in ../Library/IonE/data/misc/Colormaps
 %    Also some colormpas that Jon wrote:
@@ -69,9 +77,16 @@ if nargin~=3
     uppercolor='default';
 end
 
-
+ReverseMapFlag=0;
 if ~isnumeric(cmap)
+    if strmatch(cmap(1:3),'rev');
+        cmap=cmap(4:end);
+        ReverseMapFlag=1;
+    end
     cmap=StringToMap(cmap);
+    if ReverseMapFlag==1
+        cmap=cmap(end:-1:1,:);
+    end
 end
 
 switch lowercolor
@@ -86,7 +101,7 @@ switch lowercolor
             case 'white'
         lc=[1 1 1];
     case 'robin'
-        lc=[        0.5977    0.7969    0.9961];
+        lc=[ 0.5977    0.7969    0.9961];
     otherwise
         error(['don''t know this lowercolor bound'])
 end
@@ -94,8 +109,12 @@ end
 switch uppercolor
     case {'','default'}
         uc=[];
+            case 'white'
+        uc=[1 1 1];
     case 'black'
         uc=[0 0 0];
+    case 'robin'
+        uc=[        0.5977    0.7969    0.9961];
     otherwise
         error
         

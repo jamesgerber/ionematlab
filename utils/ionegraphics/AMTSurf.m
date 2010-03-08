@@ -1,5 +1,5 @@
 function AMTSurf(Data,Title,FileName,coloraxis,colormap);
-%  AMTSurf(Data,Title,colorvals)
+%  AMTSurf(Data,Title,FileName,coloraxis,colormap);
 
 if nargin<2
     Title='Data';

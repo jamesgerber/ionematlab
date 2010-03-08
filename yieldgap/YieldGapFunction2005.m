@@ -39,7 +39,10 @@ catch
 end
 
 
-ForceRedo=1;
+ForceRedo=0;
+if FS.ibinlist~=0
+    ForceRedo=1;
+end
 if exist(FileName)==2 & ForceRedo==0;
     load(FileName,'FS','OS');
     [RevNo]=GetSVNInfo;
@@ -440,10 +443,11 @@ else
             PassFail='PASS: ';
             
             
-                        %  AllPoints
-                        tmp=Yield(AllBinIndices);
-                        tmpyieldgap=(1-tmp./Yield90);
-                        tmpyieldgap=max(0,tmpyieldgap);
+            %  AllPoints
+            tmp=Yield(AllBinIndices);
+            tmpyieldgap=(1-tmp./Yield90);
+            tmpyieldgap=max(0,tmpyieldgap);
+            tmpyieldgap=min(1,tmpyieldgap);
             AllBinsYieldGapArray(AllBinIndices)=tmpyieldgap;
             
         else

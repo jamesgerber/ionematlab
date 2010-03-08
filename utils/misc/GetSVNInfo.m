@@ -25,7 +25,7 @@ function [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo(varargin);
 
 if nargin==0
     [ST,I]=dbstack('-completenames');
-    S=ST(end).file;
+    S=ST(max(1,end-1)).file;
 else
     S=which(varargin{1})
 end

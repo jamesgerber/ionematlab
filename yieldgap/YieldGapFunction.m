@@ -39,7 +39,11 @@ catch
 end
 
 
-ForceRedo=1;
+ForceRedo=0;
+
+if FS.ibinlist~=0
+    ForceRedo=1;
+end
 if exist(FileName)==2 & ForceRedo==0;
     load(FileName,'FS','OS');
     [RevNo]=GetSVNInfo;

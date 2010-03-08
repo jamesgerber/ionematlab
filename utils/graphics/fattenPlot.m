@@ -38,6 +38,7 @@ for j=1:length(h)
             set(h(j),'linewidth',1.5)
             set(get(h(j),'ylabel'),'fontweight','bold')
             set(get(h(j),'title'),'fontweight','bold')
+            set(get(h(j),'title'),'fontsize',12)
             set(get(h(j),'xlabel'),'fontweight','bold')
             set(get(h(j),'zlabel'),'fontweight','bold')
         end    

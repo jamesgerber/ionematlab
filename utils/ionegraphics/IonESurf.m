@@ -196,9 +196,9 @@ end
 
 
 
-if exist('NoDataStructure');
-    set(hfig,'UserData',NoDataStructure);
-end
+%if exist('NoDataStructure');
+%    set(hfig,'UserData',NoDataStructure);
+%end
 
 
 set(gcf,'Renderer','zbuffer')

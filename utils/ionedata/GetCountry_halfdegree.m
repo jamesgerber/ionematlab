@@ -24,8 +24,9 @@ if nargin==0
   help(mfilename);return;
 end
 
+systemglobals
+ncid=netcdf.open([IoneDataDir '/AdminBoundary2005/Raster_NetCDF/1_Countries_0.5deg/ctry_0.5.nc'],'NOWRITE');
 
-ncid=netcdf.open('~/datasets/ADMINBDRY/Raster_NetCDF/1_Countries_0.5deg/ctry_0.5.nc','NOWRITE');
 netcdf.inqVar(ncid,0)
 
 long=netcdf.getVar(ncid,0);
@@ -36,7 +37,7 @@ ctry=netcdf.getVar(ncid,4);
 ctry=double(ctry);
 
 
-newdata=importdata('~/datasets/ADMINBDRY/Raster_NetCDF/1_Countries_0.5deg/ctry.dat');
+newdata=importdata([IoneDataDir '/AdminBoundary2005/Raster_NetCDF/1_Countries_0.5deg/ctry.dat']);
 for j=1:length(newdata)
 thisline=newdata{j};
 ii=findstr(thisline,'0 ');

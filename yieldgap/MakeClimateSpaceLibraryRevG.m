@@ -4,12 +4,12 @@ clear DAS
 [Long,Lat,FiveMinGridCellAreas]=OpenNetCDF(['/Users/jsgerber/sandbox/jsg003_YieldGapWork/' ...
     'YieldGap/area_ha_5min.nc']);
 
-csqirev='Br2';
+csqirev='Ar2';
 
 [Long,Lat,cSQI]=getdata(['HWSD_CategoricalCSQI_' csqirev]);
     
 for N=[5 10]
-    for jcrop=[5 7 8 10 ]
+    for jcrop=[9 19 20 21]
         for jwf=4;
             for jhf=1
                  

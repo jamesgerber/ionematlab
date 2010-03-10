@@ -25,7 +25,7 @@ if isempty(coloraxis)
 end
 
 if nargin<5
-    colormap='DesertToGreen2';
+    colormap='jfgreen-brown';
 end
 
 

@@ -190,9 +190,9 @@ vis=get(UserDataStructure.DataAxisHandle,'visible');
 set(UserDataStructure.DataAxisHandle,'visible',vis);
 axes(UserDataStructure.DataAxisHandle);
 
-if CheckForMappingToolbox;
-    ChangeProjection('Initialize');
-end
+%if CheckForMappingToolbox;
+%    ChangeProjection('Initialize');
+%end
 
 
 
@@ -202,7 +202,7 @@ end
 
 
 set(gcf,'Renderer','zbuffer')
-zoom on
+
 if nargout==1
     varargout{1}=hfig;
 end

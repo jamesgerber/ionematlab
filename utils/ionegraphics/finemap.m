@@ -66,7 +66,7 @@ end
 
 
 if nargin==0 | isempty(cmap)
-    cmap='DesertToGreen2';
+    cmap='jfgreen-brown';
 end
 
 if nargin<2
@@ -165,12 +165,12 @@ catch
         catch 
         
             switch lower(str)
-                case {'DesertToGreen2','deserttogreen2'}
-            SystemGlobals
-            cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
-                case {'GreenToDesert2','greentodesert2'}
-            SystemGlobals
-            [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
+%                case {'DesertToGreen2','deserttogreen2'}
+%            SystemGlobals
+%            cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
+%                case {'GreenToDesert2','greentodesert2'}
+%            SystemGlobals
+%            [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
                 case {'jfclover'}
                     SystemGlobals
                     cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/jfclover.tiff']);

@@ -11,8 +11,9 @@ function NiceSurf(Data,Title,Units,coloraxis,colormap,FileName);
 %  S=OpenNetCDF([IoneDataDir '/Crops2000/crops/maize_5min.nc'])
 %
 %  Area=S.Data(:,:,1);
-%   NiceSurf(OS.Yield,'Yield Maize','tons/ha',[0 12],'revsummer','savefilename')
-
+%  Yield=S.Data(:,:,2);
+%   NiceSurf(Yield,'Yield Maize','tons/ha',[0 12],'revsummer','YieldTestPlot1')
+%   NiceSurf(Yield,'Yield Maize','tons/ha',[],'revsummer','YieldTestPlot2')
 if nargin==0
     help(mfilename)
     return

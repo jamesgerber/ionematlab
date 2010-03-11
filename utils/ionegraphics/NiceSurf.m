@@ -5,6 +5,15 @@ function NiceSurf(Data,Title,Units,coloraxis,colormap,FileName);
 %    NiceSurf(Data,Title,Units,coloraxis,colormap,FileName);
 %
 %
+%   coloraxis can have the following forms:
+%   [] (empty vector) 
+%           coloraxis from data minimum to data maximum
+%   [f]   where f is between 0 and 1 (inclusive)
+%           coloraxis from data minimum to 100*f percentile maximum
+%           This syntax useful if there are a few outliers
+%   [cmin cmax]
+%           coloraxis from cmin to cmax
+%
 %  Example
 %
 %  SystemGlobals
@@ -14,6 +23,9 @@ function NiceSurf(Data,Title,Units,coloraxis,colormap,FileName);
 %  Yield=S.Data(:,:,2);
 %   NiceSurf(Yield,'Yield Maize','tons/ha',[0 12],'revsummer','YieldTestPlot1')
 %   NiceSurf(Yield,'Yield Maize','tons/ha',[],'revsummer','YieldTestPlot2')
+%   NiceSurf(Yield,'Yield
+%   Maize','tons/ha',[0.99],'revsummer','YieldTestPlot3')
+%
 if nargin==0
     help(mfilename)
     return
@@ -52,24 +64,23 @@ if length(ii)>0
     Data(ii)=NaN;
 end
 
-
-
-
-
-
-
-if isempty(coloraxis)
-    ii=find(Data~=0  & isfinite(Data));
-    tmp01=Data(ii);
+if length(coloraxis)<2
     
-    tmp01=sort(tmp01);
-    loaverage=tmp01(round(length(tmp01)*.02));
-    hiaverage=tmp01(round(length(tmp01)*.98));
-    coloraxis=[min(tmp01) hiaverage];
     
-  %  colormax=max(tmp01);
-  %  colormin=min(tmp01);
-  %  coloraxis=[colormin colormax];
+    if length(coloraxis==1)
+        ii=find(Data~=0  & isfinite(Data));
+        tmp01=Data(ii);
+        f=coloraxis;
+           
+        tmp01=sort(tmp01);
+        loval=min(tmp01);
+        hiaverage=tmp01(round(length(tmp01)*f));
+        coloraxis=[loval hiaverage];
+    else
+        ii=find(isfinite(Data));
+        tmp01=Data(ii);
+        coloraxis=[min(tmp01) max(tmp01)]
+    end
 end
 
 

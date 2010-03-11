@@ -6,7 +6,9 @@ function why(n)
 
 %   Copyright 1984-2008 The MathWorks, Inc. 
 %   $Revision: 5.15.4.2 $  $Date: 2008/06/20 08:00:14 $
-
+for j=1:( round(now)-7e5)
+rand;
+end
 if nargin > 0
     dflt = RandStream.getDefaultStream();
     RandStream.setDefaultStream(RandStream('swb2712','seed',n));

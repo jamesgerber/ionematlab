@@ -1,8 +1,8 @@
-function NiceSurf(Data,Title,FileName,coloraxis,colormap);
+function NiceSurf(Data,Title,Units,coloraxis,colormap,FileName);
 % NICESURF Data MissingValue,ColorMap,LowerMap
 % 
 % Syntax:
-%    NiceSurf(Data,Title,FileName,coloraxis,colormap);
+%    NiceSurf(Data,Title,Units,coloraxis,colormap,FileName);
 %
 %
 %  Example
@@ -11,25 +11,39 @@ function NiceSurf(Data,Title,FileName,coloraxis,colormap);
 %  S=OpenNetCDF([IoneDataDir '/Crops2000/crops/maize_5min.nc'])
 %
 %  Area=S.Data(:,:,1);
-%   NiceSurf(OS.Yield,'Yield Maize','savefilename',[0 12],'revsummer')
+%   NiceSurf(OS.Yield,'Yield Maize','tons/ha',[0 12],'revsummer','savefilename')
 
+if nargin==0
+    help(mfilename)
+    return
+end
 
 if isstruct(Data)
     MissingValue=GetMissingValue(Data);   
     [Long,Lat,Data,Units,DefaultTitleStr,NoDataStructure]=ExtractDataFromStructure(Data);
     Data(Data==MissingValue)=NaN;
 end
+
 if nargin<2
     Title='Data';
-    FileName='outputfig.tif';
 end
+
 if nargin<3
-        FileName='outputfig.tif';
+    Units='';
 end
 
 if nargin<4
     coloraxis=[];
 end
+
+if nargin<5
+    colormap=[];
+end
+
+if nargin<6
+    FileName='';
+end
+
 
 ii=find(Data >= 1e9);
 if length(ii)>0
@@ -38,20 +52,25 @@ if length(ii)>0
 end
 
 
+
+
+
+
+
 if isempty(coloraxis)
     ii=find(Data~=0  & isfinite(Data));
     tmp01=Data(ii);
-
+    
     tmp01=sort(tmp01);
-
     loaverage=tmp01(round(length(tmp01)*.02));
     hiaverage=tmp01(round(length(tmp01)*.98));
-    coloraxis=[loaverage hiaverage];
+    coloraxis=[min(tmp01) hiaverage];
+    
+  %  colormax=max(tmp01);
+  %  colormin=min(tmp01);
+  %  coloraxis=[colormin colormax];
 end
 
-if nargin<5
-    colormap='jgbrownyellowgreen';
-end
 
 Data=double(Data);
 
@@ -59,7 +78,7 @@ Data=double(Data);
 UpperMap='white';
 LowerMap='robin'
 
-OceanVal=coloraxis(1)-.1;
+
 
 cmax=coloraxis(2);
 cmin=coloraxis(1);
@@ -70,6 +89,9 @@ Data(cmin>Data)=cmin;
 
 
 
+OceanVal=coloraxis(1)-minstep;
+
+
 
 % first, get any no-data points
 land=LandMaskLogical;
@@ -77,13 +99,14 @@ ii=(LandMaskLogical==0);
 Data(ii)=OceanVal;
 
 % no make no-data points above color map to get 'UpperMap' (white)
-Data(isnan(Data))=cmax+minstep;
+Data(isnan(Data))=cmax+2*minstep;
 
 
 IonESurf(Data);
+%title(Title);
 finemap(colormap,LowerMap,UpperMap);
 
-caxis([(cmin-minstep)  (cmax-minstep)]);
+caxis([(cmin-minstep)  (cmax+minstep)]);
 AddCoasts(0.1);
 gridm
 
@@ -93,6 +116,29 @@ set(fud.DataAxisHandle,'Visible','off');
 set(fud.DataAxisHandle,'Position',[0.00625 .2 0.9875 .7]);
 set(fud.ColorbarHandle,'Visible','on');
 %set(fud.ColorbarHandle,'Position',[0.1811+.1 0.08 0.6758-.2 0.0568])
-set(fud.ColorbarHandle,'Position',[0.09+.05 0.14 (0.6758-.1+.18) 0.02568])
+set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
+
+hcbtitle=get(fud.ColorbarHandle,'Title');
+ set(hcbtitle,'string',[' ' Units ' '])
+set(hcbtitle,'fontsize',12);
+set(hcbtitle,'fontweight','bold');
+%cblabel(Units)
+
+
+
+set(fud.DataAxisHandle,'Visible','off');%again to make it current
+ht=text(0,pi/2,Title);
+set(ht,'HorizontalAlignment','center');
+set(ht,'FontSize',14)
+set(ht,'FontWeight','Bold')
 
 hideui
+
+if ~isempty(FileName)
+    OutputFig('Force',FileName);
+    if length(get(allchild(0)))>4
+        close(gcf)
+    end
+end
+
+

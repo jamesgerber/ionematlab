@@ -23,8 +23,7 @@ function NiceSurf(Data,Title,Units,coloraxis,colormap,FileName);
 %  Yield=S.Data(:,:,2);
 %   NiceSurf(Yield,'Yield Maize','tons/ha',[0 12],'revsummer','YieldTestPlot1')
 %   NiceSurf(Yield,'Yield Maize','tons/ha',[],'revsummer','YieldTestPlot2')
-%   NiceSurf(Yield,'Yield
-%   Maize','tons/ha',[0.99],'revsummer','YieldTestPlot3')
+%   NiceSurf(Yield,'Yield Maize','tons/ha',[0.99],'revsummer','YieldTestPlot3')
 %
 if nargin==0
     help(mfilename)
@@ -76,11 +75,26 @@ if length(coloraxis)<2
         loval=min(tmp01);
         hiaverage=tmp01(round(length(tmp01)*f));
         coloraxis=[loval hiaverage];
-    else
+     else
         ii=find(isfinite(Data));
         tmp01=Data(ii);
         coloraxis=[min(tmp01) max(tmp01)]
     end
+    
+    
+    % make sure that coloraxis isn't really close to zero but not quite.
+    % If so, then pull it down to zero.
+    
+    c1=coloraxis(1);
+    c2=coloraxis(2);
+    
+    if c1 < (c2-c1)/10
+        coloraxis(1)=min(c1,0);
+    end
+
+    
+    
+    
 end
 
 
@@ -120,9 +134,13 @@ finemap(colormap,LowerMap,UpperMap);
 
 caxis([(cmin-minstep)  (cmax+minstep)]);
 AddCoasts(0.1);
-gridm
 
 fud=get(gcf,'UserData');
+if fud.MapToolboxFig==1
+    gridm
+else
+    grid on
+end
 set(gcf,'position',[ 218   618   560   380]);
 set(fud.DataAxisHandle,'Visible','off');
 set(fud.DataAxisHandle,'Position',[0.00625 .2 0.9875 .7]);

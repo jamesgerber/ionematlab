@@ -2,6 +2,9 @@ function AddCoasts(LineWidth,HFig);
 %  ADDCOASTS - add coasts
 %
 %  AddCoasts(0.1)  will add some very thin lines
+%
+%  AddCoasts(N) where N is an integer will add lines of default thickness
+%  (0.5) to figure N.   [This was added for backwards compatibility]
 if nargin==0
   HFig=gcf;
   LineWidth=0.5;

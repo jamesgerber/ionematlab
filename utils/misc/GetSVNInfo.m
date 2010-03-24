@@ -38,6 +38,8 @@ AllInfo=d;
 ii= find(d==sprintf('\n'));
 RevLine=d(ii(5):ii(6)-1);
 
+Name=d((ii(1)+7):ii(2)-1);
+
 RevNo=str2num(RevLine(11:end));
 RevString=['Revision ' RevLine(11:end) ' of ' ...
     S];
@@ -49,6 +51,6 @@ LCRevString=[LastChangedLine ' ' S];
 
 
 if nargout==0
-    disp(['Revision of ' mfilename ' is ' num2str(RevNo) ]);
+    disp(['Revision of ' Name ' is ' num2str(RevNo) ]);
 end
 

@@ -26,8 +26,15 @@ hax=gca;
 SystemGlobals
 
 try
-    load(ADMINBOUNDARY_VECTORMAP)
-catch   
+    
+    if LineWidth <=0.5
+        load(ADMINBOUNDARY_VECTORMAP_HIRES)
+    else
+        load(ADMINBOUNDARY_VECTORMAP)
+    end
+catch  
+        disp(['did not find system vectormap'])
+        disp(['loading default matlab coasts'])
     load coast
 end
 

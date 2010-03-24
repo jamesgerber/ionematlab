@@ -98,10 +98,12 @@ switch lowercolor
         lc=[127/255 1 212/255];
     case 'black'
         lc=[0 0 0];
-            case 'white'
+    case 'white'
         lc=[1 1 1];
     case 'robin'
         lc=[ 0.5977    0.7969    0.9961];
+    case 'bluemarble'
+        lc=[0.0588    0.1176    0.5490];
     otherwise
         error(['don''t know this lowercolor bound'])
 end
@@ -109,12 +111,14 @@ end
 switch uppercolor
     case {'','default'}
         uc=[];
-            case 'white'
+    case 'white'
         uc=[1 1 1];
     case 'black'
         uc=[0 0 0];
     case 'robin'
         uc=[        0.5977    0.7969    0.9961];
+    case 'bluemarble'
+        uc=[0.0588    0.1176    0.5490];
     otherwise
         error
         

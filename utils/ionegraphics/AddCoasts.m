@@ -27,7 +27,7 @@ SystemGlobals
 
 try
     
-    if LineWidth <=0.5
+    if LineWidth <0.5
         load(ADMINBOUNDARY_VECTORMAP_HIRES)
     else
         load(ADMINBOUNDARY_VECTORMAP)

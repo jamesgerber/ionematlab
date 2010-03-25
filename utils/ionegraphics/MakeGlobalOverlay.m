@@ -26,11 +26,14 @@ if nargin==0
   return
 end
 
-Data(Data>1e10)=NaN;
-
+ii=find(Data > 1e9 | Data < -1e9);
+if length(ii) > 1
+    disp(['Found some values of abs(Data) > 1e9, replacing with NaN']);
+    Data(ii)=NaN;
+end
 
 if nargin<2
-  colormap='summer';
+  colormap='jet';
 end
 if nargin<3 | isempty(coloraxis)
   ii=find(isfinite(Data));
@@ -57,6 +60,14 @@ Alpha(iiNaN)=0;
 imagearray=zeros([size(Data) 3]);
 
 cmap=finemap(colormap);
+
+cmax=coloraxis(2);
+cmin=coloraxis(1);
+minstep= (cmax-cmin)*.001;
+
+Data(Data>cmax)=(cmax-minstep);
+Data(cmin>Data)=(cmin+minstep);
+
 
 scaled=(Data-coloraxis(1))/(diff(coloraxis));
 scaled(scaled>1)=1;

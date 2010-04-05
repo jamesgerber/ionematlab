@@ -5,7 +5,7 @@ if nargin==0;
 end
 
 if fix(Handle)==Handle
-  % Handle is an integer ... must be figure handle.  Assume its and
+  % Handle is an integer ... must be figure handle.  Assume it is an
   % IonEFigure and look for colorbar accordingly.
   fud=get(Handle,'UserData');
   cbh=fud.ColorbarHandle;
@@ -16,18 +16,31 @@ end
 
 
 xtl=get(cbh,'XTickLabel');
-
-for j=1:size(xtl,1);
+N=size(xtl,1);
+C=size(xtl,2);
+for j=1:N;
   xtlcell{j}=xtl(j,:);
 end
 
 
 
 for j=1:length(xtlcell);
-  xtlcell{j}=[xtlcell{j} '%'];
+    tmp=xtlcell{j};
+    tmp=strrep(tmp,' ','');
+    xtlcell{j}=[tmp '%'];
 end
 
-set(cbh,'XTickLabel',xtlcell);
+%set(cbh,'XTickLabel',xtlcell);
+xtlnew= strvcat(xtlcell);
+set(cbh,'XTickLabel',xtlnew);
+set(cbh,'XTickMode','manual')
+ %%% following is a lame attempt to write my own strvcat
+%%FormatString=['%-' int2str(C+1) 's'];
+%%for j=1:length(xtlcell)
+%%xtlnew(N,(1:C+1))=sprintf(FormatString,xtlcell{j})
+%%end
+
+
 
 
   

@@ -54,7 +54,9 @@ if nargin==0
   return
 end
 
-
+if length(size(Long))>3
+    error(['can''t use this syntax with non-2D Data.  Pass in Long,Lat']);
+end
 
 if min(size(Long))>1
       

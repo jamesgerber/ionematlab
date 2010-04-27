@@ -32,12 +32,26 @@ if nargin==0
     help(mfilename)
     return
 end
+
+if nargout==1 & nargin==1
+    Data=AreaFraction;
+end
+
+
+
 if nargin <3
     p=0.95;
 end
 
-[Long,Lat,FiveMinGridCellAreas]=GetFiveMinGridCellAreas;
-CultivatedArea=AreaFraction.*FiveMinGridCellAreas;
+if nanmax(nanmax(AreaFraction))>2
+    disp(['This appears to be actual area, not area fraction'])
+    CultivatedArea=AreaFraction;
+else
+    [Long,Lat,FiveMinGridCellAreas]=GetFiveMinGridCellAreas;
+    CultivatedArea=AreaFraction.*FiveMinGridCellAreas;
+end
+
+
 
 ii=isfinite(Data) & abs(Data) < 8.9e9 & CultivatedArea>0 & (AreaFraction)<8.9e9;
 

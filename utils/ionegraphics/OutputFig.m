@@ -1,10 +1,11 @@
-function OutputFig(Hfig,FileName)
+function OutputFig(Hfig,FileName,ResFlag)
 % OutputFig - output a figure as a .png
 %
 % SYNTAX
 % OutputFig('Force') will force priting w/o querying user.
 % 
 % OutputFig('Force','FileName')
+% OutputFig('Force','FileName','-r150')
 % OutputFig(gcf,'FileName')
 
 if nargin==0
@@ -32,7 +33,7 @@ if nargin>0
     end
 end
 
-if nargin==2
+if nargin>1
     InitGuess=FileName;
     MakeSafe=0;
 else
@@ -45,7 +46,9 @@ else
     
 end
 
-
+if nargin<3
+    ResFlag='-r600';
+end
 
 % Is this figure made by IonESurf?  If so, expand the data axis
 fud=get(Hfig,'UserData');
@@ -88,7 +91,7 @@ set(gcf,'PaperPositionMode','auto');
 drawnow;
 
 disp(['Saving ' FileName '.png']);
-print('-dpng','-r600',FileName);
+print('-dpng',ResFlag,FileName);
 
 set(Hfig,'PaperPositionMode',ppm)
 

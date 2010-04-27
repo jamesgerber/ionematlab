@@ -4,7 +4,7 @@ function [TE,TMI,PEmonthly]= MakeThornthwaitePE(tmean,annualmeanprec);
 %
 %   SYNTAX:
 %
-%       [TMI]= MakeThornthwaitePE(tmean,annualmeanprec);
+%       [TE,TMI]= MakeThornthwaitePE(tmean,annualmeanprec);
 %
 %   EXAMPLE:
 %[Long,Lat,tmean]=OpenNetCDF(...

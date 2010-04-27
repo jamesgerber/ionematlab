@@ -19,7 +19,7 @@ if nargin==1
         HFig=gcf;
     end
 end
-AddStates(LineWidth,HFig);
+
 
 hax=gca;
 
@@ -28,9 +28,9 @@ SystemGlobals
 try
     
     if LineWidth <0.5
-        load(ADMINBOUNDARY_VECTORMAP_HIRES)
+        load('/ionedata/AdminBoundary2010/USStates.mat')
     else
-        load(ADMINBOUNDARY_VECTORMAP)
+        load('/ionedata/AdminBoundary2010/USStates.mat')
     end
 catch  
         disp(['did not find system vectormap'])

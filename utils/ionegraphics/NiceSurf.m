@@ -8,9 +8,12 @@ function NiceSurf(Data,Title,Units,coloraxis,colormap,FileName);
 %   coloraxis can have the following forms:
 %   [] (empty vector) 
 %           coloraxis from data minimum to data maximum
-%   [f]   where f is between 0 and 1 (inclusive)
+%   [f]   where f is between 0 and 1 
 %           coloraxis from data minimum to 100*f percentile maximum
 %           This syntax useful if there are a few outliers
+%   [0]     coloraxis from -max(abs(Data)) to +max(abs(Data))
+%           This syntax is useful for aligning 0 with the center of a
+%           colorbar
 %   [cmin cmax]
 %           coloraxis from cmin to cmax
 %
@@ -57,7 +60,7 @@ if nargin<6
 end
 
 
-ii=find(Data >= 1e9);
+ii=find(abs(Data) >= 1e9);
 if length(ii)>0
     disp([' Found elements >= 1E9.  replacing with NaN. '])
     Data(ii)=NaN;
@@ -69,12 +72,19 @@ if length(coloraxis)<2
     if length(coloraxis==1)
         ii=find(Data~=0  & isfinite(Data));
         tmp01=Data(ii);
-        f=coloraxis;
-           
-        tmp01=sort(tmp01);
-        loval=min(tmp01);
-        hiaverage=tmp01(round(length(tmp01)*f));
-        coloraxis=[loval hiaverage];
+        if coloraxis==0
+            coloraxis=[-(max(abs(tmp01))) (max(abs(tmp01)))]
+        else
+            
+            
+            
+            f=coloraxis;
+            
+            tmp01=sort(tmp01);
+            loval=min(tmp01);
+            hiaverage=tmp01(round(length(tmp01)*f));
+            coloraxis=[loval hiaverage];
+        end
      else
         ii=find(isfinite(Data));
         tmp01=Data(ii);

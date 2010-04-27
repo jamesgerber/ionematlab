@@ -103,7 +103,7 @@ set(hfig,'Tag','IonEFigure');
 meshmflag=1;
 
 if CanMap==0
-  h=surface(RedLong,RedLat,double(RedData.'));
+  h=surface(RedLong,RedLat,double(RedData.')*0-1,double(RedData.'));
   set(gca,'Position',[0.1800    0.1100    0.6750    0.8150]);
   UserDataStructure.DataAxisHandle=gca;
 
@@ -125,7 +125,7 @@ else
   else  
       NumPointsPerDegree=12*numel(RedLat)/2160;
       R=[NumPointsPerDegree,90,-180];
-      h=meshm(double(RedData.'),R);
+      h=meshm(double(RedData.'),R,[50 100],-1);
   end
 shading flat;
   

@@ -68,4 +68,4 @@ end
 %now section for ubertitles
 h=findobj(hfig,'tag','UBERTITLE');
 set(h,'FontWeight','bold')
-
+set(h,'FontSize',12)

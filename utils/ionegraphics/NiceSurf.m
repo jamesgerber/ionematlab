@@ -128,12 +128,17 @@ Data(cmin>Data)=cmin;
 OceanVal=coloraxis(1)-minstep;
 
 
-
-% first, get any no-data points
-land=LandMaskLogical;
-ii=(LandMaskLogical==0);
-Data(ii)=OceanVal;
-
+if numel(Data)==4320*2160
+    % first, get any no-data points
+    land=LandMaskLogical;
+    ii=(land==0);
+    Data(ii)=OceanVal;
+else
+   % problem ... this is not 5minute data
+   land=LandMaskLogical(Data);
+   ii=(land==0);
+   Data(ii)=OceanVal;
+end
 % no make no-data points above color map to get 'UpperMap' (white)
 Data(isnan(Data))=cmax+2*minstep;
 

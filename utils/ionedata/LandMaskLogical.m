@@ -5,8 +5,8 @@ function LogicalVector=LandMaskLogical(DataTemplate);
 %
 %      LogicalMatrix=LandMaskLogical - returns the 5 minute landmask
 %
-%      LogicalMatrix=LandMaskLogical(DataTemplate) -returns a landmask of 
-%        the size of DataTemplate (if DataTemplate is 5 or 10 mins) 
+%      LogicalMatrix=LandMaskLogical(DataTemplate) -returns a landmask of
+%        the size of DataTemplate (if DataTemplate is 5 or 10 mins)
 
 persistent LogicalLandMaskVector
 
@@ -28,10 +28,10 @@ switch numel(DataTemplate)
     case 4320*2160  %5min
         return
     case 2160*1080  %10min
-
+        
         ii=1:2:4319;
         jj=1:2:2159;
-      
+        
         LogicalVector10min=...
             (LogicalVector(ii,jj)  | ...
             LogicalVector(ii,jj+1) | ...
@@ -39,6 +39,10 @@ switch numel(DataTemplate)
             LogicalVector(ii+1,jj+1));
         
         LogicalVector=LogicalVector10min;
+    case 720*360  %30min / .5 degree
+        SystemGlobals
+        [Long,Lat,Data]=OpenNetCDF(LANDMASK_30MIN);
+        LogicalVector=(Data>0);
     otherwise
         error(['don''t have a landmask at this size'])
 end

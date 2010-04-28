@@ -18,8 +18,9 @@ if nargin==0
 end
     
 
-Units='';
-
+if nargin<4
+    Units='';
+end
 
 InputVariableName=inputname(nargin);  %Variable name from calling workspace.
 if nargin<5

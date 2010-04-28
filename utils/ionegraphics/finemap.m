@@ -104,6 +104,8 @@ switch lowercolor
         lc=[ 0.5977    0.7969    0.9961];
     case 'bluemarble'
         lc=[0.0588    0.1176    0.5490];
+        case 'emblue'
+        lc=[0.451    0.616    0.878];
     otherwise
         error(['don''t know this lowercolor bound'])
 end

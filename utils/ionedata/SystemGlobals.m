@@ -9,7 +9,7 @@ MISSINGDATAVALUE=-9E9;
 username=getenv('USER');
 
 switch username
-    case 'muell512';
+    case {'muell512','cass0131'};
         IoneDataDir=['~/Library/IonE/data/'];
     case 'jsgerber';
         IoneDataDir=['/Library/IonE/data/'];
@@ -31,3 +31,4 @@ AREAMAP_5MIN=[IoneDataDir 'misc/area_ha_5min.nc'];
 ADMINBOUNDARY_VECTORMAP=[IoneDataDir 'AdminBoundary2010/WorldLevel0Coasts_RevAr0.mat'];
 DERIVEDCLIMATEDATAPATH=[IoneDataDir 'Climate/WorldClimDerivedData/'];
 ADMINBOUNDARY_VECTORMAP_HIRES=[IoneDataDir 'AdminBoundary2010/WorldLevel0Coasts_RevAr0_HiRes.mat'];
+USSTATESBOUNDARY_VECTORMAP_HIRES=[IoneDataDir 'AdminBoundary2010/USStates.mat'];

@@ -28,7 +28,7 @@ SystemGlobals
 try
     
     if LineWidth <0.5
-        load('/ionedata/AdminBoundary2010/USStates.mat')
+        load(USSTATESBOUNDARY_VECTORMAP_HIRES)
     else
         load('/ionedata/AdminBoundary2010/USStates.mat')
     end

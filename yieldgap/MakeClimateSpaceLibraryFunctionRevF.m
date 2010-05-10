@@ -128,7 +128,7 @@ for N=Nspace;
                     load([TMILocation]);
                     Prec=TMI;
                 otherwise
-                    error
+                    error(['Don''t have ability to handle' WetFlag ' in ' mfilename ]);
             end
             
             switch HeatFlag
@@ -137,7 +137,7 @@ for N=Nspace;
                 case 'GDD'
                     eval('GDD=Heat;');
                 otherwise
-                    error
+                    error(['Don''t have ability to handle' HeatFlag ' in ' mfilename ]);
             end
             
             
@@ -173,7 +173,7 @@ for N=Nspace;
             
             save(FileName,'BinMatrix','GDDBins','PrecBins','ClimateDefs','GDDBinEdges','PrecBinEdges','Prec','GDD',...
                 'PercentToDrop','WetFlag','HeatFlag','CultivatedArea','CDS');
-            DAS.Description='Climate Space Library';
+            DAS.Description=['Climate Space Library, Revision F. ' datestr(now)];
             WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
         end
         

@@ -9,7 +9,7 @@ csqirev='Ar2';
 [Long,Lat,cSQI]=getdata(['HWSD_CategoricalCSQI_' csqirev]);
     
 for N=[5 10]
-    for jcrop=[9 19 20 21]
+    for jcrop=[5 7]
         for jwf=4;
             for jhf=1
                  

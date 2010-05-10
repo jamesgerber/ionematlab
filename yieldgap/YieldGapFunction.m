@@ -23,7 +23,7 @@ function OutputStructure=YieldGapFunction(FlagStructure)
 %  FS.ExternalMask=[];
 %  OutputStructure=YieldGapFunction(FS);
 %
-%
+%  FS.csqirev='Ar1';
 %
 
 %%% first look to see if we can automatically load in file.  If not, create
@@ -56,9 +56,20 @@ end
 
 try
     SystemGlobals
-    FileName=[OutputDirBase '/YieldGap_CropNo' int2str(FS.CropNo) ...
-        '_ClimateSpaceRev'  FS.ClimateSpaceRev ...
-        '_' num2str(FS.ClimateSpaceN) '.mat'];
+    switch FS.ClimateSpaceRev
+        case 'F'
+            FileName=[OutputDirBase '/YieldGap_CropNo' int2str(FS.CropNo) ...
+                'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
+                '_ClimateSpaceRev'  FS.ClimateSpaceRev ...
+                '_' num2str(FS.ClimateSpaceN) '.mat'];
+        case 'G'
+               FileName=[OutputDirBase '/YieldGap_CropNo' int2str(FS.CropNo) ...
+                   'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
+                '_ClimateSpaceRev'  FS.ClimateSpaceRev ...
+                '_soilrev' FS.csqirev ...
+                '_' num2str(FS.ClimateSpaceN) '.mat'];
+    end
+    
 catch
     error(['Prob. defining filename.  need CropNo, ClimateSpaceRev, ClimateSpaceN']);
 end
@@ -193,8 +204,20 @@ Production=CultivatedArea.*Yield;
 a=DS.Suitability{j};
 GDDTempstr=a(end-6);
 Nstr=int2str(N);
+switch Rev
+    case 'F'
 ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
     WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
+
+    case 'G'
+ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
+    WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev  ... 
+    '_soilrev' csqirev];
+
+    otherwise
+        error
+end
+
 
 if QuietFlag==0
     disp(['Loading ClimateLibraryDir/' ClimateMaskFile]);

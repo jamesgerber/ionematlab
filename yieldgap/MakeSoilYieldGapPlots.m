@@ -1,5 +1,8 @@
-
-for soilno=2
+% notes:  initial revision of this worked in original directory structure:
+% ~/sandbox/jsg003_yieldgapwork/
+%
+% now modifying to work in DeltaClimate
+for soilno=[1 2]
     switch soilno
         case 1
             SoilRev='Ar1';
@@ -7,7 +10,6 @@ for soilno=2
             SoilRev='Ar2';
         case 3
             SoilRev='Br1';
-            
         case 4
             SoilRev='Br2';
         otherwise
@@ -22,9 +24,10 @@ for soilno=2
     FS.MinNumberHectares=10;
     FS.CropNo=CropNo;
     FS.WetFlag='TMI';
-    FS.ClimateSpaceRev=['G_soilrev' SoilRev ];
+%    FS.ClimateSpaceRev=['G_soilrev' SoilRev ];
+    FS.ClimateSpaceRev='G';
     FS.ClimateSpaceN=N;
-    
+    FS.csqirev=SoilRev;
     FS.QuietFlag=0;
     FS.MakeGlobalMaps=0;
     FS.MakeBinWeightedYieldGapPlotFlag=0;

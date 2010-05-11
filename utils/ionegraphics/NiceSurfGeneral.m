@@ -45,6 +45,7 @@ function NiceSurf(Data,NSS);
 %   NSS.ColorMap='revsummer'
 %   NSS.LongLatBox=[];
 %   NSS.coloraxis=[];
+%   NSS.LogicalInclude=[];
 %
 %   NiceSurfGeneral(Yield,NSS)
 %
@@ -80,6 +81,7 @@ titlestring='';
 filename='';
 colormap='summer';
 longlatbox=[-180 180 -90 90];
+logicalinclude=[];
 coloraxis=[];
 
 %%now pull thins out of structure
@@ -137,8 +139,18 @@ if length(coloraxis)<2
     
 end
 
-
 Data=double(Data);
+
+if ~isempty(logicalinclude)
+    if size(logicalinclude)~=size(Data);
+        error(['LogicalInclude matrix of wrong size passed to ' mfilename]);
+    else
+        Data(~logicalinclude)=NaN;
+    end
+end
+
+
+
 
 
 UpperMap='white';
@@ -199,8 +211,8 @@ set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
 
 
 
-if ~isequal(longlatbox,[-180 180 -90 90])
-   
+if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
+    
     g1=longlatbox(1);
     g2=longlatbox(2);
     t1=longlatbox(3);
@@ -209,22 +221,22 @@ if ~isequal(longlatbox,[-180 180 -90 90])
     
     
     if fud.MapToolboxFig==1
-    
-    trustmatlab=1
-    
-    if trustmatlab==1
-    
-        setm(fud.DataAxisHandle,'Origin',...
-            [(t1+t2)/2 (g1+g2)/2 0])
-        setm(fud.DataAxisHandle,'FLonLimit',[g1 g2]-mean([g1 g2]))
-        setm(fud.DataAxisHandle,'FLatLimit',[t1 t2]-mean([t1 t2]))
-    else
-        setm(fud.DataAxisHandle,'Origin',...
-            [0 0 0])
-          setm(fud.DataAxisHandle,'FLonLimit',[g1 g2])
-          setm(fud.DataAxisHandle,'FLatLimit',[t1 t2])
-    end
-    
+        
+        trustmatlab=0
+        
+        if trustmatlab==1
+            
+            setm(fud.DataAxisHandle,'Origin',...
+                [(t1+t2)/2 (g1+g2)/2 0])
+            setm(fud.DataAxisHandle,'FLonLimit',[g1 g2]-mean([g1 g2]))
+            setm(fud.DataAxisHandle,'FLatLimit',[t1 t2]-mean([t1 t2]))
+        else
+            setm(fud.DataAxisHandle,'Origin',...
+                [0 0 0])
+            setm(fud.DataAxisHandle,'FLonLimit',[g1 g2])
+            setm(fud.DataAxisHandle,'FLatLimit',[t1 t2])
+        end
+        
     else
         % no mapping toolbox.  let's make things easy.
         
@@ -235,6 +247,10 @@ if ~isequal(longlatbox,[-180 180 -90 90])
     
     
 end
+
+
+    
+    
 
 
 set(fud.DataAxisHandle,'Visible','off');%again to make it current

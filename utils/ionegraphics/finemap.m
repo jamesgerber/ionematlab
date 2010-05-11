@@ -185,7 +185,7 @@ catch
                     [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/colormaps/jfbrown-green.tiff']);
                   
         otherwise
-            error([' don''t know this colormap '])
+            error([' don''t know this colormap: ' str])
             end
     end
 end

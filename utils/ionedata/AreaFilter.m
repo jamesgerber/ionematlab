@@ -43,7 +43,9 @@ if nargin <3
     p=0.95;
 end
 
-if nanmax(nanmax(AreaFraction))>2
+ii=(AreaFraction)<8.9e9;
+
+if nanmax(nanmax(AreaFraction(ii)))>2
     disp(['This appears to be actual area, not area fraction'])
     CultivatedArea=AreaFraction;
 else

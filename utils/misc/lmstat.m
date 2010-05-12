@@ -1,17 +1,57 @@
 wd=pwd;
 try
     cd /Applications/MATLAB_R2009a.app/etc/
-    dos(['./lmstat -a'])
+    dos(['./lmstat -a > ~/.lmstatoutput']);
     cd(wd)
 catch
     try
-    cd /Applications/MATLAB_R2008b.app/etc/
-    dos(['./lmstat -a'])
-    cd(wd)
-    catch
+        cd /Applications/MATLAB_R2008b.app/etc/
+        dos(['./lmstat -a >  ~/.lmstatoutput']);
         cd(wd)
+    catch
+        disp(['lmstat failed']);
+        cd(wd)
+        return
     end
 end
 
+
+fid=fopen('~/.lmstatoutput');
+
+wearedone=0;
+count=0;
+while ~wearedone
+count=count+1;
+    x=fgetl(fid);
     
+    if ~isempty(strmatch('Users of MAP_Toolbox:',x))
+        exitcode=1;
+        wearedone=1;
+    end
     
+    if x==-1 | count> 1e4
+        exitcode=0;
+        wearedone=1
+    end
+    
+end
+
+if exitcode==0
+    error(['error in ' mfilename]);
+else
+    
+    fprintf(1,'%s\n',x);
+    for j=1:20
+        
+       x= fgetl(fid);
+       if ~isempty(strmatch('Users of ',x))
+           break
+       end
+       fprintf(1,'%s\n',x);
+
+    end
+    
+end
+
+
+

@@ -1,6 +1,23 @@
 function [xkeep,ykeep]=ShapeFileToXY(S,minkmsq,thinninglength)
 % SHAPEFILETOXY - turn a shapefile structure into x/y that would lead to a
 % map
+%
+%   Syntax 
+%
+%      [xkeep,ykeep]=ShapeFileToXY(S) where S is the output from a 
+%      SHAPEREAD command (mapping toolbox) will produce a vector which can
+%      be plotted in matlab to produce the outline defined by the polygons
+%      of S.
+%
+%      [xkeep,ykeep]=ShapeFileToXY(S,minkmsq,thinninglength) will omit any
+%      polygons whose enclosed area (determined by polyarea) is less than
+%      minkmsq (default 200), and will smooth out multiple points within
+%      thinning length of each other.
+%
+%   Example
+%
+%
+
 
 if nargin==1
     minkmsq=200;
@@ -25,8 +42,12 @@ for j=1:length(S);
         
         x=X(ii(m)+1:ii(m+1)-1);
         y=Y(ii(m)+1:ii(m+1)-1);
-        
-        [xred,yred]=DownSample(x,y,minkmsq,thinninglength);
+        if isempty(x)
+            xred=x;
+            yred=y;
+        else
+            [xred,yred]=DownSample(x,y,minkmsq,thinninglength);
+        end
         if ~isempty(xred)
             xkeep=[xkeep NaN xred];
             ykeep=[ykeep NaN yred];

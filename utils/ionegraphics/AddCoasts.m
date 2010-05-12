@@ -19,7 +19,6 @@ if nargin==1
         HFig=gcf;
     end
 end
-AddStates(LineWidth,HFig);
 
 hax=gca;
 

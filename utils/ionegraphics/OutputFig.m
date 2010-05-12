@@ -1,4 +1,4 @@
-function OutputFig(Hfig,FileName,ResFlag)
+function FileName=OutputFig(Hfig,FileName,ResFlag)
 % OutputFig - output a figure as a .png
 %
 % SYNTAX

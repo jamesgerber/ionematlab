@@ -28,9 +28,11 @@ SystemGlobals
 try
     
     if LineWidth <0.5
-        load(USSTATESBOUNDARY_VECTORMAP_HIRES)
+        Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
+        States=load(WORLDCOUNTRIES_BRIC_NAFTASTATES_VECTORMAP_HIRES);
     else
-        load('/ionedata/AdminBoundary2010/USStates.mat')
+        Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
+        States=load(WORLDCOUNTRIES_BRIC_NAFTASTATES_VECTORMAP_HIRES);
     end
 catch  
         disp(['did not find system vectormap'])
@@ -49,10 +51,14 @@ catch
 end
 
 if CanMap==0
-    hp=plot(long,lat,'k');
-    set(hp,'linewidth',LineWidth);
+    hp=plot(States.long,States.lat);
+    set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*5);
+    hp=plot(Countries.long,Countries.lat,'k');
+    set(hp,'linewidth',LineWidth)
 else  
-    hp=plotm(lat,long,'k');
+    hp=plotm(States.lat,States.long,'k');
+    set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*5);
+    hp=plotm(Countries.lat,Countries.long,'k');
     set(hp,'linewidth',LineWidth);
 end
 set(gcf,'renderer','zbuffer');

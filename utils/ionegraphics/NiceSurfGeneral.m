@@ -1,20 +1,20 @@
-function NiceSurf(Data,NSS);
-% NICESURF Data MissingValue,ColorMap,LowerMap
-% 
+function NiceSurfGeneral(Data,NSS);
+% NICESURFGENERAL
+%
 % Syntax:
 %    NiceSurf(Data,STRUCT);
 %    NiceSurf(Long,Lat,Data,STRUCT);
 %    NiceSurf(DataStruct,STRUCT);
 %
-%  
+%
 %  Struct can have the following fields [Default]
 %
 %   NSS.coloraxis=coloraxis
 %
 %   where coloraxis can have the following forms:
-%   [] (empty vector) 
+%   [] (empty vector)
 %           coloraxis from data minimum to data maximum
-%   [f]   where f is between 0 and 1 
+%   [f]   where f is between 0 and 1
 %           coloraxis from data minimum to 100*f percentile maximum
 %           This syntax useful if there are a few outliers
 %   [0]     coloraxis from -max(abs(Data)) to +max(abs(Data))
@@ -30,6 +30,8 @@ function NiceSurf(Data,NSS);
 %   NSS.FileName
 %   NSS.ColorMap
 %   NSS.LongLatBox
+%   NSS.DisplayNotes  - this will be placed on the lower left of graph
+%   NSS.Description - this will be saved as metadata within the file
 %
 %
 %  Example
@@ -46,11 +48,13 @@ function NiceSurf(Data,NSS);
 %   NSS.LongLatBox=[];
 %   NSS.coloraxis=[];
 %   NSS.LogicalInclude=[];
-%
 %   NiceSurfGeneral(Yield,NSS)
 %
-%   NSS.LongLatBox=[-120 -80 10 35];
+%   NSS.LongLatBox=[-120 -80 10 35]; %PlotArea takes precedence
+%   NSS.PlotArea='World';
 %   NSS.coloraxis=[];
+%   NSS.Description='';
+%   NSS.DisplayNotes='';
 %
 %   NiceSurfGeneral(Yield,NSS)
 %   NiceSurf(Yield,'Yield Maize','tons/ha',[],'revsummer','YieldTestPlot2')
@@ -68,7 +72,7 @@ end
 
 
 if isstruct(Data)
-    MissingValue=GetMissingValue(Data);   
+    MissingValue=GetMissingValue(Data);
     [Long,Lat,Data,Units,DefaultTitleStr,NoDataStructure]=ExtractDataFromStructure(Data);
     Data(Data==MissingValue)=NaN;
 end
@@ -81,9 +85,11 @@ titlestring='';
 filename='';
 colormap='summer';
 longlatbox=[-180 180 -90 90];
+plotarea='';
 logicalinclude=[];
 coloraxis=[];
-
+displaynotes='';
+description='';
 %%now pull thins out of structure
 
 a=fieldnames(NSS);
@@ -91,6 +97,28 @@ for j=1:length(a)
     disp([ lower(a{j}) '=NSS.' a{j} ';'])
     eval([ lower(a{j}) '=NSS.' a{j} ';'])
 end
+
+
+% Now a section to look for PlotArea
+
+if isempty(plotarea)
+    %we are done.  keep longlatbox as is.
+else
+    switch lower(plotarea)
+        case 'world'
+            longlatbox=[-180 180 -90 90];
+        case 'europe'
+            longlatbox=[-10 60 35 75];
+        case 'usmexico'
+            longlatbox=[-125 -65 15 50];
+        case 'africa'
+            longlatbox=[-20 60 -35 40];
+        otherwise
+            error(['Don''t recognize plotarea ' plotarea]);
+    end
+end
+
+
 
 ii=find(abs(Data) >= 1e9);
 if length(ii)>0
@@ -117,7 +145,7 @@ if length(coloraxis)<2
             hiaverage=tmp01(round(length(tmp01)*f));
             coloraxis=[loval hiaverage];
         end
-     else
+    else
         ii=find(isfinite(Data));
         tmp01=Data(ii);
         coloraxis=[min(tmp01) max(tmp01)]
@@ -133,7 +161,7 @@ if length(coloraxis)<2
     if c1 < (c2-c1)/10
         coloraxis(1)=min(c1,0);
     end
-
+    
     
     
     
@@ -176,10 +204,10 @@ if numel(Data)==4320*2160
     ii=(land==0);
     Data(ii)=OceanVal;
 else
-   % problem ... this is not 5minute data
-   land=LandMaskLogical(Data);
-   ii=(land==0);
-   Data(ii)=OceanVal;
+    % problem ... this is not 5minute data
+    land=LandMaskLogical(Data);
+    ii=(land==0);
+    Data(ii)=OceanVal;
 end
 % no make no-data points above color map to get 'UpperMap' (white)
 Data(isnan(Data))=cmax+2*minstep;
@@ -190,7 +218,7 @@ IonESurf(Data);
 finemap(colormap,LowerMap,UpperMap);
 
 caxis([(cmin-minstep)  (cmax+minstep)]);
-AddCoasts(0.1);
+AddStates(0.05);
 
 fud=get(gcf,'UserData');
 if fud.MapToolboxFig==1
@@ -204,10 +232,6 @@ set(fud.DataAxisHandle,'Position',[0.00625 .2 0.9875 .7]);
 set(fud.ColorbarHandle,'Visible','on');
 %set(fud.ColorbarHandle,'Position',[0.1811+.1 0.08 0.6758-.2 0.0568])
 set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
-
-
-
-
 
 
 
@@ -240,17 +264,9 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     else
         % no mapping toolbox.  let's make things easy.
         
-        
-        
-        
     end
     
-    
 end
-
-
-    
-    
 
 
 set(fud.DataAxisHandle,'Visible','off');%again to make it current
@@ -260,18 +276,37 @@ set(ht,'FontSize',14)
 set(ht,'FontWeight','Bold')
 
 hcbtitle=get(fud.ColorbarHandle,'Title');
- set(hcbtitle,'string',[' ' units ' '])
+set(hcbtitle,'string',[' ' units ' '])
 set(hcbtitle,'fontsize',12);
 set(hcbtitle,'fontweight','bold');
 %cblabel(Units)
 
+%% Was there text for an archival statement on the plot?
+if ~isempty(displaynotes)
+    hx=axes('position',[.01 .01 .98 .02]);
+    ht=text(0,0.5,displaynotes)
+    set(hx,'visible','off')
+    set(ht,'fontsize',6)
+    set(ht,'interpreter','none')
+end
+
+
+
 hideui
 
 if ~isempty(filename)
-    OutputFig('Force',filename);
+    ActualFileName=OutputFig('Force',filename);
     if length(get(allchild(0)))>4
         close(gcf)
     end
 end
 
+% now ... if there is a metadata request, open and then resave the file
+if ~isempty(description)
+    if ~strcmp(ActualFileName(end-3:end),'.png');
+        ActualFileName=[ActualFileName '.png'];
+    end
+    a=imread(ActualFileName);
+    imwrite(a,ActualFileName,'Description',description);
+end
 

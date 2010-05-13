@@ -1,11 +1,13 @@
-function NiceSurfGeneral(Data,NSS);
+function NiceSurfGeneral(varargin);
 % NICESURFGENERAL
 %
 % Syntax:
+%    NiceSurf(Data);
 %    NiceSurf(Data,STRUCT);
 %    NiceSurf(Long,Lat,Data,STRUCT);
 %    NiceSurf(DataStruct,STRUCT);
-%
+%    NiceSurf(Data,STRUCT,'propertyname','propertyvalue');
+%    NiceSurf(Data,'propertyname','propertyvalue');
 %
 %  Struct can have the following fields [Default]
 %
@@ -20,6 +22,11 @@ function NiceSurfGeneral(Data,NSS);
 %   [0]     coloraxis from -max(abs(Data)) to +max(abs(Data))
 %           This syntax is useful for aligning 0 with the center of a
 %           colorbar
+%   [-f]  where f is between 0 and 1
+%           hybrid of previous two syntaxes.  coloraxis centered on 0, and
+%           will extend to +/-  100*f percentile absolute maximum
+%           This syntax useful if there are a few outliers in a plot of
+%           relative changes.
 %   [cmin cmax]
 %           coloraxis from cmin to cmax
 %
@@ -69,27 +76,70 @@ if nargin==0
     return
 end
 
-if nargin==2
+arglist=varargin;  %so we can hack this down as we remove arguments
+
+if nargin==1
+    % make sure at least two arguments, for less error checking below
+    NSS.PlotArea='World';
+    arglist{2}=NSS;   
+end
+
+
+%possible input syntax:
+%    NiceSurf(Data,STRUCT);
+%    NiceSurf(Data,STRUCT,'propertyname','propertyvalue');
+%    NiceSurf(Data,'propertyname','propertyvalue');
+%    NiceSurf(Long,Lat,Data,STRUCT);
+%    NiceSurf(Long,Lat,Data,'propertyname','propertyvalue');
+%    NiceSurf(Long,Lat,Data,STRUCT,'propertyname','propertyvalue');
+%%% where Data can be a matrix or a structure.  
+
+%take care of the cases where first argin is a vector.
+
+if min(size(arglist{1}))==1
+    Long=arglist{1};
+    Lat=arglist{2};
+    arglist(1:nargin-2)=arglist(3:end);
+end
+
+
+% now resolve for data to be a structure or a matrix
+Data=arglist{1};
+if isstruct(Data)
+%    MissingValue=GetMissingValue(Data);
+    [Long,Lat,Data,Units,DefaultTitleStr,NoDataStructure]=ExtractDataFromStructure(Data);
+%    Data(Data==MissingValue)=NaN;
+else
     [Long,Lat]=InferLongLat(Data);
 end
 
 
-if isstruct(Data)
-    MissingValue=GetMissingValue(Data);
-    [Long,Lat,Data,Units,DefaultTitleStr,NoDataStructure]=ExtractDataFromStructure(Data);
-    Data(Data==MissingValue)=NaN;
+if isstruct(arglist{2})
+    NSS=arglist{2};
+    if length(arglist)==2
+        PropsList=[];
+    else
+        PropsList=arglist(3:end);
+    end
+else
+    
+    NSS=[];
+    PropsList=arglist(2:end)
 end
 
-%% check class of Data
-S=class(Data)
-
-switch S
-    case {'double','single'}
-        %ok.  do nothing.
-    otherwise
-    warning(['Class of Data variable might cause problems.'])
+for j=1:2:length(PropsList)
+    NSS=setfield(NSS,PropsList{j},PropsList{j+1});;  
 end
-Data=double(Data);
+
+
+%% sort through everything passed in ...
+
+
+ListOfProperties={
+'units','titlestring','filename','cmap','longlatbox','plotarea', ...
+'logicalinclude','coloraxis','displaynotes','description','uppermap',...
+'lowermap'};
+
 
 units='';
 titlestring='';
@@ -103,12 +153,17 @@ displaynotes='';
 description='';
 uppermap='white';
 lowermap='emblue';
-%%now pull thins out of structure
+%%now pull property values out of structure
 
 a=fieldnames(NSS);
 for j=1:length(a)
-    disp([ lower(a{j}) '=NSS.' a{j} ';'])
-    eval([ lower(a{j}) '=NSS.' a{j} ';'])
+    ThisProperty=a{j};
+    if isempty(strmatch(lower(ThisProperty),lower(ListOfProperties),'exact'))
+        ListOfProperties
+        error(['Property "' ThisProperty '" not recognized in ' mfilename])
+    end
+     %disp([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
+     eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
 end
 
 
@@ -131,7 +186,16 @@ else
     end
 end
 
+%% check class of Data, data conditioning
+S=class(Data);
 
+switch S
+    case {'double','single'}
+        %ok.  do nothing.
+    otherwise
+    warning(['Class of Data variable might cause problems.'])
+end
+Data=double(Data);
 
 ii=find(abs(Data) >= 1e9);
 if length(ii)>0
@@ -139,6 +203,9 @@ if length(ii)>0
     Data(ii)=NaN;
 end
 
+
+
+%% colorbars
 if length(coloraxis)<2
     
     
@@ -148,11 +215,15 @@ if length(coloraxis)<2
         if coloraxis==0
             coloraxis=[-(max(abs(tmp01))) (max(abs(tmp01)))]
         else                     
-            f=coloraxis;
+            f=abs(coloraxis);
             tmp01=sort(tmp01);
             loval=min(tmp01);
             hiaverage=tmp01(round(length(tmp01)*f));
-            coloraxis=[loval hiaverage];
+            if coloraxis>0
+                coloraxis=[loval hiaverage];
+            else
+                coloraxis=[-hiaverage hiaverage];
+            end
         end
     else
         ii=find(isfinite(Data));

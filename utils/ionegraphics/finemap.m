@@ -88,44 +88,50 @@ if ~isnumeric(cmap)
         cmap=cmap(end:-1:1,:);
     end
 end
-
-switch lowercolor
-    case {'','default'}
-        lc=[];
-    case 'aqua'
-        lc=[    0.0352    0.4258    0.5195];
-    case 'blue'
-        lc=[127/255 1 212/255];
-    case 'black'
-        lc=[0 0 0];
-    case 'white'
-        lc=[1 1 1];
-    case 'robin'
-        lc=[ 0.5977    0.7969    0.9961];
-    case 'bluemarble'
-        lc=[0.0588    0.1176    0.5490];
+if ~ischar(lowercolor)
+    lc=lowercolor;
+else
+    switch lowercolor
+        case {'','default'}
+            lc=[];
+        case 'aqua'
+            lc=[    0.0352    0.4258    0.5195];
+        case 'blue'
+            lc=[127/255 1 212/255];
+        case 'black'
+            lc=[0 0 0];
+        case 'white'
+            lc=[1 1 1];
+        case 'robin'
+            lc=[ 0.5977    0.7969    0.9961];
+        case 'bluemarble'
+            lc=[0.0588    0.1176    0.5490];
         case 'emblue'
-        lc=[0.451    0.616    0.878];
-    otherwise
-        error(['don''t know this lowercolor bound: ' lowercolor])
+            lc=[0.451    0.616    0.878];
+        otherwise
+            error(['don''t know this lowercolor bound: ' lowercolor])
+    end
 end
-
-switch uppercolor
-    case {'','default'}
-        uc=[];
-    case 'white'
-        uc=[1 1 1];
-    case 'black'
-        uc=[0 0 0];
-    case {'gray'}
-        uc=[.5 .5 .5];
-    case 'robin'
-        uc=[        0.5977    0.7969    0.9961];
-    case 'bluemarble'
-        uc=[0.0588    0.1176    0.5490];
-    otherwise
-        error(['don''t know this uppercolor bound: ' uppercolor]);
-        
+if ~ischar(uppercolor)
+    uc=uppercolor;
+else
+    switch uppercolor
+        case {'','default'}
+            uc=[];
+        case 'white'
+            uc=[1 1 1];
+        case 'black'
+            uc=[0 0 0];
+        case {'gray'}
+            uc=[.8 .8 .8];
+        case 'robin'
+            uc=[        0.5977    0.7969    0.9961];
+        case 'bluemarble'
+            uc=[0.0588    0.1176    0.5490];
+        otherwise
+            error(['don''t know this uppercolor bound: ' uppercolor]);
+            
+    end
 end
 
 map=cmap;

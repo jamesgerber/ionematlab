@@ -52,12 +52,12 @@ end
 
 if CanMap==0
     hp=plot(States.long,States.lat);
-    set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*5);
+    set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*4);
     hp=plot(Countries.long,Countries.lat,'k');
     set(hp,'linewidth',LineWidth)
 else  
     hp=plotm(States.lat,States.long,'k');
-    set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*5);
+    set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*4);
     hp=plotm(Countries.lat,Countries.long,'k');
     set(hp,'linewidth',LineWidth);
 end

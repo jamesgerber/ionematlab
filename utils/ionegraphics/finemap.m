@@ -107,7 +107,7 @@ switch lowercolor
         case 'emblue'
         lc=[0.451    0.616    0.878];
     otherwise
-        error(['don''t know this lowercolor bound'])
+        error(['don''t know this lowercolor bound: ' lowercolor])
 end
 
 switch uppercolor
@@ -117,12 +117,14 @@ switch uppercolor
         uc=[1 1 1];
     case 'black'
         uc=[0 0 0];
+    case {'gray'}
+        uc=[.5 .5 .5];
     case 'robin'
         uc=[        0.5977    0.7969    0.9961];
     case 'bluemarble'
         uc=[0.0588    0.1176    0.5490];
     otherwise
-        error
+        error(['don''t know this uppercolor bound: ' uppercolor]);
         
 end
 

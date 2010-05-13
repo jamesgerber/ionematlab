@@ -28,7 +28,7 @@ function NiceSurfGeneral(Data,NSS);
 %   NSS.Units ['']
 %   NSS.TitleString
 %   NSS.FileName
-%   NSS.ColorMap
+%   NSS.cmap
 %   NSS.LongLatBox
 %   NSS.DisplayNotes  - this will be placed on the lower left of graph
 %   NSS.Description - this will be saved as metadata within the file
@@ -44,7 +44,7 @@ function NiceSurfGeneral(Data,NSS);
 %   NSS.Units='tons/ha';
 %   NSS.TitleString='Yield Maize';
 %   NSS.FileName='YieldTestPlot4';
-%   NSS.ColorMap='revsummer'
+%   NSS.cmap='revsummer'
 %   NSS.LongLatBox=[];
 %   NSS.coloraxis=[];
 %   NSS.LogicalInclude=[];
@@ -55,12 +55,15 @@ function NiceSurfGeneral(Data,NSS);
 %   NSS.coloraxis=[];
 %   NSS.Description='';
 %   NSS.DisplayNotes='';
+%   NSS.uppermap='white';
+%   NSS.lowermap='emblue';
 %
 %   NiceSurfGeneral(Yield,NSS)
 %   NiceSurf(Yield,'Yield Maize','tons/ha',[],'revsummer','YieldTestPlot2')
 %   NiceSurf(Yield,'Yield Maize','tons/ha',[0 12],'revsummer','YieldTestPlot1')
 %   NiceSurf(Yield,'Yield Maize','tons/ha',[0.99],'revsummer','YieldTestPlot3')
 %
+%% preliminaries to handle inputs
 if nargin==0
     help(mfilename)
     return
@@ -77,19 +80,29 @@ if isstruct(Data)
     Data(Data==MissingValue)=NaN;
 end
 
+%% check class of Data
+S=class(Data)
 
-
+switch S
+    case {'double','single'}
+        %ok.  do nothing.
+    otherwise
+    warning(['Class of Data variable might cause problems.'])
+end
+Data=double(Data);
 
 units='';
 titlestring='';
 filename='';
-colormap='summer';
+cmap='summer';
 longlatbox=[-180 180 -90 90];
 plotarea='';
 logicalinclude=[];
 coloraxis=[];
 displaynotes='';
 description='';
+uppermap='white';
+lowermap='emblue';
 %%now pull thins out of structure
 
 a=fieldnames(NSS);
@@ -109,7 +122,7 @@ else
             longlatbox=[-180 180 -90 90];
         case 'europe'
             longlatbox=[-10 60 35 75];
-        case 'usmexico'
+        case {'usmexico','usmex'}
             longlatbox=[-125 -65 15 50];
         case 'africa'
             longlatbox=[-20 60 -35 40];
@@ -134,12 +147,8 @@ if length(coloraxis)<2
         tmp01=Data(ii);
         if coloraxis==0
             coloraxis=[-(max(abs(tmp01))) (max(abs(tmp01)))]
-        else
-            
-            
-            
+        else                     
             f=coloraxis;
-            
             tmp01=sort(tmp01);
             loval=min(tmp01);
             hiaverage=tmp01(round(length(tmp01)*f));
@@ -177,15 +186,7 @@ if ~isempty(logicalinclude)
     end
 end
 
-
-
-
-
-UpperMap='white';
-LowerMap='emblue'
-
-
-
+%% Color axis manipulation
 cmax=coloraxis(2);
 cmin=coloraxis(1);
 minstep= (cmax-cmin)*.001;
@@ -196,26 +197,22 @@ Data(cmin>Data)=cmin;
 
 
 OceanVal=coloraxis(1)-minstep;
+NoDataLandVal=coloraxis(2)+minstep;
 
 
-if numel(Data)==4320*2160
-    % first, get any no-data points
-    land=LandMaskLogical;
-    ii=(land==0);
-    Data(ii)=OceanVal;
-else
-    % problem ... this is not 5minute data
-    land=LandMaskLogical(Data);
-    ii=(land==0);
-    Data(ii)=OceanVal;
-end
-% no make no-data points above color map to get 'UpperMap' (white)
-Data(isnan(Data))=cmax+2*minstep;
+%Any points off of the land mask must be set to ocean color.
+land=LandMaskLogical;
+ii=(land==0);
+Data(ii)=OceanVal;
+
+% no make no-data points above color map to get 'uppermap' (white)
+Data(isnan(Data))=NoDataLandVal;
 
 
+%% Make graph
 IonESurf(Data);
-%title(Title);
-finemap(colormap,LowerMap,UpperMap);
+
+finemap(cmap,lowermap,uppermap);
 
 caxis([(cmin-minstep)  (cmax+minstep)]);
 AddStates(0.05);

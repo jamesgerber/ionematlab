@@ -1,3 +1,6 @@
+% LMSTAT - type out lmstat results specifically for mapping toolbox
+
+
 wd=pwd;
 try
     cd /Applications/MATLAB_R2009a.app/etc/
@@ -53,5 +56,5 @@ else
     
 end
 
-
+dos(['rm ~/.lmstatoutput']);
 

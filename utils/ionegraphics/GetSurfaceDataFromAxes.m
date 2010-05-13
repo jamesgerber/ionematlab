@@ -35,7 +35,8 @@ for j=1:length(hc)
     z=get(hc(j),'ZData');
     % check to see if z is all zeros.  If so, we want
     % cdata.
-    ii=find(~isnan(z) & z~=0);
+    ii=find(~isnan(z) & z~=0 & z~=-1);  %need to add -1 since some codes 
+    %put the color data at -1 so that lines take precedence
     if isempty(ii)
       z=get(hc(j),'CData');
     end

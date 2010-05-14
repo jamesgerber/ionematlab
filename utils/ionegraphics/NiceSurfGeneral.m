@@ -64,6 +64,7 @@ function NiceSurfGeneral(varargin);
 %   NSS.DisplayNotes='';
 %   NSS.uppermap='white';
 %   NSS.lowermap='emblue';
+%   NSS.colorbarpercent='off';
 %
 %   NiceSurfGeneral(Yield,NSS)
 %   NiceSurf(Yield,'Yield Maize','tons/ha',[],'revsummer','YieldTestPlot2')
@@ -138,7 +139,7 @@ end
 ListOfProperties={
 'units','titlestring','filename','cmap','longlatbox','plotarea', ...
 'logicalinclude','coloraxis','displaynotes','description','uppermap',...
-'lowermap'};
+'lowermap','colorbarpercent'};
 
 
 units='';
@@ -153,6 +154,7 @@ displaynotes='';
 description='';
 uppermap='white';
 lowermap='emblue';
+colorbarpercent='off'
 %%now pull property values out of structure
 
 a=fieldnames(NSS);
@@ -302,6 +304,10 @@ set(fud.ColorbarHandle,'Visible','on');
 set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
 
 
+if isequal(colorbarpercent,'on')
+    AddColorbarPercent;
+end
+
 
 if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     
@@ -342,6 +348,9 @@ ht=text(0,pi/2,titlestring);
 set(ht,'HorizontalAlignment','center');
 set(ht,'FontSize',14)
 set(ht,'FontWeight','Bold')
+if length(titlestring)>1
+    set(ht,'Position',[0 1.635 0]);
+end
 
 hcbtitle=get(fud.ColorbarHandle,'Title');
 set(hcbtitle,'string',[' ' units ' '])
@@ -364,7 +373,7 @@ hideui
 
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename);
-    if length(get(allchild(0)))>4
+    if length(get(allchild(0)))>1
         close(gcf)
     end
 end

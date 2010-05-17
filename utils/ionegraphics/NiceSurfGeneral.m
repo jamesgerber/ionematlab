@@ -47,6 +47,7 @@ function NiceSurfGeneral(varargin);
 %   NSS.lowermap='emblue';
 %   NSS.colorbarpercent='off';%
 %   NSS.resolution='-r600';%
+%   NSS.figfilesave='on';%
 %
 %  Example
 %
@@ -146,9 +147,9 @@ end
 ListOfProperties={
 'units','titlestring','filename','cmap','longlatbox','plotarea', ...
 'logicalinclude','coloraxis','displaynotes','description','uppermap',...
-'lowermap','colorbarpercent','resolution'};
+'lowermap','colorbarpercent','resolution','figfilesave'};
 
-
+%% set defaults for these properties
 units='';
 titlestring='';
 filename='';
@@ -162,7 +163,8 @@ description='';
 uppermap='white';
 lowermap='emblue';
 colorbarpercent='off';
-resolution='-r600'
+resolution='-r600';
+figfilesave='off';
 %%now pull property values out of structure
 
 a=fieldnames(NSS);
@@ -381,6 +383,9 @@ hideui
 
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
+    if isequal(figfilesave,'on')
+        hgsave(filename);
+    end
     if length(get(allchild(0)))>4
         close(gcf)
     end

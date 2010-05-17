@@ -113,4 +113,5 @@ switch nargout
     otherwise
         error
 end
+netcdf.close(ncid);
 

@@ -56,5 +56,5 @@ else
     
 end
 
-dos(['rm ~/.lmstatoutput']);
+%dos(['rm ~/.lmstatoutput']);
 

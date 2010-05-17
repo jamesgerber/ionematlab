@@ -39,7 +39,14 @@ function NiceSurfGeneral(varargin);
 %   NSS.LongLatBox
 %   NSS.DisplayNotes  - this will be placed on the lower left of graph
 %   NSS.Description - this will be saved as metadata within the file
-%
+%   NSS.PlotArea='World';
+%   NSS.coloraxis=[];
+%   NSS.Description='';
+%   NSS.DisplayNotes='';
+%   NSS.uppermap='white';
+%   NSS.lowermap='emblue';
+%   NSS.colorbarpercent='off';%
+%   NSS.resolution='-r600';%
 %
 %  Example
 %
@@ -139,7 +146,7 @@ end
 ListOfProperties={
 'units','titlestring','filename','cmap','longlatbox','plotarea', ...
 'logicalinclude','coloraxis','displaynotes','description','uppermap',...
-'lowermap','colorbarpercent'};
+'lowermap','colorbarpercent','resolution'};
 
 
 units='';
@@ -154,7 +161,8 @@ displaynotes='';
 description='';
 uppermap='white';
 lowermap='emblue';
-colorbarpercent='off'
+colorbarpercent='off';
+resolution='-r600'
 %%now pull property values out of structure
 
 a=fieldnames(NSS);
@@ -372,8 +380,8 @@ end
 hideui
 
 if ~isempty(filename)
-    ActualFileName=OutputFig('Force',filename);
-    if length(get(allchild(0)))>1
+    ActualFileName=OutputFig('Force',filename,resolution);
+    if length(get(allchild(0)))>4
         close(gcf)
     end
 end

@@ -189,10 +189,14 @@ else
             longlatbox=[-180 180 -90 90];
         case 'europe'
             longlatbox=[-10 60 35 75];
+            filename=[filename '_europe'];
         case {'usmexico','usmex'}
-            longlatbox=[-125 -65 15 50];
+            longlatbox=[-130 -60 10 55];
+            
+            filename=[filename '_usmexico'];
         case 'africa'
             longlatbox=[-20 60 -35 40];
+            filename=[filename '_africa'];
         otherwise
             error(['Don''t recognize plotarea ' plotarea]);
     end
@@ -311,8 +315,12 @@ set(fud.DataAxisHandle,'Visible','off');
 set(fud.DataAxisHandle,'Position',[0.00625 .2 0.9875 .7]);
 set(fud.ColorbarHandle,'Visible','on');
 %set(fud.ColorbarHandle,'Position',[0.1811+.1 0.08 0.6758-.2 0.0568])
-set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
-
+drawnow
+if fud.MapToolboxFig==0
+     set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02])
+else
+    set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
+end
 
 if isequal(colorbarpercent,'on')
     AddColorbarPercent;
@@ -330,7 +338,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     
     if fud.MapToolboxFig==1
         
-        trustmatlab=0
+        trustmatlab=1
         
         if trustmatlab==1
             
@@ -348,13 +356,20 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     else
         % no mapping toolbox.  let's make things easy.
         
+        axis([g1 g2 t1 t2])
+        
+        
     end
+     ht=text( 0 ,(t2-t1)/2*pi/180,titlestring)
+else
+    ht=text(0,pi/2,titlestring);
     
 end
 
 
 set(fud.DataAxisHandle,'Visible','off');%again to make it current
-ht=text(0,pi/2,titlestring);
+%
+
 set(ht,'HorizontalAlignment','center');
 set(ht,'FontSize',14)
 set(ht,'FontWeight','Bold')

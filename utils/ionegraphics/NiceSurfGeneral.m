@@ -188,7 +188,7 @@ else
         case 'world'
             longlatbox=[-180 180 -90 90];
         case 'europe'
-            longlatbox=[-10 60 35 75];
+            longlatbox=[-15 65 30 80];
             filename=[filename '_europe'];
         case {'usmexico','usmex'}
             longlatbox=[-130 -60 10 55];
@@ -360,10 +360,12 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         
         
     end
-     ht=text( 0 ,(t2-t1)/2*pi/180,titlestring)
+     ht=text( 0 ,(t2-t1)/2*pi/180 + 0*pi/20,titlestring)
 else
     ht=text(0,pi/2,titlestring);
-    
+    if length(titlestring)>1
+    set(ht,'Position',[0 1.635 0]);
+end
 end
 
 
@@ -373,9 +375,7 @@ set(fud.DataAxisHandle,'Visible','off');%again to make it current
 set(ht,'HorizontalAlignment','center');
 set(ht,'FontSize',14)
 set(ht,'FontWeight','Bold')
-if length(titlestring)>1
-    set(ht,'Position',[0 1.635 0]);
-end
+
 
 hcbtitle=get(fud.ColorbarHandle,'Title');
 set(hcbtitle,'string',[' ' units ' '])
@@ -401,7 +401,7 @@ if ~isempty(filename)
     if isequal(figfilesave,'on')
         hgsave(filename);
     end
-    if length(get(allchild(0)))>4
+    if length(get(allchild(0)))>1
         close(gcf)
     end
 end

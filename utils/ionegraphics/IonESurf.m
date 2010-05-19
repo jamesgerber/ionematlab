@@ -191,9 +191,9 @@ vis=get(UserDataStructure.DataAxisHandle,'visible');
 set(UserDataStructure.DataAxisHandle,'visible',vis);
 axes(UserDataStructure.DataAxisHandle);
 
-%if CheckForMappingToolbox;
-%    ChangeProjection('Initialize');
-%end
+if CheckForMappingToolbox;
+   ChangeProjection('Initialize');
+end
 
 
 

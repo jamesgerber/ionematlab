@@ -17,6 +17,10 @@ function [jp,xbins,ybins]=GenerateJointDist(X,Y,XBinEdges,YBinEdges,Weight);
 %
 %   See Also:  SelectUniformBins
 %
+%
+%    Be careful with square JPD's !!!!!
+%
+%   Always a good idea to make s
 
  
 if nargin==0

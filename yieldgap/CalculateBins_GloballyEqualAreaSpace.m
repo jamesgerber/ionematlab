@@ -1,40 +1,40 @@
-function [GDDBinEdgesCell,PrecBinEdges]= ...
-    CalculateBins_GloballyEqualAreaSpace(GDD,Prec,Area,N,PercentToDrop);
+function [YYYBinEdgesCell,XXXBinEdges]= ...
+    CalculateBins_GloballyEqualAreaSpace(YYY,XXX,Area,N,PercentToDrop);
 %   CalculateBins_EqualAreaSpace
 %
 %     SYNTAX:
-%    [GDDBinEdges,PrecBinEdges]=CalculateBins_CenteredSpace(GDD,Prec,Area); 
+%    [YYYBinEdges,XXXBinEdges]=CalculateBins_CenteredSpace(YYY,XXX,Area); 
 %
 %
 
-% first Prec Bins
+% first XXX Bins
 
 
-IndicesWeCareAbout=find(CropMaskLogical & Prec < 1e15 & isfinite(Prec));
+IndicesWeCareAbout=find(CropMaskLogical & XXX < 1e15 & isfinite(XXX));
 
 
-x=GDD(IndicesWeCareAbout);
-y=Prec(IndicesWeCareAbout);
+x=YYY(IndicesWeCareAbout);
+y=XXX(IndicesWeCareAbout);
 A=Area(IndicesWeCareAbout);
 p=PercentToDrop/100;
 
-[PrecBinEdges]=GetBins(y,A,N,p,'Prec');
+[XXXBinEdges]=GetBins(y,A,N,p,'XXX');
 
-% now have PrecBinEdges.
+% now have XXXBinEdges.
 
-%for each PrecBin, let's get a set of GDDBins
+%for each XXXBin, let's get a set of YYYBins
 
-for j=1:length(PrecBinEdges)-1;
+for j=1:length(XXXBinEdges)-1;
 % note that it is the same procedure as above, except that now when
 % we get indiceswecareabout it will be limit to those within each
 % precipitation bin.
-  IndicesWeCareAbout=find(CropMaskLogical & Prec < 1e15  & ...
-       isfinite(Prec) & isfinite(GDD) &...
-			  Prec >=PrecBinEdges(j) & Prec < PrecBinEdges(j+1));
-  x=GDD(IndicesWeCareAbout);
-  y=Prec(IndicesWeCareAbout);
+  IndicesWeCareAbout=find(CropMaskLogical & XXX < 1e15  & ...
+       isfinite(XXX) & isfinite(YYY) &...
+			  XXX >=XXXBinEdges(j) & XXX < XXXBinEdges(j+1));
+  x=YYY(IndicesWeCareAbout);
+  y=XXX(IndicesWeCareAbout);
   A=Area(IndicesWeCareAbout);
-  GDDBinEdgesCell{j}=GetBins(x,A,N,p,'GDD');  
+  YYYBinEdgesCell{j}=GetBins(x,A,N,p,'YYY');  
 end
 
 

@@ -1,5 +1,5 @@
 function colorvals=ScaleColors(scale,cvector)
-% ScaleColors - replace an array of scaled vals with a uint8 color
+% ScaleColors - replace values scaled 0-1 with a uint8 color vals (0-255)
 %
 % SYNTAX:
 %          colorvals=ScaleColors(scale,cvector);

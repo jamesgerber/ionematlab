@@ -1,14 +1,16 @@
-function NiceSurfGeneral(varargin);
+function OS=NiceSurfGeneral(varargin);
 % NICESURFGENERAL
 %
 % Syntax:
-%    NiceSurf(Data);
-%    NiceSurf(Data,STRUCT);
-%    NiceSurf(Long,Lat,Data,STRUCT);
-%    NiceSurf(DataStruct,STRUCT);
-%    NiceSurf(Data,STRUCT,'propertyname','propertyvalue');
-%    NiceSurf(Data,'propertyname','propertyvalue');
+%    NiceSurfGeneral(Data);
+%    NiceSurfGeneral(Data,STRUCT);
+%    NiceSurfGeneral(Long,Lat,Data,STRUCT);
+%    NiceSurfGeneral(DataStruct,STRUCT);
+%    NiceSurfGeneral(Data,STRUCT,'propertyname','propertyvalue');
+%    NiceSurfGeneral(Data,'propertyname','propertyvalue');
 %
+%    OS=NiceSurfGeneral(...) returns OS with calculated fields (e.g.
+%    coloraxis)
 %  Struct can have the following fields [Default]
 %
 %   NSS.coloraxis=coloraxis
@@ -75,9 +77,7 @@ function NiceSurfGeneral(varargin);
 %   NSS.colorbarpercent='off';
 %
 %   NiceSurfGeneral(Yield,NSS)
-%   NiceSurf(Yield,'Yield Maize','tons/ha',[],'revsummer','YieldTestPlot2')
-%   NiceSurf(Yield,'Yield Maize','tons/ha',[0 12],'revsummer','YieldTestPlot1')
-%   NiceSurf(Yield,'Yield Maize','tons/ha',[0.99],'revsummer','YieldTestPlot3')
+
 %
 %% preliminaries to handle inputs
 if nargin==0
@@ -90,7 +90,7 @@ arglist=varargin;  %so we can hack this down as we remove arguments
 if nargin==1
     % make sure at least two arguments, for less error checking below
     NSS.PlotArea='World';
-    arglist{2}=NSS;   
+    arglist{2}=NSS;
 end
 
 
@@ -101,23 +101,23 @@ end
 %    NiceSurf(Long,Lat,Data,STRUCT);
 %    NiceSurf(Long,Lat,Data,'propertyname','propertyvalue');
 %    NiceSurf(Long,Lat,Data,STRUCT,'propertyname','propertyvalue');
-%%% where Data can be a matrix or a structure.  
+%%% where Data can be a matrix or a structure.
 
 %take care of the cases where first argin is a vector.
 
 if min(size(arglist{1}))==1
     Long=arglist{1};
     Lat=arglist{2};
-    arglist(1:nargin-2)=arglist(3:end);
+    arglist=arglist(3:end);
 end
 
 
 % now resolve for data to be a structure or a matrix
 Data=arglist{1};
 if isstruct(Data)
-%    MissingValue=GetMissingValue(Data);
+    %    MissingValue=GetMissingValue(Data);
     [Long,Lat,Data,Units,DefaultTitleStr,NoDataStructure]=ExtractDataFromStructure(Data);
-%    Data(Data==MissingValue)=NaN;
+    %    Data(Data==MissingValue)=NaN;
 else
     [Long,Lat]=InferLongLat(Data);
 end
@@ -133,11 +133,11 @@ if isstruct(arglist{2})
 else
     
     NSS=[];
-    PropsList=arglist(2:end)
+    PropsList=arglist(2:end);
 end
 
 for j=1:2:length(PropsList)
-    NSS=setfield(NSS,PropsList{j},PropsList{j+1});;  
+    NSS=setfield(NSS,PropsList{j},PropsList{j+1});
 end
 
 
@@ -145,9 +145,9 @@ end
 
 
 ListOfProperties={
-'units','titlestring','filename','cmap','longlatbox','plotarea', ...
-'logicalinclude','coloraxis','displaynotes','description','uppermap',...
-'lowermap','colorbarpercent','resolution','figfilesave'};
+    'units','titlestring','filename','cmap','longlatbox','plotarea', ...
+    'logicalinclude','coloraxis','displaynotes','description','uppermap',...
+    'lowermap','colorbarpercent','resolution','figfilesave'};
 
 %% set defaults for these properties
 units='';
@@ -174,8 +174,8 @@ for j=1:length(a)
         ListOfProperties
         error(['Property "' ThisProperty '" not recognized in ' mfilename])
     end
-     %disp([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
-     eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
+    %disp([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
+    eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
 end
 
 
@@ -190,13 +190,21 @@ else
         case 'europe'
             longlatbox=[-15 65 30 80];
             filename=[filename '_europe'];
+            ylim=.51;
         case {'usmexico','usmex'}
             longlatbox=[-130 -60 10 55];
-            
             filename=[filename '_usmexico'];
+            ylim=.43;
         case 'africa'
             longlatbox=[-20 60 -35 40];
             filename=[filename '_africa'];
+            ylim=.77;
+        case 'midwest'
+            longlatbox=[-105 -75 25 55];
+            filename=[filename '_midwest'];
+            ylim=.32;
+
+        
         otherwise
             error(['Don''t recognize plotarea ' plotarea]);
     end
@@ -209,12 +217,12 @@ switch S
     case {'double','single'}
         %ok.  do nothing.
     otherwise
-    warning(['Class of Data variable might cause problems.'])
+        warning(mfilename,'Class of Data variable might cause problems.')
 end
 Data=double(Data);
 
 ii=find(abs(Data) >= 1e9);
-if length(ii)>0
+if ~isempty(ii)
     disp([' Found elements >= 1E9.  replacing with NaN. '])
     Data(ii)=NaN;
 end
@@ -230,7 +238,7 @@ if length(coloraxis)<2
         tmp01=Data(ii);
         if coloraxis==0
             coloraxis=[-(max(abs(tmp01))) (max(abs(tmp01)))]
-        else                     
+        else
             f=abs(coloraxis);
             tmp01=sort(tmp01);
             loval=min(tmp01);
@@ -257,10 +265,6 @@ if length(coloraxis)<2
     if c1 < (c2-c1)/10
         coloraxis(1)=min(c1,0);
     end
-    
-    
-    
-    
 end
 
 Data=double(Data);
@@ -272,6 +276,12 @@ if ~isempty(logicalinclude)
         Data(~logicalinclude)=NaN;
     end
 end
+
+%% prepare output data
+% do it before turn nan to NoData value.
+OS.coloraxis=coloraxis;
+OS.Data=Data;
+
 
 %% Color axis manipulation
 cmax=coloraxis(2);
@@ -288,12 +298,13 @@ NoDataLandVal=coloraxis(2)+minstep;
 
 
 %Any points off of the land mask must be set to ocean color.
-land=LandMaskLogical;
+land=LandMaskLogical(Data);
 ii=(land==0);
 Data(ii)=OceanVal;
 
 % no make no-data points above color map to get 'uppermap' (white)
 Data(isnan(Data))=NoDataLandVal;
+
 
 
 %% Make graph
@@ -317,7 +328,7 @@ set(fud.ColorbarHandle,'Visible','on');
 %set(fud.ColorbarHandle,'Position',[0.1811+.1 0.08 0.6758-.2 0.0568])
 drawnow
 if fud.MapToolboxFig==0
-     set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02])
+    set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02])
 else
     set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
 end
@@ -333,9 +344,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     g2=longlatbox(2);
     t1=longlatbox(3);
     t2=longlatbox(4);
-    
-    
-    
+
     if fud.MapToolboxFig==1
         
         trustmatlab=1
@@ -357,15 +366,14 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         % no mapping toolbox.  let's make things easy.
         
         axis([g1 g2 t1 t2])
-        
-        
+                
     end
-     ht=text( 0 ,(t2-t1)/2*pi/180 + 0*pi/20,titlestring)
+    ht=text(0, ylim,titlestring)
 else
     ht=text(0,pi/2,titlestring);
     if length(titlestring)>1
-    set(ht,'Position',[0 1.635 0]);
-end
+        set(ht,'Position',[0 1.635 0]);
+    end
 end
 
 
@@ -392,10 +400,7 @@ if ~isempty(displaynotes)
     set(ht,'interpreter','none')
 end
 
-
-
 hideui
-
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
     if isequal(figfilesave,'on')

@@ -1,4 +1,4 @@
-function [jp,xbins,ybins]=GenerateJointDist(X,Y,XBinEdges,YBinEdges,Weight);
+function [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(X,Y,XBinEdges,YBinEdges,Weight);
 % GENERATEJOINTDIST - Generate joint distribution of two vectors
 %
 %  [jp,xbins,ybins]=GenerateJointDist(X,Y,XBinEdges,YBinEdges,Weight);

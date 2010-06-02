@@ -17,9 +17,9 @@ function DoubleAllVars
 % Institute on the Environment
 % October, 2009
 
-a=evalin('base','whos');
+a=evalin('caller','whos');
 for j=1:length(a);
     if isequal(a(j).class,'single')
-        evalin('base',[a(j).name '=double(' a(j).name ');']);
+        evalin('caller',[a(j).name '=double(' a(j).name ');']);
     end
 end

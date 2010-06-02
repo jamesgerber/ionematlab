@@ -152,8 +152,9 @@ for N=Nspace;
                 ii=(CultivatedArea==0);
                 tempvar(ii)=1e20;  % this will cause these guys to be ignored
                 
-                [PrecBinEdges,GDDBinEdges]= ...
-                    CalculateBins_GloballyEqualAreaSpace(Prec,tempvar,CultivatedArea,N,PercentToDrop);
+                [BinEdgesDefinitions]= ...
+                    CalculateBins_Globally_RevH(Prec,tempvar,...
+                    CultivatedArea,N,200,PercentToDrop,cropname);
             else
                 %% Get bins from somewhere else
                 disp(['Getting Bins from ' GetBinsElsewhere]);

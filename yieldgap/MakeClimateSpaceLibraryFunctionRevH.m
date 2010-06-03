@@ -20,6 +20,8 @@ function MakeClimateSpaceLibraryFunctionRevH(FlagStructure)
 %
 % Get crop information section
 
+Rev='H';
+
 
 jcropvector=[5 7];
 Nspace=[5 10];
@@ -152,7 +154,7 @@ for N=Nspace;
                 ii=(CultivatedArea==0);
                 tempvar(ii)=1e20;  % this will cause these guys to be ignored
                 
-                [BinEdgesDefinitions]= ...
+                [PrecBinEdges,GDDBinEdges,xbins,ybins,ContourMask]= ...
                     CalculateBins_Globally_RevH(Prec,tempvar,...
                     CultivatedArea,N,200,PercentToDrop,cropname);
             else
@@ -175,14 +177,17 @@ for N=Nspace;
                 NG=length(GDDBinEdges)-1
             end
             %[BinMatrix,GDDBins,PrecBins,ClimateDefs]=MakeClimateSpace(GDD,Prec,GDDBinEdges,PrecBinEdges);
-            [BinMatrix,PrecBins,GDDBins,ClimateDefs,CDS]=MakeClimateSpace(Prec,Heat,PrecBinEdges,GDDBinEdges);
+            [BinMatrix,PrecBins,GDDBins,ClimateDefs,CDS]=MakeClimateSpace_HeatFirst(Heat,Prec,GDDBinEdges,PrecBinEdges);
             BinMatrix=single(BinMatrix);
             
-            
+            % now need to refine CDS
+            disp('refining bins')
+            [BinMatrix,ClimateDefs,CDS]=...
+                RefineClimateSpaceRevH(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask);
             
             save(FileName,'BinMatrix','GDDBins','PrecBins','ClimateDefs','GDDBinEdges','PrecBinEdges','Prec','GDD',...
                 'PercentToDrop','WetFlag','HeatFlag','CultivatedArea','CDS');
-            DAS.Description=['Climate Space Library, Revision F. ' datestr(now)];
+            DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
             WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
         end
         

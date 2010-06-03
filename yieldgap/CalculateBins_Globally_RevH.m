@@ -1,4 +1,4 @@
-function [BinEdgeDefinitions]= ...
+function [XXXBinEdges,YYYBinEdgesCell,xbins,ybins,ContourMask]= ...
     CalculateBins_Globally_RevH(YYY,XXX,Area,Nbin,Nsurface,PercentToDrop,cropname);
 %   CalculateBins_EqualAreaSpace
 %
@@ -16,7 +16,7 @@ if nargin<7
     cropname='unspecified crop'
     debugplots=0;
 else
-    debugplots=0;
+    debugplots=1;
 end
 
 
@@ -128,80 +128,80 @@ for j=1:length(XXXBinEdges)-1;
 % we get indiceswecareabout it will be limit to those within each
 % precipitation bin.
   IndicesIsValidDataAbout=find(xcr >=XXXBinEdges(j) & xcr < XXXBinEdges(j+1));
-  x=ycr(IndicesIsValidDataAbout);
-  y=xcr(IndicesIsValidDataAbout);
+  x=xcr(IndicesIsValidDataAbout);
+  y=ycr(IndicesIsValidDataAbout);
   A=Acr(IndicesIsValidDataAbout);
-  YYYBinEdgesCell{j}=GetBins(ycr,Acr,Nbin,p,'YYY');  
+  YYYBinEdgesCell{j}=GetBins(y,A,Nbin,p,'YYY');  
 end
 
-disp('text');
-%% old fashioned bin calculation (code copied from MakeClimateSpace)
-
-% prep for copied code
-
-WaterBins=YYYBinEdgesCell;
-TempBins=XXXBinEdges;
-T=xcr;
-W=ycr;
-TempDataName='GDD';
-WaterDataName='Water';
-
-%copied code
-if iscell(WaterBins)
-    NW=length(WaterBins);
-else
-    NW=length(WaterBins)-1;
-end
-
-if iscell(TempBins)
-    NT=length(TempBins);
-else
-    NT=length(TempBins)-1;
-end
-
-for mW=1:NW
-    for mT=1:NT
-        ClimateBinNumber=(mW-1)*NT+mT;
-               
-        if iscell(WaterBins)
-            WaterBinsThisTempBin=WaterBins{mT};
-            Wmin=WaterBinsThisTempBin(mW);
-            Wmax=WaterBinsThisTempBin(mW+1);
-        else
-            % Water variable limits
-            Wmin=WaterBins(mW);
-            Wmax=WaterBins(mW+1);
-        end
-         
-        %Temperature variable limits        
-        if iscell(TempBins)
-            TempBinsThisWaterBin=TempBins{mW};
-            Tmin=TempBinsThisWaterBin(mT);
-            Tmax=TempBinsThisWaterBin(mT+1);
-        else
-            Tmin=TempBins(mT);
-            Tmax=TempBins(mT+1);
-        end
-               
-        % who fits?
-        jj=find( T >= Tmin & T <Tmax & W >= Wmin & W <Wmax);
-        
-        ClimateBinVector(jj)=ClimateBinNumber;
-        ClimateDefs{ClimateBinNumber}=...
-            ['Bin No ' int2str(ClimateBinNumber) '.   ' ...
-            num2str(Tmin) '< ' TempDataName ' <= ' num2str(Tmax) ',   ' ...
-            num2str(Wmin) '< ' WaterDataName ' <= ' num2str(Wmax) ];
-        CDS(ClimateBinNumber).GDDmin=Wmin;
-        CDS(ClimateBinNumber).GDDmax=Wmax;
-        CDS(ClimateBinNumber).Precmin=Tmin;
-        CDS(ClimateBinNumber).Precmax=Tmax;
-    end
-end
-
-
-
-
-
+% % % disp('text');
+% % % %% old fashioned bin calculation (code copied from MakeClimateSpace)
+% % % 
+% % % % prep for copied code
+% % % 
+% % % WaterBins=YYYBinEdgesCell;
+% % % TempBins=XXXBinEdges;
+% % % T=xcr;
+% % % W=ycr;
+% % % TempDataName='GDD';
+% % % WaterDataName='Water';
+% % % 
+% % % %copied code
+% % % if iscell(WaterBins)
+% % %     NW=length(WaterBins);
+% % % else
+% % %     NW=length(WaterBins)-1;
+% % % end
+% % % 
+% % % if iscell(TempBins)
+% % %     NT=length(TempBins);
+% % % else
+% % %     NT=length(TempBins)-1;
+% % % end
+% % % 
+% % % for mW=1:NW
+% % %     for mT=1:NT
+% % %         ClimateBinNumber=(mW-1)*NT+mT;
+% % %                
+% % %         if iscell(WaterBins)
+% % %             WaterBinsThisTempBin=WaterBins{mT};
+% % %             Wmin=WaterBinsThisTempBin(mW);
+% % %             Wmax=WaterBinsThisTempBin(mW+1);
+% % %         else
+% % %             % Water variable limits
+% % %             Wmin=WaterBins(mW);
+% % %             Wmax=WaterBins(mW+1);
+% % %         end
+% % %          
+% % %         %Temperature variable limits        
+% % %         if iscell(TempBins)
+% % %             TempBinsThisWaterBin=TempBins{mW};
+% % %             Tmin=TempBinsThisWaterBin(mT);
+% % %             Tmax=TempBinsThisWaterBin(mT+1);
+% % %         else
+% % %             Tmin=TempBins(mT);
+% % %             Tmax=TempBins(mT+1);
+% % %         end
+% % %                
+% % %         % who fits?
+% % %         jj=find( T >= Tmin & T <Tmax & W >= Wmin & W <Wmax);
+% % %         
+% % %         ClimateBinVector(jj)=ClimateBinNumber;
+% % %         ClimateDefs{ClimateBinNumber}=...
+% % %             ['Bin No ' int2str(ClimateBinNumber) '.   ' ...
+% % %             num2str(Tmin) '< ' TempDataName ' <= ' num2str(Tmax) ',   ' ...
+% % %             num2str(Wmin) '< ' WaterDataName ' <= ' num2str(Wmax) ];
+% % %         CDS(ClimateBinNumber).GDDmin=Wmin;
+% % %         CDS(ClimateBinNumber).GDDmax=Wmax;
+% % %         CDS(ClimateBinNumber).Precmin=Tmin;
+% % %         CDS(ClimateBinNumber).Precmax=Tmax;
+% % %     end
+% % % end
+% % % 
+% % % 
+% % % 
+% % % 
+% % % 
 function [xbins]=GetBins(x,y,N,p,str);
 [xsort,ii]=sort(x);
 
@@ -247,6 +247,6 @@ if MakePlot
     end
 end
     
-    
-    
+% % %     
+% % %     
     

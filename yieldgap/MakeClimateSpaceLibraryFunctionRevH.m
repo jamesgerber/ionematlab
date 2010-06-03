@@ -176,16 +176,36 @@ for N=Nspace;
             else
                 NG=length(GDDBinEdges)-1
             end
-            %[BinMatrix,GDDBins,PrecBins,ClimateDefs]=MakeClimateSpace(GDD,Prec,GDDBinEdges,PrecBinEdges);
-            [BinMatrix,PrecBins,GDDBins,ClimateDefs,CDS]=MakeClimateSpace_HeatFirst(Heat,Prec,GDDBinEdges,PrecBinEdges);
+
+            [BinMatrix,PrecBins,GDDBins,ClimateDefs,CDS]=MakeClimateSpace(Heat,Prec,GDDBinEdges,PrecBinEdges);
             BinMatrix=single(BinMatrix);
             
             % now need to refine CDS
             disp('refining bins')
-            [BinMatrix,ClimateDefs,CDS]=...
+            [CDSnew]=...
                 RefineClimateSpaceRevH(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask);
             
-            save(FileName,'BinMatrix','GDDBins','PrecBins','ClimateDefs','GDDBinEdges','PrecBinEdges','Prec','GDD',...
+            %% Make Climate Space
+            DataQualityGood=(isfinite(CultivatedArea) & CultivatedArea>eps & isfinite(Heat) & isfinite(Prec) );
+            BinMatrix=0*Heat;
+            for j=1:length(CDSnew)
+                CD=CDSnew(j);
+                ii=find(Prec>=CD.Precmin & Prec < CD.Precmax & ...
+                    Heat >=CD.GDDmin & Heat < CD.GDDmax & DataQualityGood);
+            
+                BinMatrix(ii)=j;
+                ClimateDefs{j}=...
+                    ['Bin No ' int2str(j) '.   ' ...
+                    num2str(CD.GDDmin) '< ' TempDataName ' <= ' num2str(CD.GDDmax) ',   ' ...
+                    num2str(CD.Precmin) '< ' WaterDataName ' <= ' num2str(CD.Precmax) ];
+            end
+            
+            
+            CDS=CDSnew;
+            
+            %%
+            
+            save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...
                 'PercentToDrop','WetFlag','HeatFlag','CultivatedArea','CDS');
             DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
             WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);

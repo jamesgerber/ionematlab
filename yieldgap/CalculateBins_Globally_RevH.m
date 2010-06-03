@@ -16,7 +16,7 @@ if nargin<7
     cropname='unspecified crop'
     debugplots=0;
 else
-    debugplots=1;
+    debugplots=0;
 end
 
 

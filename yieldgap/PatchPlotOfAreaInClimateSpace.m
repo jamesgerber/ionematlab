@@ -1,4 +1,11 @@
-
+function PatchPlotOfAreaInClimateSpace...
+    (CDS,BinMatrix,CultivatedArea,Heat,Prec,cropname,Rev)
+% PatchPlotOfAreaInClimateSpace
+%
+%   Syntax
+%     PatchPlotOfAreaInClimateSpace...
+%    (CDS,BinMatrix,CultivatedArea,Heat,Prec,cropname,Rev)
+%
 
 c=1;
 clear x y z
@@ -21,7 +28,7 @@ for ibin=1:length(CDS)
   x=double(x);y=double(y);
 
   ii=find(ClimateMask==ibin & CropMaskLogical & ...
-      GDD > x(1) & GDD < x(3) & ...
+      Heat > x(1) & Heat < x(3) & ...
       Prec > y(1) & Prec < y(3));
   TotalArea=sum(CultivatedArea(ii))
   
@@ -33,4 +40,4 @@ ylabel(WetFlag)
 xlabel('GDD')
 title([cropname  ' ' WetFlag '. Rev' Rev]);
 colorbar
-OutputFig('Force')
+%OutputFig('Force')

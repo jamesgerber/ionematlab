@@ -1,14 +1,17 @@
 function PatchPlotOfAreaInClimateSpace...
-    (CDS,BinMatrix,CultivatedArea,Heat,Prec,cropname,Rev)
+    (CDS,CultivatedArea,Heat,Prec,cropname,Rev)
 % PatchPlotOfAreaInClimateSpace
 %
 %   Syntax
 %     PatchPlotOfAreaInClimateSpace...
-%    (CDS,BinMatrix,CultivatedArea,Heat,Prec,cropname,Rev)
+%    (CDS,CultivatedArea,Heat,Prec,cropname,Rev)
 %
 
-c=1;
-clear x y z
+
+[BinMatrix]=...
+    ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,'heat','prec');
+
+
 figure
 
 for ibin=1:length(CDS)
@@ -27,7 +30,7 @@ for ibin=1:length(CDS)
   y(5)=S.Precmin;       
   x=double(x);y=double(y);
 
-  ii=find(ClimateMask==ibin & CropMaskLogical & ...
+  ii=find(BinMatrix==ibin & CropMaskLogical & ...
       Heat > x(1) & Heat < x(3) & ...
       Prec > y(1) & Prec < y(3));
   TotalArea=sum(CultivatedArea(ii))
@@ -36,8 +39,8 @@ for ibin=1:length(CDS)
   TotalAreaVect(ibin)=TotalArea;
 end
 
-ylabel(WetFlag)
+ylabel('Moisture Index')
 xlabel('GDD')
-title([cropname  ' ' WetFlag '. Rev' Rev]);
+title([cropname  ' ' 'Moisture Index' '. Rev' Rev]);
 colorbar
 %OutputFig('Force')

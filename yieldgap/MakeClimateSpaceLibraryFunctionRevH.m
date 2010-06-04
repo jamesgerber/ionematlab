@@ -186,23 +186,10 @@ for N=Nspace;
                 RefineClimateSpaceRevH(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask);
             
             %% Make Climate Space
-            DataQualityGood=(isfinite(CultivatedArea) & CultivatedArea>eps & isfinite(Heat) & isfinite(Prec) );
-            BinMatrix=0*Heat;
-            for j=1:length(CDSnew)
-                CD=CDSnew(j);
-                ii=find(Prec>=CD.Precmin & Prec < CD.Precmax & ...
-                    Heat >=CD.GDDmin & Heat < CD.GDDmax & DataQualityGood);
-            
-                BinMatrix(ii)=j;
-                ClimateDefs{j}=...
-                    ['Bin No ' int2str(j) '.   ' ...
-                    num2str(CD.GDDmin) '< ' HeatFlag ' <= ' num2str(CD.GDDmax) ',   ' ...
-                    num2str(CD.Precmin) '< ' WetFlag ' <= ' num2str(CD.Precmax) ];
-            end
-            
-            
+
             CDS=CDSnew;
-            
+            [BinMatrix,ClimateDefs]=ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag);
+
             %%
             
             save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...

@@ -82,7 +82,7 @@ for k=1:N
     for j=1:N; %N+2; %  climate bin away from an edge (if N>2)
         
         m=N*(j-1)+k;
-    
+
            ii=find(PrecVect>=CDS(m).Precmin & PrecVect < CDS(m).Precmax & ...
            HeatVect >=CDS(m).GDDmin & HeatVect < CDS(m).GDDmax);
         

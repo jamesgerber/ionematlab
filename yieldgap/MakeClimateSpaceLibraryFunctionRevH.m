@@ -156,7 +156,7 @@ for N=Nspace;
                 
                 [PrecBinEdges,GDDBinEdges,xbins,ybins,ContourMask]= ...
                     CalculateBins_Globally_RevH(Prec,tempvar,...
-                    CultivatedArea,N,200,PercentToDrop,cropname);
+                    CultivatedArea,N,300,PercentToDrop,cropname);
             else
                 %% Get bins from somewhere else
                 disp(['Getting Bins from ' GetBinsElsewhere]);

@@ -1,5 +1,6 @@
 function [XXXBinEdges,YYYBinEdgesCell,xbins,ybins,ContourMask]= ...
-    CalculateBins_Globally_RevH(YYY,XXX,Area,Nbin,Nsurface,PercentToDrop,cropname);
+    CalculateBins_Globally_RevH(YYY,XXX,Area,Nbin,Nsurface,...
+    PercentToDrop,cropname,WetFlag,HeatFlag);
 %   CalculateBins_EqualAreaSpace
 %
 %     SYNTAX:
@@ -16,7 +17,7 @@ if nargin<7
     cropname='unspecified crop'
     debugplots=0;
 else
-    debugplots=0;
+    debugplots=1;
 end
 
 
@@ -37,26 +38,37 @@ if debugplots==1
     figure
     surface(double(xbins),double(ybins),double(jp).');
     shading flat
-    xlabel('GDD');
-    ylabel('TMI');
+    xlabel(HeatFlag);
+    ylabel(WetFlag);
     %zeroylim(0,6);
     grid on
     ylims=get(gca,'YLim');
-    title([' All cultivated areas. ' cropname ' (made in calcbins revh) ']);
+    title([' All cultivated areas. ' cropname ' ' WetFlag ' RevH']);
     fattenplot
     finemap('area2')
     OutputFig('Force')
     
     figure;surface(xbins,ybins,double(jp.*ContourMask).')
-    xlabel('GDD');
-    ylabel('TMI');
+    xlabel(HeatFlag);
+    ylabel(WetFlag);
     zeroylim(ylims(1),ylims(2));
     grid on
     ylims=get(gca,'YLim');
-    title([' Contour-filtered areas. ' cropname ' (made in calcbins revh) ']);
+    title([' Contour-filtered areas. ' cropname ' ' WetFlag ' RevH']);
     fattenplot
     shading flat
     finemap('area2')
+    OutputFig('Force')
+
+    figure;surface(xbins,ybins,double(ContourMask).')
+    xlabel(HeatFlag);
+    ylabel(WetFlag);
+    zeroylim(ylims(1),ylims(2));
+    grid on
+    title([' 95% Contour ' cropname ' ' WetFlag ' RevH']);
+    fattenplot
+    shading flat
+    finemap('jet')
     OutputFig('Force')
 end
 
@@ -102,13 +114,13 @@ if debugplots==1
 
     figure
     surface(double(xbins),double(ybins),double(jp).');
-    xlabel('GDD');
-    ylabel('TMI');
+    xlabel(HeatFlag);
+    ylabel(WetFlag);
     zeroylim(ylims(1),ylims(2));
     grid on
     ylims=get(gca,'YLim');
-    title([' Scatter plot from all contour-filtered data ' cropname ...
-        ' (made in calcbins revh) ']);
+    title([' Scatter plot from contour-filtered data ' cropname ...
+         ' ' WetFlag ' RevH']);
     fattenplot
     shading flat
     finemap('area2')
@@ -172,7 +184,7 @@ if p>0
     xbins=[min(x) xbins max(x)];
 end
 
-MakePlot=0;
+MakePlot=1;
 if MakePlot
     figure
     plot(xsort,AreaNorm);

@@ -27,6 +27,7 @@ jcropvector=[5 7];
 Nspace=[5 10];
 GDDBaseDir='GDDLibrary/';
 TMILocation='./TMI.mat';
+AnnualMeanPrec='./AnnualMeanPrec.mat';
 SaveFileNameBaseDir='./ClimateLibrary';
 GetBinsElsewhere='';
 if nargin==1
@@ -45,7 +46,7 @@ end
 
 for N=Nspace;
     for jcrop=jcropvector
-        jwf=4;
+      for   jwf=[2 4];
         jhf=1
         
         
@@ -129,6 +130,9 @@ for N=Nspace;
                 case 'TMI'
                     load([TMILocation]);
                     Prec=TMI;
+                case 'prec'
+                    load([AnnualMeanPrec]);
+                    Prec=annualmeanprec;
                 otherwise
                     error(['Don''t have ability to handle' WetFlag ' in ' mfilename ]);
             end
@@ -156,7 +160,7 @@ for N=Nspace;
                 
                 [PrecBinEdges,GDDBinEdges,xbins,ybins,ContourMask]= ...
                     CalculateBins_Globally_RevH(Prec,tempvar,...
-                    CultivatedArea,N,300,PercentToDrop,cropname);
+                    CultivatedArea,N,300,PercentToDrop,cropname,WetFlag,HeatFlag);
             else
                 %% Get bins from somewhere else
                 disp(['Getting Bins from ' GetBinsElsewhere]);
@@ -183,7 +187,7 @@ for N=Nspace;
             % now need to refine CDS
             disp('refining bins')
             [CDSnew]=...
-                RefineClimateSpaceRevH(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask);
+                RefineClimateSpaceRevH(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask,[cropname ' ' WetFlag]);
             
             %% Make Climate Space
 
@@ -197,6 +201,9 @@ for N=Nspace;
             DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
             WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
         end
-        
+          close all  
+      end
+      
     end
+
 end

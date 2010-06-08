@@ -68,4 +68,38 @@ AreaCutoff=AVsort( iiAV)
 LogicalInclude=(ii & CultivatedArea>=AreaCutoff);
 FilteredData=Data;
 FilteredData(~LogicalInclude)=NaN;
+
+
+
+if nargout==0
+    figure
+    subplot(211)
+    [N,x]=hist(AVsort,1000);
+    bar(x,N,.2)
+    zeroxlim(0,1000)
+    xlabel('grid cell area')
+    ylabel('histogram')
+    grid on
+    hold on
+    ylims=get(gca,'YLim')
+    plot([1 1]*AreaCutoff,ylims,'r');
+    hold off
+    title(['    Distribution of grid cell areas    '])
+    
+    
+    
+    subplot(212)
+    plot(AVsort,cAVnorm)
+    zeroxlim(0,1000)
+    xlabel('grid cell area')
+    ylabel('Cumulative area')
+    title(['    Cumulative area    '])
+    hold on
+    ylims=get(gca,'YLim')
+    plot([1 1]*AreaCutoff,ylims,'r');
+    grid on
+    fattenplot
+    
+end
+
 %

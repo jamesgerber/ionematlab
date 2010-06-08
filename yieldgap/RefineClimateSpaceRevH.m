@@ -1,5 +1,5 @@
 function [CDSnew]=RefineClimateSpaceRevH(Heat,Prec, ...
-    Area,CDS,xbins,ybins,ContourMask);
+    Area,CDS,xbins,ybins,ContourMask,cropname);
 %RefineClimateSpaceRevH
 %
 %   called from MakeClimateSpaceLibraryFunctionRevH
@@ -10,8 +10,6 @@ function [CDSnew]=RefineClimateSpaceRevH(Heat,Prec, ...
 %
 
 CDSnew=CDS;
-PatchPlotOfAreaInClimateSpace...
-    (CDS,Area,Heat,Prec,'Old CDS','RevH')
 DataQualityGood=(isfinite(Area) & Area>eps & isfinite(Heat) & isfinite(Prec) );
 
 
@@ -38,6 +36,13 @@ for k=1:N
     tmparea
 end
 areamatrix
+PatchPlotOfAreaInClimateSpace...
+    (CDS,Area,Heat,Prec,[cropname ' pre-refine climate bins'],'H');
+cmin=min(min(areamatrix));
+cmax=max(max(areamatrix));
+caxis([cmin cmax])
+OutputFig('Force')
+
 
 IndicesOfOuterBins=unique([1:N (1:N)*N (N+1):N:(N^2-N+1) (N^2-N):N^2])
 
@@ -46,31 +51,34 @@ IndicesOfCenterBins=setdiff(1:N^2,IndicesOfOuterBins);
 TargetArea=mean(areamatrix(IndicesOfCenterBins));
 
 
-for ibin=1:N;
-    ChangeFieldName='GDDmin';
-    NewCD=PullInBoundary(CDS(ibin),AreaVect,ChangeFieldName,TargetArea,HeatVect,PrecVect);
-    CDSnew(ibin)=NewCD;
-end
-for ibin=(N*(N-1)+1):N^2;
-    ChangeFieldName='GDDmax';
-    NewCD=PullInBoundary(CDSnew(ibin),AreaVect,ChangeFieldName,TargetArea,HeatVect,PrecVect);
-    CDSnew(ibin)=NewCD;
-end
-for ibin=(N):N: N^2;
-    ChangeFieldName='Precmax';
-    NewCD=PullInBoundary(CDSnew(ibin),AreaVect,ChangeFieldName,TargetArea,HeatVect,PrecVect);
-    CDSnew(ibin)=NewCD;
-end
 for ibin=(1):N: (N^2-N+1);
     ChangeFieldName='Precmin';
     NewCD=PullInBoundary(CDSnew(ibin),AreaVect,ChangeFieldName,TargetArea,HeatVect,PrecVect);
     CDSnew(ibin)=NewCD;
 end
 
+
+for ibin=(N*(N-1)+1):N^2;
+    ChangeFieldName='GDDmax';
+    NewCD=PullInBoundary(CDSnew(ibin),AreaVect,ChangeFieldName,TargetArea,HeatVect,PrecVect);
+    CDSnew(ibin)=NewCD;
+end
+
+for ibin=1:N;
+    ChangeFieldName='GDDmin';
+    NewCD=PullInBoundary(CDSnew(ibin),AreaVect,ChangeFieldName,TargetArea,HeatVect,PrecVect);
+    CDSnew(ibin)=NewCD;
+end
+
+
+
+for ibin=(N):N: N^2;
+    ChangeFieldName='Precmax';
+    NewCD=PullInBoundary(CDSnew(ibin),AreaVect,ChangeFieldName,TargetArea,HeatVect,PrecVect);
+    CDSnew(ibin)=NewCD;
+end
+
 disp(['climate space refined'])
-
-
-
 
 
 
@@ -100,20 +108,31 @@ end
 
 
 PatchPlotOfAreaInClimateSpace...
-    (CDS,Area,Heat,Prec,'New CDS','RevH')
-
+    (CDS,Area,Heat,Prec,[cropname ' post-refine climate bins'],'RevH')
+caxis([cmin cmax])
+OutputFig('Force')
 
 
 function NewCD=PullInBoundary(CD,Area,ChangeFieldName,TargetArea,Heat,Prec);
 % note ... Area,Heat,Prec are all vectors in here
 initguess=getfield(CD,ChangeFieldName);
 initguess=double(initguess);
+switch ChangeFieldName
+    case {'Precmin','Precmax'}
+        minguess=getfield(CD,'Precmin');
+        maxguess=getfield(CD,'Precmax');
+    case {'GDDmin','GDDmax'};
+        minguess=getfield(CD,'GDDmin');
+        maxguess=getfield(CD,'GDDmax');
+end
+minguess=double(minguess);
+maxguess=double(maxguess);
 clear enclosedareafast
-legacy=0
+legacy=1
 if legacy==1
     tic
-    newfieldval=fzero(@(FieldVal) ...
-        enclosedarea(FieldVal,ChangeFieldName,CD,TargetArea,Heat,Prec,Area),initguess);
+    newfieldval=fminbnd(@(FieldVal) ...
+        enclosedarea(FieldVal,ChangeFieldName,CD,TargetArea,Heat,Prec,Area),minguess,maxguess);
     toc
 else
     tic
@@ -125,6 +144,9 @@ end
 
 NewCD=setfield(CD,ChangeFieldName,newfieldval)
 
+if NewCD.GDDmin > NewCD.GDDmax
+    keyboard
+end
 
 
 
@@ -138,7 +160,7 @@ ii=(Prec>=CD.Precmin & Prec < CD.Precmax & ...
 
 
 TrialArea=sum(Area(ii));
-eaerr=TrialArea-TargetArea;
+eaerr=(TrialArea-TargetArea)^2;
 
 
 
@@ -168,13 +190,13 @@ end
         
 
 % calculate enclosed area
-FieldVal
+FieldVal;
 
 ii=(Prec>=Precmin & Prec < Precmax & ...
     Heat >=GDDmin & Heat < GDDmax);
 
 
-TrialArea=sum(Area(ii))
+TrialArea=sum(Area(ii));
 eaerr=TrialArea-TargetArea;
 if ~isfinite(eaerr)
     keyboard

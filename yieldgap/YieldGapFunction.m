@@ -57,11 +57,12 @@ end
 try
     SystemGlobals
     switch FS.ClimateSpaceRev
-        case 'F'
+        case {'F','H'}
             FileName=[OutputDirBase '/YieldGap_CropNo' int2str(FS.CropNo) ...
                 'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
                 '_ClimateSpaceRev'  FS.ClimateSpaceRev ...
                 '_' num2str(FS.ClimateSpaceN) '.mat'];
+  
         case 'G'
                FileName=[OutputDirBase '/YieldGap_CropNo' int2str(FS.CropNo) ...
                    'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
@@ -205,7 +206,7 @@ a=DS.Suitability{j};
 GDDTempstr=a(end-6);
 Nstr=int2str(N);
 switch Rev
-    case 'F'
+    case {'F','H'}
 ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
     WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
 

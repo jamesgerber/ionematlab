@@ -4,7 +4,8 @@ function [BinMatrix,ClimateDefs]=...
 %
 %  Called by MakeClimateSpaceLibraryFunctionRevH
 
-DataQualityGood=(isfinite(CultivatedArea) & CultivatedArea>eps & isfinite(Heat) & isfinite(Prec) );
+%DataQualityGood=(isfinite(CultivatedArea) & CultivatedArea>eps & isfinite(Heat) & isfinite(Prec) );
+DataQualityGood=(isfinite(Heat) & isfinite(Prec) );
 BinMatrix=0*Heat;
 
 for j=1:length(CDS)

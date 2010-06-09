@@ -45,7 +45,7 @@ w
 
 
 if length(findstr(w,'?')>0)
-    disp(['you may need to execute these lines from terminal:'])    
+    disp(['you may need to execute these lines from terminal (remove the "!"):'])    
 
     % break out w
     ii=find(w==w(end));  %take advantage of fact that w ends with return
@@ -60,7 +60,7 @@ if length(findstr(w,'?')>0)
         
         ThisLine=w(iiStart(j):iiEnd(j));
         if ThisLine(1)=='?'
-            disp(['svn add ' ThisLine(2:end)])
+            disp(['! svn add ' ThisLine(2:end)])
         end
     end
     disp([' '])

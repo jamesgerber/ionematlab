@@ -1,5 +1,14 @@
 function [ContourMask,CutoffValue]=FindContour(jp,jpmax,p)
 
+
+if p==1
+    ContourMask=logical(ones(size(jp)));
+    CutoffValue=min(min(jp))
+    return
+end
+
+
+
   %find contour that has 0.95% of area
 
 jpmax_norm=jpmax/max(max(jpmax));

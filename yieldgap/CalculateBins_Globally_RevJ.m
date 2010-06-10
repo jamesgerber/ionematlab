@@ -34,7 +34,7 @@ tmp=sum(jpmax)
 jptmp=repmat(tmp',1,Nsurface)';
 
 
-p=0.95;
+p=0.975;
 
 [ContourMask1,CutoffValue]=FindContour(jp,jptmp,p);
 
@@ -45,7 +45,7 @@ jptmp=repmat(tmp,1,Nsurface+10);
 
 %jpmax=monotonicdistribution(jptmp);
 
-p=0.95;
+p=0.975;
 
 [ContourMask2,CutoffValue]=FindContour(jp,jptmp,p);
 

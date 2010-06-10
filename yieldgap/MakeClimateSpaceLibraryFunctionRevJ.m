@@ -46,7 +46,7 @@ end
 
 for N=Nspace;
     for jcrop=jcropvector
-      for   jwf=[4];
+      for   jwf=[2 4];
         jhf=1
         
         
@@ -207,9 +207,11 @@ for N=Nspace;
             DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
             WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
         end
-          close all  
+
       end
-      
+      if length(allchild(0))>30
+          close all
+      end
     end
 
 end

@@ -24,8 +24,8 @@ end
 
 IsValidData=(CropMaskLogical & XXX < 1e15 & isfinite(XXX) & Area>eps & isfinite(Area));
 
-%LogicalAreaGood=AreaFilter(Area,Area);
-%IsValidData=IsValidData & LogicalAreaGood;
+LogicalAreaGood=AreaFilter(Area,Area);
+IsValidData=IsValidData & LogicalAreaGood;
 
 
 W=Area(IsValidData); %Weight is the area, but only for these points.

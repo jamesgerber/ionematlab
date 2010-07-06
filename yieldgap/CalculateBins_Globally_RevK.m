@@ -17,7 +17,7 @@ if nargin<7
     cropname='unspecified crop'
     debugplots=0;
 else
-    debugplots=0;
+    debugplots=1;
 end
 
 
@@ -30,7 +30,7 @@ GoodArea=AreaFilter(Area,Area);
 IsValidData=IsValidData&GoodArea;
 
 
-p=0.975;
+p=1.0;
 
 W=Area(IsValidData); %Weight is the area, but only for these points.
 [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(XXX(IsValidData),YYY(IsValidData),Nsurface,Nsurface+10,W);

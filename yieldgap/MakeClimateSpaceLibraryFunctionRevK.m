@@ -186,13 +186,13 @@ for N=Nspace;
             BinMatrix=single(BinMatrix);
             
             % now need to refine CDS
-            disp('refining bins')
-            [CDSnew]=...
-                RefineClimateSpaceRevH(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask,[cropname ' ' WetFlag]);
+%            disp('refining bins')
+%            [CDSnew]=...
+%                RefineClimateSpaceRevH(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask,[cropname ' ' WetFlag]);
             
             %% Make Climate Space
 
-            CDS=CDSnew;
+%            CDS=CDSnew;
             [BinMatrix,ClimateDefs]=ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag);
 
             %%

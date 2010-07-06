@@ -46,7 +46,7 @@ end
 
 for N=Nspace;
     for jcrop=jcropvector
-      for   jwf=[2 4];
+      for   jwf=[4];
         jhf=1
         
         

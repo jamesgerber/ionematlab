@@ -1,5 +1,11 @@
 function ZoomToMax(varargin);
 % ZOOMTOMAX - Zoom graph to maximum value.
+%
+%  syntax:
+% 
+%   ZoomToMax('Initialize')
+%   ZoomToMax('ZoomIn')
+%   ZoomToMax('ZoomOut')
 
 if nargin==0
     help(mfilename);
@@ -37,61 +43,47 @@ switch(InputFlag)
         
         if length(unique(z))==1
             z=get(hc(end),'CData');
-            xx=UDS.Long;
-            yy=UDS.Lat;
         end
         
+
         
         if isvector(xx)==1
-            [maxval,RowIndex,ColumnIndex]=max2d(z);
+            [minval,RowIndex,ColumnIndex]=max2d(z);
             LongVal=xx(ColumnIndex);
             LatVal=yy(RowIndex);
         else
             ii=find(isnan(xx) | isnan(yy));
-            z(ii)=min(min(z(ii)))-1;
+            z(ii)=max(max(z(ii)))+1;
+            xx=imresize(xx,size(z));
+            yy=imresize(yy,size(z));
             % assign maximal values here ... this
             %makes sure that we don't sneak by with a NaN
             % this is necessary because the mapping toolbox pads the x and y
             % matrices with NaNs
-            
-            [maxval,RowIndex,ColumnIndex]=max2d(z);
+            [minval,RowIndex,ColumnIndex]=max2d(z);
             LongVal=xx(RowIndex,ColumnIndex);
             LatVal=yy(RowIndex,ColumnIndex);
         end
         
         %% need to find out how much user wants us to zoom by.  It's
         %% encoded in the userdatastructure in the figure window.
-        try
-
-            DeltaLong=UDS.ZoomLongDelta*10;
-            DeltaLat=UDS.ZoomLatDelta*10;
-        catch
-            DeltaLong=2.5;
-            DeltaLat=2.5;
-        end
-        
-        
-        if UDS.MapToolboxFig==1
-      %      setm(UDS.DataAxisHandle,'maplonlimit',[LongVal-DeltaLong LongVal+DeltaLong]);
-      %      setm(UDS.DataAxisHandle,'maplatlimit',[LatVal-DeltaLat LatVal+DeltaLat])
-            
-            setm(UDS.DataAxisHandle,'Origin',[LatVal LongVal 0])
-              setm(UDS.DataAxisHandle,'FLonLimit',[LongVal-DeltaLong LongVal+DeltaLong]);
-            setm(UDS.DataAxisHandle,'FLatLimit',[LatVal-DeltaLat LatVal+DeltaLat])
-          
+        if (UDS.MapToolboxFig==1)
+            UDS=get(gcbf,'UserData');
+            DeltaLong=.05;
+            DeltaLat=.025;
         else
-            axis(UDS.DataAxisHandle,...
-                [LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
+            DeltaLong=3.0;
+            DeltaLat=1.5;
         end
         
+        axis(UDS.DataAxisHandle,[LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
+  
         
-
-        
-        [CountryNumber,CountryName]=GetCountry(LongVal,LatVal)    ;
+        [CountryNumber,CountryName]=GetCountry5min(LongVal,LatVal);
         
         disp(CountryName)
         
-        
+       
     case 'ZoomOut'
         
         try
@@ -108,7 +100,7 @@ switch(InputFlag)
         if CanMap==0
             axis([-180 180 -90 90]);
         else
-            axis([-pi pi -pi pi]);
+            axis 'auto xy'
         end
     otherwise
         error('syntax error in ZoomToMax.m')

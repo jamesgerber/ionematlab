@@ -36,9 +36,10 @@ switch(InputFlag)
         %                     end
         %                 end
         %             end
-        
-        [xx,yy,z]=GetSurfaceDataFromAxes(ha);
-        
+        UDS=get(gcbf,'UserData');
+        z=UDS.Data;
+        xx=UDS.Long;
+        yy=UDS.Lat;
         ii=find(~isnan(z) & z~=0);
         
         
@@ -82,7 +83,7 @@ switch(InputFlag)
         subplot(122);
         % keyboard
         UserDataStructure=get(gcbf,'UserData');
-        Scale= UserDataStructure.ScaleToDegrees;
+        Scale=UserDataStructure.ScaleToDegrees;
         
         deg=-87.5:5:87.5;
         for m=1:length(deg);

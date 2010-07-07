@@ -147,6 +147,7 @@ end
 
 UserDataStructure.Lat=RedLat;
 UserDataStructure.Long=RedLong;
+UserDataStructure.Data=RedData;
 UserDataStructure.SurfaceHandle=h;
 %axes(UserDataStructure.DataAxisHandle);
 set(gca,'Tag','IonEAxis')
@@ -207,4 +208,4 @@ set(gcf,'Renderer','zbuffer')
 if nargout==1
     varargout{1}=hfig;
 end
-
+end

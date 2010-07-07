@@ -45,31 +45,33 @@ switch(InputFlag)
         else
             ii=find(isnan(xx) | isnan(yy));
             z(ii)=max(max(z(ii)))+1;
-            % assign maximal values here ... this
+            xx=imresize(xx,size(z));
+            yy=imresize(yy,size(z));
+            % assign minimal values here ... this
             %makes sure that we don't sneak by with a NaN
             % this is necessary because the mapping toolbox pads the x and y
             % matrices with NaNs
         
-            [minval,RowIndex,ColumnIndex]=max2d(-z);
+            [minval,RowIndex,ColumnIndex]=max2d(-z)
             LongVal=xx(RowIndex,ColumnIndex);
             LatVal=yy(RowIndex,ColumnIndex);
         end
         
         %% need to find out how much user wants us to zoom by.  It's
         %% encoded in the userdatastructure in the figure window.
-        try
+        if (UDS.MapToolboxFig==1)
             UDS=get(gcbf,'UserData');
-            DeltaLong=UDS.ZoomLongDelta;
-            DeltaLat=UDS.ZoomLatDelta;
-        catch
-            DeltaLong=2.5;
-            DeltaLat=2.5;
+            DeltaLong=.05;
+            DeltaLat=.025;
+        else
+            DeltaLong=3.0;
+            DeltaLat=1.5;
         end
         
         axis(UDS.DataAxisHandle,[LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
   
         
-        [CountryNumber,CountryName]=GetCountry5min(LongVal,LatVal);    ;
+        [CountryNumber,CountryName]=GetCountry5min(LongVal,LatVal);
         
         disp(CountryName)
         

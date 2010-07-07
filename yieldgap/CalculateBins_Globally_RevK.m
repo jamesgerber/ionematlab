@@ -17,7 +17,7 @@ if nargin<7
     cropname='unspecified crop'
     debugplots=0;
 else
-    debugplots=1;
+    debugplots=0;
 end
 
 
@@ -53,7 +53,7 @@ if debugplots==1
     title([' All cultivated areas. ' cropname ' ' WetFlag ' RevK']);
     fattenplot
     finemap('area2')
-    OutputFig('Force')
+    OutputFig('Force',['Figures/' cropname '_' WetFlag '_RevK_AllCultivatedAreas'],'-r300')
     
     figure;surface(xbins,ybins,double(jp.*ContourMask).')
     xlabel(HeatFlag);
@@ -65,7 +65,7 @@ if debugplots==1
     fattenplot
     shading flat
     finemap('area2')
-    OutputFig('Force')
+    OutputFig('Force',['Figures/' cropname '_' WetFlag '_RevK_Contour-FilteredAreas'],'-r300')
 
     figure;surface(xbins,ybins,double(ContourMask).')
     xlabel(HeatFlag);
@@ -76,7 +76,7 @@ if debugplots==1
     fattenplot
     shading flat
     finemap('jet')
-    OutputFig('Force')
+    OutputFig('Force',['Figures/' cropname '_' WetFlag '_RevK_95%Contour-FilteredAreas'],'-r300')
 end
 
 
@@ -136,7 +136,8 @@ if debugplots==1
     fattenplot
     shading flat
     finemap('area2')
-    OutputFig('Force')
+     OutputFig('Force',['Figures/' cropname '_' WetFlag '_RevK_scatterplotfromContour-FilteredAreas'],'-r300')
+
 end
 
 p=PercentToDrop/100;

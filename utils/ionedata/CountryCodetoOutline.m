@@ -25,7 +25,7 @@ function [outline, indices] = CountryCodetoOutline(countrycode)
 % http://www.mathworks.com/support/solutions/en/data/1-18I2C/
 %
 % Written by Nathan Mueller
-% last modified 7.6.2010
+% last modified 7.8.2010
 %
 % see also StandardCountryNames.m
 
@@ -103,16 +103,6 @@ if isempty(snu_htable);
             state_htable.put(statecode,sagecodes);
         end
         
-        %         disp('Creating hash table for SAGE_COUNTRY codes and SAGE_ADMIN codes')
-        %
-        %         for c = 1:length(countrycodes);
-        %             ccode = countrycodes{c};
-        %             disp(ccode);
-        %             countryrows = strmatch(ccode, admincodes.SAGE_COUNTRY);
-        %             sagecodes = admincodes.SAGE_ADMIN(countryrows);
-        %             state_htable.put(ccode,sagecodes);
-        %         end
-        
         disp('Creating outlines and hash table for SAGE_COUNTRY codes')
         
         ctry_outlines = zeros(4320,2160);
@@ -140,6 +130,8 @@ if isempty(snu_htable);
     end
 end
 
+% build outlines; procedure depends on whether you are asking for a
+% country, state, or county-level political unit
 if length(countrycode) == 3;
     
     c = ctry_htable.get(countrycode);
@@ -169,133 +161,3 @@ else
     warning('invalid SAGE code');
     
 end
-
-
-
-
-
-% %
-% %         outline = zeros(4320,2160);
-% %         for n = 1:length(ac)
-% %             code = ac{n};
-% %             gridno = pb_htable.get(code);
-% %             ii = find(AdminGrid == gridno);
-% %             if ~isempty(ii)
-% %                 outline(ii) = 1;
-% %             end
-% %         end
-% %         ii = find(outline == 1);
-% %         if ~isempty(ii)
-% %             state_htable.put(statecode,ii);
-% %         end
-% %     end
-% %
-% %     disp('Creating hash table for SAGE_COUNTRY codes and SAGE_ADMIN codes')
-% %
-% %     for c = 1:length(countrycodes);
-% %         ccode = countrycodes{c};
-% %         disp(ccode);
-% %         countryrows = strmatch(ccode, admincodes.SAGE_COUNTRY);
-% %         ac = admincodes.SAGE_ADMIN(countryrows);
-% %         outline = zeros(4320,2160);
-% %         for n = 1:length(ac)
-% %             code = ac{n};
-% %             gridno = pb_htable.get(code);
-% %             ii = find(AdminGrid == gridno);
-% %             if ~isempty(ii)
-% %                 outline(ii) = 1;
-% %             end
-% %         end
-% %         ii = find(outline == 1);
-% %         if ~isempty(ii)
-% %             state_htable.put(ccode,ii);
-% %         end
-% %     end
-
-
-
-
-%  disp('Creating hash table for SAGE_STATE codes and map indices')
-%
-%         for c = 1:length(statecodes);
-%             statecode = statecodes{c};
-%             disp(statecode);
-%             staterows = strmatch(statecode, admincodes.SAGE_STATE);
-%             ac = admincodes.SAGE_ADMIN(staterows);
-%             outline = zeros(4320,2160);
-%             for n = 1:length(ac)
-%                 code = ac{n};
-%                 gridno = pb_htable.get(code);
-%                 ii = find(AdminGrid == gridno);
-%                 if ~isempty(ii)
-%                     outline(ii) = 1;
-%                 end
-%             end
-%             ii = find(outline == 1);
-%             if ~isempty(ii)
-%                 state_htable.put(statecode,ii);
-%             end
-%         end
-%
-%         disp('Creating hash table for SAGE_COUNTRY codes and map indices')
-%
-%         for c = 1:length(countrycodes);
-%             ccode = countrycodes{c};
-%             disp(ccode);
-%             countryrows = strmatch(ccode, admincodes.SAGE_COUNTRY);
-%             ac = admincodes.SAGE_ADMIN(countryrows);
-%             outline = zeros(4320,2160);
-%             for n = 1:length(ac)
-%                 code = ac{n};
-%                 gridno = pb_htable.get(code);
-%                 ii = find(AdminGrid == gridno);
-%                 if ~isempty(ii)
-%                     outline(ii) = 1;
-%                 end
-%             end
-%             ii = find(outline == 1);
-%             if ~isempty(ii)
-%                 state_htable.put(ccode,ii);
-%             end
-%         end
-
-
-
-% % %
-% % %
-% % % else
-% % %
-% % %     workingdir = pwd;
-% % %
-% % %     %     str = ([IoneDataDir 'misc']);
-% % %     %     cd(str);
-% % %     %     load 5mincountries;
-% % %     %     cd(workingdir);
-% % %
-% % %     loadpath = ['load ' IoneDataDir '/misc/5mincountries.mat'];
-% % %     eval(loadpath);
-% % %
-% % %     state_htable = java.util.Properties;
-% % %     for j=1:length(co_codes);
-% % %         code = co_codes{j};
-% % %         tmp = co_numbers(j);
-% % %         ii = find(co_outlines == tmp);
-% % %         if ~isempty(ii)
-% % %
-% % %             state_htable.put(co_codes{j},ii);
-% % %         end
-% % %
-% % %     end
-% % %
-% % % end
-% % %
-% % % outline = zeros(4320,2160);
-% % % ii = state_htable.get(countrycode);
-% % % outline(ii) = 1;
-% % %
-% % % %
-% % % % try
-% % % %
-% % % %     ii = state_htable.get(countrycode);
-% % % %
-% % % % catch

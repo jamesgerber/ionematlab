@@ -18,11 +18,10 @@ function [outline, indices] = CountryCodetoOutline(countrycode)
 %    [outline, ii] = CountryCodetoOutline('CAN');
 %
 % ***IMPORTANT NOTES***: The first time this code is run, you will have to
-% build a hash table .mat file using raw AdminBoundary info. This will
-% likely take ~30 minutes(!). You should also change the Java Heap Space
-% for Matlab to 256 MB, else this will likely crash after you have taken
-% the time to build the hash table and before you can save it! To see how
-% to increase Java memory, see this MathWorks tutorial:
+% build a .mat file of hash tables using raw AdminBoundary info. This will
+% likely take ~20 minutes(!). You may also need to change the Java Heap
+% Space for Matlab to 256 MB, else Matlab may not be able to save the hash
+% tables. To see how to increase Java memory, see this MathWorks tutorial:
 % http://www.mathworks.com/support/solutions/en/data/1-18I2C/
 %
 % Written by Nathan Mueller
@@ -51,15 +50,11 @@ if isempty(snu_htable);
             '3_M3lcover_5min/admincodes.csv'];
         admincodes = ReadGenericCSV(path);
         
-        % build list of 5-letter/number codes for state-level entries
+        % build list of 5-letter/number codes for state-level entries and a
+        % list of 3-letter/number codes for country-level entries
         for c = 1:length(admincodes.SAGE_ADMIN)
             code = admincodes.SAGE_ADMIN{c};
             admincodes.SAGE_STATE{c} = code(1:5);
-        end
-        
-        % build list of 5-letter/number codes for country-level entries
-        for c = 1:length(admincodes.SAGE_ADMIN)
-            code = admincodes.SAGE_ADMIN{c};
             admincodes.SAGE_COUNTRY{c} = code(1:3);
         end
         

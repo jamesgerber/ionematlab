@@ -43,7 +43,7 @@ end
 
 for N=Nspace;
     for jcrop=jcropvector
-        jwf=4;
+       for jwf=[4];
         jhf=1
         
         
@@ -169,13 +169,16 @@ for N=Nspace;
             [BinMatrix,PrecBins,GDDBins,ClimateDefs,CDS]=MakeClimateSpace(Prec,Heat,PrecBinEdges,GDDBinEdges);
             BinMatrix=single(BinMatrix);
             
-            
+            %% MultiBoxPlot
+Rev='F'
+            LogicalInclude=( CultivatedArea>eps & CropMaskLogical & Heat < 1e15 & isfinite(Heat));
+            MultiBoxPlotInClimateSpace(CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,LogicalInclude);
             
             save(FileName,'BinMatrix','GDDBins','PrecBins','ClimateDefs','GDDBinEdges','PrecBinEdges','Prec','GDD',...
                 'PercentToDrop','WetFlag','HeatFlag','CultivatedArea','CDS');
             DAS.Description=['Climate Space Library, Revision F. ' datestr(now)];
             WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
         end
-        
+       end
     end
 end

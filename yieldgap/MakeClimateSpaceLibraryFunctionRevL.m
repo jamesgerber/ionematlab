@@ -1,5 +1,5 @@
-function MakeClimateSpaceLibraryFunctionRevK(FlagStructure)
-%% MakeClimateSpaceLibraryFunctionRevK   New Yield Gap Work - J. Gerber, N. Mueller
+function MakeClimateSpaceLibraryFunctionRevL(FlagStructure)
+%% MakeClimateSpaceLibraryFunctionRevL   New Yield Gap Work - J. Gerber, N. Mueller
 %
 %  SYNTAX
 %      YieldGapFunction  Will compute yield gaps according to
@@ -14,7 +14,7 @@ function MakeClimateSpaceLibraryFunctionRevK(FlagStructure)
 %  FS.GDDBaseDir='GDDLibrary/'
 %  FS.TMILocation='./TMI.mat';
 %  FS.GetBinsElsewhere='../Climate0/ClimateLibrary/';
-% OutputStructure=MakeClimateSpaceLibraryFunctionRevK(FS);
+% OutputStructure=MakeClimateSpaceLibraryFunctionRevL(FS);
 %
 %
 %
@@ -116,10 +116,10 @@ for N=Nspace;
         end
         
         FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
-            'x' int2str(N) '_RevK'];
+            'x' int2str(N) '_RevL'];
         
         NoBaseFileName=['/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
-            'x' int2str(N) '_RevK'];
+            'x' int2str(N) '_RevL'];
         
         if exist([FileName '.nc'])==2
             disp(['Already have ' FileName '.nc'])
@@ -152,7 +152,7 @@ for N=Nspace;
             disp(['Making bins'])
                 % Make bins
                 
-                % RevK - if Cultivated Area ==0, then do not take those
+                % RevL - if Cultivated Area ==0, then do not take those
                 % bins into account when calculating Bin Edges.
                 
                 tempvar=Heat;
@@ -185,22 +185,31 @@ for N=Nspace;
             [BinMatrix,PrecBins,GDDBins,ClimateDefs,CDS]=MakeClimateSpace(Heat,Prec,GDDBinEdges,PrecBinEdges);
             BinMatrix=single(BinMatrix);
             
-            % now need to refine CDS
-%            disp('refining bins')
-%            [CDSnew]=...
-%                RefineClimateSpaceRevH(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask,[cropname ' ' WetFlag]);
-            
-            %% Make Climate Space
-
+  
 %            CDS=CDSnew;
             [BinMatrix,ClimateDefs]=ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag);
 
+  % now add soils
+  
+  SystemGlobals
+  [Long,Lat,Soils]=OpenNetCDF([iddstring '/HarmonisedSoils/HWSD_CategoricalCSQI.nc']);
+  iiOcean=(Soils==0 | Soils==7);
+  iiGood=(Soils==1);
+  iiMed=(Soils==2);
+  iiPoor=(Soils==3 | Soils==4 | Soils==5);
+  CategoryMap=Soils*-1;
+  CategoryMap(iiGood)=1;
+  CategoryMap(iiMed)=2;
+  CategoryMap(iiPoor)=3;
+  Categories=1:3;
+           % [BinMatrix,ClimateDefs,CDS]=...
+                [NewBinMatrix,NewClimateDefs,NewCDS]=...
+    Add3rdClimateSpaceCategory(BinMatrix,ClimateDefs,CDS,CategoryMap,Categories);
+            BinMatrix=NewBinMatrix;
+            ClimateDefs=NewClimateDefs;
+            CDS=NewCDS;
             %%
-            %Now can make a plot 
-            LogicalInclude=AreaFilter(CultivatedArea,CultivatedArea);
-            LogicalInclude=(LogicalInclude & CropMaskLogical & Heat < 1e15 & isfinite(Heat));
-            MultiBoxPlotInClimateSpace(CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,LogicalInclude);
-            %%
+            
             save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...
                 'PercentToDrop','WetFlag','HeatFlag','CultivatedArea','CDS');
             DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];

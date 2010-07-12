@@ -50,8 +50,8 @@ if strcmp(get(src,'SelectionType'),'normal')
         pt=gcpmap;
         y=pt(1,1);
         x=pt(1,2);
-        [b1 a1]=getRowCol(UDS.Lat,UDS.Long,y,x);
-        z=UDS.Data(a1,b1);
+        [a1 b1]=getRowCol(UDS.Lat,UDS.Long,y,x);
+        z=UDS.Data(b1,a1);
         Scale=1;
     else
         cp=get(UDS.DataAxisHandle,'CurrentPoint');
@@ -61,13 +61,7 @@ if strcmp(get(src,'SelectionType'),'normal')
         z=UDS.Data(b1,a1);
         Scale=UDS.ScaleToDegrees;
     end
-    [CountryNumbers,CountryNames]=...
-        GetCountry_halfdegree(x*Scale,y*Scale);
-    CountryName=CountryNames{1};
-    ii=find(CountryName==',');
-    if ~isempty(ii)
-        CountryName=CountryName(1:(ii(1)-1));
-    end
+    CountryName=UDS.States(b1,2161-a1);
     
      %%% now set text in the console
      % first delete old text
@@ -79,14 +73,18 @@ if strcmp(get(src,'SelectionType'),'normal')
      axes(hc)
      set(hc,'xlim',[0 1]);
      set(hc,'ylim',[0 1]);
-     ht=text(0.02,.2,['Country=' CountryName]);
+     if (length(CountryName{1})>=3)
+        ht=text(0.02,.0,['Country = ' {StandardCountryNames(CountryName{1}(1:3),'sage3','sagecountry')}]);
+        set(ht,'Tag','IonEConsoleText');
+     end
+     ht=text(0.02,.3,['SAGE = ' CountryName]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.4,['Value = ' num2str(z)]);
-     %set(ht,'Tag','IonEConsoleText');
-     %ht=text(0.02,.6,['Lat = ' num2str(y)]);
+     ht=text(0.02,.6,['Value = ' num2str(z)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.6,['Lon = ' num2str(x)]);
-     set(ht,'Tag','IonEConsoleText'); 
+     ht=text(0.02,.8,['Lat = ' num2str(y)]);
+     set(ht,'Tag','IonEConsoleText');
+     ht=text(0.02,1.0,['Lon = ' num2str(x)]);
+     set(ht,'Tag','IonEConsoleText');  
      axes(UDS.DataAxisHandle);  %make data axis handle current
 end
 
@@ -119,13 +117,7 @@ if strcmp(get(src,'SelectionType'),'normal')
         z=UDS.Data(b1,a1);
         Scale=UDS.ScaleToDegrees;
     end
-    [CountryNumbers,CountryNames]=...
-        GetCountry_halfdegree(x*Scale,y*Scale);
-    CountryName=CountryNames{1};
-    ii=find(CountryName==',');
-    if ~isempty(ii)
-        CountryName=CountryName(1:(ii(1)-1));
-    end
+    CountryName=UDS.States(b1,2161-a1);
      %%% now set text in the console
      % first delete old text
      h=findobj('Tag','IonEConsoleText');
@@ -134,13 +126,17 @@ if strcmp(get(src,'SelectionType'),'normal')
      %now new text
      hc=UDS.ConsoleAxisHandle;
      axes(hc)
-     ht=text(0.02,.2,['Country=' CountryName]);
+     if (length(CountryName{1})>=3)
+        ht=text(0.02,.0,['Country = ' {StandardCountryNames(CountryName{1}(1:3),'sage3','sagecountry')}]);
+        set(ht,'Tag','IonEConsoleText');
+     end
+     ht=text(0.02,.3,['SAGE = ' CountryName]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.4,['Value = ' num2str(z)]);
+     ht=text(0.02,.6,['Value = ' num2str(z)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.6,['Lat = ' num2str(y)]);
+     ht=text(0.02,.8,['Lat = ' num2str(y)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.8,['Lon = ' num2str(x)]);
+     ht=text(0.02,1.0,['Lon = ' num2str(x)]);
      set(ht,'Tag','IonEConsoleText');  
      
      LongVal=x1;

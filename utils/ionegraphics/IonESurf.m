@@ -180,10 +180,12 @@ IonEButtonDownFunctions('Initialize');
 %% Add Console
 position=NextButtonCoords;
 position(4)=100;
-ConsoleAxisHandle=axes('units','pixels','Position',position);
+ConsoleAxisHandle=axes('Units','normalized','Position',[.83,.40,.15,.35]);
 set(ConsoleAxisHandle,'units','normalized'); %this is the default
 set(ConsoleAxisHandle,'visible','off');
 UserDataStructure.ConsoleAxisHandle=ConsoleAxisHandle;
+load('outlines.mat');
+UserDataStructure.States=sagecodes;
 set(hfig,'UserData',UserDataStructure);
 
 % make dataaxis current

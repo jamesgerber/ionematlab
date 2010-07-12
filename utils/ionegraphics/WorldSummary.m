@@ -42,7 +42,6 @@ switch(InputFlag)
         yy=UDS.Lat;
         ii=find(~isnan(z) & z~=0);
         
-        
         [maxval,RowIndex,ColumnIndex]=max2d(z)
         if isvector(xx)
             LongVal=xx(ColumnIndex);
@@ -87,9 +86,9 @@ switch(InputFlag)
         
         deg=-87.5:5:87.5;
         for m=1:length(deg);
-            ii=find( yy*Scale > deg(m)-2.5 & yy*Scale <= deg(m)+2.5);
+            ii=find( yy > deg(m)-2.5 & yy <= deg(m)+2.5);
             if isvector(xx)
-                zonestrip=z(ii,:);
+                zonestrip=z(:,ii);
             else
                 zonestrip=z(ii);
             end
@@ -115,7 +114,7 @@ switch(InputFlag)
                 hyl=get(hcb,'Ylabel');
                 Units=get(hyl,'String');
             else
-                Units='';
+                Units='N/A';
             end
         end
         x=.1;

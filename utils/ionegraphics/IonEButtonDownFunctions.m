@@ -61,8 +61,7 @@ if strcmp(get(src,'SelectionType'),'normal')
         z=UDS.Data(b1,a1);
         Scale=UDS.ScaleToDegrees;
     end
-    CountryName=UDS.States(b1,2161-a1);
-    
+    CountryName=UDS.States(round((b1*2160)/length(UDS.Lat)),2161-round((a1*4320)/length(UDS.Long)));
      %%% now set text in the console
      % first delete old text
      h=findobj('Tag','IonEConsoleText');
@@ -117,7 +116,7 @@ if strcmp(get(src,'SelectionType'),'normal')
         z=UDS.Data(b1,a1);
         Scale=UDS.ScaleToDegrees;
     end
-    CountryName=UDS.States(b1,2161-a1);
+    CountryName=UDS.States(round((b1*2160)/length(UDS.Lat)),2161-round((a1*4320)/length(UDS.Long)));
      %%% now set text in the console
      % first delete old text
      h=findobj('Tag','IonEConsoleText');
@@ -154,10 +153,10 @@ end
 
 function [a b]=getRowCol(LT,LN,lat,lon)
 a=1;
-while ((LT(a,1)<lat)&&(a<2160))
+while ((LT(a,1)<lat)&&(a<length(LT)))
     a=a+1;
 end
 b=1;
-while ((LN(b,1)<lon)&&(b<4320))
+while ((LN(b,1)<lon)&&(b<length(LN)))
     b=b+1;
 end

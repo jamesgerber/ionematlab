@@ -82,7 +82,7 @@ if FS.ibinlist~=0
 end
 if exist(FileName)==2 & ForceRedo==0;
     load(FileName,'FS','OS');
-    [RevNo]=GetSVNInfo;
+    [RevNo]=GetSVNInfo(mfilename);
     if ~isequal(RevNo,OS.RevData.CodeRevisionNo);
         warning([ mfilename ' revision no = ' num2str(RevNo) ' Stored file made with ' ...
             num2str(OS.RevData.CodeRevisionNo)]);

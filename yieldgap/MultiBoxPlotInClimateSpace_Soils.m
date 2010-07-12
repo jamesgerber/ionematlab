@@ -134,7 +134,7 @@ for SoilCategory=1:3;
     grid off
     
     N=sqrt(Nsq)
-
+    
     nbyn=[num2str(N) 'x' num2str(N)]
     OutputFig('Force',['Figures/' cropname 'BoxScatterPlot_' WetFlag '_' nbyn '_' ' Rev' Rev '_' Description])
 end

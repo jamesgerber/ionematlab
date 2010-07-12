@@ -23,6 +23,7 @@ function MakeClimateSpaceLibraryFunctionRevF(FlagStructure)
 
 jcropvector=[5 7];
 Nspace=[5 10];
+AnnualMeanPrec='./AnnualMeanPrec.mat';
 GDDBaseDir='GDDLibrary/';
 TMILocation='./TMI.mat';
 SaveFileNameBaseDir='./ClimateLibrary';
@@ -43,7 +44,7 @@ end
 
 for N=Nspace;
     for jcrop=jcropvector
-       for jwf=[4];
+       for jwf=[2 4];
         jhf=1
         
         
@@ -127,6 +128,9 @@ for N=Nspace;
                 case 'TMI'
                     load([TMILocation]);
                     Prec=TMI;
+           case 'prec'
+                    load([AnnualMeanPrec]);
+                    Prec=annualmeanprec;		    
                 otherwise
                     error(['Don''t have ability to handle' WetFlag ' in ' mfilename ]);
             end

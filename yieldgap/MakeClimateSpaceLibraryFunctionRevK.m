@@ -20,7 +20,7 @@ function MakeClimateSpaceLibraryFunctionRevK(FlagStructure)
 %
 % Get crop information section
 
-Rev='H';
+Rev='K';
 
 
 jcropvector=[5 7];
@@ -198,7 +198,7 @@ for N=Nspace;
             %%
             %Now can make a plot 
             LogicalInclude=AreaFilter(CultivatedArea,CultivatedArea);
-            LogicalInclude=(LogicalInclude & CropMaskLogical & Heat < 1e15 & isfinite(Heat));
+            LogicalInclude=(LogicalInclude & CropMaskLogical & Heat < 1e15 & isfinite(Heat))
             MultiBoxPlotInClimateSpace(CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,LogicalInclude);
             %%
             save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...

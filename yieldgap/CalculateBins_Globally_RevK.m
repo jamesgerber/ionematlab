@@ -49,11 +49,15 @@ if debugplots==1
     ylabel(WetFlag);
     %zeroylim(0,6);
     grid on
-    ylims=get(gca,'YLim');
-    title([' All cultivated areas. ' cropname ' ' WetFlag ' RevK']);
+
+    if isequal(WetFlag,'prec') & isequal(cropname,'Maize')  %hardwire for some nice plots
+        zeroylim(0,1e4);
+    end
+        ylims=get(gca,'YLim');
+    title([' Top 95% cultivated areas. ' cropname ' ' WetFlag ' RevK']);
     fattenplot
     finemap('area2')
-    OutputFig('Force',['Figures/' cropname '_' WetFlag '_RevK_AllCultivatedAreas'],'-r300')
+    OutputFig('Force',['Figures/' cropname '_' WetFlag '_Top95CultivatedAreas'],'-r300')
     
     figure;surface(xbins,ybins,double(jp.*ContourMask).')
     xlabel(HeatFlag);

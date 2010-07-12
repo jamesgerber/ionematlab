@@ -1,4 +1,4 @@
-function [XXXBinEdges,YYYBinEdgesCell,xbins,ybins,ContourMask]= ...
+function [XXXBinEdges,YYYBinEdgesCell,xbins,ybins,ContourMask,InsideContourLogical]= ...
     CalculateBins_Globally_RevH(YYY,XXX,Area,Nbin,Nsurface,...
     PercentToDrop,cropname,WetFlag,HeatFlag);
 %   CalculateBins_EqualAreaSpace
@@ -43,7 +43,7 @@ if debugplots==1
     %zeroylim(0,6);
     grid on
     ylims=get(gca,'YLim');
-    title([' All cultivated areas. ' cropname ' ' WetFlag ' RevH']);
+    title([' All cultivated areas. ' cropname ' ' WetFlag ]);
     fattenplot
     finemap('area2')
     OutputFig('Force')
@@ -58,7 +58,7 @@ if debugplots==1
     fattenplot
     shading flat
     finemap('area2')
-    OutputFig('Force')
+    OutputFig('Force',['Figures/Contour-filteredareas_' cropname '_' WetFlag 'RevH'])
 
     figure;surface(xbins,ybins,double(ContourMask).')
     xlabel(HeatFlag);
@@ -104,6 +104,9 @@ end
 GoodList=logical(GoodList);
 
 GoodList=GoodList & IsValidData;
+
+InsideContourLogical=GoodList;
+
 
 xcr=XXX(GoodList);
 ycr=YYY(GoodList);

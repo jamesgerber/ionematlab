@@ -158,7 +158,7 @@ for N=Nspace;
                 ii=(CultivatedArea==0);
                 tempvar(ii)=1e20;  % this will cause these guys to be ignored
                 
-                [PrecBinEdges,GDDBinEdges,xbins,ybins,ContourMask]= ...
+                [PrecBinEdges,GDDBinEdges,xbins,ybins,ContourMask,InsideContourLogical]= ...
                     CalculateBins_Globally_RevH(Prec,tempvar,...
                     CultivatedArea,N,300,PercentToDrop,cropname,WetFlag,HeatFlag);
             else
@@ -195,7 +195,11 @@ for N=Nspace;
             [BinMatrix,ClimateDefs]=ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag);
 
             %%
+               %Now can make a plot 
+
+            MultiBoxPlotInClimateSpace(CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,InsideContourLogical);
             
+            %%
             save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...
                 'PercentToDrop','WetFlag','HeatFlag','CultivatedArea','CDS');
             DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];

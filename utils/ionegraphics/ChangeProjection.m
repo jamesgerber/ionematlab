@@ -28,7 +28,7 @@ end
 switch(InputFlag)
     case 'Initialize'
         uicontrol('style','popupmenu','String',CallbackString,'Callback', ...
-            'ChangeProjection(''ChangeProjectionCallback'')','Units','normalized','Position',[.83,.95,.15,.03]);
+            'ChangeProjection(''ChangeProjectionCallback'')','Position',[5,320,120,25]);
         
     case 'ChangeProjectionCallback'
         

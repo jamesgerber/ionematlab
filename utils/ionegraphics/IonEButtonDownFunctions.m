@@ -124,18 +124,15 @@ if strcmp(get(src,'SelectionType'),'normal')
      hc=UDS.ConsoleAxisHandle;
      axes(hc)
      if (length(CountryName{1})>=3)
-        ht=text(0.02,.0,['Country = ' {StandardCountryNames(CountryName{1}(1:3),'sage3','sagecountry')}]);
+        ht=text(1.0,0.5,['Country = ' {StandardCountryNames(CountryName{1}(1:3),'sage3','sagecountry')}]);
         set(ht,'Tag','IonEConsoleText');
      end
-     ht=text(0.02,.3,['SAGE = ' CountryName]);
+     ht=text(0.67,0.5,['SAGE = ' CountryName]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.6,['Value = ' num2str(z)]);
+     ht=text(0.0,0.5,['Value = ' num2str(z)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.8,['Lat = ' num2str(y)]);
+     ht=text(0.33,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,1.0,['Lon = ' num2str(x)]);
-     set(ht,'Tag','IonEConsoleText');  
-     
      LongVal=x1;
      LatVal=y1;
      % now want to zoom axes ...

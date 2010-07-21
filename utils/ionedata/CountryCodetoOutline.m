@@ -38,7 +38,7 @@ SystemGlobals;
 if isempty(snu_htable);
     
     % if the hash table doesn't exist, try to load it from misc folder
-    ht_path = ['/misc/admin_hashtable.mat'];
+    ht_path = [IoneDataDir '/misc/admin_hashtable.mat'];
     if exist(ht_path) == 2
         eval(['load ' ht_path]);
         
@@ -123,7 +123,8 @@ if isempty(snu_htable);
             ctry_htable.put(ccode,c);
         end
         
-        savepath = ['save admin_hashtable.mat snu_htable state_htable ctry_htable ctry_outlines'];
+        savepath = ['save ' IoneDataDir '/misc/admin_hashtable.mat ' ...
+            'snu_htable state_htable ctry_htable ctry_outlines'];
         eval(savepath);
         
     end

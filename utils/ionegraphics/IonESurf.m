@@ -175,20 +175,15 @@ ZoomToContinent('Initialize');
 PropagateLimits('Initialize');
 OutputFig('Initialize');
 IonEButtonDownFunctions('Initialize');
-if CheckForMappingToolbox;
-   ChangeProjection('Initialize');
-end
 
 
 %% Add Console
 position=NextButtonCoords;
 position(4)=100;
-ConsoleAxisHandle=axes('Units','normalized','Position',[.2,.05,.6,.04]);
+ConsoleAxisHandle=axes('units','pixels','Position',position);
 set(ConsoleAxisHandle,'units','normalized'); %this is the default
 set(ConsoleAxisHandle,'visible','off');
 UserDataStructure.ConsoleAxisHandle=ConsoleAxisHandle;
-load('outlines.mat');
-UserDataStructure.States=sagecodes;
 set(hfig,'UserData',UserDataStructure);
 
 % make dataaxis current
@@ -197,6 +192,9 @@ vis=get(UserDataStructure.DataAxisHandle,'visible');
 set(UserDataStructure.DataAxisHandle,'visible',vis);
 axes(UserDataStructure.DataAxisHandle);
 
+if CheckForMappingToolbox;
+   ChangeProjection('Initialize');
+end
 
 
 

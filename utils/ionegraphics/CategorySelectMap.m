@@ -9,7 +9,7 @@ if (nargin<3)
 end
 
 if (nargin<4)
-    bmap=jet(1000);
+    bmap=bone(1000);
 end
 
 cmap(1,1)=.7;
@@ -19,9 +19,6 @@ cmap(size(cmap,1),1)=.7;
 cmap(size(cmap,1),2)=.7;
 cmap(size(cmap,1),3)=.7;
 
-bmap(1,1)=.7;
-bmap(1,2)=.7;
-bmap(1,3)=.7;
 bmap(size(bmap,1),1)=.7;
 bmap(size(bmap,1),2)=.7;
 bmap(size(bmap,1),3)=.7;

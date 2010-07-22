@@ -13,7 +13,9 @@ switch(InputFlag)
         h=meshm(double(UDS.Back.'),R);
         shading flat;
         colormap(UDS.BMap);
-        caxis(UDS.DataAxisHandle,'auto');
+        mn=min2d(UDS.Back);
+        mx=max2d(UDS.Back);
+        caxis(UDS.DataAxisHandle,[mn,mx]);
         set(gcbf,'WindowButtonDownFcn',@SelectClickCallback);
     case 'clear'
         zoom(gcbf,'off');
@@ -32,10 +34,11 @@ UDS=get(gcbf,'UserData');
     [a b]=getRowCol(UDS.Lat,UDS.Long,cp(1,1),cp(1,2));
     z=UDS.Data(b,a);
     R=[12,90,-180];
-    h1=meshm(double(UDS.Data.'),R);
+    [q w e]=CMapAppend(UDS.BMap/2,UDS.CMap,min2d(UDS.Back),max2d(UDS.Back),min2d(UDS.Data),max2d(UDS.Data));
+    h1=meshm(double(IonEOverlay(UDS.Data*w+e,UDS.Data==z,UDS.Back)).',R);
     shading flat;
-    colormap(UDS.CMap);
-    caxis(UDS.DataAxisHandle,[z-(z/1000),z+((100-z)/1000)]);
+    colormap(q);
+    caxis(UDS.DataAxisHandle,[min2d(UDS.Back),max2d(UDS.Data)*w+e]);
 end
 
 function [a b]=getRowCol(LT,LN,lat,lon)

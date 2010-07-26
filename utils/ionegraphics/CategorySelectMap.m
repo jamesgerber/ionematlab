@@ -15,13 +15,13 @@ end
 cmap(1,1)=.7;
 cmap(1,2)=.7;
 cmap(1,3)=.7;
-cmap(size(cmap,1),1)=.7;
-cmap(size(cmap,1),2)=.7;
-cmap(size(cmap,1),3)=.7;
+cmap(size(cmap+1,1),1)=.7;
+cmap(size(cmap+1,1),2)=.7;
+cmap(size(cmap+1,1),3)=.7;
 
-bmap(size(bmap,1),1)=.7;
-bmap(size(bmap,1),2)=.7;
-bmap(size(bmap,1),3)=.7;
+bmap(size(bmap+1,1),1)=.7;
+bmap(size(bmap+1,1),2)=.7;
+bmap(size(bmap+1,1),3)=.7;
 
 [Long,Lat]=InferLongLat(Data);
 Units='';
@@ -36,6 +36,11 @@ RedData=Data;
 RedLat=RedLat(end:-1:1);
 RedData=RedData(:,end:-1:1);
 backdata=backdata(:,end:-1:1);
+
+OldMax=max2d(RedData);
+BMax=max2d(backdata);
+
+RedData=RedData*((length(cmap)-10)/(length(cmap)));
 
 hfig=figure;
 
@@ -66,7 +71,10 @@ set(hfig,'Tag','IonEFigure');
   h=meshm(double(RedData.'),R);
   shading flat;
 colormap(gca,cmap);
-caxis([0 100]);
+caxis([0 OldMax]);
+UserDataStructure.Fig=hfig;
+UserDataStructure.Max=OldMax;
+UserDataStructure.BMax=BMax;
 UserDataStructure.CMap=cmap;
 UserDataStructure.DataAxisHandle=gca;
 UserDataStructure.Lat=RedLat;

@@ -59,6 +59,6 @@ end
 %documentation, just make the axis current.)   The following lines make a
 %trivial change to the axes, which somehow makes them current without
 %erasing legends.
-vis=get(hax,'visibl');
+vis=get(hax,'visible');
 set(hax,'visible',vis)
 axes(hax)

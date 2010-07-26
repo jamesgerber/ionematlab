@@ -178,9 +178,8 @@ IonEButtonDownFunctions('Initialize');
 
 
 %% Add Console
-position=NextButtonCoords;
-position(4)=100;
-ConsoleAxisHandle=axes('units','pixels','Position',position);
+position=[0.0,0.0,1,.1];
+ConsoleAxisHandle=axes('units','normalized','Position',position);
 set(ConsoleAxisHandle,'units','normalized'); %this is the default
 set(ConsoleAxisHandle,'visible','off');
 UserDataStructure.ConsoleAxisHandle=ConsoleAxisHandle;

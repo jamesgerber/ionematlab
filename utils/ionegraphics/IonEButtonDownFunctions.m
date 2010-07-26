@@ -79,14 +79,12 @@ if strcmp(get(src,'SelectionType'),'normal')
      axes(hc)
      set(hc,'xlim',[0 1]);
      set(hc,'ylim',[0 1]);
-     ht=text(0.02,.2,['Country=' CountryName]);
+     ht=text(0.25,.5,['Country=' CountryName]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.4,['Value = ' num2str(z)]);
-     %set(ht,'Tag','IonEConsoleText');
-     %ht=text(0.02,.6,['Lat = ' num2str(y)]);
+     ht=text(0.5,.5,['Value = ' num2str(z)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.6,['Lon = ' num2str(x)]);
-     set(ht,'Tag','IonEConsoleText'); 
+     ht=text(0.75,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
+     set(ht,'Tag','IonEConsoleText');
      axes(UDS.DataAxisHandle);  %make data axis handle current
 end
 
@@ -134,14 +132,14 @@ if strcmp(get(src,'SelectionType'),'normal')
      %now new text
      hc=UDS.ConsoleAxisHandle;
      axes(hc)
-     ht=text(0.02,.2,['Country=' CountryName]);
+     set(hc,'xlim',[0 1]);
+     set(hc,'ylim',[0 1]);
+     ht=text(0.25,.5,['Country=' CountryName]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.4,['Value = ' num2str(z)]);
+     ht=text(0.5,.5,['Value = ' num2str(z)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.6,['Lat = ' num2str(y)]);
+     ht=text(0.75,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.8,['Lon = ' num2str(x)]);
-     set(ht,'Tag','IonEConsoleText');  
      
      LongVal=x1;
      LatVal=y1;

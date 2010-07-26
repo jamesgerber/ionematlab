@@ -14,7 +14,7 @@ switch(InputFlag)
         shading flat;
         colormap(UDS.BMap);
         mn=min2d(UDS.Back);
-        mx=max2d(UDS.Back);
+        mx=UDS.BMax;
         caxis(UDS.DataAxisHandle,[mn,mx]);
         set(gcbf,'WindowButtonDownFcn',@SelectClickCallback);
     case 'clear'
@@ -24,11 +24,11 @@ switch(InputFlag)
         h1=meshm(double(UDS.Data.'),R);
         shading flat;
         colormap(UDS.CMap);
-        caxis(UDS.DataAxisHandle,[0 100]);
+        caxis(UDS.DataAxisHandle,[0 UDS.Max]);
 end
 end
 
-function SelectClickCallback(src,event) 
+function SelectClickCallback(src,event)
 UDS=get(gcbf,'UserData');
     cp=gcpmap(UDS.DataAxisHandle)
     [a b]=getRowCol(UDS.Lat,UDS.Long,cp(1,1),cp(1,2));

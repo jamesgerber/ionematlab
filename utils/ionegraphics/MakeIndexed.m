@@ -11,3 +11,4 @@ for i=1:size(Image,1)
         CNext=CNext+1;
     end
 end
+CMAP=scaletodouble(CMAP);

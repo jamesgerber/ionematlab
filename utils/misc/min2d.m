@@ -1,5 +1,5 @@
 function [minval,RowIndex,ColumnIndex]=min2d(z)
-% Max2d - returns min value, row index, and column index
+% Min2d - returns min value, row index, and column index
 %
 %  SYNTAX
 %         [MinVal,RowIndex,ColumnIndex]=min2d(z);

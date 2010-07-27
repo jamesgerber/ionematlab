@@ -5,7 +5,9 @@ Image=ScaleToDouble(Image);
 IM=zeros(size(Image,1),size(Image,2),'double');
 CNext=1;
 CMAP=zeros(0,3,'double');
+h = waitbar(0,'Processing');
 for i=1:size(Image,1)
+    waitbar(i/size(Image,1));
     for j=1:size(Image,2)
         tmp=q*.5;
         pos=0;
@@ -25,3 +27,4 @@ for i=1:size(Image,1)
         end
     end
 end
+close(h);

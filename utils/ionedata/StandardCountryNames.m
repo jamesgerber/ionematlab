@@ -166,7 +166,7 @@ end
 
 if length(Row)>1
     switch(Input(1:min(6,end)))
-        case 'israel'
+        case {'ISR','israel'}
             Row=Row(1);
             return
         case {'SRM','serbia'}

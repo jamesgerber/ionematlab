@@ -54,9 +54,7 @@ else
     hp=plotm(lat,long,'k');
     set(hp,'linewidth',LineWidth);
 end
-set(gcf,'renderer','zbuffer');
 
 if holdstatus==0
   hold off
 end
-axes(gca);

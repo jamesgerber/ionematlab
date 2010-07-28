@@ -10,39 +10,34 @@
 %    properly.
 %    v1.3 Update to make unique maps for every crop proxy in the proxylist.
 %    Added capability to scale this output to FAO total consumption.
+%    v1.5 Version used to make poster. Fill rate gaps with countries of
+%    similar economic status.
+
+tic
 
 % Record the version number
 verno = '1_5';
 disp(['You are running version ' verno ' of fertilizermaps'])
 
-tic
+%% read input files
 
 disp('Reading input CSV files')
 % ReadGenericCSV.m converts a CSV file into a MATLAB structure where each
 % column of the CSV file becomes an element of the structure.
-%load fertinput;
+% load fertinput;
 inputfile = ReadGenericCSV('subnationalfert2.csv');
-
-
-
 countrycodes = unique(inputfile.ctry_code);
 tmp = strmatch('new',countrycodes); % remove any "new_snu" issues
 countrycodes(tmp) = [];
 
-
-%% add hash table for inputfile
-
+% add hash table for inputfile
 if ~exist('htable')
     htable = java.util.Properties;
-    
     for j=1:length(countrycodes);
         ii=strmatch(countrycodes{j},inputfile.ctry_code);
         htable.put(countrycodes{j},ii);
     end
 end
-
-
-
 
 cropinput = ReadGenericCSV('proxylist.csv');
 datalist = cropinput.datalist;
@@ -51,8 +46,6 @@ faoinput = ReadGenericCSV('FAO_0307avg.csv');
 
 fao_ctries = unique(faoinput.ctry_codes);
 fao_ctries = fao_ctries(2:length(fao_ctries)); % NOTE: DOING THIS B/C
-
-
 
 disp('Reading input netCDF files')
 SystemGlobals;
@@ -70,31 +63,29 @@ load 5mincountries; % load 5min co_outlines for countries, plus the
 % corresponding lookup tables - co_codes (country codes) and co_numbers,
 % the corresponding numbers in the grid for each country
 
+
+%% build unique crop list
+
 % Create a list of unique crop types we'll make fertilizer application maps
 % for. This map is created from all the unique proxies in the proxylist.
-
 disp('Building list of unique crop types')
 tmp = {};
 for n = 1:length(proxylist);
     str = proxylist{n};
     
     % below is Jamie's code to convert the list of proxies into a cell array
-    
     clear proxycellarray
-    
     str=strrep(str,' ','');
     str=strrep(str,'"','');
     str(end+1)='+';
     ii=find(str=='+');
     proxycellarray = {};
     proxycellarray{1}=str(1:ii(1)-1);
-    
     for j=1:(length(ii)-1)
         proxycellarray{j+1}=str(ii(j)+1:ii(j+1)-1);
     end
     
     % create a master list & find unique values
-    
     x = length(tmp);
     for c = 1:length(proxycellarray);
         y = x + c;
@@ -103,12 +94,14 @@ for n = 1:length(proxylist);
 end
 croplist = unique(tmp(:));
 
+%% loop through nutrient data
+
 % move to output folder to begin writing files
 str = ['output_v' verno];
 mkdir(str);
 cd(str);
 
-for n = 1%%%%%%%%%%%%%%%%%%%%:3
+for n = 1:3
     switch n
         case 1
             nutrient = 'N';
@@ -123,37 +116,6 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
     % initialize fertilizer application maps for these crops: Level 1 =
     % fertilizer application rate data (here just -9s indicating that we
     % don't have data yet), Level 2 = Monfreda harvested area
-    
-    disp(['Initializing netcdf files for ' nutrient])
-%     for c = 1:length(croplist);
-%         % in this section, start going through croplist.  for each crop,
-%         % make an array with -9 where there is crop area.  will also save
-%         % crop area in second level
-%         
-%         appratemap = nan(4320,2160);
-%         cropname = croplist{c};
-%         disp(['working on ' cropname]);
-%         x = ([cropname '_5min.nc']);
-%         path = [IoneDataDir 'Crops2000/crops/' x];
-%         [DS] = OpenNetCDF(path);
-%         tmp = DS.Data(:,:,1);
-%         tmp(tmp > 100) = NaN;
-%         ii = find(tmp < 2 & tmp > 0);
-%         appratemap(ii) = -9; % put -9 where we know we have crop data ...
-%         % but we do not know the application rate
-%         tmp = DS.Data(:,:,1);
-%         tmp(tmp > 2) = NaN;
-%         appratemap(:,:,2) = tmp; % save M3 harvested area for this crop to
-%         % the second level
-%         appratemap=single(appratemap);
-%         
-%         
-%         titlestr = [cropname '_' nutrient '_ver' verno];
-%         DataStoreGateway([titlestr '_rate'],appratemap(:,:,1));
-%         DataStoreGateway([titlestr '_area'],appratemap(:,:,2));
-%     end
-    
-    % Loop through data list
     
     for datano = 1:length(datalist)
         dataentry = datalist{datano};
@@ -171,16 +133,13 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
         
         % below is Jamie's code to convert the list of proxies into a cell
         % array
-        
         clear proxycellarray
-        
         str=strrep(str,' ','');
         str=strrep(str,'"','');
         str(end+1)='+';
         ii=find(str=='+');
         proxycellarray = {};
         proxycellarray{1}=str(1:ii(1)-1);
-        
         for j=1:(length(ii)-1)
             proxycellarray{j+1}=str(ii(j)+1:ii(j+1)-1);
         end
@@ -248,10 +207,7 @@ for n = 1%%%%%%%%%%%%%%%%%%%%:3
                             
                             filestr = [cropname '_' nutrient '_ver' verno '.nc'];
                             titlestr = [cropname '_' nutrient '_ver' verno ];
-                            %%%%    DS = OpenNetCDF(filestr);
                             appratemap=DataStoreGateway([titlestr '_rate']);
-                            
-                            %%%%    appratemap = DS.Data(:,:,1);
                             
                             ii = find(appratemap > -10 & outline > 0);
                             appratemap(ii) = countrydata;

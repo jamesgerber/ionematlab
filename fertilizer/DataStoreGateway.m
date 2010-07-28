@@ -18,7 +18,7 @@ if nargout==1
   
   load(name);
   
-  data=-1*zeros(4320,2160);
+  data=-1*nan(4320,2160);
   
   data(ii)=store(:);  %note that store is dataname within saved file
     varargout{1}=data;

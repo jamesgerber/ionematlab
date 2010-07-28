@@ -6,7 +6,7 @@ persistent DataLandMaskVector
 if isempty(DataLandMaskVector)
     SystemGlobals
     [Long,Lat,Data]=OpenNetCDF(LANDMASK_5MIN);
-    DataLandMaskVector=(Data==7);
+    DataLandMaskVector=(Data>2);
 end
 LogicalVector=DataLandMaskVector;
 

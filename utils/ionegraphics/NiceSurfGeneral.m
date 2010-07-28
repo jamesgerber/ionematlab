@@ -203,9 +203,39 @@ else
             longlatbox=[-105 -75 25 55];
             filename=[filename '_midwest'];
             ylim=.32;
-
-        
-        otherwise
+        case 'tropics'
+            longlatbox=[-180 180 -30 30];
+            filename=[filename '_tropics'];
+            ylim=.32;
+        case {'brazil','brasil'}
+            longlatbox=[-80 -20 -40 10];
+            filename=[filename '_brazil'];
+            ylim=.52;
+        case {'china'}
+            longlatbox=[75 140 15 60];
+            filename=[filename '_china'];
+            ylim=.42;%.37;%.32;%52
+        case {'india'}
+            longlatbox=[65 100 5 40];
+            filename=[filename '_india'];
+            ylim=.35%.32;	    
+        case {'indonesia'}
+            longlatbox=[90 145 -15 10];
+            filename=[filename '_indonesia'];
+            ylim=.27;%.32;	    	    
+        case {'chinatropical'}
+            longlatbox=[80 140 10 35];
+            filename=[filename '_chinatropical'];
+            ylim=.32;
+        case {'mexico'}
+            longlatbox=[-125 -80 10 35];
+            filename=[filename '_mexico'];
+            ylim=.27;%.32;	    
+        case {'southafrica'}
+            longlatbox=[15 40 -40 -20];
+            filename=[filename '_southafrica'];
+            ylim=.22;	    
+     otherwise
             error(['Don''t recognize plotarea ' plotarea]);
     end
 end
@@ -406,7 +436,7 @@ if ~isempty(filename)
     if isequal(figfilesave,'on')
         hgsave(filename);
     end
-    if length(get(allchild(0)))>1
+    if length(get(allchild(0)))>0
         close(gcf)
     end
 end

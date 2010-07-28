@@ -28,6 +28,7 @@ TOTCMatrix=-999+0*SoilIDMatrix;
 TOTNMatrix=-999+0*SoilIDMatrix;
 BULKMatrix=-999+0*SoilIDMatrix;
 TAWCMatrix=-999+0*SoilIDMatrix;
+TAWCMatrix_modal=-999+0*SoilIDMatrix;
 CLPCMatrix=-999+0*SoilIDMatrix;
 SDTOMatrix=-999+0*SoilIDMatrix;
 PHAQMatrix=-999+0*SoilIDMatrix;
@@ -77,7 +78,8 @@ for LayerNo=1:5;
         TOTCMatrix(ii)=SoilProps.AvgTOTC;
         TOTNMatrix(ii)=SoilProps.AvgTOTN;
         BULKMatrix(ii)=SoilProps.AvgBULK;
-      %  TAWCMatrix(ii)=SoilProps.AvgTAWC;
+        TAWCMatrix(ii)=SoilProps.AvgTAWC;
+        TAWCMatrix_modal(ii)=SoilProps.ModalTAWC;
         CLPCMatrix(ii)=SoilProps.AvgCLPC;
         SDTOMatrix(ii)=SoilProps.AvgSDTO;
         PHAQMatrix(ii)=SoilProps.AvgPHAQ;
@@ -123,7 +125,23 @@ for LayerNo=1:5;
     CLPC(:,EmbeddingIndices)=CLPCMatrix;
     DAS.units='Percentage';
     DAS.source='ISRIC Version 1.0';
-    WriteNetCDF(Long,Lat,single(CLPC),'CLPC',['CLPC_Level' Layer '.nc'],DAS);    
+    WriteNetCDF(Long,Lat,single(CLPC),'CLPC',['CLPC_Level' Layer '.nc'],DAS);   
+    
+    TAWC=CorrectlySizedMatrix;
+    TAWC(:,EmbeddingIndices)=TAWCMatrix;
+    DAS.units='cm/m';
+    DAS.source='ISRIC Version 1.0';
+    DAS.Description=['Total Available Water Content. Weighted Average.' ...
+        ' Layer ' Layer ];
+    WriteNetCDF(Long,Lat,single(TAWC),'TAWC',['Avg_TAWC_Level' Layer '.nc'],DAS);   
+  
+    TAWC=CorrectlySizedMatrix;
+    TAWC(:,EmbeddingIndices)=TAWCMatrix_modal;
+    DAS.units='cm/m';
+    DAS.source='ISRIC Version 1.0';
+     DAS.Description=['Total Available Water Content. Dominant Soil Type.' ...
+        ' Layer ' Layer ];
+    WriteNetCDF(Long,Lat,single(TAWC),'TAWC',['Modal_TAWC_Level' Layer '.nc'],DAS);   
 end
   
 

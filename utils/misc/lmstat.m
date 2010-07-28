@@ -56,5 +56,13 @@ else
     
 end
 
+
+S=license('inuse');
+
+disp([ num2str(length(S)) ' licenses currently in use:'])
+for j=1:length(S)
+    disp([S(j).feature]);
+end
+
 %dos(['rm ~/.lmstatoutput']);
 

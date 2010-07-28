@@ -52,6 +52,7 @@ if counter==0
     SoilProps.AvgCLPC=tmpCLPC;
     SoilProps.AvgSDTO=tmpSDTO;
     SoilProps.AvgPHAQ=tmpPHAQ;
+    SoilProps.ModalTAWC=tmpTAWC;
     return
 end
 
@@ -121,7 +122,12 @@ AvgPH=-log10(AvgMH);
 SoilProps.AvgPHAQ=AvgPH;
 SoilProps.AvgPHAQ_Units='PH';
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  TAWC - total available water capacity  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SoilProps.AvgTAWC=sum(TAWC.*Percentage)/sum(Percentage);
+SoilProps.ModalTAWC=TAWC(end);
+SoilProps.AvgTAWC_Units='cm/m';
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -16,7 +16,8 @@
 %    Added this back in. Added hash table for country row look-up. Fixed
 %    the seasonal barley and wheat issue by creating national-level
 %    weighted-average application rates for the two crops. The underlying
-%    data is preserved in the input file for future use.
+%    data is preserved in the input file for future use. Added subnational
+%    scaling procedures 1 and 2.
 
 
 
@@ -163,7 +164,7 @@ for i = 1:length(croplist);
     appratemap = nan(4320,2160);
     appratemap(ii) = -9; % put -9 where we know we have crop data ...
     % but we do not (at least yet) know the application rate
-    
+
     % save the data files
     appratemap = single(appratemap);
     areamap = single(areamap);
@@ -181,7 +182,7 @@ for i = 1:length(croplist);
         DataStoreGateway([titlestr '_datatype'],appratemap);
         DataStoreGateway([titlestr '_area'],areamap);
     end
-    
+
     % add to total fertilized land map
     areamap(jj) = 0;
     areahamap = areamap .* gridcellareas;
@@ -210,7 +211,7 @@ for n = 1:3
     end
     disp(['Begin calculating weighted averages for ' nutrient ...
         ' application rates'])
-    
+
     for i = 1:2
         switch i
             case 1
@@ -218,7 +219,7 @@ for n = 1:3
             case 2
                 crop = 'wheat';
         end
-        
+
         for s = 1:4;
             switch s
                 case 1
@@ -230,7 +231,7 @@ for n = 1:3
                 case 4
                     season = '_winter';
             end
-            
+
             disp(['Getting data columns for ' nutrient ...
                 ' ' season ' ' crop ' data'])
             dataentry = [crop season];
@@ -239,13 +240,13 @@ for n = 1:3
             eval(['datacol_' num2str(s) ' = inputfile.' dataheader ';']);
             eval(['areacol_' num2str(s) ' = inputfile.' areaheader ';']);
         end
-        
+
         for k = 1:length(fao_ctries)
             countrycode = fao_ctries{k};
-            
+
             % Find the rows with data for this country:
             ctryrows=row_htable.get(countrycode);
-            
+
             % Find the rows for data type, source, and the country-level
             % data
             tmp = strmatch('data type', inputfile.Name_1(ctryrows));
@@ -255,7 +256,7 @@ for n = 1:3
             tmp = strmatch('country data', inputfile.Name_1(ctryrows));
             countrydatarow = ctryrows(tmp);
             country = inputfile.Cntry_name{datatyperow};
-            
+
             for s = 1:4;
                 eval(['datatype_' num2str(s) ' = str2double(datacol_' ...
                     num2str(s) '{datatyperow});']);
@@ -266,9 +267,9 @@ for n = 1:3
                 eval(['countryarea_' num2str(s) ' = str2double(areacol_'...
                     num2str(s) '{countrydatarow});']);
             end
-            
+
             WAflag = 1;
-            
+
             if countrydata_1 < 0
                 if countrydata_2 < 0
                     if countrydata_3 < 0
@@ -303,44 +304,44 @@ for n = 1:3
                     eval(['countrydata_' num2str(s) ' = countrydata;']);
                     eval(['countryarea_' num2str(s) ' = countryarea;']);
                 end
-                
+
                 totalcroparea = countryarea_1 + countryarea_2 + ...
                     countryarea_3 + countryarea_4;
-                
+
                 ratexarea_1 = countryarea_1 .* countrydata_1;
                 ratexarea_2 = countryarea_2 .* countrydata_2;
                 ratexarea_3 = countryarea_3 .* countrydata_3;
                 ratexarea_4 = countryarea_4 .* countrydata_4;
-                
+
                 totalratexarea = ratexarea_1 + ratexarea_2 + ...
                     ratexarea_3 + ratexarea_4;
-                
+
                 WA_rate = totalratexarea ./ totalcroparea;
-                
+
                 disp(['weighted average for ' crop ...
                     ' ' nutrient ' in ' country ': ' num2str(WA_rate) ...
                     ' kg/ha ' nutrient ', ' num2str(totalcroparea) ...
                     ' total ha cropland']);
-                
+
                 % save the rate and area in the proper data columns
-                
+
                 dataheader = [crop '_' nutrient '_data'];
                 areaheader = [crop '_' nutrient '_areafert'];
                 eval(['datacol = inputfile.' dataheader ';']);
                 eval(['areacol = inputfile.' areaheader ';']);
-                
+
                 datacol{countrydatarow} = num2str(WA_rate);
                 areacol{countrydatarow} = num2str(totalcroparea);
-                
+
                 % save the data type: **NOTE** this is hardcoded as data
                 % type 3 for the time being since we are only dealing with
                 % national-level data
-                
+
                 datacol{datatyperow} = '3';
                 areacol{datatyperow} = '3';
-                
+
                 % save the data source
-                
+
                 for s = 1:4
                     eval(['datasource = datasource_' num2str(s) ';']);
                     if datasource == -9
@@ -348,15 +349,15 @@ for n = 1:3
                         sourcetosave = datasource;
                     end
                 end
-                
+
                 datacol{datasourcerow} = sourcetosave;
                 areacol{datasourcerow} = sourcetosave;
-                
+
                 % save to inputfile
-                
+
                 eval(['inputfile.' dataheader ' = datacol;']);
                 eval(['inputfile.' areaheader ' = areacol;']);
-                
+
             end
         end
     end
@@ -622,6 +623,8 @@ for n = 1:3
         
     end
     
+    
+    
     %% Fill gaps in application rate data
     
     % Now - need to get data from neighbors to fill in gaps
@@ -883,24 +886,406 @@ for n = 1:3
     DataStoreGateway(['totalcons_' nutrient '_noscaling'], ...
         total_consmap);
     
-    for snp = 2;
+    for snp = 1:2; 
         if snp == 1;
+            
             disp('Executing subnational scaling protocol number 1');
             
+            scalingmap = ones(4320,2160);
+            snudatamap = zeros(4320,2160);
+            
+            % loop through countries to find subnational data
+            for c = 1:length(countrycodes)
+                countrycode = countrycodes{c};
+                
+                % Find the rows with data for this country:
+                ctryrows = row_htable.get(countrycode);
+                
+                % Create a list for ctryrows minus the data type row,
+                % country data row, and data source row
+                subnationalrows = ctryrows;
+                subnationalrows([1, 2, 3]) = [];
+                
+                % Find the rows for data type, source, and the
+                % country-level data
+                tmp = strmatch('data type', inputfile.Name_1(ctryrows));
+                datatyperow = ctryrows(tmp);
+                
+                eval(['datacol = inputfile.cons_' nutrient 'fert;']);
+                compcol = inputfile.cons_compfert;
+                
+                datatype = str2double(datacol{datatyperow});
+                country = inputfile.Cntry_name{datatyperow};
+                
+                if datatype > 1; % it can be -9 for no data, 2, or 2.5
+                     
+                    % calculate the number of snus with subnational data, the
+                    % total amount of area in these snus, and the total amount
+                    % of consumption in these snus.
+                    
+                    totfertsnus_num = 0;
+                    totfertsnus_cons = 0;
+                    totfertsnus_area = 0;
+                    
+                    for d = 1:length(subnationalrows);
+                        snurow = subnationalrows(d);
+                        nutrientdata = str2double(datacol{snurow});
+                        compdata = str2double(compcol{snurow});
+                        snucode = inputfile.Sage_admin{snurow};
+                        
+                        snu_cons_data = 0;
+                        snudataflag = 0;
+                        if ~isnan(nutrientdata)
+                            snu_cons_data = snu_cons_data ...
+                                + nutrientdata;
+                            snudataflag = 1;
+                            if ~isnan(compdata)
+                                snu_cons_data = snu_cons_data ...
+                                    + compdata;
+                                snudataflag = 1;
+                            end
+                        end
+                        
+                        if snudataflag == 1;
+                            
+                            totfertsnus_num = totfertsnus_num + 1;
+                            [outline, ii] = CountryCodetoOutline(snucode);
+                            
+                            % get area & add to the total fertilized area for
+                            % all the snus with data
+                            ii = find(isnan(totfertlandmap));
+                            totfertlandmap(ii) = 0; % this shouldn't have NaNs
+                            % unless pulled from DataStoreGateway
+                            snuarea = sum(sum(totfertlandmap .* outline));
+                            totfertsnus_area = totfertsnus_area + snuarea;
+                            
+                            % get consumption & add to total consumption for
+                            % all the snus with data
+                            if datatype == 2;
+                                totfertsnus_cons = totfertsnus_cons + ...
+                                    snu_cons_data;
+                            elseif datatype == 2.5
+                                % snu_cons_data is actually a rate if this
+                                % is data type 2.5. convert to cons by
+                                % multiplying by area.
+                                totfertsnus_cons = totfertsnus_cons + ...
+                                    (snu_cons_data .* snuarea);
+                            end
+                        end
+                    end
+                    
+                    % find the area-weighted average consumption per ha of
+                    % total fertilized land. This is calculated as
+                    % (total consumption across all snus / # snus) / (sum
+                    % of area over all snus / # snus). This is a
+                    % simplification (see ppt slide or publication) of the
+                    % full weighted average equation.
+                    
+                    wa_rate = (totfertsnus_cons ./ totfertsnus_num) ./ ...
+                        (totfertsnus_area ./ totfertsnus_num);
+                    
+                    % now, loop through each SNU and calculate a scalar
+                    % using the adjusted data in the datacol and the weighted
+                    % average application rate. this scalar is
+                    % (nutrient consumption in kg)
+                    % cons / totfertarea
+                    % build total consumption
+                    
+                    for d = 1:length(subnationalrows);
+                        snurow = subnationalrows(d);
+                        
+                        snucode = inputfile.Sage_admin{snurow};
+                        snuname1 = inputfile.Name_1{snurow};
+                        snuname2 = inputfile.Name_2{snurow};
+                        nutrientdata = str2double(datacol{snurow});
+                        compdata = str2double(compcol{snurow});
+                        snucode = inputfile.Sage_admin{snurow};
+                        
+                        snu_cons_data = 0;
+                        snudataflag = 0;
+                        if ~isnan(nutrientdata)
+                            snu_cons_data = snu_cons_data ...
+                                + nutrientdata;
+                            snudataflag = 1;
+                            if ~isnan(compdata)
+                                snu_cons_data = snu_cons_data ...
+                                    + compdata;
+                                snudataflag = 1;
+                            end
+                        end
+                        
+                        if snudataflag == 1;
+                            
+                            [outline, ii] = CountryCodetoOutline(snucode);
+                            
+                            if datatype == 2;
+                                snurate = snu_cons_data ./ ...
+                                    sum(sum(totfertlandmap .* outline));
+                            elseif datatype == 2.5
+                                snurate = snu_cons_data;
+                            end
+                            
+                            scalar = snurate ./ wa_rate;
+                            
+                            if scalar > 1.5
+                                scalar = 1.5;
+                                disp(['Scalar for ' nutrient ' ' country...
+                                    ': ' snuname1 ' ' snuname2 ...
+                                    ' is > 1.5 (' num2str(scalar) ...
+                                    ') - limiting scalar to 1.5']);
+                            elseif scalar < 0.5
+                                scalar = 0.5;
+                                disp(['Scalar for ' nutrient ' ' country...
+                                    ': ' snuname1 ' ' snuname2 ...
+                                    ' is < 0.5 (' num2str(scalar) ...
+                                    ') - limiting scalar to 0.5']);
+                            end
+                            
+                            scalingmap(ii) = scalar;
+                            snudatamap(ii) = 1;
+                            
+                            disp(['Scaling ' nutrient ' consumption ' ...
+                                'with subnational data from ' country ...
+                                ': ' snuname1 ' ' snuname2 ...
+                                '; scalar = ' num2str(scalar)]);
+                            
+                        else
+                            
+                            disp(['No subnational ' nutrient ' data ' ...
+                                'to use as a scalar for ' country ...
+                                ': ' snuname1 ' ' snuname2]);
+                            
+                        end
+                    end
+                end
+            end
+             
+            % loop through crops and scale the data using the scalingmap,
+            % calculate a crop-specific correction factor for each country,
+            % so that the weighted average application rate is equal pre-
+            % and post-scaling (aka equal consumption)
+            
+            total_consmap_scaled = zeros(4320,2160);
+            
+            for c = 1:length(croplist)
+                cropname = croplist{c};
+                
+                titlestr = [cropname '_' nutrient '_ver' verno ];
+                appratemap = DataStoreGateway([titlestr '_rate']);
+                kk = find(isfinite(appratemap));
+                datatypemap = DataStoreGateway([titlestr '_datatype']);
+                
+                disp(['Calculating correction factors for ' cropname ...
+                    ' scalar data']);
+                crop_scalar_corrfact_map = ones(4320,2160);
+                
+                for d = 1:length(countrycodes);
+                    countrycode = countrycodes{d};
+                    
+                    [outline, ii] = CountryCodetoOutline(countrycode);
+                    
+                    tmp = sum(sum(appratemap(kk) .* totfertlandmap(kk) ...
+                        .* outline(kk)));
+                    tmp2 = sum(sum(appratemap(kk) .* totfertlandmap(kk) ...
+                        .* outline(kk) .* scalingmap(kk)));
+                    
+                    if tmp > 0;
+                        crop_scalar_corrfact = tmp ./ tmp2;
+                        crop_scalar_corrfact_map(ii) = ...
+                            crop_scalar_corrfact;
+                    end
+                end
+                
+                disp(['Applying subnational scalars to ' cropname ...
+                    ' data']);
+                
+                appratemap = appratemap .* scalingmap .* ...
+                    crop_scalar_corrfact_map;
+                DataStoreGateway([titlestr '_rate_SNP1'], ...
+                    appratemap);
+                
+                % save the data type appropriately
+                
+                datatypemap = DataStoreGateway([titlestr '_datatype']);
+                % if we scaled subnational application rate data, call it
+                % data type 0.5
+                jj = find(snudatamap == 1 & datatypemap == 1);
+                datatypemap(jj) = 0.5;
+                % if we scaled national-level data, call it data type 2
+                jj = find(snudatamap == 1 & datatypemap == 3);
+                datatypemap(jj) = 2;
+                % if we scaled extrapolated data from countries of similar
+                % economic status, call it data type 4
+                jj = find(snudatamap == 1 & datatypemap == 5);
+                datatypemap(jj) = 4;
+                % if we scaled extrapolated global avg application rate
+                % data, call it data type 4.5
+                jj = find(snudatamap == 1 & datatypemap == 5.5);
+                datatypemap(jj) = 4.5;
+                DataStoreGateway([titlestr '_datatype_SNP1'], ...
+                    datatypemap);
+                
+                % calculate the total consumption map
+                
+                areamap=DataStoreGateway([titlestr '_area']);
+                jj = find(appratemap < 0); % put all no data and -9 values to zero
+                appratemap(jj) = 0;
+                jj = find(isnan(appratemap)); % put all no data and -9 values to zero
+                appratemap(jj) = 0;
+                jj = find(areamap < 0); % put all no data and -9 values to zero
+                areamap(jj) = 0;
+                jj = find(isnan(areamap)); % put all no data and -9 values to zero
+                areamap(jj) = 0;
+                crop_consmap = (areamap.*gridcellareas.*appratemap);
+                total_consmap_scaled = total_consmap_scaled + crop_consmap;
+                
+            end
+            
+            % save the scaling map
+            DataStoreGateway('scalingmap_SNP1', scalingmap);
+            
+            % save the SNP1 scaled total consumption map;
+            DataStoreGateway(['totalcons_' nutrient '_scaled_SNP1'], ...
+                total_consmap_scaled);
             
             
             
+            %% Match everything up with FAO consumption
             
+            disp(['Begin scaling rate data to match with FAO ' ...
+                'nutrient consumption data']);
             
+            % save total_consmap_scaled as total_consmap in this
+            % calculation. reset total_consmap_scaled - now that variable
+            % will be used for a map that has been scaled to match FAO
+            % consumption data
             
+            total_consmap = total_consmap_scaled;
+            total_consmap_scaled = zeros(4320,2160);
             
+            % create a new scaling map
+            scalingmap = ones(4320,2160);
             
+            % create a binary fao data map; 1 = yes, we have FAO data, 0 =
+            % no FAO data. I am doing this b/c some countries may perfectly
+            % match up to FAO b/c they were already scaled with the
+            % subnational data (if subnational consumption was normalized
+            % to the FAO data)
+            faodatamap = nan(4320,2160);
             
+            % loop through countries and calculate consumption; compare to
+            % FAO consumption
             
+            for k = 1:length(countrycodes)
+                
+                countrycode = countrycodes{k};
+                ctryrows = row_htable.get(countrycode);
+                
+                % get the country name
+                tmp = strmatch('data type', inputfile.Name_1(ctryrows));
+                datatyperow = ctryrows(tmp);
+                country = inputfile.Cntry_name{datatyperow};
+                [outline, ii] = CountryCodetoOutline(countrycode);
+                
+                % check if there are data rows in the FAO file for this
+                % country
+                ctryrows = strmatch(countrycode, faoinput.ctry_codes);
+                
+                if ~isempty(ctryrows)
+                    % Find the row with the nutrient of interest:
+                    tmp = strmatch(nutrient, faoinput.nutrient(ctryrows));
+                    if ~isempty(tmp)
+                        
+                        datarow = ctryrows(tmp);
+                        country_cons_fao = faoinput.avg_0203(datarow) ...
+                            .* 1000;
+                        country_cons_map = sum(sum(total_consmap ...
+                            .* outline));
+                        
+                        if country_cons_map > 0;
+                            
+                            scalar = country_cons_fao ./ country_cons_map;
+                            scalingmap(ii) = scalar;
+                            faodatamap(ii) = 1;
+                            disp(['Scalar for ' nutrient ' data in ' ...
+                                country ' = ' num2str(scalar)]);
+                            
+                        else
+                            
+                            scalingmap(ii) = 0;
+                            faodatamap(ii) = 0;
+                            warning(['No map data for ' country '; ' ...
+                                'check for problem with CropMaskIndices']);
+                        end
+                    else
+                        disp(['No FAO ' nutrient ' entry for ' country]);
+                        faodatamap(ii) = 0;
+                    end
+                    
+                else
+                    disp(['No FAO country entry for: ' country]);
+                    faodatamap(ii) = 0;
+                end
+            end
             
+            % save the scaling map
+            DataStoreGateway('scalingmap_SNP1_FAO', scalingmap);
             
+            % now loop through crops and apply the FAO scalars
             
-            
+            for c = 1:length(croplist)
+                cropname = croplist{c};
+                
+                disp(['Applying FAO scalars to ' cropname ' data']);
+                
+                titlestr = [cropname '_' nutrient '_ver' verno ];
+                appratemap = DataStoreGateway([titlestr '_rate_SNP1']);
+                appratemap = appratemap .* scalingmap;
+                DataStoreGateway([titlestr '_rate_SNP1_FAO'], ...
+                    appratemap);
+                
+                % save the data type appropriately
+                
+                datatypemap = DataStoreGateway([titlestr ...
+                    '_datatype_SNP1']);
+                % all countries that have any fertilizer data of types
+                % 1-4.5 are included in the FAO dataset (after some
+                % checking by N. Mueller), so we only need to identify
+                % whether extrapolated data for types 5 & 5.5 *do not*
+                % have FAO data. These data types will be adjusted to 6
+                % & 6.5. (6 = inferred from ctries of similar economic
+                % status, not adjusted to match FAO. 6.5 = inferred
+                % global avg application rate, not adjusted to match
+                % FAO data.)
+                jj = find(faodatamap == 0 & datatypemap == 5);
+                datatypemap(jj) = 6;
+                % set to zero for total consumption map
+                appratemap(jj) = 0;
+                jj = find(scalingmap == 0 & datatypemap == 5.5);
+                datatypemap(jj) = 6.5;
+                % set to zero for total consumption map
+                appratemap(jj) = 0;
+                DataStoreGateway([titlestr '_datatype_SNP1_FAO'], ...
+                    datatypemap);
+                
+                % calculate the total consumption map
+                
+                areamap=DataStoreGateway([titlestr '_area']);
+                jj = find(appratemap < 0); % put all no data and -9 values to zero
+                appratemap(jj) = 0;
+                jj = find(isnan(appratemap)); % put all no data and -9 values to zero
+                appratemap(jj) = 0;
+                jj = find(areamap < 0); % put all no data and -9 values to zero
+                areamap(jj) = 0;
+                jj = find(isnan(areamap)); % put all no data and -9 values to zero
+                areamap(jj) = 0;
+                crop_consmap = (areamap.*gridcellareas.*appratemap);
+                total_consmap_scaled = total_consmap_scaled + crop_consmap;
+                
+                % save the total consumption map
+                DataStoreGateway(['totalcons_' nutrient ...
+                    '_scaled_SNP1_FAO'], total_consmap_scaled);
+            end
             
             
             
@@ -908,9 +1293,10 @@ for n = 1:3
             disp('Executing subnational scaling protocol number 2');
             
             scalingmap = ones(4320,2160);
+            snudatamap = zeros(4320,2160);
             
             % loop through countries to find subnational data
-            for c = 1:length(countrycodes)
+            for c = 160:length(countrycodes)
                 countrycode = countrycodes{c};
                 
                 % Find the rows with data for this country:
@@ -962,7 +1348,22 @@ for n = 1:3
                             
                             scalar = snu_cons_data ./ snu_cons_map;
                             
+                            if scalar > 1.5
+                                scalar = 1.5;
+                                disp(['Scalar for ' nutrient ' ' country...
+                                    ': ' snuname1 ' ' snuname2 ...
+                                    ' is > 1.5 (' num2str(scalar) ...
+                                    ') - limiting scalar to 1.5']);
+                            elseif scalar < 0.5
+                                scalar = 0.5;
+                                disp(['Scalar for ' nutrient ' ' country...
+                                    ': ' snuname1 ' ' snuname2 ...
+                                    ' is < 0.5 (' num2str(scalar) ...
+                                    ') - limiting scalar to 0.5']);
+                            end
+                            
                             scalingmap(ii) = scalar;
+                            snudatamap(ii) = 1;
                             
                             disp(['Scaling ' nutrient ' consumption ' ...
                                 'with subnational data from ' country ...
@@ -1057,19 +1458,24 @@ for n = 1:3
                             compdata = str2double(compcol{snurow});
                             
                             adj_nutrientcons = 0;
+                            snudataflag = 0;
                             if ~isnan(nutrientdata)
                                 adj_nutrientcons = adj_nutrientcons ...
                                     + nutrientdata;
+                                snudataflag = 1;
                                 if ~isnan(compdata)
                                     adj_nutrientcons = adj_nutrientcons ...
                                         + compdata;
+                                    snudataflag = 1;
                                 end
                             end
                             
-                            adj_nutrientcons = adj_nutrientcons .* ...
-                                percent_nutrient;
-                            datacol{snurow} = num2str(adj_nutrientcons);
-                            
+                            if snudataflag == 1;
+                                adj_nutrientcons = adj_nutrientcons .* ...
+                                    percent_nutrient;
+                                datacol{snurow} = ...
+                                    num2str(adj_nutrientcons);
+                            end
                         end
                     end
                     
@@ -1094,7 +1500,22 @@ for n = 1:3
                             
                             scalar = snu_cons_data ./ snu_cons_map;
                             
+                            if scalar > 1.5
+                                scalar = 1.5;
+                                disp(['Scalar for ' nutrient ' ' country...
+                                    ': ' snuname1 ' ' snuname2 ...
+                                    ' is > 1.5 (' num2str(scalar) ...
+                                    ') - limiting scalar to 1.5']);
+                            elseif scalar < 0.5
+                                scalar = 0.5;
+                                disp(['Scalar for ' nutrient ' ' country...
+                                    ': ' snuname1 ' ' snuname2 ...
+                                    ' is < 0.5 (' num2str(scalar) ...
+                                    ') - limiting scalar to 0.5']);
+                            end
+                            
                             scalingmap(ii) = scalar;
+                            snudatamap(ii) = 1;
                             
                             disp(['Scaling ' nutrient ' consumption ' ...
                                 'with subnational data from ' country ...
@@ -1134,18 +1555,18 @@ for n = 1:3
                 datatypemap = DataStoreGateway([titlestr '_datatype']);
                 % if we scaled subnational application rate data, call it
                 % data type 0.5
-                jj = find(scalingmap ~= 1 & datatypemap == 1);
+                jj = find(snudatamap == 1 & datatypemap == 1);
                 datatypemap(jj) = 0.5;
                 % if we scaled national-level data, call it data type 2
-                jj = find(scalingmap ~= 1 & datatypemap == 3);
+                jj = find(snudatamap == 1 & datatypemap == 3);
                 datatypemap(jj) = 2;
                 % if we scaled extrapolated data from countries of similar
                 % economic status, call it data type 4
-                jj = find(scalingmap ~= 1 & datatypemap == 5);
+                jj = find(snudatamap == 1 & datatypemap == 5);
                 datatypemap(jj) = 4;
                 % if we scaled extrapolated global avg application rate
                 % data, call it data type 4.5
-                jj = find(scalingmap ~= 1 & datatypemap == 5.5);
+                jj = find(snudatamap == 1 & datatypemap == 5.5);
                 datatypemap(jj) = 4.5;
                 DataStoreGateway([titlestr '_datatype_SNP2'], ...
                     datatypemap);
@@ -1165,8 +1586,6 @@ for n = 1:3
                 total_consmap_scaled = total_consmap_scaled + crop_consmap;
                 
             end
-            
-            
             
             % save the scaling map
             DataStoreGateway('scalingmap_SNP2', scalingmap);
@@ -1262,8 +1681,7 @@ for n = 1:3
             for c = 1:length(croplist)
                 cropname = croplist{c};
                 
-                disp(['Applying subnational scalars to ' cropname ...
-                    ' data']);
+                disp(['Applying FAO scalars to ' cropname ' data']);
                 
                 titlestr = [cropname '_' nutrient '_ver' verno ];
                 appratemap = DataStoreGateway([titlestr '_rate_SNP2']);
@@ -1273,7 +1691,8 @@ for n = 1:3
                 
                 % save the data type appropriately
                 
-                datatypemap = DataStoreGateway([titlestr '_datatype']);
+                datatypemap = DataStoreGateway([titlestr ...
+                    '_datatype_SNP2']);
                 % all countries that have any fertilizer data of types
                 % 1-4.5 are included in the FAO dataset (after some
                 % checking by N. Mueller), so we only need to identify

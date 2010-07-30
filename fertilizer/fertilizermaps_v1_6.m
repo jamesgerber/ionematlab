@@ -40,7 +40,7 @@ disp(['You are running version ' verno ' of fertilizermaps'])
 %% read input files
 
 % load fertilizer data file
-inputfile = ReadGenericCSV('subnationalfert3.csv');
+inputfile = ReadGenericCSV('subnationalfert4.csv');
 save fertinput
 % load fertinput
 

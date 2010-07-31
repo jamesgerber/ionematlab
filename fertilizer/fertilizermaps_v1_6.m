@@ -18,6 +18,7 @@
 %    weighted-average application rates for the two crops. The underlying
 %    data is preserved in the input file for future use. Added subnational
 %    scaling procedures 1 and 2.
+%    FIXED CROP EXTRAPOLATION
 
 
 

@@ -648,7 +648,7 @@ for n = 1:3
         WBIhtable.put(WBI.countrycode{j},income);
     end
     
-    for c = 154:length(croplist)
+    for c = 1:length(croplist)
         cropname = croplist{c};
         
         disp(['Start filling in missing application rate data for ' ...
@@ -886,7 +886,7 @@ for n = 1:3
     DataStoreGateway(['totalcons_' nutrient '_noscaling'], ...
         total_consmap);
     
-    for snp = 1:2; 
+    for snp = 2; 
         if snp == 1;
             
             disp('Executing subnational scaling protocol number 1');
@@ -1296,7 +1296,7 @@ for n = 1:3
             snudatamap = zeros(4320,2160);
             
             % loop through countries to find subnational data
-            for c = 160:length(countrycodes)
+            for c = 1:length(countrycodes)
                 countrycode = countrycodes{c};
                 
                 % Find the rows with data for this country:

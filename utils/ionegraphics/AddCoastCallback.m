@@ -17,7 +17,7 @@ switch(InputFlag)
     case 'AddCoast'
         % find maximum, zoom in       
         
-        AddCoasts(gcbf);
+        AddStates(gcbf);
     otherwise
         error('syntax error in AddCoastCallBack.m')
         

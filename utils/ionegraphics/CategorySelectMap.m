@@ -44,6 +44,9 @@ if (nargin<3)
     backdata=flipud(rot90(im));
 end
 
+
+Data=double(Data);
+
 cmap(1,1)=.7;
 cmap(1,2)=.7;
 cmap(1,3)=.7;

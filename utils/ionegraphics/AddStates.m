@@ -1,9 +1,9 @@
-function AddCoasts(LineWidth,HFig);
-%  ADDCOASTS - add coasts
+function AddStates(LineWidth,HFig);
+%  ADDSTATES - add country boundaries and some state boundaries
 %
-%  AddCoasts(0.1)  will add some very thin lines
+%  AddStates(0.1)  will add some very thin lines
 %
-%  AddCoasts(N) where N is an integer will add lines of default thickness
+%  AddStates(N) where N is an integer will add lines of default thickness
 %  (0.5) to figure N.   [This was added for backwards compatibility]
 if nargin==0
   HFig=gcf;

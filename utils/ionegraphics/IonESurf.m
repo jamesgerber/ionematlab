@@ -12,6 +12,22 @@ function varargout=IonESurf(Long,Lat,Data,Units,TitleStr);
 %
 %     IonESurf(DS);  where DS is a matlab structure will look for fields
 %     Long, Lat, Data, Title, Units
+%
+%
+%     IonESurf is the base-level plotting routine written to
+%     standardize and facilitate plotting.   It has a few limitations, and
+%     so some other plotting routines have been written which call
+%     IonESurf.
+%     * IoneSurf can be slow, so FastSurf, DownSurf, and ThinSurf reduce
+%     the dataset before calling IoneSurf
+%     * IonESurf will plot the data that is sent to it ... so "dummy"
+%     values for oceans (e.g. -90000000000000) can mess up the color axis.
+%     NiceSurf looks for values like that and removes them, and takes out
+%     anything over the oceans
+%     * IonESurf doesn't necessarily result in a figure which will plot
+%     nicely.  NiceSurfGeneral facilitates plotting.
+%
+%     See Also NiceSurf NiceSurfGeneral FastSurf DownSurf ThinSurf
 if nargin==0
   help(mfilename);
   return

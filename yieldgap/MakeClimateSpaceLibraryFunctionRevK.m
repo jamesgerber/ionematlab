@@ -23,6 +23,8 @@ function MakeClimateSpaceLibraryFunctionRevK(FlagStructure)
 Rev='K';
 
 
+plotflag=0;
+
 jcropvector=[5 7];
 Nspace=[5 10];
 GDDBaseDir='GDDLibrary/';
@@ -198,11 +200,14 @@ for N=Nspace;
             %%
             %Now can make a plot 
             LogicalInclude=AreaFilter(CultivatedArea,CultivatedArea);
-            LogicalInclude=(LogicalInclude & CropMaskLogical & Heat < 1e15 & isfinite(Heat))
-            MultiBoxPlotInClimateSpace(CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,LogicalInclude);
-            %%
+            LogicalInclude=(LogicalInclude & CropMaskLogical & Heat < 1e15 & isfinite(Heat));
+            if plotflag==1
+                MultiBoxPlotInClimateSpace(CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,LogicalInclude);
+            end
+   %%
             save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...
-                'PercentToDrop','WetFlag','HeatFlag','CultivatedArea','CDS');
+                'PercentToDrop','WetFlag','HeatFlag','CultivatedArea',...
+                'PrecBinEdges','GDDBinEdges','CDS');
             DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
             WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
         end

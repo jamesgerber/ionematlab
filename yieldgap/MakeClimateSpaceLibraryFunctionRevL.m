@@ -214,13 +214,14 @@ for N=Nspace;
                 % Good Soils
 
                 IsValidData=(LogicalAreaKeep & isfinite(Heat) & isfinite(Prec) & CropMaskLogical & Heat < 1e15);
-                MultiBoxPlotInClimateSpace_Soils...
-                    (CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,IsValidData);
+ %               MultiBoxPlotInClimateSpace_Soils...
+ %                   (CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,IsValidData);
                 
                 %%
                 
                 save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...
-                    'PercentToDrop','WetFlag','HeatFlag','CultivatedArea','CDS');
+                    'PercentToDrop','WetFlag','HeatFlag','CultivatedArea',...
+                    'PrecBinEdges','GDDBinEdges','CDS');
                 DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
                 WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
             end

@@ -18,8 +18,10 @@ function CategorySelectMap(Data,cmap,backdata,bmap);
 % Example
 %
 %  load([iddstring 'YieldGap/AreaFiltered_Soil/' ...
-%     'YieldGap_Maize_MaxYieldPct_95_AreaFilteredClimateSpaceWithSoil_10x10_prec.mat'])
-%  CategorySelectMap(OS.ClimateMask)
+%     'YieldGap_Maize_MaxYieldPct_95_AreaFilteredClimateSpaceWithSoil_10x10_prec.mat']);
+%  data=OS.ClimateMask;
+%  data=data(1:2:end,1:2:end);
+% CategorySelectMap(data)
 %
 %
 %  AMT
@@ -38,6 +40,7 @@ if (nargin<4)
     bmap=jet(500);
 end
 
+Data=double(Data);
 bmax=-9;
 
 if (nargin<3)

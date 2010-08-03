@@ -5,7 +5,7 @@ persistent CropLandMaskVector
 
 if isempty(CropLandMaskVector)
     SystemGlobals
-    [Long,Lat,Crop]=OpenNetCDF('Cropland2000_5min.nc');
+    [Long,Lat,Crop]=OpenNetCDF([iddstring '/Crops2000/Cropland2000_5min.nc']);
   %  AllIndices=1:numel(Crop);
     CropLandMaskVector=(Crop>0 & Crop < 1e10 & DataMaskLogical);
 end

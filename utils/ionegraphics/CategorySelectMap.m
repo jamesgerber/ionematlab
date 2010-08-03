@@ -1,4 +1,9 @@
 function CategorySelectMap(Data,cmap,backdata,bmap);
+% CATEGORYSELECTMAP - interactive category selection tool
+%
+%   Syntax:
+%  CategorySelectMap(Data,cmap,backdata,bmap);
+%
 % Creates an interactive figure which lets the user click on a spot on the
 % map to highlight it and all other areas with the same value. If provided,
 % it will display another data set behind the primary one. (By default, a
@@ -8,15 +13,32 @@ function CategorySelectMap(Data,cmap,backdata,bmap);
 % CategorySelectMap(Data,cmap,flipud(rot90(backdata)),bmap)
 % Higher-resolution colormaps will look much nicer but may also seriously
 % impact runtime and space-efficiency.
+%
+%
+% Example
+%
+%  load([iddstring 'YieldGap/AreaFiltered_Soil/' ...
+%     'YieldGap_Maize_MaxYieldPct_95_AreaFilteredClimateSpaceWithSoil_10x10_prec.mat'])
+%  CategorySelectMap(OS.ClimateMask)
+%
+%
+%  AMT
+%  July 2010
+
+if nargin==0
+    help(mfilename)
+    return
+end
+
 if (nargin==1)
     cmap=jet(500);
 end
 
-if (nargin==3)
+if (nargin<4)
     bmap=jet(500);
 end
 
-if (nargin==2)
+if (nargin<3)
     load worldindexed
     bmap=immap;
     backdata=flipud(rot90(im));

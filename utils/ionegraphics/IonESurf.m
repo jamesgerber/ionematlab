@@ -39,7 +39,7 @@ if nargin<4
 end
 
 InputVariableName=inputname(nargin);  %Variable name from calling workspace.
-if nargin<5Crop
+if nargin<5
     TitleStr=InputVariableName;
 end
 

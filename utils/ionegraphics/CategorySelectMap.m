@@ -38,25 +38,30 @@ if (nargin<4)
     bmap=jet(500);
 end
 
+bmax=-9;
+
 if (nargin<3)
     load worldindexed
     bmap=immap;
-    backdata=flipud(rot90(im));
+    backdata=EasyInterp2(flipud(rot90(im)),size(Data,1),size(Data,2));
+    bmax=length(immap)+1;
 end
 
+if bmax==-9
+    bmax=max2d(backdata)+1;
+end
 
-Data=double(Data);
+for i=length(cmap)+1:-1:2
+    cmap(i,:)=cmap(i-1,:);
+end
+cmap(1,:)=.7;
+cmap(length(cmap)+1,:)=.7;
 
-cmap(1,1)=.7;
-cmap(1,2)=.7;
-cmap(1,3)=.7;
-tmp=size(cmap,1)*2
-cmap(size(cmap,1)+1:tmp,:)=.7;
-size(cmap)
-
-tmp=size(bmap,1)*2
-bmap(size(bmap,1)+1:tmp,:)=.7;
-size(bmap)
+for i=length(bmap)+1:-1:2
+    bmap(i,:)=bmap(i-1,:);
+end
+bmap(1,:)=.7;
+bmap(length(bmap)+1,:)=.7;
 
 [Long,Lat]=InferLongLat(Data);
 Units='';
@@ -72,8 +77,8 @@ RedLat=RedLat(end:-1:1);
 RedData=RedData(:,end:-1:1);
 backdata=backdata(:,end:-1:1);
 
-RedData=RedData/2;
-backdata=backdata/2;
+RedData=RedData+1.0;
+backdata=backdata+1.0;
 
 hfig=figure;
 
@@ -107,13 +112,16 @@ set(hfig,'Tag','IonEFigure');
   h=meshm(double(RedData.'),R);
   shading flat;
 colormap(gca,cmap);
-caxis([0 max2d(RedData)*2+1]);
+caxis([1 max2d(RedData)+1]);
+max2d(RedData)
 UserDataStructure.Fig=hfig;
 UserDataStructure.CMap=cmap;
+UserDataStructure.BMax=bmax;
 UserDataStructure.DataAxisHandle=gca;
 UserDataStructure.Lat=RedLat;
 UserDataStructure.Long=RedLong;
 UserDataStructure.Data=RedData;
+UserDataStructure.CellSize=NumPointsPerDegree;
 
 colorbar('hide');
 shading flat
@@ -123,7 +131,7 @@ UserDataStructure.BMap=bmap;
 set(hfig,'UserData',UserDataStructure);
 
 selectCategory('Initialize');
-AddCoastCallback('Initialize');
+AddStatesCallback('Initialize');
 zoomButtons('Initialize');
 
 clear NextButtonCoords

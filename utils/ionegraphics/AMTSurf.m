@@ -51,7 +51,7 @@ colormap=greenlightdark;
 end
 
 if nargin<5
-cutoff=.1;
+cutoff=.00000001;
 end
 
 if nargin<6
@@ -149,7 +149,6 @@ COLOR(:,:,1)=c1;
 COLOR(:,:,2)=c2;
 COLOR(:,:,3)=c3;
 
-end
 
 % The matrix resulting from the above manipulations is now simply cropped
 % and resized, then saved as the provided filename.

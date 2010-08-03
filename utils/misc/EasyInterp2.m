@@ -1,6 +1,6 @@
 function B=EasyInterp2(A,rows,cols,method)
 if nargin<4
-    method='linear';
+    method='nearest';
 end
 if nargin==2
     cols=round(size(A,2)*rows);

@@ -50,6 +50,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.colorbarpercent='off';%
 %   NSS.resolution='-r600';%
 %   NSS.figfilesave='on';%
+%   NSS.plotflag='on';  %allows for calling functions to turn off plotting
 %
 %  Example
 %
@@ -147,7 +148,7 @@ end
 ListOfProperties={
     'units','titlestring','filename','cmap','longlatbox','plotarea', ...
     'logicalinclude','coloraxis','displaynotes','description','uppermap',...
-    'lowermap','colorbarpercent','resolution','figfilesave'};
+    'lowermap','colorbarpercent','resolution','figfilesave','plotflag'};
 
 %% set defaults for these properties
 units='';
@@ -165,6 +166,7 @@ lowermap='emblue';
 colorbarpercent='off';
 resolution='-r600';
 figfilesave='off';
+plotflag='on';
 %%now pull property values out of structure
 
 a=fieldnames(NSS);
@@ -178,6 +180,9 @@ for j=1:length(a)
     eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
 end
 
+if plotflag=='off'
+    return
+end
 
 % Now a section to look for PlotArea
 

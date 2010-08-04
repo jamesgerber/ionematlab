@@ -63,7 +63,7 @@ AVsort=sort(AV);
 cumulativeAV=cumsum(AVsort);
 cAVnorm=cumulativeAV/max(cumulativeAV);
 [iiAV]=min(find(cAVnorm>=(1-p)));
-AreaCutoff=AVsort( iiAV)
+AreaCutoff=AVsort(iiAV);
 
 LogicalInclude=(ii & CultivatedArea>=AreaCutoff);
 FilteredData=Data;

@@ -28,6 +28,10 @@ if isempty(w)
     disp(['Local changes are checked into subversion repository'])
     disp(['WARNING!  SERVER MAY HAVE NEWER FILES AND YOU NEED TO UPDATE!'])
     SVNStatus='';
+   
+    disp('You may need to run this from a terminal window: (or paste into matlab)');
+disp(['!svn update ' fullpath(1:end-25)]);
+disp([' '])
     return
 end
 
@@ -66,9 +70,9 @@ if length(findstr(w,'?')>0)
     disp([' '])
 end
 
-disp('You may need to run this from a terminal window: ');
-disp(['svn commit ' fullpath(1:end-25) ' -m "message here"']);
-disp(['svn update ' fullpath(1:end-25)]);
+disp('You may need to run this from a terminal window: (or paste into matlab)');
+disp(['!svn commit ' fullpath(1:end-25) ' -m "message here"']);
+disp(['!svn update ' fullpath(1:end-25)]);
 disp([' '])
 
 

@@ -266,17 +266,22 @@ if length(coloraxis)<2
     if length(coloraxis==1)
         ii=find(Data~=0  & isfinite(Data));
         tmp01=Data(ii);
-        if coloraxis==0
-            coloraxis=[-(max(abs(tmp01))) (max(abs(tmp01)))]
+        if length(tmp01)==0
+            disp(['all finite values are zero'])
+            coloraxis=[-1 1];
         else
-            f=abs(coloraxis);
-            tmp01=sort(tmp01);
-            loval=min(tmp01);
-            hiaverage=tmp01(round(length(tmp01)*f));
-            if coloraxis>0
-                coloraxis=[loval hiaverage];
+            if coloraxis==0
+                coloraxis=[-(max(abs(tmp01))) (max(abs(tmp01)))]
             else
-                coloraxis=[-hiaverage hiaverage];
+                f=abs(coloraxis);
+                tmp01=sort(tmp01);
+                loval=min(tmp01);
+                hiaverage=tmp01(round(length(tmp01)*f));
+                if coloraxis>0
+                    coloraxis=[loval hiaverage];
+                else
+                    coloraxis=[-hiaverage hiaverage];
+                end
             end
         end
     else

@@ -2,13 +2,20 @@ function [LogicalInclude,FilteredData,AreaCutoff]=AreaFilter(AreaFraction,Data,p
 %  AreaFilter  - Filter out data below cumulative percentage of area
 %
 %   SYNTAX:
+%
+%
+%      [LogicalInclude]=AreaFilter(AreaFraction); returns logical array
+%      corresponding to points to be included inside area filter
+%
+%      [LogicalInclude]=AreaFilter(AreaFraction,p)
+%
 %      [LogicalInclude,FilteredData]=AreaFilter(AreaFraction,Data); will
 %      choose an area cutoff AC such that inclusion of all grid cells with
 %      cultivated area greater than or equal to AC comprises 95% of all
 %      cultivated area.   p=1 means there is no filtering.
 %
-%      [LogicalInclude,FilteredData,AreaCutoff]=AreaFilter(AreaFraction,Dat
-%      a,p);
+%      [LogicalInclude,FilteredData,AreaCutoff]=...
+%         AreaFilter(AreaFraction,Data,p);
 %
 %   EXAMPLE:
 %  
@@ -33,14 +40,17 @@ if nargin==0
     return
 end
 
-if nargout==1 & nargin==1
-    Data=AreaFraction;
-end
-
-
-
-if nargin <3
-    p=0.95;
+switch nargin
+    case 1
+        Data=AreaFraction;
+        p=0.95;
+    case 2
+        if numel(Data)==1
+            p=Data;
+            Data=AreaFraction;
+        else
+            p=0.95;
+        end
 end
 
 ii=(AreaFraction)<8.9e9;

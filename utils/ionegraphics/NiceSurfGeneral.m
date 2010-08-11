@@ -180,7 +180,7 @@ for j=1:length(a)
     eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
 end
 
-if plotflag=='off'
+if isequal(plotflag,'off')
     return
 end
 

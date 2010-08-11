@@ -55,8 +55,11 @@ end
 %% Determine filename tokens
 
 
-FileName=YieldGapFunctionFileNames(FS,OutputDirBase);
+[FileName,DirName]=YieldGapFunctionFileNames(FS,OutputDirBase);
 
+if ~exist(DirName,'dir');
+mkdir(DirName)
+end
 ForceRedo=0;
 
 if FS.ibinlist~=0

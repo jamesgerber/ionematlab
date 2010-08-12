@@ -1285,6 +1285,10 @@ for n = 1:3
                 % if we scaled national-level data, call it data type 2
                 jj = find(snudatamap == 1 & datatypemap == 3);
                 datatypemap(jj) = 2;
+                % if we scaled national-level "other crop" data, call it
+                % data type 3.25
+                jj = find(snudatamap == 1 & datatypemap == 3.5);
+                datatypemap(jj) = 3.25;
                 % if we scaled extrapolated data from countries of similar
                 % economic status, call it data type 4
                 jj = find(snudatamap == 1 & datatypemap == 5);

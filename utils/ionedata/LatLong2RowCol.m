@@ -6,7 +6,7 @@ function [row,col]=LatLong2RowCol(latpos,longpos,Lat,Long)
 %     associated with latpos and longpos in array Data.
 %
 %     LatLong2RowCol(latpos,longpos,Lat,Long) will return the row/col
-%     associated with a map of size Lat/Long or of size
+%     associated with latpos/longpos in a map of size Lat/Long or of size
 %     length(Lat)/length(Long).
 %
 if nargin==3

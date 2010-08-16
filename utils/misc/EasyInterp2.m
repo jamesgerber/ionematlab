@@ -14,4 +14,8 @@ else
 end
 R=(1:(size(A,2)-1)/(cols-1):size(A,2));
 C=(1:(size(A,1)-1)/(rows-1):size(A,1));
+rows=0;
+cols=0;
 B=interp2(A,R,rot90(C,3),method);
+R=0;
+C=0;

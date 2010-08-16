@@ -95,6 +95,7 @@ RedData=RedData(:,end:-1:1);
 
 hfig=figure;
 
+zoom(hfig,'on');
 % calculate place to put figure
 if hfig <30
     XStart=100+30*hfig;
@@ -134,6 +135,8 @@ if CanMap==0
   UserDataStructure.MapToolboxFig=0;
 else
   hm=axesm('robinson')
+
+  
   if meshmflag==0
       [lat2D,lon2D]=meshgrat(RedLat,RedLong);
       h=surfm(lat2D,lon2D,double(RedData.'));
@@ -165,6 +168,60 @@ UserDataStructure.Data=RedData;
 UserDataStructure.SurfaceHandle=h;
 %axes(UserDataStructure.DataAxisHandle);
 set(gca,'Tag','IonEAxis')
+shading flat
+ht=title(TitleStr);
+set(ht,'interpreter','none');
+hcb=colorbar('peer',UserDataStructure.DataAxisHandle,'SouthOutside');
+hy=get(hcb,'XLabel');
+set(hy,'String',Units);
+set(hy,'FontWeight','Bold')
+UserDataStructure.ColorbarStringHandle=hy;
+UserDataStructure.ColorbarHandle=hcb;
 
 
+
+% now make graphics
+clear NextButtonCoords
+
+WorldSummary('Initialize');
+ZoomToMax('Initialize');
+ZoomToMin('Initialize');
+MakeReducedDataSets('Initialize');
+AddCoastCallback('Initialize');
+ZoomToContinent('Initialize');
+PropagateLimits('Initialize');
+OutputFig('Initialize');
+IonEButtonDownFunctions('Initialize');
+
+
+%% Add Console
+position=[0.0,0.0,1,.1];
+ConsoleAxisHandle=axes('units','normalized','Position',position);
+set(ConsoleAxisHandle,'units','normalized'); %this is the default
+set(ConsoleAxisHandle,'visible','off');
+UserDataStructure.ConsoleAxisHandle=ConsoleAxisHandle;
+set(hfig,'UserData',UserDataStructure);
+
+% make dataaxis current
+
+vis=get(UserDataStructure.DataAxisHandle,'visible');
+set(UserDataStructure.DataAxisHandle,'visible',vis);
+axes(UserDataStructure.DataAxisHandle);
+
+if CheckForMappingToolbox;
+   ChangeProjection('Initialize');
+end
+
+
+
+%if exist('NoDataStructure');
+%    set(hfig,'UserData',NoDataStructure);
+%end
+
+
+set(gcf,'Renderer','zbuffer')
+
+if nargout==1
+    varargout{1}=hfig;
+end
 end

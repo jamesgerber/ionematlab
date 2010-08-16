@@ -1,6 +1,19 @@
 function draw5090(Data)
+%INTERP2 draw a figure highlighting data at the 50th and 90th percentiles
+%
+%   fill5090(Data) plots Data on a Robinson projection and fills in all
+%   cells at the 50th and 90th percentiles of the nonzero points with
+%   solid color.
+%
+%   Example:
+%
+%   S=OpenNetCDF([iddstring 'Crops2000/crops/maize_5min.nc'])
+%   tmp=S.Data(:,:,2);  %yield ... not area
+%   draw5090(tmp);
+%
+%   See also fill5090
     load worldindexed;
-    Data=fliplr(EasyInterp2(Data,4320,2160));
+    Data=fliplr(EasyInterp2(double(Data),4320,2160));
     bmap=immap;
     backdata=rot90(im,3)+1;
     tmp=sort(nonzeros(Data));

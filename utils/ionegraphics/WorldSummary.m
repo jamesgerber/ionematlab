@@ -42,11 +42,14 @@ switch(InputFlag)
         yy=UDS.Lat;
         ii=find(~isnan(z) & z~=0);
         
+        size(z)
+        size(xx)
+        size(yy)
         
         [maxval,RowIndex,ColumnIndex]=max2d(z)
         if isvector(xx)
-            LongVal=xx(ColumnIndex);
-            LatVal=yy(RowIndex);
+            LatVal=yy(ColumnIndex);
+            LongVal=xx(RowIndex);
         else
             LongVal=xx(RowIndex,ColumnIndex);
             LatVal=yy(RowIndex,ColumnIndex);

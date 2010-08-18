@@ -439,9 +439,9 @@ for n = 1:3
 end
 
 % remove the seasonal data entries from the datalist
-tmp = datalist([1:9 13:152 156]);
+tmp = datalist([1:9 13:151 155]);
 datalist = tmp;
-tmp = proxylist([1:9 13:152 156]);
+tmp = proxylist([1:9 13:151 155]);
 proxylist = tmp;
 
 % delete some extra files after pre-processing
@@ -704,87 +704,87 @@ for n = 1:3
     end
     
     
-    %% Fill gaps in application rate data with "other crop" data
-    
-    % find the other crop column
-    dataentry = 'other';
-    dataheader = [dataentry '_' nutrient '_data'];
-    areaheader = [dataentry '_' nutrient '_areafert'];
-    
-    eval(['datacol = inputfile.' dataheader ';']);
-    eval(['areacol = inputfile.' areaheader ';']);
-    
-    % check to see if we have data for "other" crops in each country;
-    % create a map of the "other crop" rate for each country.
-    
-    othermap = nan(4320,2160);
-    
-    for k = 1:length(fao_ctries)
-        countrycode = fao_ctries{k};
-        
-        % Find the rows with data for this country:
-        ctryrows=row_htable.get(countrycode);
-        
-        % Create a list for ctryrows minus the data type row,
-        % country data row, and data source row
-        subnationalrows = ctryrows;
-        subnationalrows([1, 2, 3]) = [];
-        
-        % Find the rows for data type, source, and the
-        % country-level data
-        tmp = strmatch('data type', inputfile.Name_1(ctryrows));
-        datatyperow = ctryrows(tmp);
-        tmp = strmatch('data source', inputfile.Name_1(ctryrows));
-        datasourcerow = ctryrows(tmp);
-        tmp = strmatch('country data', inputfile.Name_1(ctryrows));
-        countrydatarow = ctryrows(tmp);
-        country = inputfile.Cntry_name{datatyperow};
-        
-        % get the data type, source, and app rate data for the country
-        % and data entry
-        datatype = str2double(datacol{datatyperow});
-        datasource = datacol{datasourcerow};
-        countrydata = str2double(datacol{countrydatarow});
-        
-        if (datatype > 0)
-            
-            disp(['Adding "other crop" ' nutrient ' data in ' country ...
-                ' to the other crop map: ' num2str(countrydata) ' kg/ha']);
-            [outline,ii] = CountryCodetoOutline(countrycode);
-            othermap(ii) = countrydata;
-            
-        else
-            
-            disp(['No "other crop" ' nutrient ' data in ' country]);
-            
-        end
-    end
-        
-    % Now, for each crop, if we're missing data, use the "other crop" data
-    for c = 1:length(croplist)
-        cropname = croplist{c};
-        
-        if strmatch('horticulture', cropname);
-            disp(['Skipping extrapolation for horticulture: this is ' ...
-                'only present to preserve total nutrient consumption ' ...
-                'in a few countries.']);
-        else
-            
-            titlestr = [cropname '_' nutrient '_ver' verno ];
-            appratemap = DataStoreGateway([titlestr '_rate']);
-            datatypemap = DataStoreGateway([titlestr '_datatype']);
-            
-            disp(['Filling in data for ' cropname ' using the ' ...
-                '"other crop" ' nutrient ' application rates']);
-            ii = find(isfinite(othermap) & appratemap == -9);
-            appratemap(ii) = othermap(ii);
-            datatypemap(ii) = 3.5;
-            
-            DataStoreGateway([titlestr '_rate'], appratemap);
-            DataStoreGateway([titlestr '_datatype'], datatypemap);
-            
-        end
-    end
+%     %% Fill gaps in application rate data with "other crop" data
+%     
+%     % find the other crop column
+%     dataentry = 'other';
+%     dataheader = [dataentry '_' nutrient '_data'];
+%     areaheader = [dataentry '_' nutrient '_areafert'];
+%     
+%     eval(['datacol = inputfile.' dataheader ';']);
+%     eval(['areacol = inputfile.' areaheader ';']);
+%     
+%     % check to see if we have data for "other" crops in each country;
+%     % create a map of the "other crop" rate for each country.
+%     
+%     othermap = nan(4320,2160);
+%     
+%     for k = 1:length(fao_ctries)
+%         countrycode = fao_ctries{k};
+%         
+%         % Find the rows with data for this country:
+%         ctryrows=row_htable.get(countrycode);
+%         
+%         % Create a list for ctryrows minus the data type row,
+%         % country data row, and data source row
+%         subnationalrows = ctryrows;
+%         subnationalrows([1, 2, 3]) = [];
+%         
+%         % Find the rows for data type, source, and the
+%         % country-level data
+%         tmp = strmatch('data type', inputfile.Name_1(ctryrows));
+%         datatyperow = ctryrows(tmp);
+%         tmp = strmatch('data source', inputfile.Name_1(ctryrows));
+%         datasourcerow = ctryrows(tmp);
+%         tmp = strmatch('country data', inputfile.Name_1(ctryrows));
+%         countrydatarow = ctryrows(tmp);
+%         country = inputfile.Cntry_name{datatyperow};
+%         
+%         % get the data type, source, and app rate data for the country
+%         % and data entry
+%         datatype = str2double(datacol{datatyperow});
+%         datasource = datacol{datasourcerow};
+%         countrydata = str2double(datacol{countrydatarow});
+%         
+%         if (datatype > 0)
+%             
+%             disp(['Adding "other crop" ' nutrient ' data in ' country ...
+%                 ' to the other crop map: ' num2str(countrydata) ' kg/ha']);
+%             [outline,ii] = CountryCodetoOutline(countrycode);
+%             othermap(ii) = countrydata;
+%             
+%         else
+%             
+%             disp(['No "other crop" ' nutrient ' data in ' country]);
+%             
+%         end
+%     end
+%         
+%     % Now, for each crop, if we're missing data, use the "other crop" data
+%     for c = 1:length(croplist)
+%         cropname = croplist{c};
+%         
+%         if strmatch('horticulture', cropname);
+%             disp(['Skipping extrapolation for horticulture: this is ' ...
+%                 'only present to preserve total nutrient consumption ' ...
+%                 'in a few countries.']);
+%         else
+%             
+%             titlestr = [cropname '_' nutrient '_ver' verno ];
+%             appratemap = DataStoreGateway([titlestr '_rate']);
+%             datatypemap = DataStoreGateway([titlestr '_datatype']);
+%             
+%             disp(['Filling in data for ' cropname ' using the ' ...
+%                 '"other crop" ' nutrient ' application rates']);
+%             ii = find(isfinite(othermap) & appratemap == -9);
+%             appratemap(ii) = othermap(ii);
+%             datatypemap(ii) = 3.5;
+%             
+%             DataStoreGateway([titlestr '_rate'], appratemap);
+%             DataStoreGateway([titlestr '_datatype'], datatypemap);
+%             
+%         end
+%     end
     
     
     
@@ -1244,6 +1244,8 @@ for n = 1:3
                 titlestr = [cropname '_' nutrient '_ver' verno ];
                 appratemap = DataStoreGateway([titlestr '_rate']);
                 kk = find(isfinite(appratemap));
+                areamap = DataStoreGateway([titlestr '_area']);
+                areahamap = areamap .* gridcellareas;
                 datatypemap = DataStoreGateway([titlestr '_datatype']);
                 
                 disp(['Calculating correction factors for ' cropname ...
@@ -1255,9 +1257,12 @@ for n = 1:3
                     
                     [outline, ii] = CountryCodetoOutline(countrycode);
                     
-                    tmp = sum(sum(appratemap(kk) .* totfertlandmap(kk) ...
+%                     tmp = mean(appratemap(kk) .* areahamap(kk) ...
+%                         .* outline(kk)) ./ mean(areahamap(kk))
+                    
+                    tmp = sum(sum(appratemap(kk) .* areahamap(kk) ...
                         .* outline(kk)));
-                    tmp2 = sum(sum(appratemap(kk) .* totfertlandmap(kk) ...
+                    tmp2 = sum(sum(appratemap(kk) .* areahamap(kk) ...
                         .* outline(kk) .* scalingmap(kk)));
                     
                     if tmp > 0;
@@ -1277,7 +1282,6 @@ for n = 1:3
                 
                 % save the data type appropriately
                 
-                datatypemap = DataStoreGateway([titlestr '_datatype']);
                 % if we scaled subnational application rate data, call it
                 % data type 0.5
                 jj = find(snudatamap == 1 & datatypemap == 1);
@@ -1302,7 +1306,6 @@ for n = 1:3
                 
                 % calculate the total consumption map
                 
-                areamap=DataStoreGateway([titlestr '_area']);
                 jj = find(appratemap < 0); % put all no data and -9 values to zero
                 appratemap(jj) = 0;
                 jj = find(isnan(appratemap)); % put all no data and -9 values to zero
@@ -1456,11 +1459,14 @@ for n = 1:3
                 areamap(jj) = 0;
                 crop_consmap = (areamap.*gridcellareas.*appratemap);
                 total_consmap_scaled = total_consmap_scaled + crop_consmap;
-                
-                % save the total consumption map
-                DataStoreGateway(['totalcons_' nutrient ...
-                    '_scaled_SNP1_FAO'], total_consmap_scaled);
+             
             end
+            
+            % save the total consumption map
+            
+            total_consmap_scaled(faodatamap == 0) = 0;
+            DataStoreGateway(['totalcons_' nutrient ...
+                '_scaled_SNP1_FAO'], total_consmap_scaled);
             
             
             
@@ -1902,11 +1908,14 @@ for n = 1:3
                 crop_consmap = (areamap.*gridcellareas.*appratemap);
                 total_consmap_scaled = total_consmap_scaled + crop_consmap;
                 
-                % save the total consumption map
-                DataStoreGateway(['totalcons_' nutrient ...
-                    '_scaled_SNP2_FAO'], total_consmap_scaled);
-                
+                   
             end
+            
+            % save the total consumption map
+            total_consmap_scaled(faodatamap == 0) = 0;
+            DataStoreGateway(['totalcons_' nutrient ...
+                '_scaled_SNP2_FAO'], total_consmap_scaled);
+        
         end
     end
 end

@@ -38,6 +38,46 @@ switch(InputFlag)
             otherwise
                 error(['syntax error in ' mfilename])
         end
+        
+    case 'Import';
+        ThisFig =varargin{2};
+        x=varargin{3};
+        y=varargin{4};
+        UDS=get(ThisFig,'UserData');
+        if (UDS.MapToolboxFig==1)
+            [b1 a1]=getRowCol(UDS.Lat,UDS.Long,y,x);
+            z=UDS.Data(a1,b1);
+            Scale=1;
+        else
+            [a1 b1]=getRowCol(UDS.Lat,UDS.Long,y,x);
+            z=UDS.Data(b1,a1);
+            Scale=UDS.ScaleToDegrees;
+        end
+        [CountryNumbers,CountryNames]=...
+            GetCountry_halfdegree(x*Scale,y*Scale);
+        CountryName=CountryNames{1};
+        ii=find(CountryName==',');
+        if ~isempty(ii)
+            CountryName=CountryName(1:(ii(1)-1));
+        end
+        
+        %%% now set text in the console
+        % first delete old text
+        h=findobj('Tag','IonEConsoleText');
+        
+        %now new text
+        hc=UDS.ConsoleAxisHandle;
+        axes(hc)
+        set(hc,'xlim',[0 1]);
+        set(hc,'ylim',[0 1]);
+        ht=text(0.25,.5,['Country=' CountryName]);
+        set(ht,'Tag','IonEConsoleText');
+        ht=text(0.5,.5,['Value = ' num2str(z)]);
+        set(ht,'Tag','IonEConsoleText');
+        ht=text(0.75,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
+        set(ht,'Tag','IonEConsoleText');
+        axes(UDS.DataAxisHandle);  %make data axis handle current
+         
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -86,6 +126,20 @@ if strcmp(get(src,'SelectionType'),'normal')
      ht=text(0.75,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
      set(ht,'Tag','IonEConsoleText');
      axes(UDS.DataAxisHandle);  %make data axis handle current
+     
+     assignin('base','Country',CountryName);
+     assignin('base','Value',z);
+     assignin('base','Lat',y);
+     assignin('base','Long',x);
+     
+     hall=allchild(0); % all handles
+     for j=1:length(hall)
+         if isequal(get(hall(j),'Tag'),'IonEFigure');
+             % we have an "IonEFigure". Resize.
+             ionebuttondownfunctions('Import',hall(j),x,y);
+         end
+     end
+         
 end
 
 

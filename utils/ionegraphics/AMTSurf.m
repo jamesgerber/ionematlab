@@ -47,7 +47,7 @@ end
 
 if nargin<4
 load '~andrew/greenlightdark';
-colormap=greenlightdark;
+colormap=greenlightdark(1:round(length(greenlightdark)*.8),:);
 end
 
 if nargin<5

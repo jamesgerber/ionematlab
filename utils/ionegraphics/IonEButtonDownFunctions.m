@@ -131,6 +131,15 @@ if strcmp(get(src,'SelectionType'),'normal')
      assignin('base','Value',z);
      assignin('base','Lat',y);
      assignin('base','Long',x);
+     SystemGlobals
+     ncid=netcdf.open(ADMINBOUNDARYMAP_5min,'NOWRITE');
+     netcdf.inqVar(ncid,0);
+     longC=netcdf.getVar(ncid,0);
+     latC=netcdf.getVar(ncid,1);
+     [r,c]=latlong2rowcol(y,x,latC,longC);
+     ctry=netcdf.getVar(ncid,4);
+     ctry=double(ctry);
+     assignin('base','Province',ctry(r,c));
      
      hall=allchild(0); % all handles
      for j=1:length(hall)

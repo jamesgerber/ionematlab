@@ -67,7 +67,7 @@ switch nargin
                         DML=DML*0;  %now use DML to construct a matrix for DATA
                         DML(DMI)=Data; %Data still a vector, assign it into DML
                         Data=DML;  %no Data is properly embedded in a matrix
-                    case length(DML)
+                    case numel(DML)
                         % user has passed in the entire globe as a vector.
                         DML=DML*0;  %Use this matrix
                         DML(DMI)=Data(DMI);

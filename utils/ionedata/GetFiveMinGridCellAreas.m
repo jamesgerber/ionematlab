@@ -24,7 +24,7 @@ function [Long,Lat,FiveMinGridCellAreas]=GetFiveMinGridCellAreas;
  FiveMinGridAreaAtEquator=EarthCircumference.^2*(1/360/12)^2*1e2; %1e2 is sq km to ha
 % 
  FiveMinGridCellAreasha=FiveMinGridAreaAtEquator*ones(size(Long))*cosd(Lat.');
-
+FiveMinGridCellAreas=FiveMinGridCellAreasha;
  return
  
  

@@ -20,7 +20,10 @@ function OutputStructure=YieldGapFunction(FlagStructure)
 %  FS.MakeBinWeightedYieldGapPlotFlag=0;
 %  FS.ClimateLibraryDir='../ClimateSpaces';
 %  FS.OutputDirBase=[IoneDataDir 'YieldGap'];
-%  FS.ExternalMask=[];
+%  FS.ExternalMask=[];;
+%  FS.AlternateCropCsv=[];
+%  FS.CropBasePath=[];
+%  FS.ForceRedo=0;
 %  OutputStructure=YieldGapFunction(FS);
 %
 %  FS.csqirev='Ar1';
@@ -29,6 +32,17 @@ function OutputStructure=YieldGapFunction(FlagStructure)
 %%% first look to see if we can automatically load in file.  If not, create
 %%% and save
 FS=FlagStructure;
+if ~isfield(FS,'WetFlag')
+    FS.WetFlag='prec';
+end
+
+if ~isfield(FS,'ForceRedo')
+    ForceRedo=0;
+else
+    ForceRedo=FS.ForceRedo;
+end
+
+
 try
     OutputDirBase=FS.OutputDirBase;
 catch
@@ -52,6 +66,9 @@ if numel(FS.CropNo)>1 | numel(FS.ClimateSpaceN)>1
     return
 end
 
+
+
+
 %% Determine filename tokens
 
 
@@ -60,7 +77,7 @@ end
 if ~exist(DirName,'dir');
 mkdir(DirName)
 end
-ForceRedo=0;
+
 
 if FS.ibinlist~=0
     ForceRedo=1;
@@ -113,6 +130,9 @@ PercentileForMaxYield=95;
 MakeBinWeightedYieldGapPlotFlag=0;
 MakeGlobalMapsSoil=0;
 ExternalMask=[];
+AlternateCropCsv=[];
+CropBasePath=[];
+
 % Now override defaults with FlagStructure
 
 clear j
@@ -149,8 +169,19 @@ if ibinlist==0
     end
 end
 
-%%% Read from crops.csv
-[DS,NS]=CSV_to_structure('crops.csv');
+
+
+if isempty(AlternateCropCsv);
+    %%% Read from crops.csv
+    [DS,NS]=CSV_to_structure('crops.csv');
+else
+    [DS,NS]=CSV_to_structure(AlternateCropCsv);
+end
+
+if isempty(CropBasePath);
+    CropBasePath=[iddstring '/Crops2000/crops/'];
+end
+
 
 %for j=1:length(NS.col1);
 
@@ -165,7 +196,7 @@ cropconv=NS.col6(j);
 areafilter=NS.col7(j);
 
 systemglobals
-croppath=[IoneDataDir '/Crops2000/crops/' croppath];
+croppath=[ CropBasePath croppath];
 
 if QuietFlag==0
     disp(['Working on ' cropname]);
@@ -593,7 +624,6 @@ OutputStructure.VectorOfPotentialYields=VectorOfPotentialYields;
 OutputStructure.LogicalArrayOfGridPointsInABin=...
     LogicalArrayOfGridPointsInABin;
 OutputStructure.InputStructureRecord=FlagStructure;
-OutputStructure.Top99YieldGapFraction=AllBinsYieldGapArray;
 [RevNo,RevString,LastChangeRevNo,LCRString,AI]=GetSVNInfo;
 RevData.CodeRevisionNo=RevNo;
 RevData.CodeRevisionString=RevString;

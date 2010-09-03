@@ -37,8 +37,8 @@ UDS=get(gcbf,'UserData');
     [q w e]=CMapAppend(UDS.BMap*.66,(1+UDS.CMap*5)/6,1,UDS.BMax+1,1,max2d(UDS.Data)+1);
     h1=meshm(double(IonEOverlay(UDS.Data*w+e,UDS.Data==z,UDS.Back)).',R);
     shading flat;
-    colormap(q);
-    caxis(UDS.DataAxisHandle,[min2d(UDS.Back)-1,(max2d(UDS.Data)+1)*w+e]);
+%    colormap(q);
+%    caxis(UDS.DataAxisHandle,[min2d(UDS.Back)-1,(max2d(UDS.Data)+1)*w+e]);
 end
 
 function [a b]=getRowCol(LT,LN,lat,lon)

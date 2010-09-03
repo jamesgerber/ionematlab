@@ -43,8 +43,10 @@ ListOfDirsToSearch={};
 
 PathList=path;
 
-PathList=[';' PathList ';' pwd ';'];
-ii=find(PathList==';');
+
+
+PathList=[pathsep PathList pathsep pwd pathsep];
+ii=find(PathList==pathsep);
 
 for j=1:length(ii)-1;
    ThisPath=PathList(  (ii(j)+1) : (ii(j+1))-1 );

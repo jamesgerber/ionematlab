@@ -1,4 +1,4 @@
-%SystemGlobals% - 
+%SystemGlobals% -
 
 
 
@@ -43,13 +43,15 @@ switch username
     case 'muell512'
         
     case 'cass0131'
-
+        
     case 'jsgerber'
+        ADMINBOUNDARYMAP_5min    =[IoneDataDir 'AdminBoundary2005/Raster_NetCDF/2_States_5min/glctry.nc'];
+        ADMINBOUNDARYMAP_5min_key=[IoneDataDir 'AdminBoundary2005/Raster_NetCDF/2_States_5min//PolitBoundary_Aug09.csv'];
         
     case 'dray'
-
+        
     case 'jfoley'
         
     otherwise
-
+        
 end

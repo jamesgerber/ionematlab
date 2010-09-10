@@ -27,8 +27,6 @@ end
 systemglobals
 ncid=netcdf.open([IoneDataDir '/AdminBoundary2005/Raster_NetCDF/1_Countries_0.5deg/ctry_0.5.nc'],'NOWRITE');
 
-netcdf.inqVar(ncid,0)
-
 long=netcdf.getVar(ncid,0);
 lat=netcdf.getVar(ncid,1);
 level=netcdf.getVar(ncid,2);

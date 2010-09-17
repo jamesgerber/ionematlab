@@ -32,7 +32,11 @@ fid=fopen(FileName);
 
 for m=1:length(HeaderLines)
     headerline=fgetl(fid);
-    VC=GetStrings(headerline);  %function below.
+    headerline=strrep(headerline,'(','');
+
+        headerline=strrep(headerline,')','');
+        headerline=strrep(headerline,'_','');
+VC=GetStrings(headerline);  %function below.
     FieldNameStructure(m).Vector=VC;
 end
 

@@ -20,6 +20,11 @@ if nargin==0
     return
 end
 
+if isequal(InString(1),' ') | isequal(InString(1),'_')
+    OutString=MakeSafeString(InString(2:end));
+    return
+end
+
 persistent NoColumnNameCounter
 if isempty(NoColumnNameCounter)
     NoColumnNameCounter=0;

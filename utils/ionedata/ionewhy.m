@@ -38,8 +38,8 @@ switch fix(12*rand)
     case 6,   a = 'it should be obvious.';
     case 7,   a = 'the devil made me do it.';
     case 8,   a = 'the computer did it.';
-    case 9,   a = 'the customer is always right.';
-    case 10,  a = 'in the beginning, God created the heavens and the earth...';
+    case 9,   a = 'the yield gap is your fault';
+    case 10,  a = 'where is your jump suit?';
     otherwise,a = 'don''t you have something better to do?';
 end
 
@@ -76,16 +76,18 @@ switch fix(4*rand)
 end
 
 function a = proper_noun
-switch fix(9*rand) 
+switch fix(11*rand) 
     case 0,    a = 'Jon';
     case 1,    a = 'Jamie';
     case 2,    a = 'Nathan';
-    case 3,    a = 'Jason';
-    case 4,    a = 'The corn growers';
+    case 3,    a = 'Christine';
+    case 4,    a = 'The ethanol lobby';
     case 5,    a = 'Vegetarians';
     case 6,    a = 'Meat eaters';
     case 7,    a = 'Deepak';
     case 8,    a = 'Emily';
+    case 9,    a = 'Kate';
+    case 10,   a = 'Ashley';
     end
 
 function a = noun_phrase
@@ -102,7 +104,7 @@ switch fix(6*rand)
     case 2,    a = 'global landscaper';
     case 3,    a = 'meat eater';
     case 4,    a = 'corn grower';
-    case 5,    a = 'numerical modeller';
+    case 5,    a = 'biofuels proponent';
 end
 
 function a = nominative_pronoun
@@ -148,7 +150,7 @@ switch fix(7*rand)
     case 1,    a = 'bald';
     case 2,    a = 'young';
     case 3,    a = 'smart';
-    case 4,    a = 'rich';
+    case 4,    a = 'matlab-crazed';
     case 5,    a = 'hungry';
     otherwise, a = 'good';
 end

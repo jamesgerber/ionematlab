@@ -30,6 +30,8 @@ DERIVEDCLIMATEDATAPATH=[IoneDataDir 'Climate/WorldClimDerivedData/'];
 WORLDCOUNTRIES_LEVEL0=[IoneDataDir 'AdminBoundary2010/WorldLevel0Coasts_RevAr0.mat'];
 
 WORLDCOUNTRIES_LEVEL0_HIRES=[IoneDataDir 'AdminBoundary2010/WorldLevel0Coasts_RevAr0_HiRes.mat'];
+WORLDCOUNTRIES_LEVEL1_HIRES=[IoneDataDir 'AdminBoundary2010/WorldLevel1_HiRes_RevAr0.mat'];
+
 USSTATESBOUNDARY_VECTORMAP_HIRES=[IoneDataDir 'AdminBoundary2010/USStates.mat'];
 WORLDCOUNTRIES_BRIC_NAFTASTATES_VECTORMAP_HIRES=[IoneDataDir 'AdminBoundary2010/WorldLevel0Coasts0_bricnafta1_HiRes.mat'];
 %% Override settings here

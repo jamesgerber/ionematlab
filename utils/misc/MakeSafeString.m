@@ -3,7 +3,9 @@ function OutString=MakeSafeString(InString);
 %
 %   MakeSafeString(QUESTIONABLEFILENAME)
 %
-%    MakeSafeString
+%    MakeSafeString will remove characters that can't be in a filename.  It
+%    will replace many of them with "_"  although an "_" at the beginning
+%    of a filename will just be stripped off.
 %
 %    Example
 %    MakeSafeString('Bad-FileName!')

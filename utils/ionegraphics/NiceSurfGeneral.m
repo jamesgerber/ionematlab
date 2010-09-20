@@ -51,7 +51,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.resolution='-r600';%
 %   NSS.figfilesave='on';%
 %   NSS.plotflag='on';  %allows for calling functions to turn off plotting
-%
+%   NSS.fastplot='off'; %downsamples data/turns off printing for fast plots
+%   
 %  Example
 %
 %  SystemGlobals
@@ -147,8 +148,9 @@ end
 
 ListOfProperties={
     'units','titlestring','filename','cmap','longlatbox','plotarea', ...
-    'logicalinclude','coloraxis','displaynotes','description','uppermap',...
-    'lowermap','colorbarpercent','resolution','figfilesave','plotflag'};
+    'logicalinclude','coloraxis','displaynotes','description',...
+    'uppermap','lowermap','colorbarpercent','resolution',...
+    'figfilesave','plotflag','fastplot'};
 
 %% set defaults for these properties
 units='';
@@ -167,6 +169,7 @@ colorbarpercent='off';
 resolution='-r600';
 figfilesave='off';
 plotflag='on';
+fastplot='off';
 %%now pull property values out of structure
 
 a=fieldnames(NSS);
@@ -188,7 +191,9 @@ end
 
 if isempty(plotarea)
     %we are done.  keep longlatbox as is.
+    PlotAllStates=0;
 else
+    PlotAllStates=1;
     switch lower(plotarea)
         case 'world'
             longlatbox=[-180 180 -90 90];
@@ -216,6 +221,14 @@ else
             longlatbox=[-80 -20 -40 10];
             filename=[filename '_brazil'];
             ylim=.52;
+        case {'southamerica'}
+            longlatbox=[-80 -20 -40 10];
+            filename=[filename '_southamerica'];
+            ylim=.52;
+        case {'argentina'}
+            longlatbox=[-80 -20 -60 -20];
+            filename=[filename 'argentina'];
+            ylim=.45;
         case {'china'}
             longlatbox=[75 140 15 60];
             filename=[filename '_china'];
@@ -263,6 +276,30 @@ if ~isempty(ii)
 end
 
 
+%% Check that logicalinclude is correct size
+if ~isempty(logicalinclude)
+    if size(logicalinclude)~=size(Data);
+        error(['LogicalInclude matrix of wrong size passed to ' mfilename]);
+    else
+        Data(~logicalinclude)=NaN;
+    end
+end
+
+%% check to see if fastplot==1
+if isequal(fastplot,'on')
+    % downsample data if it is 5min
+    if length(size(Data,2))<=1080
+        disp([' data is 20 min or coarser.  not downsampling.']);
+        Data=Data(1:2:end,1:2:end);
+        logicalinclude=logicalinclude(1:2:end,1:2:end);
+    end
+    figfilesave='off';
+    filename='';
+end
+
+Data=double(Data);
+
+
 
 %% colorbars
 if length(coloraxis)<2
@@ -307,15 +344,7 @@ if length(coloraxis)<2
     end
 end
 
-Data=double(Data);
 
-if ~isempty(logicalinclude)
-    if size(logicalinclude)~=size(Data);
-        error(['LogicalInclude matrix of wrong size passed to ' mfilename]);
-    else
-        Data(~logicalinclude)=NaN;
-    end
-end
 
 %% prepare output data
 % do it before turn nan to NoData value.
@@ -353,8 +382,11 @@ IonESurf(Data);
 finemap(cmap,lowermap,uppermap);
 
 caxis([(cmin-minstep)  (cmax+minstep)]);
-AddStates(0.05);
-
+if   PlotAllStates==0;
+    AddStates(0.05);
+else
+    AddStates(0.05,gcf,'all');
+end
 fud=get(gcf,'UserData');
 if fud.MapToolboxFig==1
     gridm
@@ -446,13 +478,13 @@ if ~isempty(filename)
     if isequal(figfilesave,'on')
         hgsave(filename);
     end
-    if length(get(allchild(0)))>0
+    if length(get(allchild(0)))>4
         close(gcf)
     end
 end
 
 % now ... if there is a metadata request, open and then resave the file
-if ~isempty(description)
+if ~isempty(description) & ~isequal(fastplot,'on')
     if ~strcmp(ActualFileName(end-3:end),'.png');
         ActualFileName=[ActualFileName '.png'];
     end

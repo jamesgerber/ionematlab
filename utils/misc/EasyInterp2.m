@@ -1,4 +1,25 @@
 function B=EasyInterp2(A,rows,cols,method)
+% EasyInterp2 - interpolate 2-dimensional matrix with easy syntax
+%
+% SYNTAX
+%     B=EasyInterp2(A,n); B is A expanded to n times original size
+%
+%     B=EasyInterp2(A,n,method); B is A expanded to n times original size
+%     using method
+%   
+%     B=EasyInterp2(A,rows,cols); B is A stretched to size rows x cols
+%
+%     B=EasyInterp2(A,rows,cols, method); B is A stretched to size rows x
+%     cols using method
+%
+%
+%     EasyInterp2 is designed to make interp2, the built in 2-d matrix
+%     interpolation function, more accessible. It can be used to stretch a
+%     small data set to a greater size if needed, or a vice versa, and
+%     will return the entered matrix exactly as-was if its dimensions match
+%     rows x cols. Without this function, imresize is the easiest way to do
+%     this.
+%
 if nargin<4
     method='nearest';
 end

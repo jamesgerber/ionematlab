@@ -13,6 +13,18 @@ function [FileName,DirName]=YieldGapFunctionFileNames(FS,OutputDirBase);
 %   FS.ClimateSpaceN
 %   FS.WetFlag
 %   FS.PercentileForMaxYield;
+%
+%  example
+%   FS.ClimateSpaceRev='K';
+%   FS.CropNo=5;
+%   FS.ClimateSpaceN=10;
+%   FS.WetFlag='prec';
+%   FS.PercentileForMaxYield=90;
+%   OutputDirBase=[iddstring '/YieldGap/'];
+%   FileName=YieldGapFunctionFileNames(FS,OutputDirBase);
+%
+
+
 
 [DS,NS]=CSV_to_structure('crops.csv');
 

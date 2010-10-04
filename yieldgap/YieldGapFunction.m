@@ -51,16 +51,25 @@ catch
     OutputDirBase=[IoneDataDir 'YieldGap'];
 end
 
-if numel(FS.CropNo)>1 | numel(FS.ClimateSpaceN)>1
+if numel(FS.CropNo)>1 | numel(FS.ClimateSpaceN)>1 ...
+        | numel(PercentileForMaxYield)>1 | numel(FS.ClimateSpaceRev)>1
     c=0;
     Ncrop=numel(FS.CropNo);
     Nclim=numel(FS.ClimateSpaceN);
+    NPercentileForMaxYield=numel(FS.PercentileForMaxYield);
+    NCSR=numel(FS.ClimateSpaceRev);
     for j=1:Ncrop
         for m=1:Nclim;           
-            FS=FlagStructure;
-            FS.CropNo=FlagStructure.CropNo(j);
-            FS.ClimateSpaceN=FlagStructure.ClimateSpaceN(m);
-            OutputStructure=YieldGapFunction(FS);
+            for k=1:NPercentileForMaxYield
+                for n=1:NCSR;
+                FS=FlagStructure;
+                FS.CropNo=FlagStructure.CropNo(j);
+                FS.ClimateSpaceN=FlagStructure.ClimateSpaceN(m);
+                FS.PercentileForMaxYield=FlagStructure.PercentileForMaxYield(k);
+                FS.ClimateSpaceRev=FlagStructure.ClimateSpaceRev(n);
+                OutputStructure=YieldGapFunction(FS);
+                end
+            end
         end
     end
     return
@@ -613,7 +622,7 @@ end
 OutputStructure.Yield=Yield;
 OutputStructure.YieldGapFraction=single(YieldGapArray);
 OutputStructure.potentialyield=single(potentialyield);
-OutputStructure.ClimateMask=int8(ClimateMask);
+OutputStructure.ClimateMask=uint16(ClimateMask);
 OutputStructure.ClimateMaskFile=ClimateMaskFile;
 OutputStructure.Area=CultivatedArea;
 OutputStructure.cropname=cropname;

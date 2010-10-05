@@ -52,7 +52,7 @@ catch
 end
 
 if numel(FS.CropNo)>1 | numel(FS.ClimateSpaceN)>1 ...
-        | numel(PercentileForMaxYield)>1 | numel(FS.ClimateSpaceRev)>1
+        | numel(FS.PercentileForMaxYield)>1 | numel(FS.ClimateSpaceRev)>1
     c=0;
     Ncrop=numel(FS.CropNo);
     Nclim=numel(FS.ClimateSpaceN);

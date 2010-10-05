@@ -1,4 +1,4 @@
-function DS=ReadGenericCSV(FileName,HeaderLines);
+function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter);
 % ReadGenericCSV - Read in a CSV file - whatever is in the columns
 %
 %  Syntax
@@ -26,6 +26,9 @@ end
 
 if nargin==1
     HeaderLines=1;
+end
+if nargin<3
+    Delimiter=',';
 end
 
 fid=fopen(FileName);
@@ -81,7 +84,7 @@ end
 
 fclose(fid);
 fid=fopen(FileName);
-C=textscan(fid,formatstring,'Delimiter',',','HeaderLines',HeaderLines);
+C=textscan(fid,formatstring,'Delimiter',Delimiter,'HeaderLines',HeaderLines);
 fclose(fid);
 
 

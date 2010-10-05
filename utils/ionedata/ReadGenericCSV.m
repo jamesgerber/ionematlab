@@ -39,7 +39,7 @@ for m=1:length(HeaderLines)
 
         headerline=strrep(headerline,')','');
         headerline=strrep(headerline,'_','');
-VC=GetStrings(headerline);  %function below.
+VC=GetStrings(headerline,Delimiter);  %function below.
     FieldNameStructure(m).Vector=VC;
 end
 
@@ -56,7 +56,7 @@ end
 % Now consider first line
 xline=fgetl(fid);
 
-VC=GetStrings(xline);
+VC=GetStrings(xline,Delimiter);
 
 dvals=str2double(VC);
 
@@ -123,9 +123,9 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %        GetStrings          %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function VC=GetStrings(xline)
+function VC=GetStrings(xline,Delimiter)
 
-ii=find(xline==',');
+ii=find(xline==Delimiter);
 
 %stick a one on the beginning, and an N on the end.
 % cumbersome, but then we can loop into the part where we make a structure

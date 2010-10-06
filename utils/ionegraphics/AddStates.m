@@ -5,10 +5,23 @@ function AddStates(LineWidth,HFig,AllStates);
 %
 %  AddStates(N) where N is an integer will add lines of default thickness
 %  (0.5) to figure N.   [This was added for backwards compatibility]
+%
+%  AddStates all  will add all state boundaries (gadm 1.0, level 1)
+%  AddStates world  will add all state boundaries (gadm 1.0, level 1)
+%
+%  See Also  AddCoasts
+
 if nargin==0
     HFig=gcf;
     LineWidth=0.5;
     AllStates='bricnafta';
+end
+
+
+if nargin==1 & (isequal(lower(LineWidth),'all') | ...
+        isequal(lower(LineWidth),'world'));
+    AddStates(0.5,gcf,'all');
+    return
 end
 
 if nargin==1

@@ -2,15 +2,15 @@ function varargout=IonESurf(Long,Lat,Data,Units,TitleStr);
 % IonESurf - Make a surface plot consistent with IONE standards
 %
 % SYNTAX
-%     IonESurf(Long,Lat,Data) will make a surface plot
+%     IONESURF(Long,Lat,Data) will make a surface plot
 %
-%     IonESurf(Long,Lat,Data,Units,TitleStr) will put 'Units','Title' on
+%     IONESURF(Long,Lat,Data,Units,TitleStr) will put 'Units','Title' on
 %     the plot
 %
-%     IonESurf(Data);  will assume global coverage of data and construct
+%     IONESURF(Data);  will assume global coverage of data and construct
 %     Long, Lat
 %
-%     IonESurf(DS);  where DS is a matlab structure will look for fields
+%     IONESURF(DS);  where DS is a matlab structure will look for fields
 %     Long, Lat, Data, Title, Units
 %
 %
@@ -18,14 +18,14 @@ function varargout=IonESurf(Long,Lat,Data,Units,TitleStr);
 %     standardize and facilitate plotting.   It has a few limitations, and
 %     so some other plotting routines have been written which call
 %     IonESurf.
-%     * IoneSurf can be slow, so FastSurf, DownSurf, and ThinSurf reduce
+%     * IoneSurf can be slow, so FASTSURF, DOWNSURF, and THINSURF reduce
 %     the dataset before calling IoneSurf
 %     * IonESurf will plot the data that is sent to it ... so "dummy"
 %     values for oceans (e.g. -90000000000000) can mess up the color axis.
 %     NiceSurf looks for values like that and removes them, and takes out
 %     anything over the oceans
 %     * IonESurf doesn't necessarily result in a figure which will plot
-%     nicely.  NiceSurfGeneral facilitates plotting.
+%     nicely.  NICESURFGENERAL facilitates plotting.
 %
 %     See Also NiceSurf NiceSurfGeneral FastSurf DownSurf ThinSurf
 if nargin==0

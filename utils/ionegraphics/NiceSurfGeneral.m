@@ -183,7 +183,7 @@ for j=1:length(a)
     eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
 end
 
-if isequal(plotflag,'off')
+if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so as to define NSS
     return
 end
 
@@ -373,6 +373,11 @@ Data(ii)=OceanVal;
 
 % no make no-data points above color map to get 'uppermap' (white)
 Data(isnan(Data))=NoDataLandVal;
+
+if isequal(plotflag,'off')   %if nargout ~= 0, need to keep going so as to define NSS
+    OS.Data=Data;
+   return
+end
 
 
 

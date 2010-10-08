@@ -97,7 +97,7 @@ switch MatchType
         Row=GetRow(lower(Input),lower(SageCountry));
     case 'sage3'
         Row=GetRow(Input,Sage3);
-    case 'ISO3'
+    case 'iso3'
         Row=GetRow(Input,GADM_ISO);
 end
 

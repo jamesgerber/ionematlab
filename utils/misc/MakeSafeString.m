@@ -55,11 +55,17 @@ end
 
 x=InString;
 x=strrep(x,'/','_');
+x=strrep(x,'.','_');
+x=strrep(x,'%','_');
 x=strrep(x,'!','');
 x=strrep(x,'\','_');
 x=strrep(x,'"','');
 x=strrep(x,'=','_eq_');
 x=strrep(x,'-','_');
 x=strrep(x,' ','_');
+x=strrep(x,'__','_');
+x=strrep(x,'__','_');
+x=strrep(x,'__','_');
+x=strrep(x,'__','_');
 OutString=x;
 

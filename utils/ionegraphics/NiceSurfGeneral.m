@@ -79,7 +79,12 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.colorbarpercent='off';
 %
 %   NiceSurfGeneral(Yield,NSS)
-
+%
+%
+%   Tricky syntax:
+%   OSS=NiceSurfGeneral(DATA,'coloraxis',[.99],'plotflag','off')
+%   OSS will contain field coloraxis, and no plot will be made.
+%
 %
 %% preliminaries to handle inputs
 if nargin==0

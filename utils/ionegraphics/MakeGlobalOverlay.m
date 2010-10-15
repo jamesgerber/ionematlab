@@ -1,5 +1,5 @@
 function MakeGlobalOverlay(Data,colormap,coloraxis,FullFileName,BaseTransparency);
-% MakeGlobalOverlay - turn a netcdf into a globe-spanning .png 
+% MakeGlobalOverlay - 
 %
 %  Syntax
 %  

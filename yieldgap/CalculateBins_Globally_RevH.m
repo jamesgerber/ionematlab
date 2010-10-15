@@ -21,7 +21,8 @@ else
 end
 
 
-IsValidData=(CropMaskLogical & XXX < 1e15 & isfinite(XXX) & Area>eps & isfinite(Area));
+IsValidData=(CropMaskLogical & XXX < 1e15 & isfinite(XXX) & Area>eps & isfinite(Area) & ...
+    XXX > -8e8 & YYY > -8e8 );
 
 W=Area(IsValidData); %Weight is the area, but only for these points.
 [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(XXX(IsValidData),YYY(IsValidData),Nsurface,Nsurface+10,W);

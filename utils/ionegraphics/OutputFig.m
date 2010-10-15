@@ -47,7 +47,7 @@ else
 end
 
 if nargin<3
-    ResFlag='-r600';
+    ResFlag='-r200';
 end
 
 % Is this figure made by IonESurf?  If so, expand the data axis
@@ -74,6 +74,7 @@ try
 catch
     InitGuess='Figure';
 end
+
 
 
 if ForcePlots==0

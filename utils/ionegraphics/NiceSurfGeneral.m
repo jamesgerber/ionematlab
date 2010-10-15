@@ -187,6 +187,8 @@ if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so
     return
 end
 
+
+ylim=pi/2;  % need to initialize variable.
 % Now a section to look for PlotArea
 
 if isempty(plotarea)
@@ -197,6 +199,7 @@ else
     switch lower(plotarea)
         case 'world'
             longlatbox=[-180 180 -90 90];
+            ylim=pi/2;
         case 'europe'
             longlatbox=[-15 65 30 80];
             filename=[filename '_europe'];

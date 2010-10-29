@@ -12,11 +12,19 @@ catch
         dos(['./lmstat -a >  ~/.lmstatoutput']);
         cd(wd)
     catch
-        disp(['lmstat failed']);
-        cd(wd)
-        return
+        try
+            cd /Applications/MATLAB_R2009b.app/etc/
+            dos(['./lmstat -a >  ~/.lmstatoutput']);
+            cd(wd)
+        end
     end
+    
+    
+    disp(['lmstat failed']);
+    cd(wd)
+    return
 end
+
 
 
 fid=fopen('~/.lmstatoutput');
@@ -24,7 +32,7 @@ fid=fopen('~/.lmstatoutput');
 wearedone=0;
 count=0;
 while ~wearedone
-count=count+1;
+    count=count+1;
     x=fgetl(fid);
     
     if ~isempty(strmatch('Users of MAP_Toolbox:',x))
@@ -46,12 +54,12 @@ else
     fprintf(1,'%s\n',x);
     for j=1:20
         
-       x= fgetl(fid);
-       if ~isempty(strmatch('Users of ',x))
-           break
-       end
-       fprintf(1,'%s\n',x);
-
+        x= fgetl(fid);
+        if ~isempty(strmatch('Users of ',x))
+            break
+        end
+        fprintf(1,'%s\n',x);
+        
     end
     
 end

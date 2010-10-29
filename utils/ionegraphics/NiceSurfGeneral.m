@@ -491,7 +491,7 @@ if ~isempty(filename)
     if isequal(figfilesave,'on')
         hgsave(filename);
     end
-    if length(get(allchild(0)))>4
+    if length(get(allchild(0)))>2
         close(gcf)
     end
 end

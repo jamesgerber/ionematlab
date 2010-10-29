@@ -23,8 +23,7 @@ end
 
 persistent  Group Cropname_FAO Cropname_monfreda itemcode;
 if isempty(itemcode)
-    SystemGlobals
-    fid=fopen([IoneDataDir '/misc/Reconcile_Monfreda_FAO_cropnames.txt']);
+    fid=fopen([iddstring '/misc/Reconcile_Monfreda_FAO_cropnames.txt']);
     C=textscan(fid,'%s%s%s%s','Delimiter',tab);
     fclose(fid);
     itemcode=C{1};

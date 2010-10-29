@@ -47,7 +47,7 @@ else
 end
 
 if nargin<3
-    ResFlag='-r200';
+    ResFlag='-r300';
 end
 
 % Is this figure made by IonESurf?  If so, expand the data axis

@@ -95,9 +95,11 @@ finemap(colormap,'white')
 % andrew/AMTSURFtmp.tif, then immediately read into matrix COLOR. COLOR is
 % then cross-referenced with GRAY to fill in possible data errors. Then the
 % coastlines are drawn over with black lines.
-GRAY=imread('~andrew/darkrobin.tif');
-print -dtiffn -r300 '~andrew/AMTSURFtmp.tif';
-COLOR=imread(['~andrew/AMTSURFtmp.tif']);
+GRAY=imread('~andrew/public/darkrobin.tif');
+username=getenv('USER');
+print('-dtiffn', '-r300', ['~' username '/AMTSURFtmp.tif']);
+COLOR=imread(['~' username '/AMTSURFtmp.tif']);
+delete(['~' username '/AMTSURFtmp.tif']);
 
 c1=COLOR(:,:,1);
 c2=COLOR(:,:,2);
@@ -114,7 +116,7 @@ c2(ii)=g2(ii);
 c3(ii)=g3(ii);
 
 %% second part
-iicx=[2:1799];
+iicx=[2:1540];
 iicy=[2:2399];
 
 iioffset=logical(  (g1(iicx,iicy)==153 & g2(iicx,iicy)==204 & g3(iicx,iicy)==255 ) & ...
@@ -125,7 +127,7 @@ iioffset=logical(  (g1(iicx,iicy)==153 & g2(iicx,iicy)==204 & g3(iicx,iicy)==255
 				   (g1(iicx,iicy+1)==153 & g2(iicx,iicy+1)==204 & g3(iicx,iicy+1)==255 )));
 
 iitmp=logical(zeros(1800,2400));
-iitmp(2:1799,2:2399)=iioffset;
+iitmp(2:1540,2:2399)=iioffset;
 
 c1(iitmp)=0;
 c2(iitmp)=0;
@@ -139,7 +141,7 @@ iioffset=logical(  (g1(iicx,iicy)==205 & g2(iicx,iicy)==254 & g3(iicx,iicy)==254
 				   (g1(iicx,iicy+1)==205 & g2(iicx,iicy+1)==254 & g3(iicx,iicy+1)==254 )));
 
 iitmp=logical(zeros(1800,2400));
-iitmp(2:1799,2:2399)=iioffset;
+iitmp(2:1540,2:2399)=iioffset;
 
 c1(iitmp)=0;
 c2(iitmp)=0;
@@ -190,4 +192,5 @@ h=meshm(Data.',R);
 		text(0,-1.85,0,Title,'HorizontalAlignment','center');
 		showaxes('hide')
 		caxis(colorvals);
+        AddStates(.1);
 		h=gcf;

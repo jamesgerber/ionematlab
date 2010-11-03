@@ -168,10 +168,24 @@ logicalinclude=[];
 coloraxis=[];
 displaynotes='';
 description='';
-uppermap='white';
-lowermap='emblue';
+upcheck=personalpreferences('nodatacolor');
+if isempty(nodatacolor)
+    uppermap='white';
+else
+    uppermap=upcheck;
+end
+oceancheck=personalpreferences('oceancolor');
+if isempty(oceancheck)
+    lowermap='emblue';
+else
+    lowermap=oceancheck;
+end
 colorbarpercent='off';
-resolution='-r600';
+rescheck=personalpreferences('printingres');
+if isempty(rescheck)
+    resolution='-r600';
+else resolution=rescheck;
+end
 figfilesave='off';
 plotflag='on';
 fastplot='off';
@@ -405,6 +419,10 @@ if fud.MapToolboxFig==1
     gridm
 else
     grid on
+end
+gridcolorcheck=personalpreferences('latlongcolor');
+if ~isempty(gridcolorcheck)
+    gridm('GColor',gridcolorcheck);
 end
 set(gcf,'position',[ 218   618   560   380]);
 set(fud.DataAxisHandle,'Visible','off');

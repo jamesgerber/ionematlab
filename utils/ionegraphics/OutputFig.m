@@ -47,7 +47,12 @@ else
 end
 
 if nargin<3
-    ResFlag='-r300';
+    ResFlagcheck=personalpreferences('printingres');
+    if isempty(ResFlagcheck)
+        ResFlag='-r300';
+    else
+        ResFlag=ResFlagcheck;
+    end
 end
 
 % Is this figure made by IonESurf?  If so, expand the data axis

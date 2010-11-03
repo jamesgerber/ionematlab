@@ -70,11 +70,13 @@ if nargin==0 | isempty(cmap)
 end
 
 if nargin<2
-    lowercolor='robin';
+%    lowercolor='robin';
+    lowercolor='';
 end
 
 if nargin~=3
-    uppercolor='default';
+%    uppercolor='default';
+    uppercolor='';
 end
 
 ReverseMapFlag=0;

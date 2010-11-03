@@ -52,7 +52,9 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.figfilesave='on';%
 %   NSS.plotflag='on';  %allows for calling functions to turn off plotting
 %   NSS.fastplot='off'; %downsamples data/turns off printing for fast plots
-%   
+%   NSS.plotstates='off' %plots states as well as countries
+%   NSS.longlatlines='on' %turns lat long grid on or off
+%
 %  Example
 %
 %  SystemGlobals
@@ -189,6 +191,8 @@ end
 figfilesave='off';
 plotflag='on';
 fastplot='off';
+plotststates='off';
+longlatlines='on';
 %%now pull property values out of structure
 
 a=fieldnames(NSS);
@@ -409,16 +413,21 @@ IonESurf(Data);
 finemap(cmap,lowermap,uppermap);
 
 caxis([(cmin-minstep)  (cmax+minstep)]);
+if strcmp(plotstates,'on')
 if   PlotAllStates==0;
     AddStates(0.05);
 else
     AddStates(0.05,gcf,'all');
+end
 end
 fud=get(gcf,'UserData');
 if fud.MapToolboxFig==1
     gridm
 else
     grid on
+end
+if strcmp(longlatlines,'off')
+    gridm('off');
 end
 gridcolorcheck=personalpreferences('latlongcolor');
 if ~isempty(gridcolorcheck)

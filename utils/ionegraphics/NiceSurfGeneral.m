@@ -169,7 +169,7 @@ coloraxis=[];
 displaynotes='';
 description='';
 upcheck=personalpreferences('nodatacolor');
-if isempty(nodatacolor)
+if isempty(upcheck)
     uppermap='white';
 else
     uppermap=upcheck;

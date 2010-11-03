@@ -1,6 +1,7 @@
 function x=personalpreferences(variable,setting)
 % PERSONALPREFERENCES - get or set personal default settings for
-% NiceSurfGeneral
+% NiceSurfGeneral and finemap, oceancolor, nodatacolor, latlongcolor, and
+% printingres
 %
 %  Syntax
 %

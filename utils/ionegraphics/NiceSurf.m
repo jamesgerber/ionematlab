@@ -19,8 +19,8 @@ function NiceSurf(Data,Title,Units,coloraxis,colormap,FileName);
 %
 %  Example
 %
-%  SystemGlobals
-%  S=OpenNetCDF([IoneDataDir '/Crops2000/crops/maize_5min.nc'])
+%  
+%  S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
 %
 %  Area=S.Data(:,:,1);
 %  Yield=S.Data(:,:,2);
@@ -76,8 +76,6 @@ if length(coloraxis)<2
             coloraxis=[-(max(abs(tmp01))) (max(abs(tmp01)))]
         else
             
-            
-            
             f=coloraxis;
             
             tmp01=sort(tmp01);
@@ -91,7 +89,6 @@ if length(coloraxis)<2
         coloraxis=[min(tmp01) max(tmp01)]
     end
     
-    
     % make sure that coloraxis isn't really close to zero but not quite.
     % If so, then pull it down to zero.
     
@@ -100,21 +97,13 @@ if length(coloraxis)<2
     
     if c1 < (c2-c1)/10
         coloraxis(1)=min(c1,0);
-    end
-
-    
-    
-    
+    end 
 end
-
 
 Data=double(Data);
 
-
 UpperMap='white';
 LowerMap='emblue'
-
-
 
 cmax=coloraxis(2);
 cmin=coloraxis(1);
@@ -123,10 +112,7 @@ minstep= (cmax-cmin)*.001;
 Data(Data>cmax)=cmax;
 Data(cmin>Data)=cmin;
 
-
-
 OceanVal=coloraxis(1)-minstep;
-
 
 if numel(Data)==4320*2160
     % first, get any no-data points
@@ -151,6 +137,11 @@ caxis([(cmin-minstep)  (cmax+minstep)]);
 AddCoasts(0.1);
 
 fud=get(gcf,'UserData');
+
+fud.NiceSurfLowerCutoff=(cmin-minstep/2);
+fud.NiceSurfUpperCutoff=(cmax+minstep/2);
+set(gcf,'UserData',fud);
+
 if fud.MapToolboxFig==1
     gridm
 else

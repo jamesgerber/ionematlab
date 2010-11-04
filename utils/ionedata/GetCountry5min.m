@@ -69,15 +69,16 @@ end
 
 %% possibly need to correct longlist, latlist if we are using the mapping
 %% toolbox.
-try
-    CanMap=CheckForMappingToolbox;
-    if CanMap==1;
-        longlist=longlist*(180/pi);
-        latlist=latlist*(90/pi);
-    end
-catch
-    disp(['problem with Mapping Toolbox check in ' mfilename])
-end
+%% took this out ... only want to pass in real long/lat.  
+% try
+%     CanMap=CheckForMappingToolbox;
+%     if CanMap==1;
+%         longlist=longlist*(180/pi);
+%         latlist=latlist*(180/pi);
+%     end
+% catch
+%     disp(['problem with Mapping Toolbox check in ' mfilename])
+% end
 
 
 

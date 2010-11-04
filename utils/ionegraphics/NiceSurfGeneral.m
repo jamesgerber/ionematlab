@@ -57,8 +57,7 @@ function OS=NiceSurfGeneral(varargin);
 %
 %  Example
 %
-%  SystemGlobals
-%  S=OpenNetCDF([IoneDataDir '/Crops2000/crops/maize_5min.nc'])
+%  S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
 %
 %  Area=S.Data(:,:,1);
 %  Yield=S.Data(:,:,2);
@@ -170,28 +169,16 @@ logicalinclude=[];
 coloraxis=[];
 displaynotes='';
 description='';
-upcheck=personalpreferences('nodatacolor');
-if isempty(upcheck)
-    uppermap='white';
-else
-    uppermap=upcheck;
-end
-oceancheck=personalpreferences('oceancolor');
-if isempty(oceancheck)
-    lowermap='emblue';
-else
-    lowermap=oceancheck;
-end
+
+uppermap=callpersonalpreferences('nodatacolor');
+lowermap=callpersonalpreferences('oceancolor');
+resolution=callpersonalpreferences('printingres');
+
 colorbarpercent='off';
-rescheck=personalpreferences('printingres');
-if isempty(rescheck)
-    resolution='-r600';
-else resolution=rescheck;
-end
 figfilesave='off';
 plotflag='on';
 fastplot='off';
-plotststates='off';
+plotstates='off';
 longlatlines='on';
 %%now pull property values out of structure
 
@@ -414,25 +401,36 @@ finemap(cmap,lowermap,uppermap);
 
 caxis([(cmin-minstep)  (cmax+minstep)]);
 if strcmp(plotstates,'on')
-if   PlotAllStates==0;
-    AddStates(0.05);
-else
-    AddStates(0.05,gcf,'all');
-end
+    if   PlotAllStates==0;
+        AddStates(0.05);
+    else
+        AddStates(0.05,gcf,'all');
+    end
 end
 fud=get(gcf,'UserData');
+
+
+
+% let's store the cut-off values
+
+fud.NiceSurfLowerCutoff=(cmin+minstep/2);
+fud.NiceSurfUpperCutoff=(cmax-minstep/2);
+set(gcf,'UserData',fud);
+
+
+
 if fud.MapToolboxFig==1
     gridm
+    
+    if strcmp(longlatlines,'off')
+        gridm('off');
+    end
+    gridcolor=callpersonalpreferences('latlongcolor');
+    gridm('GColor',gridcolor);
 else
     grid on
 end
-if strcmp(longlatlines,'off')
-    gridm('off');
-end
-gridcolorcheck=personalpreferences('latlongcolor');
-if ~isempty(gridcolorcheck)
-    gridm('GColor',gridcolorcheck);
-end
+
 set(gcf,'position',[ 218   618   560   380]);
 set(fud.DataAxisHandle,'Visible','off');
 set(fud.DataAxisHandle,'Position',[0.00625 .2 0.9875 .7]);

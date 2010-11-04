@@ -54,30 +54,35 @@ switch(InputFlag)
             Scale=UDS.ScaleToDegrees;
         end
         [CountryNumbers,CountryNames]=...
-            GetCountry_halfdegree(x*Scale,y*Scale);
+            GetCountry5min(x*Scale,y*Scale);
         CountryName=CountryNames{1};
-        ii=find(CountryName==',');
-        if ~isempty(ii)
-            CountryName=CountryName(1:(ii(1)-1));
-        end
+%         ii=find(CountryName==',');
+%         if ~isempty(ii)
+%             CountryName=CountryName(1:(ii(1)-1));
+%         end
+     
         
-        %%% now set text in the console
-        % first delete old text
-        h=findobj('Tag','IonEConsoleText');
+        ht=outputtoionefigureconsole(UDS,CountryName,z,x,y);
+
         
-        %now new text
-        hc=UDS.ConsoleAxisHandle;
-        axes(hc)
-        set(hc,'xlim',[0 1]);
-        set(hc,'ylim',[0 1]);
-        ht=text(0.25,.5,['Country=' CountryName]);
-        set(ht,'Tag','IonEConsoleText');
-        ht=text(0.5,.5,['Value = ' num2str(z)]);
-        set(ht,'Tag','IonEConsoleText');
-        ht=text(0.75,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
-        set(ht,'Tag','IonEConsoleText');
-        axes(UDS.DataAxisHandle);  %make data axis handle current
-         
+        
+%         %%% now set text in the console
+%         % first delete old text
+%         h=findobj('Tag','IonEConsoleText');
+%         
+%         %now new text
+%         hc=UDS.ConsoleAxisHandle;
+%         axes(hc)
+%         set(hc,'xlim',[0 1]);
+%         set(hc,'ylim',[0 1]);
+%         ht=text(0.25,.5,['Country=' CountryName]);
+%         set(ht,'Tag','IonEConsoleText');
+%         ht=text(0.5,.5,['Value = ' num2str(z)]);
+%         set(ht,'Tag','IonEConsoleText');
+%         ht=text(0.75,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
+%         set(ht,'Tag','IonEConsoleText');
+%         axes(UDS.DataAxisHandle);  %make data axis handle current
+%          
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -101,32 +106,23 @@ if strcmp(get(src,'SelectionType'),'normal')
         z=UDS.Data(b1,a1);
         Scale=UDS.ScaleToDegrees;
     end
+%    [CountryNumbers,CountryNames]=...
+%        GetCountry_halfdegree(x*Scale,y*Scale);
     [CountryNumbers,CountryNames]=...
-        GetCountry_halfdegree(x*Scale,y*Scale);
+        GetCountry5min(x*Scale,y*Scale);
+
     CountryName=CountryNames{1};
-    ii=find(CountryName==',');
-    if ~isempty(ii)
-        CountryName=CountryName(1:(ii(1)-1));
-    end
+ %   ii=find(CountryName==',');
+ %   if ~isempty(ii)
+ %       CountryName=CountryName(1:(ii(1)-1));
+ %   end
     
-     %%% now set text in the console
-     % first delete old text
-     h=findobj('Tag','IonEConsoleText');
-     delete(h);
+
      
-     %now new text
-     hc=UDS.ConsoleAxisHandle;
-     axes(hc)
-     set(hc,'xlim',[0 1]);
-     set(hc,'ylim',[0 1]);
-     ht=text(0.25,.5,['Country=' CountryName]);
-     set(ht,'Tag','IonEConsoleText');
-     ht=text(0.5,.5,['Value = ' num2str(z)]);
-     set(ht,'Tag','IonEConsoleText');
-     ht=text(0.75,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
-     set(ht,'Tag','IonEConsoleText');
-     axes(UDS.DataAxisHandle);  %make data axis handle current
+      ht=outputtoionefigureconsole(UDS,CountryName,z,x,y);
+
      
+         
      assignin('base','Country',CountryName);
      assignin('base','Value',z);
      assignin('base','Lat',y);
@@ -181,12 +177,12 @@ if strcmp(get(src,'SelectionType'),'normal')
         Scale=UDS.ScaleToDegrees;
     end
     [CountryNumbers,CountryNames]=...
-        GetCountry_halfdegree(x*Scale,y*Scale);
+        GetCountry5min(x*Scale,y*Scale);
     CountryName=CountryNames{1};
-    ii=find(CountryName==',');
-    if ~isempty(ii)
-        CountryName=CountryName(1:(ii(1)-1));
-    end
+  %  ii=find(CountryName==',');
+  %  if ~isempty(ii)
+  %      CountryName=CountryName(1:(ii(1)-1));
+  %  end
      %%% now set text in the console
      % first delete old text
      h=findobj('Tag','IonEConsoleText');

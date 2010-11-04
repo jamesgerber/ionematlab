@@ -97,7 +97,14 @@ set(gcf,'PaperPositionMode','auto');
 drawnow;
 
 disp(['Saving ' FileName '.png']);
-print('-dpng',ResFlag,FileName);
+
+try
+    SaveFileType=personalpreferences('GraphicsFileType');
+catch
+    SaveFileType='-dpng';
+end
+
+print(SaveFileType,ResFlag,FileName);
 
 set(Hfig,'PaperPositionMode',ppm)
 

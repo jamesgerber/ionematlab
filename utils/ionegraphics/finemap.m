@@ -116,6 +116,8 @@ else
             lc=[0.0588    0.1176    0.5490];
         case 'emblue'
             lc=[0.451    0.616    0.878];
+        case {'gray'}
+            lc=[.8 .8 .8];
         otherwise
             error(['don''t know this lowercolor bound: ' lowercolor])
     end

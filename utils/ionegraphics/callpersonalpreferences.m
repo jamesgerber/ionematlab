@@ -3,6 +3,30 @@ function out=callpersonalpreferences(in);
 
 
 
+ListOfPreferences={'printingres','GraphicsFileType','oceancolor',...
+    'nodatacolor','latlongcolor'};
+%% if called with no arguments, tell user what defaults are
+if nargin==0
+    for j=1:length(ListOfPreferences)
+        
+        val=callpersonalpreferences(ListOfPreferences{j});
+        
+        if isstr(val)
+        disp(sprintf('%20s =     ''%s'' ',...
+            ['personalpreferences(''' ListOfPreferences{j} '''' ')' ],...
+            val));
+        else
+        disp(sprintf('%20s =      [%s]',...
+            ['personalpreferences(''' ListOfPreferences{j} '''' ')' ],...
+            num2str(val)));
+        end
+    end
+    return
+end
+
+    
+
+
 
 %% OutputFig
 printingres='-r300';

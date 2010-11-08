@@ -25,6 +25,12 @@ function [Long,Lat,FiveMinGridCellAreas]=GetFiveMinGridCellAreas;
 % 
  FiveMinGridCellAreasha=FiveMinGridAreaAtEquator*ones(size(Long))*cosd(Lat.');
 FiveMinGridCellAreas=FiveMinGridCellAreasha;
+
+
+if nargout==1
+    Long=FiveMinGridCellAreas;
+end
+
  return
  
  

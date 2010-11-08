@@ -36,7 +36,7 @@ function OS=NiceSurfGeneral(varargin);
 %
 %   NSS.Units ['']
 %   NSS.TitleString
-%   NSS.FileName
+%   NSS.FileName   = if 'on' will use titlestring
 %   NSS.cmap
 %   NSS.LongLatBox
 %   NSS.DisplayNotes  - this will be placed on the lower left of graph
@@ -511,6 +511,15 @@ if ~isempty(displaynotes)
 end
 
 hideui
+
+%% did user want to print?
+
+if isequal(filename,'on')
+    filename=titlestring;
+end
+
+
+
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
     if isequal(figfilesave,'on')

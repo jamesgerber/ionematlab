@@ -52,8 +52,9 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.figfilesave='on';%
 %   NSS.plotflag='on';  %allows for calling functions to turn off plotting
 %   NSS.fastplot='off'; %downsamples data/turns off printing for fast plots
-%   NSS.plotstates='off' %plots states as well as countries
 %   NSS.longlatlines='on' %turns lat long grid on or off
+%   NSS.plotstates='bricnafta' %adm bounds.
+%         {'off','countries','bricnafta','states','gadm0','gadm1','gadm2'}
 %
 %  Example
 %
@@ -156,7 +157,7 @@ ListOfProperties={
     'units','titlestring','filename','cmap','longlatbox','plotarea', ...
     'logicalinclude','coloraxis','displaynotes','description',...
     'uppermap','lowermap','colorbarpercent','resolution',...
-    'figfilesave','plotflag','fastplot'};
+    'figfilesave','plotflag','fastplot','plotstates'};
 
 %% set defaults for these properties
 units='';
@@ -178,7 +179,7 @@ colorbarpercent='off';
 figfilesave='off';
 plotflag='on';
 fastplot='off';
-plotstates='off';
+plotstates='bricnafta';
 longlatlines='on';
 %%now pull property values out of structure
 
@@ -249,11 +250,11 @@ else
         case {'india'}
             longlatbox=[65 100 5 40];
             filename=[filename '_india'];
-            ylim=.35%.32;	    
+            ylim=.35%.32;
         case {'indonesia'}
             longlatbox=[90 145 -15 10];
             filename=[filename '_indonesia'];
-            ylim=.27;%.32;	    	    
+            ylim=.27;%.32;
         case {'chinatropical'}
             longlatbox=[80 140 10 35];
             filename=[filename '_chinatropical'];
@@ -261,12 +262,12 @@ else
         case {'mexico'}
             longlatbox=[-125 -80 10 35];
             filename=[filename '_mexico'];
-            ylim=.27;%.32;	    
+            ylim=.27;%.32;
         case {'southafrica'}
             longlatbox=[15 40 -40 -20];
             filename=[filename '_southafrica'];
-            ylim=.22;	    
-     otherwise
+            ylim=.22;
+        otherwise
             error(['Don''t recognize plotarea ' plotarea]);
     end
 end
@@ -389,7 +390,7 @@ Data(isnan(Data))=NoDataLandVal;
 
 if isequal(plotflag,'off')   %if nargout ~= 0, need to keep going so as to define NSS
     OS.Data=Data;
-   return
+    return
 end
 
 
@@ -400,13 +401,24 @@ IonESurf(Data);
 finemap(cmap,lowermap,uppermap);
 
 caxis([(cmin-minstep)  (cmax+minstep)]);
-if strcmp(plotstates,'on')
-    if   PlotAllStates==0;
-        AddStates(0.05);
-    else
+
+
+%% plotstates section
+
+%plotstates
+switch(lower(plotstates))
+    
+    case {'off','none'}
+        % do nothing
+    case {'bric','bricnafta','nafta'}
+        AddStates(0.05,gcf,'bricnafta');
+    case {'world','lev0','gadm0'}
         AddStates(0.05,gcf,'all');
-    end
+    otherwise
+        error(['have not yet implemented this in AddStates'])
 end
+
+
 fud=get(gcf,'UserData');
 
 
@@ -454,7 +466,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     g2=longlatbox(2);
     t1=longlatbox(3);
     t2=longlatbox(4);
-
+    
     if fud.MapToolboxFig==1
         
         trustmatlab=1
@@ -476,7 +488,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         % no mapping toolbox.  let's make things easy.
         
         axis([g1 g2 t1 t2])
-                
+        
     end
     ht=text(0, ylim,titlestring)
 else

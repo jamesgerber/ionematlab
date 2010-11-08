@@ -29,6 +29,7 @@ function [outline, indices] = CountryCodetoOutline(countrycode)
 %
 % see also StandardCountryNames.m
 
+if nargin==0;help(mfilename);return;end
 
 persistent snu_htable state_htable ctry_htable ctry_outlines
 

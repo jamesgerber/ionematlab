@@ -4,7 +4,7 @@ function out=callpersonalpreferences(in);
 
 
 ListOfPreferences={'printingres','GraphicsFileType','oceancolor',...
-    'nodatacolor','latlongcolor'};
+    'nodatacolor','latlongcolor','maxnumfigsNSG'};
 %% if called with no arguments, tell user what defaults are
 if nargin==0
     for j=1:length(ListOfPreferences)
@@ -37,7 +37,7 @@ GraphicsFileType='-dpng';% '-djpg' ; '-dtiff';
 oceancolor='emblue';
 nodatacolor='gray';
 latlongcolor=[.5 .5 .5];
-
+maxnumfigsNSG=3;
 try
     out=personalpreferences(in);
     return

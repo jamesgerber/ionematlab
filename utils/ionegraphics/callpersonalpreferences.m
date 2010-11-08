@@ -37,7 +37,7 @@ GraphicsFileType='-dpng';% '-djpg' ; '-dtiff';
 oceancolor='emblue';
 nodatacolor='gray';
 latlongcolor=[.5 .5 .5];
-maxnumfigsNSG=3;
+maxnumfigsNSG=0;
 try
     out=personalpreferences(in);
     return

@@ -531,13 +531,15 @@ if isequal(filename,'on')
 end
 
 
+MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
+
 
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
     if isequal(figfilesave,'on')
         hgsave(filename);
     end
-    if length(get(allchild(0)))>2
+    if length(get(allchild(0)))>MaxNumFigs
         close(gcf)
     end
 end

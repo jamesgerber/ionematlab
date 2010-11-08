@@ -12,15 +12,19 @@ function [TE,TMI,PEmonthly]= MakeThornthwaitePE(tmean,annualmeanprec);
 %[Long,Lat,prec]=OpenNetCDF(...
 %    '/Library/IonE/data/Climate/WorldClim_5min_prec.nc');
 %
-%       [TE,TMI]= MakeThornthwaitePE(tmean,prec);
+%    annualmeanprec=sum(prec,4)/12;
+%
+%       [TE,TMI]= MakeThornthwaitePE(temp,annualmeanprec);
 %       save(['Thornthwaite'], 'TE','TMI')
 %       clear DAS
 %       DAS.DateProcessed=date;
 %       DataName=['TE'];
-%       FileName=['TE'.nc'];
+%       FileName=['TE.nc'];
 %       DAS.Description=['Thornthwaite Potential Evaporation']
 %       WriteNetCDF(Long,Lat,TE,DataName,FileName,DAS);
 %       end
+
+%      annualmeantemp=sum(tmean,4)/12;
 
 
 if nargin<2;help(mfilename);return;end
@@ -28,7 +32,6 @@ if nargin<2;help(mfilename);return;end
 %TEMatrix         =zeros(size(tmean,1),size(tmean,2));;
 AnnualThermalIndex       =zeros(size(tmean,1),size(tmean,2));;
 
-%annualmeantemp=sum(tmean,4)/12;
 %annualmeanprec=sum(prec,4)/12;
 
 [Long,LatVector]=InferLongLat(tmean(:,:,1,1));

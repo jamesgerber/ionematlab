@@ -71,18 +71,13 @@ end
 
 if nargin<2
 %    lowercolor='robin';
-    lowercolor='';
-    if ~isempty(personalpreferences('oceancolor'))
-        uppercolor=personalpreferences('oceancolor');
-    end
+    lowercolor=callpersonalpreferences('oceancolor');
+   
 end
 
 if nargin~=3
 %    uppercolor='default';
-    uppercolor='';
-    if ~isempty(personalpreferences('oceancolor'))
-        uppercolor=personalpreferences('nodatacolor');
-    end
+    uppercolor=callpersonalpreferences('nodatacolor');;
 end
 
 ReverseMapFlag=0;

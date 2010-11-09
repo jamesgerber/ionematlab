@@ -16,9 +16,17 @@ function x=personalpreferences(variable,setting)
 %     personalpreferences('printingres')
 %     personalpreferences('printingres','-r555')
 %     personalpreferences('printingres')
+%     personalpreferences('maxnumfigsNSG')
 %
 %
 %
+
+
+if nargin==0
+    callpersonalpreferences
+    return
+end
+
 
 persistent latlongcolor printingres GraphicsFileType oceancolor ...
     maxnumfigsNSG nodatacolor
@@ -42,14 +50,16 @@ end
 
 if nargin==2
     
-    disp(['Setting ' variable '=''' setting ''';']);
     
     a=whos(variable);
     if isequal(a.class,'double')
+        disp(['Setting ' variable '=' num2str(setting) ';']);
         eval([variable '=' num2str(setting) ';']);
+        
     else
         
-        
+        disp(['Setting ' variable '=''' setting ''';']);
+ 
         eval([variable '=''' setting ''';']);
     end
     

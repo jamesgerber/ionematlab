@@ -44,9 +44,9 @@ if nargin==2
     
     disp(['Setting ' variable '=''' setting ''';']);
     
-    a=whos(variable)
+    a=whos(variable);
     if isequal(a.class,'double')
-        eval([variable '=''' num2str(setting) ''';']);
+        eval([variable '=' num2str(setting) ';']);
     else
         
         

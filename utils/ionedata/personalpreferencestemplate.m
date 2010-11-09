@@ -20,21 +20,11 @@ function x=personalpreferences(variable,setting)
 %
 %
 
-persistent latlongcolor printingres GraphicsFileType oceancolor nodatacolor
+persistent latlongcolor printingres GraphicsFileType oceancolor ...
+    maxnumfigsNSG nodatacolor
 
 
-if nargin==2
-    disp(['Setting ' variable '=''' setting ''';']);
-    eval([variable '=''' setting ''';']);
-    return
-end
-
-
-
-
-if isempty(latlongcolor) 
-    
-    
+if isempty(latlongcolor)   
     %% OutputFig
     printingres='-r300';
     GraphicsFileType='-dpng';% '-djpg' ; '-dtiff';
@@ -44,8 +34,31 @@ if isempty(latlongcolor)
     oceancolor='emblue';
     nodatacolor='gray';
     latlongcolor=[.3 .3 .3];
+    maxnumfigsNSG=3;
 
 end
+
+
+
+if nargin==2
+    
+    disp(['Setting ' variable '=''' setting ''';']);
+    
+    a=whos(variable)
+    if isequal(a.class,'double')
+        eval([variable '=''' num2str(setting) ''';']);
+    else
+        
+        
+        eval([variable '=''' setting ''';']);
+    end
+    
+    return
+end
+
+
+
+
 
 
 

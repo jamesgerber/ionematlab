@@ -307,6 +307,7 @@ if isequal(fastplot,'on')
         Data=Data(1:2:end,1:2:end);
         logicalinclude=logicalinclude(1:2:end,1:2:end);
     end
+    disp(['Turning off saving file ... fastplot is on'])
     figfilesave='off';
     filename='';
 end

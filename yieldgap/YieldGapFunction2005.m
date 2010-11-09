@@ -162,9 +162,9 @@ else
     
     %%% now read in 2005 Yields
     %Yield=CropData.Data(:,:,2);
-    yieldpath=[IoneDataDir '/yield2005/2005' cropname '.nc'];
+    yieldpath=[IoneDataDir '/yield2005/' cropname '2005_5min.nc'];
     yielddata=OpenNetCDF(yieldpath);
-    Yield=yielddata.Data;
+    Yield=yielddata.Data(:,:,2);
     
     
     clear CropData

@@ -45,6 +45,11 @@ catch
 disp('Did not have successful call to personal preferences ... calling default')
 
 disp(' You probably need to copy personalpreferencestemplate.m to ~/Documents/MATLAB !')
+S=which('startup');
+S=S(1:end-9);
+R=which('personalpreferencestemplate.m');
+disp(['Please execute in matlab command window: '])
+disp(['!cp ' R '  ' S 'personalpreferences.m ']);
 
 eval(['out=' in ';']);
 

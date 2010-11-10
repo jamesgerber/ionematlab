@@ -11,18 +11,25 @@ function varargout=DataStoreGateway(name,data)
 %   DS=OpenNetCDF(filestr)
 %
 
-ii=CropMaskIndices;
-
 if nargout==1
     disp(['retrieving data for ' name])
   
   load(name);
   
+  tmp = length(store);
+  switch tmp
+      case 2069588
+          ii = AgriMaskIndices;
+      case 920953
+          ii = CropMaskIndices;
+  end
+    
   data=-1*nan(4320,2160);
   
   data(ii)=store(:);  %note that store is dataname within saved file
     varargout{1}=data;
 else
+    ii=CropMaskIndices;
     N=length(ii);
     store=data(ii);
     save(name,'store');

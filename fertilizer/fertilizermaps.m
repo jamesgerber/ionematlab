@@ -73,9 +73,6 @@ path = [IoneDataDir 'misc/area_ha_5min.nc'];
 [DS] = OpenNetCDF(path);
 gridcellareas = DS.Data;
 
-% load World Bank income classification info
-WB = ReadGenericCSV('wbiclass.csv');
-
 
 
 %% pre-processing of input file to speed up data lookup
@@ -1320,7 +1317,7 @@ for n = 1:3
             end
             
             % save the scaling map
-            DataStoreGateway('scalingmap_SNP1', scalingmap);
+            DataStoreGateway(['scalingmap_' nutrient '_SNP1'], scalingmap);
             
             % save the SNP1 scaled total consumption map;
             DataStoreGateway(['totalcons_' nutrient '_scaled_SNP1'], ...
@@ -1407,7 +1404,8 @@ for n = 1:3
             end
             
             % save the scaling map
-            DataStoreGateway('scalingmap_SNP1_FAO', scalingmap);
+            DataStoreGateway(['scalingmap_' nutrient 'SNP1_FAO'], ...
+                scalingmap);
             
             % now loop through crops and apply the FAO scalars
             
@@ -1769,7 +1767,7 @@ for n = 1:3
             end
             
             % save the scaling map
-            DataStoreGateway('scalingmap_SNP2', scalingmap);
+            DataStoreGateway(['scalingmap_' nutrient '_SNP2'], scalingmap);
             
             % save the SNP2 scaled total consumption map;
             DataStoreGateway(['totalcons_' nutrient '_scaled_SNP2'], ...
@@ -1855,7 +1853,8 @@ for n = 1:3
             end
             
             % save the scaling map
-            DataStoreGateway('scalingmap_SNP2_FAO', scalingmap);
+            DataStoreGateway(['scalingmap_' nutrient '_SNP2_FAO'], ...
+                scalingmap);
             
             % now loop through crops and apply the FAO scalars
             

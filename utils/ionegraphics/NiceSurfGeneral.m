@@ -83,7 +83,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NiceSurfGeneral(Yield,NSS)
 %
 %
-%   Tricky syntax:
+%   Tricky syntax for getting coloraxis.
 %   OSS=NiceSurfGeneral(DATA,'coloraxis',[.99],'plotflag','off')
 %   OSS will contain field coloraxis, and no plot will be made.
 %

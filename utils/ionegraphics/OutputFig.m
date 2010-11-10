@@ -81,9 +81,15 @@ catch
 end
 
 
+try
+    SaveFileType=personalpreferences('GraphicsFileType');
+catch
+    SaveFileType='-dpng';
+end
+
 
 if ForcePlots==0
-    [filename,pathname]=uiputfile('*.png','Choose File Name',InitGuess);
+    [filename,pathname]=uiputfile('*','Choose File Name',InitGuess);
     FileName=[pathname  filename];
 else
     FileName=InitGuess;
@@ -96,13 +102,7 @@ set(gcf,'PaperPositionMode','auto');
 
 drawnow;
 
-disp(['Saving ' FileName '.png']);
-
-try
-    SaveFileType=personalpreferences('GraphicsFileType');
-catch
-    SaveFileType='-dpng';
-end
+disp(['Saving ' FileName]);
 
 print(SaveFileType,ResFlag,FileName);
 

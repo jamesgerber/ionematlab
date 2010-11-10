@@ -1,5 +1,16 @@
+% webdatascript - make an html file of ione data
+
+% define the colormaps to be used in the KMZs
+AREACMAP=flipud(autumn(100));
+YIELDCMAP=finemap('brightyield');
+mkdir('outfiles/area');
+mkdir('outfiles/yield');
 load list
-tmp=opennetcdf([list{1} '_5min.nc']);
+% loads a list of the names of each crop (maize, vegetablenes, etc)
+
+tmp=opennetcdf([iddstring 'Crops2000/Crops/' list{1} '_5min.nc']);
+
+% create 2D 4320x2160 matrices of lat and long values
 Long1=zeros(4320,2160);
 for i=1:4320
     Long1(i,1:2160)=tmp.Long(i,1);
@@ -10,44 +21,98 @@ for i=1:2160
     Lat1(1:4320,i)=tmp.Lat(i,1);
 end
 Lat1=rot90(Lat1);
+
 for i=1:length(list)
+    
+    % skips i=128; list(128), coir, is associated with bad data
     i=i+(i==128);
-    waitbar(i/length(list),['Processing ' list{i}]);
-    tmp=opennetcdf([iddstring 'Crops2000/Crops/' list{i} '_5min.nc']);
+    ThisCropName=list{i};
+    waitbar(i/length(list),['Processing ' ThisCropName]);
+    
+    % get the netcdf associated with crop ThisCropName
+    tmp=opennetcdf([iddstring 'Crops2000/Crops/' ThisCropName '_5min.nc']);
+    
+    % multiply area by 100 to convert to percentage, rather than fraction
     area=tmp.Data(:,:,1)*100;
+    
     yield=tmp.Data(:,:,2);
-    tmps=strrep(strrep(strrep(list{i},'nes', ' (other)'),'for',' (for silage)'),'etc',', etc.');
-%     T.area=area;
-%     T.yield=yield;
-%     copyfile([list{1} '_5min.nc'],['outfiles/area/' list{i} '_data.nc']);
-%     AMTSurf(area,['Percentage of land dedicated to ' tmps ' cultivation'],...
-%         ['outfiles/area/' list{i} '_area.png']);
-%     AMTSurf(yield,['Average regional ' tmps ' yield (tonnes/ha)'],...
-%         ['outfiles/yield/' list{i} '_yield.png']);
-%     area=area.*(area<1e20);
-%     amax=percentile(area,98);
-%     area=area*100/percentile(area,98);
-%     area(area>percentile(area,98))=percentile(area,98);
-%     yield=yield.*(yield<1e20);
-%     ymax=percentile(yield,98);
-%     yield=yield*100/percentile(yield,98);
-%     yield(yield>percentile(yield,98))=percentile(yield,98);
-%     mkdir('outfiles/area',[list{i} '_overlay']);
-%     mkdir(['outfiles/area/' list{i} '_overlay'],'file');
-%     imwrite(ind2rgb(round(rot90(fliplr(area))),summer(100)),...
-%         ['outfiles/area/' list{i} '_overlay/file/overlay.png'],'Alpha',rot90(fliplr(yield))/125+.2*(rot90(fliplr(area))>0));
-%     mkdir('outfiles/yield',[list{i} '_overlay']);
-%     mkdir(['outfiles/yield/' list{i} '_overlay'],'file');
-%     imwrite(ind2rgb(round(rot90(fliplr(yield))),autumn(100)),...
-%         ['outfiles/yield/' list{i} '_overlay/file/overlay.png'],'Alpha',rot90(fliplr(area))/125+.2*(rot90(fliplr(yield))>0));
-%     makeLegend(summer(100),list{i},0,0.0,amax,0.0,ymax);
-%     makeLegend(autumn(100),list{i},1,0.0,ymax,0.0,amax);
-    fid=fopen(['outfiles/area/' list{i} '_overlay/doc.kml'],'w');
+    
+    % format the name to look user-friendly
+    tmps=strrep(strrep(strrep(ThisCropName,'nes', ' (other)'),'for',' (for silage)'),'etc',', etc.');
+    
+    % copy the current crop's netcdf into outfiles/area, name it
+    % [crop]_data.nc
+    copyfile([iddstring 'Crops2000/Crops/' ThisCropName '_5min.nc'],['outfiles/area/' ThisCropName '_data.nc']);
+    
+    % use AMTSurf to save png maps of the current crop's area and yield,
+    % save the results in outfiles/area and outfiles/yield as
+    % [crop]_area.png and [crop]_yield.png
+    AMTSurf(area,['Percentage of land dedicated to ' tmps ' cultivation'],...
+        ['outfiles/area/' ThisCropName '_area.png']);
+    AMTSurf(yield,['Average regional ' tmps ' yield (tonnes/ha)'],...
+        ['outfiles/yield/' ThisCropName '_yield.png']);
+    
+    % format the data: remove absurdly large placeholder values, scale so
+    % max is 100, chop off top 2%
+    % for area:
+    area=area.*(area<1e20); % remove placeholders (replace with 0)
+    amax=percentile(area,98); % find the current 98th percentile
+    area=area*100/percentile(area,98); % scale data so that its 98% is 100
+    area(area>percentile(area,98))=percentile(area,98); % cap values at 98%
+    % for yield:
+    yield=yield.*(yield<1e20); % remove placeholders (replace with 0)
+    ymax=percentile(yield,98); % find the current 98th percentile
+    yield=yield*100/percentile(yield,98); % scale data so that its 98% is 100
+    yield(yield>percentile(yield,98))=percentile(yield,98); % cap values at 98%
+    
+    % for area:
+    % make a directory in outfiles/area called [crop]_overlay (this will be
+    % used to store files for the kmz)
+    mkdir('outfiles/area',[ThisCropName '_overlay']);
+    
+    % make a directory in outfiles/area/[crop]_overlay called file
+    mkdir(['outfiles/area/' ThisCropName '_overlay'],'file');
+    
+    % save the data as a png image, area determining the color and yield
+    % determining the transparency
+    gridtoimage(area,AREACMAP,yield,['outfiles/area/' ThisCropName '_overlay/file/overlay.png']);
+ 
+  
+  %MakeGlobalOverlay(Data,colormap,coloraxis,FullFileName,BaseTransparency);
+   
+%       area=tmp.Data(:,:,1)*100;
+%       area(area==0)=NaN;
+%   MakeGlobalOverlay(area(area>1),'area2',[0 100],['outfiles/area/' ThisCropName '_overlay/file/overlay.png'],0.5);
+
+  
+  
+    % for yield:
+    % make a directory in outfiles/yield called [crop]_overlay (this will be
+    % used to store files for the kmz)
+    mkdir('outfiles/yield',[ThisCropName '_overlay']);
+    
+    % make a directory in outfiles/yield/[crop]_overlay called file
+    mkdir(['outfiles/yield/' ThisCropName '_overlay'],'file');
+    
+    % save the data as a png image, yield determining the color and area
+    % determining the transparency
+    gridtoimage(yield,YIELDCMAP,area,['outfiles/yield/' ThisCropName '_overlay/file/overlay.png']);
+%      yield=tmp.Data(:,:,2);
+% yield(yield==0)=NaN;
+%      MakeGlobalOverlay(yield(yield>1),'brightyield',[0 100],['outfiles/yield/' ThisCropName '_overlay/file/overlay.png'],0.5);
+
+    % use helper function makeLegend to make legends and IonE logos appear
+    % in outfiles/area/[crop]_overlay/file and
+    % outfiles/yield/[crop]_overlay/file
+    makeLegend(AREACMAP,ThisCropName,0,0.0,amax,0.0,ymax);
+    makeLegend(finemap('brightyield'),ThisCropName,1,0.0,ymax,0.0,amax);
+    
+    % write a kml file for area (outfiles/area/[crop]_overlay/doc.kml)
+    fid=fopen(['outfiles/area/' ThisCropName '_overlay/doc.kml'],'w');
     fprintf(fid,['<?xml version="1.0" encoding="UTF-8"?>\n'...
         '<kml xmlns="http://www.opengis.net/kml/2.2">\n'...
-        '<Folder>\n'...
+        '<Folder>\n'... % these \n newline indicators are not necessary but make it look nicer
         ['<name>Area: ' tmps '</name>\n']...
-        ['<description>Global ' tmps ' area data</description>\n']...
         '<GroundOverlay>\n'...
         '<name>Large-scale overlay on terrain</name>\n'...
         '<description>Overlay shows amount of land used for ' tmps ' cultivation. Transparency corresponds to yield.\n'...
@@ -70,7 +135,7 @@ for i=1:length(list)
         '<overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>\n'...
         '<screenXY x="0" y="1" xunits="fraction" yunits="fraction"/>\n'...
         '<rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>\n'...
-        '<size x="210" y="120" xunits="pixels" yunits="pixels"/>\n'...
+        '<size x="180" y="66" xunits="pixels" yunits="pixels"/>\n'...
         '</ScreenOverlay>\n'...
         '<ScreenOverlay>\n'...
         '<name>GLI</name>\n'...
@@ -84,17 +149,21 @@ for i=1:length(list)
         '</ScreenOverlay>\n'...
         '</Folder>\n'...
         '</kml>\n']);
-    zip(['outfiles/area/' list{i} '_area.zip'],...
+    
+    % zip outfiles/area/[crop]_overlay and call the resulting file
+    % [crop]_area.kmz
+    zip(['outfiles/area/' ThisCropName '_area.zip'],...
         {'doc.kml','file/overlay.png','file/legend.png','file/logo.png'},...
-        ['outfiles/area/' list{i} '_overlay']);
-    movefile(['outfiles/area/' list{i} '_area.zip'],...
-        ['outfiles/area/' list{i} '_area.kmz']);
-    fid=fopen(['outfiles/yield/' list{i} '_overlay/doc.kml'],'w');
+        ['outfiles/area/' ThisCropName '_overlay']);
+    movefile(['outfiles/area/' ThisCropName '_area.zip'],...
+        ['outfiles/area/' ThisCropName '_area.kmz']);
+
+    % write a kml file for yield (outfiles/yield/[crop]_overlay/doc.kml)
+    fid=fopen(['outfiles/yield/' ThisCropName '_overlay/doc.kml'],'w');
     fprintf(fid,['<?xml version="1.0" encoding="UTF-8"?>\n'...
         '<kml xmlns="http://www.opengis.net/kml/2.2">\n'...
         '<Folder>\n'...
         ['<name>Yield: ' tmps '</name>\n']...
-        ['<description>Global ' tmps ' yield data</description>\n']...
         '<GroundOverlay>\n'...
         '<name>Large-scale overlay on terrain</name>\n'...
         '<description>Overlay shows ' tmps ' yield. Transparency corresponds to amount of land used for its cultivation.\n'...
@@ -117,7 +186,7 @@ for i=1:length(list)
         '<overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>\n'...
         '<screenXY x="0" y="1" xunits="fraction" yunits="fraction"/>\n'...
         '<rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>\n'...
-        '<size x="210" y="120" xunits="pixels" yunits="pixels"/>\n'...
+        '<size x="180" y="48" xunits="pixels" yunits="pixels"/>\n'...
         '</ScreenOverlay>\n'...
         '<ScreenOverlay>\n'...
         '<name>GLI</name>\n'...
@@ -131,11 +200,16 @@ for i=1:length(list)
         '</ScreenOverlay>\n'...
         '</Folder>\n'...
         '</kml>\n']);
-    zip(['outfiles/yield/' list{i} '_yield.zip'],...
+    
+    % zip outfiles/area/[crop]_overlay and call the resulting file
+    % [crop]_area.kmz
+    zip(['outfiles/yield/' ThisCropName '_yield.zip'],...
         {'doc.kml','file/overlay.png','file/legend.png','file/logo.png'},...
-        ['outfiles/yield/' list{i} '_overlay']);
-    movefile(['outfiles/yield/' list{i} '_yield.zip'],...
-        ['outfiles/yield/' list{i} '_yield.kmz']);
+        ['outfiles/yield/' ThisCropName '_overlay']);
+    movefile(['outfiles/yield/' ThisCropName '_yield.zip'],...
+        ['outfiles/yield/' ThisCropName '_yield.kmz']);
+    
+    % close all figures still open to prevent clutter
     fclose('all');
     close all hidden
 end

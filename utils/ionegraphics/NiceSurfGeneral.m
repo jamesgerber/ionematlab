@@ -1,6 +1,7 @@
 function OS=NiceSurfGeneral(varargin);
 % NICESURFGENERAL
 %
+%
 % Syntax:
 %    NiceSurfGeneral(Data);
 %    NiceSurfGeneral(Data,STRUCT);

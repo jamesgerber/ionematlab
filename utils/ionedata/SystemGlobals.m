@@ -6,13 +6,19 @@
 MISSINGDATAVALUE=-9E9;
 
 
-username=getenv('USER');
+if ismac
+    username=getenv('USER');
+else
+    username=getenv('username');
+end
 
 switch username
     case {'muell512','cass0131'}
         IoneDataDir=['~/Library/IonE/data/'];
     case 'jsgerber'
         IoneDataDir=['/Library/IonE/data/'];
+	case 'mattj'
+		IoneDataDir=['C:\Users\mattj\Documents\UMN\ionedata\'];
     otherwise
         IoneDataDir=['/Library/IonE/data/'];
 end

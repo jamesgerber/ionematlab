@@ -99,10 +99,10 @@ zoom(hfig,'on');
 % calculate place to put figure
 if hfig <30
     XStart=100+30*hfig;
-    YStart=400-20*hfig;
+    YStart=350-20*hfig;
 else
     XStart=100;
-    YStart=400;
+    YStart=350;
 end
 
 pos=get(hfig,'position');

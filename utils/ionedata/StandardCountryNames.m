@@ -99,6 +99,10 @@ switch MatchType
         Row=GetRow(Input,Sage3);
     case 'iso3'
         Row=GetRow(Input,GADM_ISO);
+    case 'name_fao'
+        Row=GetRow(Input,GADM_NAME_FAO);
+    otherwise
+        error(['don''t yet have this match type'])
 end
 
 

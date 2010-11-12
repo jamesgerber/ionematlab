@@ -22,8 +22,8 @@ for i=1:2160
 end
 Lat1=rot90(Lat1);
 
-%for i=1:length(list)
-    for i=3
+for i=1:length(list)
+  %  for i=3
     % skips i=128; list(128), coir, is associated with bad data
     i=i+(i==128);
     ThisCropName=list{i};
@@ -99,7 +99,8 @@ Lat1=rot90(Lat1);
 %    gridtoimage(yield,YIELDCMAP,area,['outfiles/yield/' ThisCropName '_overlay/file/overlay.png']);
 %      yield=tmp.Data(:,:,2);
 % yield(yield==0)=NaN;
-      MakeGlobalOverlay(yield(yield>1),'brightyield',[0 100],['outfiles/yield/' ThisCropName '_overlay/file/overlay.png'],0.5);
+   %   MakeGlobalOverlay(yield(yield>1),'brightyield',[0 100],['outfiles/yield/' ThisCropName '_overlay/file/overlay.png'],0.5);
+ MakeGlobalOverlay(yield,'brightyield',[0 100],['outfiles/yield/' ThisCropName '_overlay/file/overlay.png'],0.5);
 
     % use helper function makeLegend to make legends and IonE logos appear
     % in outfiles/area/[crop]_overlay/file and

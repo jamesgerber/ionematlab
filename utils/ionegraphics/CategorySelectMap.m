@@ -17,8 +17,12 @@ function CategorySelectMap(Data,cmap,backdata,bmap);
 %
 % Example
 %
+%  load([iddstring 'YieldGap/AreaFiltered/' ...
+%     'YieldGap_Maize_MaxYieldPct_95_AreaFilteredClimateSpace_10x10_prec.mat']);
+%  data=OS.ClimateMask;
+%
 %  load([iddstring 'YieldGap/AreaFiltered_Soil/' ...
-%     'YieldGap_Maize_MaxYieldPct_95_AreaFilteredClimateSpaceWithSoil_10x10_prec.mat']);
+%     'YieldGap_Maize_MaxYieldPct_95_AreaFilteredClimateSpaceWithSoil_5x5_prec.mat']);
 %  data=OS.ClimateMask;
 %  data=data(1:2:end,1:2:end);
 % CategorySelectMap(data)

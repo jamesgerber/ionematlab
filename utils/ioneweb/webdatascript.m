@@ -23,7 +23,7 @@ end
 Lat1=rot90(Lat1);
 
 for i=1:length(list)
-  %  for i=3
+%    for i=3
     % skips i=128; list(128), coir, is associated with bad data
     i=i+(i==128);
     ThisCropName=list{i};
@@ -47,8 +47,10 @@ for i=1:length(list)
     % use AMTSurf to save png maps of the current crop's area and yield,
     % save the results in outfiles/area and outfiles/yield as
     % [crop]_area.png and [crop]_yield.png
+    areacolormap=finemap('area2');
+    
     AMTSurf(area,['Percentage of land dedicated to ' tmps ' cultivation'],...
-        ['outfiles/area/' ThisCropName '_area.png']);
+        ['outfiles/area/' ThisCropName '_area.png'],areacolormap);
     AMTSurf(yield,['Average regional ' tmps ' yield (tonnes/ha)'],...
         ['outfiles/yield/' ThisCropName '_yield.png']);
     
@@ -96,11 +98,11 @@ for i=1:length(list)
     
     % save the data as a png image, yield determining the color and area
     % determining the transparency
-%    gridtoimage(yield,YIELDCMAP,area,['outfiles/yield/' ThisCropName '_overlay/file/overlay.png']);
-%      yield=tmp.Data(:,:,2);
-% yield(yield==0)=NaN;
+ %   gridtoimage(yield,YIELDCMAP,area,['outfiles/yield/' ThisCropName '_overlay/file/overlay.png']);
+      yield=tmp.Data(:,:,2);
+ yield(yield==0)=NaN;
    %   MakeGlobalOverlay(yield(yield>1),'brightyield',[0 100],['outfiles/yield/' ThisCropName '_overlay/file/overlay.png'],0.5);
- MakeGlobalOverlay(yield,'brightyield',[0 100],['outfiles/yield/' ThisCropName '_overlay/file/overlay.png'],0.5);
+ MakeGlobalOverlay(yield,'brightyield',[.98],['outfiles/yield/' ThisCropName '_overlay/file/overlay.png'],0.5);
 
     % use helper function makeLegend to make legends and IonE logos appear
     % in outfiles/area/[crop]_overlay/file and

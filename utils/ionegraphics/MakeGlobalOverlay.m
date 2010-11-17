@@ -50,6 +50,12 @@ end
 
 
 
+if length(coloraxis)==1
+      OSS=NiceSurfGeneral(Data,'coloraxis',[coloraxis],'plotflag','off')
+    %OSS will contain field coloraxis, and no plot will be made.
+end
+coloraxis=OSS.coloraxis;
+
 
 iiNaN=find(isnan(Data));
 

@@ -60,7 +60,7 @@ for j=1:length(S);
         error('This S vector isn''t quite working out ... ')
     end
     
-    disp(['Working on ' S(j).NAME '(' num2str(j) ' out of ' num2str(length(S)) ...
+    disp(['Working on ' S(j).ID '(' num2str(j) ' out of ' num2str(length(S)) ...
         ').  ' num2str(length(kk)-1) ' regions.']);
     
     LogicalCountryMatrix=logical(zeros(size(MatrixTemplate)));

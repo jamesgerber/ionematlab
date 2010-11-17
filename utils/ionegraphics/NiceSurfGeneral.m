@@ -203,7 +203,7 @@ if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so
 end
 
 
-ylim=pi/2;  % need to initialize variable.
+%ylim=pi/2;  % need to initialize variable.
 % Now a section to look for PlotArea
 
 if isempty(plotarea)
@@ -214,63 +214,63 @@ else
     switch lower(plotarea)
         case 'world'
             longlatbox=[-180 180 -90 90];
-            ylim=pi/2;
+%            ylim=pi/2;
         case 'europe'
             longlatbox=[-15 65 30 80];
             filename=[filename '_europe'];
-            ylim=.51;
+%            ylim=.51;
         case {'usmexico','usmex'}
             longlatbox=[-130 -60 10 55];
             filename=[filename '_usmexico'];
-            ylim=.43;
+%            ylim=.43;
         case 'africa'
             longlatbox=[-20 60 -35 40];
             filename=[filename '_africa'];
-            ylim=.77;
+%            ylim=.77;
         case 'midwest'
             longlatbox=[-105 -75 25 55];
             filename=[filename '_midwest'];
-            ylim=.32;
+%            ylim=.32;
         case 'tropics'
             longlatbox=[-180 180 -30 30];
             filename=[filename '_tropics'];
-            ylim=.32;
+%            ylim=.32;
         case {'brazil','brasil'}
             longlatbox=[-80 -20 -40 10];
             filename=[filename '_brazil'];
-            ylim=.52;
+%            ylim=.52;
         case {'southamerica'}
             longlatbox=[-80 -20 -40 10];
             filename=[filename '_southamerica'];
-            ylim=.52;
+%            ylim=.52;
         case {'argentina'}
             longlatbox=[-80 -20 -60 -20];
             filename=[filename 'argentina'];
-            ylim=.45;
+%            ylim=.45;
         case {'china'}
             longlatbox=[75 140 15 60];
             filename=[filename '_china'];
-            ylim=.42;%.37;%.32;%52
+%            ylim=.42;%.37;%.32;%52
         case {'india'}
             longlatbox=[65 100 5 40];
             filename=[filename '_india'];
-            ylim=.35%.32;
+%            ylim=.35%.32;
         case {'indonesia'}
             longlatbox=[90 145 -15 10];
             filename=[filename '_indonesia'];
-            ylim=.27;%.32;
+%            ylim=.27;%.32;
         case {'chinatropical'}
             longlatbox=[80 140 10 35];
             filename=[filename '_chinatropical'];
-            ylim=.32;
+%            ylim=.32;
         case {'mexico'}
             longlatbox=[-125 -80 10 35];
             filename=[filename '_mexico'];
-            ylim=.27;%.32;
+%            ylim=.27;%.32;
         case {'southafrica'}
             longlatbox=[15 40 -40 -20];
             filename=[filename '_southafrica'];
-            ylim=.22;
+%            ylim=.22;
         otherwise
             error(['Don''t recognize plotarea ' plotarea]);
     end
@@ -495,6 +495,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         axis([g1 g2 t1 t2])
         
     end
+ylim=(t2-t1)/100;
     ht=text(0, ylim,titlestring)
 else
     ht=text(0,pi/2,titlestring);

@@ -103,7 +103,7 @@ end
 areamatrix
 
 if any(areamatrix < TargetArea/2);
-    keyboard
+    warning([' area matrix very heterogeneous in ' mfilename]);
 end
 
 

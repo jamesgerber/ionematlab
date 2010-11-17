@@ -164,7 +164,8 @@ for N=Nspace;
             else
                 %% Get bins from somewhere else
                 disp(['Getting Bins from ' GetBinsElsewhere]);
-                load([GetBinsElsewhere filesep NoBaseFileName],'PrecBinEdges','GDDBinEdges');
+                load([GetBinsElsewhere filesep NoBaseFileName],'PrecBinEdges','GDDBinEdges',...
+                    'xbins','ybins','ContourMask','InsideContourLogical');
             end
             
           %  PrecBinEdges
@@ -202,7 +203,8 @@ for N=Nspace;
             %%
             save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...
                 'PercentToDrop','WetFlag','HeatFlag','CultivatedArea',...
-                'PrecBinEdges','GDDBinEdges','CDS');
+                'PrecBinEdges','GDDBinEdges','CDS','xbins','ybins','ContourMask',...
+                'InsideContourLogical');
             DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
             WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
         end

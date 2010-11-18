@@ -17,6 +17,12 @@ if nargin<8
     IsValidData=(CropMaskLogical & Heat < 1e15 & isfinite(Heat) & CultivatedArea>eps & isfinite(CultivatedArea));
 end
 
+
+
+% check to make sure that heat/prec are positvite
+ IsValidData=IsValidData & (Heat > -8e8 & Prec > -8e8); 
+ 
+
 W=CultivatedArea(IsValidData); %Weight is the area, but only for these points.
 [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(Heat(IsValidData),Prec(IsValidData),Nsurface,Nsurface+10,W);
 

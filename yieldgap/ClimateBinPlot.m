@@ -48,8 +48,10 @@ newmap=finemap(cmap);%,'emblue','white');
 NSS.coloraxis=[1 25];
 NSS.cmap=newmap;
 NSS.TitleString='Climate Zones. Maize.';
+NSS.uppermap='white';
 %NSS.units='dry/cold to warm/wet';
-a=BinMatrix;
+a=double(BinMatrix);
+
 a(a==0)=NaN;
 
 NiceSurfGeneral(a,NSS)
@@ -122,7 +124,7 @@ hy=text(0.125,3,'  precipitation  ');
 set(hy,'FontSize',30,'HorizontalAlignment','Center','Rotation',90);
 
 
-OutputFig('Force','ClimateBinLegend_5x5','-r75')
+%OutputFig('Force','ClimateBinLegend_5x5','-r75')
 
 function [cmap,shortmap]=mapbyhand;
 
@@ -163,7 +165,7 @@ red=[
     203 24 29
     153 0 13];
 
-map=[blue;green;purple;orange;red]/255;
+map=[purple;blue;green;orange;red]/255;
     
 
 

@@ -53,8 +53,8 @@ if nargin==2
     
     a=whos(variable);
     if isequal(a.class,'double')
-        disp(['Setting ' variable '=' num2str(setting) ';']);
-        eval([variable '=' num2str(setting) ';']);
+        disp(['Setting ' variable '=[' num2str(setting) '];']);
+        eval([variable '=[' num2str(setting) '];']);
         
     else
         

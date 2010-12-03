@@ -171,34 +171,18 @@ end
 % StringToMap %
 %%%%%%%%%%%%%%%
 function cmap=StringToMap(str);
-
+    
 try
+    cmap=ReadTiffCmap([iddstring '/misc/colormaps/' str '.tiff']);
     % first try matlab's built in functions (or any functions on the path)
-    cmap=colormap(str);
+    
 catch
-                SystemGlobals
+    try
+    cmap=colormap(str);
+    catch
+    
 
-        try
-
-            cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/' str '.tiff']);
-        catch 
-        
-            switch lower(str)
-%                case {'DesertToGreen2','deserttogreen2'}
-%            SystemGlobals
-%            cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
-%                case {'GreenToDesert2','greentodesert2'}
-%            SystemGlobals
-%            [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
-                case {'jfclover'}
-                    SystemGlobals
-                    cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/jfclover.tiff']);
-              case {'jfgreen-brown'}
-                    SystemGlobals
-                    [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/colormaps/jfbrown-green.tiff']);
-                  
-        otherwise
-            error([' don''t know this colormap: ' str])
-            end
-    end
+        error([' don''t know this colormap: ' str])
 end
+end
+

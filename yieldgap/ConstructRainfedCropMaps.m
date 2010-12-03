@@ -1,7 +1,7 @@
 
-for IP=[10];
+for IP=[25 10 75 5];
 
-for jCrop=[1 2 8 6 7 ];
+for jCrop=2;[1 2 8 6 7 ];
     
     switch jCrop
         case 1
@@ -26,17 +26,23 @@ for jCrop=[1 2 8 6 7 ];
         int2str(jCrop) '.nc'], 'NC_NOWRITE');
     percirrarea = netcdf.getVar(ncid,6);
     
-    
     iirainfed=percirrarea<IP/100;
- 
+    ii_irr=percirrarea>=IP/100;
+ disp(['Number of rainfed points / cutoff=' num2str(IP) ])
+ length(find(iirainfed))
     
     S=OpenNetCDF([iddstring '/Crops2000/crops/' name '_5min.nc']);
     
     a=S.Data(:,:,1);
     y=S.Data(:,:,2);
     
-    a(iirainfed)=0;
-    y(iirainfed)=S.missing_value;
+    
+        iiareabig=(a>9e9);
+
+    
+    a(ii_irr)=0;
+    a(iiareabig)=S.missing_value;
+    y(ii_irr)=S.missing_value;
     
     S.Data(:,:,1)=a;
     S.Data(:,:,2)=y;

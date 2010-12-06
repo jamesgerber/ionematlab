@@ -59,14 +59,14 @@ if debugplots==1
     fattenplot
     shading flat
     finemap('area2')
-    OutputFig('Force',['Figures/Contour-filteredareas_' cropname '_' WetFlag 'RevH'])
+    OutputFig('Force',['Figures/Contour-filteredareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevH'])
 
     figure;surface(xbins,ybins,double(ContourMask).')
     xlabel(HeatFlag);
     ylabel(WetFlag);
     zeroylim(ylims(1),ylims(2));
     grid on
-    title([' 95% Contour ' cropname ' ' WetFlag ' RevH']);
+    title([' 95% Contour ' cropname ' ' WetFlag  'Nbins ' int2str(Nbin) ' RevH']);
     fattenplot
     shading flat
     finemap('jet')

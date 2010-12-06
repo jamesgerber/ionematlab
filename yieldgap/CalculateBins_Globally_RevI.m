@@ -29,7 +29,7 @@ IsValidData=IsValidData & LogicalAreaGood;
 
 
 W=Area(IsValidData); %Weight is the area, but only for these points.
-[jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(XXX(IsValidData),YYY(IsValidData),Nsurface,Nsurface+10,W);
+[jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(XXX(IsValidData),YYY(IsValidData),Nsurface,Nsurface,W);
 
 jpmax=monotonicdistribution(jp);
 

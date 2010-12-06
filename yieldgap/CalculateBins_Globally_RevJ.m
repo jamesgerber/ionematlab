@@ -24,7 +24,7 @@ end
 IsValidData=(CropMaskLogical & XXX < 1e15 & isfinite(XXX) & Area>eps & isfinite(Area));
 
 W=Area(IsValidData); %Weight is the area, but only for these points.
-[jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(XXX(IsValidData),YYY(IsValidData),Nsurface,Nsurface+10,W);
+[jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(XXX(IsValidData),YYY(IsValidData),Nsurface,Nsurface,W);
 
 %% construct a different type of distribution / get a different contour
 %want a rectangular one.  Discard 5% of points outside of contour.
@@ -41,7 +41,7 @@ p=0.975;
 
 tmp=sum(jpmax,2)
 
-jptmp=repmat(tmp,1,Nsurface+10);
+jptmp=repmat(tmp,1,Nsurface);
 
 %jpmax=monotonicdistribution(jptmp);
 

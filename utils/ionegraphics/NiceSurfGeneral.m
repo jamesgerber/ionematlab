@@ -185,17 +185,36 @@ plotflag='on';
 fastplot='off';
 plotstates='bricnafta';
 longlatlines='on';
+
+
+%% there are a few properties that user often screws up ... let's just
+%% correct
+
+if isfield(NSS,'caxis')
+    warning('called NiceSurfGeneral with caxis.  Try coloraxis.');
+    NSS.coloraxis=NSS.caxis;
+    NSS=rmfield(NSS,'caxis');
+end
+    
+
+
 %%now pull property values out of structure
 
 a=fieldnames(NSS);
 for j=1:length(a)
     ThisProperty=a{j};
-    if isempty(strmatch(lower(ThisProperty),lower(ListOfProperties),'exact'))
+    ii=strmatch(lower(ThisProperty),lower(ListOfProperties),'exact');
+switch numel(ii)
+    case 0
         ListOfProperties
-        error(['Property "' ThisProperty '" not recognized in ' mfilename])
+        error(['Property "' ThisProperty '" not recognized in ' mfilename]);
+    case 1
+        eval([ lower(ThisProperty) '=NSS.' ThisProperty ';']);
+    otherwise
+        error(['Multiple occurences of ' lower(ThisProperty) ' in NiceSurfGeneral ']);
     end
+    
     %disp([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
-    eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
 end
 
 if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so as to define NSS

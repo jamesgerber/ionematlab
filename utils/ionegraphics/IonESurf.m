@@ -134,7 +134,7 @@ if CanMap==0
     UserDataStructure.ScaleToDegrees=1;
     UserDataStructure.MapToolboxFig=0;
 else
-    hm=axesm('robinson')
+    hm=axesm('robinson','Frame','On')
     
     
     if meshmflag==0

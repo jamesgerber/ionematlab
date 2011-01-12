@@ -1,7 +1,7 @@
 
 for IP=[25 10 75 5];
 
-for jCrop=2;[1 2 8 6 7 ];
+for jCrop=8;[1 2 8 6 7 ];
     
     switch jCrop
         case 1

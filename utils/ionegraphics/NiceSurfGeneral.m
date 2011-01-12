@@ -190,11 +190,10 @@ longlatlines='on';
 %% there are a few properties that user often screws up ... let's just
 %% correct
 
-if isfield(NSS,'caxis')
-    warning('called NiceSurfGeneral with caxis.  Try coloraxis.');
-    NSS.coloraxis=NSS.caxis;
-    NSS=rmfield(NSS,'caxis');
-end
+NSS=fixfield(NSS,'cmap','colormap');
+NSS=fixfield(NSS,'coloraxis','caxis');
+NSS=fixfield(NSS,'titlestring','title');
+
     
 
 
@@ -577,4 +576,14 @@ if ~isempty(description) & ~isequal(fastplot,'on')
     a=imread(ActualFileName);
     imwrite(a,ActualFileName,'Description',description);
 end
+
+
+%%%%%%
+function NSS=fixfield(NSS,right,wrong)
+if isfield(NSS,wrong)
+    warning(['called NiceSurfGeneral with ' wrong '.  Try ' right ]);
+    NSS=setfield(NSS,right,getfield(NSS,wrong));
+    NSS=rmfield(NSS,wrong);
+end
+
 

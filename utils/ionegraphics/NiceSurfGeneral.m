@@ -56,6 +56,9 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.longlatlines='on' %turns lat long grid on or off
 %   NSS.plotstates='bricnafta' %adm bounds.
 %         {'off','countries','bricnafta','states','gadm0','gadm1','gadm2'}
+%   NSS.categorical='off';
+%   NSS.categoryranges={};
+%   NSS.categoryvalues={};
 %
 %  Example
 %
@@ -161,7 +164,8 @@ ListOfProperties={
     'units','titlestring','filename','cmap','longlatbox','plotarea', ...
     'logicalinclude','coloraxis','displaynotes','description',...
     'uppermap','lowermap','colorbarpercent','resolution',...
-    'figfilesave','plotflag','fastplot','plotstates'};
+    'figfilesave','plotflag','fastplot','plotstates','categorical',...
+    'categoryranges','categoryvalues','categorycolors'};
 
 %% set defaults for these properties
 units='';
@@ -185,35 +189,25 @@ plotflag='on';
 fastplot='off';
 plotstates='bricnafta';
 longlatlines='on';
-
-
-%% there are a few properties that user often screws up ... let's just
-%% correct
-
-NSS=fixfield(NSS,'cmap','colormap');
-NSS=fixfield(NSS,'coloraxis','caxis');
-NSS=fixfield(NSS,'titlestring','title');
-
-    
-
-
+categorical='off';
+categoryranges={};
+categoryvalues={};
 %%now pull property values out of structure
+
+
+if strcmp(categorical,'on')
+    cmap=easyinterp2(cmap,3,length(categoryvalues));
+end
 
 a=fieldnames(NSS);
 for j=1:length(a)
     ThisProperty=a{j};
-    ii=strmatch(lower(ThisProperty),lower(ListOfProperties),'exact');
-switch numel(ii)
-    case 0
+    if isempty(strmatch(lower(ThisProperty),lower(ListOfProperties),'exact'))
         ListOfProperties
-        error(['Property "' ThisProperty '" not recognized in ' mfilename]);
-    case 1
-        eval([ lower(ThisProperty) '=NSS.' ThisProperty ';']);
-    otherwise
-        error(['Multiple occurences of ' lower(ThisProperty) ' in NiceSurfGeneral ']);
+        error(['Property "' ThisProperty '" not recognized in ' mfilename])
     end
-    
     %disp([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
+    eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
 end
 
 if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so as to define NSS
@@ -381,7 +375,13 @@ if length(coloraxis)<2
     end
 end
 
-
+if strcmp(categorical,'on')
+    coloraxis=[1,length(categoryvalues)];
+    for ii=1:length(categoryranges)
+        cur=categoryranges{ii};
+        Data(Data>=cur(1)&Data<cur(2))=ii;
+    end
+end
 
 %% prepare output data
 % do it before turn nan to NoData value.
@@ -470,6 +470,9 @@ set(gcf,'position',[ 218   618   560   380]);
 set(fud.DataAxisHandle,'Visible','off');
 set(fud.DataAxisHandle,'Position',[0.00625 .2 0.9875 .7]);
 set(fud.ColorbarHandle,'Visible','on');
+if strcmp(categorical,'on')
+    set(fud.ColorbarHandle,'Visible','off');
+end
 %set(fud.ColorbarHandle,'Position',[0.1811+.1 0.08 0.6758-.2 0.0568])
 drawnow
 if fud.MapToolboxFig==0
@@ -548,6 +551,17 @@ end
 
 hideui
 
+
+
+
+if strcmp(categorical,'on')
+    bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+    legh=legend(bb,categoryvalues,3);
+    hlegt=get(legh,'title');
+    set(hlegt,'string',units);
+    set(bb,'Visi','off')
+end
+
 %% did user want to print?
 
 if isequal(filename,'on')
@@ -576,14 +590,4 @@ if ~isempty(description) & ~isequal(fastplot,'on')
     a=imread(ActualFileName);
     imwrite(a,ActualFileName,'Description',description);
 end
-
-
-%%%%%%
-function NSS=fixfield(NSS,right,wrong)
-if isfield(NSS,wrong)
-    warning(['called NiceSurfGeneral with ' wrong '.  Try ' right ]);
-    NSS=setfield(NSS,right,getfield(NSS,wrong));
-    NSS=rmfield(NSS,wrong);
-end
-
 

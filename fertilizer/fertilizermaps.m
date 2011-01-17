@@ -405,12 +405,18 @@ for n = 1:3
                 datacol{countrydatarow} = num2str(WA_rate);
                 areacol{countrydatarow} = num2str(totalcroparea);
                 
-                % save the data type: **NOTE** this is hardcoded as data
-                % type 3 for the time being since we are only dealing with
-                % national-level data
-                
-                datacol{datatyperow} = '3';
-                areacol{datatyperow} = '3';
+                % save the data type: **NOTE** for all countries except the
+                % US we are dealing with national-level data so this is
+                % hard-coded as data type 3. For the US we will use data
+                % type 1 so that we can use subnational wheat app rates
+                % where we have them.
+                if strmatch(countrycode, 'USA');
+                    datacol{datatyperow} = '1';
+                    areacol{datatyperow} = '1';
+                else
+                    datacol{datatyperow} = '3';
+                    areacol{datatyperow} = '3';
+                end
                 
                 % save the data source
                 
@@ -647,7 +653,7 @@ for n = 1:3
                                             'this SNU']);
                                     else
                                         appratemap(ii) = adjcountrydata;
-                                        datatypemap(ii) = 1;
+                                        datatypemap(ii) = 3;
                                     end
                                     
                                 else

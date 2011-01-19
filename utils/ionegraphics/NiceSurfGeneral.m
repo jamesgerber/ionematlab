@@ -87,6 +87,19 @@ function OS=NiceSurfGeneral(varargin);
 %   NiceSurfGeneral(Yield,NSS)
 %
 %
+%   Example:
+%
+%  S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
+%
+%  Area=S.Data(:,:,1);
+%  Yield=S.Data(:,:,2);
+%   NSS.Units='tons/ha';
+%   NSS.categorical='on';
+%   NSS.categoryranges={[0 4],[4 6],[6 8],[8 20]}
+%   NSS.categoryvalues={'[0 4]','[4 6]','[6 8]','[8 20]'}
+%   NSS.cmap='revsummer';
+%   NiceSurfGeneral(Yield,NSS);
+%
 %   Tricky syntax for getting coloraxis.
 %   OSS=NiceSurfGeneral(DATA,'coloraxis',[.99],'plotflag','off')
 %   OSS will contain field coloraxis, and no plot will be made.

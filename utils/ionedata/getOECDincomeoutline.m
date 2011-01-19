@@ -1,5 +1,5 @@
 function Outline=getOECDincomeoutline(incomelevel);
-% getOECDincomeoutline
+% getOECDincomeoutline - get outlines of OECD income levels
 %
 %     Outline=getOECDincomeoutline('high');
 %     Outline=getOECDincomeoutline('mid');
@@ -31,8 +31,16 @@ switch lower(incomelevel)
         ii=unique([ii1' ii2']);
     case {'middle','mid'}
         ii=unique([ii3' ii4']);
-    case {'low'}
-ii=ii5';
+    case {'low','lo'}
+        ii=ii5';
+    case {'upper middle','um'}
+        ii=ii3';
+    case {'lm','lower middle'}
+        ii=ii4'; 
+    case {'high_non','ii2'}
+        ii=ii2';
+    case {'ii1'}
+        ii=ii1';
 end
 
 
@@ -43,9 +51,11 @@ ii=ii(:)';
 
 a=StandardCountryNames(WBI.countrycode,'sage3');
 for j=ii;
-    if j==82
-        warning('fix honduras please')
-    else    
+ %   if j==82
+ %       warning('fix honduras please')
+ %   else    
         Outline=Outline + CountryCodetoOutline(a{j});
-    end
+ %   end
 end
+
+Outline=logical(Outline);

@@ -1,5 +1,5 @@
-function ConstructRainfedCropMaps
-%  CONSTRUCTRAINFEDCROPMAPS
+function ConstructIncomeFilteredCropMaps
+%  CONSTRUCTINCOMEFILTEREDCROPMAPS
 for IP=[25 10 75 5];
     
     for jCrop=8;[1 2 8 6 7 ];
@@ -62,8 +62,16 @@ for IP=[25 10 75 5];
     end
 end
 
+return
 
 
+%% test code to split up income areas
+M=getdata('maize');
+a=M.Data(:,:,1);
+y=M.Data(:,:,2);
+
+
+ii_lo=getOECDincomeoutline('low');
 
 
 

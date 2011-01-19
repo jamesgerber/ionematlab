@@ -21,6 +21,8 @@
 %    v1.7 Eliminated crop_2000 extrapolation; Apply "other crop" data to
 %    missing crops when possible before doing income extrapolation; Created
 %    a horticulture map in the beginning.
+%    v2.0 Final version of the fertilizer data for the m3 yield model
+%    paper.
 
 
 
@@ -35,7 +37,7 @@ tic;
 
 
 %% record the version number
-verno = '1_7';
+verno = '2';
 disp(['You are running version ' verno ' of fertilizermaps'])
 
 
@@ -43,7 +45,7 @@ disp(['You are running version ' verno ' of fertilizermaps'])
 %% read input files
 
 % load fertilizer data file
-inputfile = ReadGenericCSV('subnationalfert4.csv');
+inputfile = ReadGenericCSV('subnationalfert5.csv');
 save fertinput
 % load fertinput
 

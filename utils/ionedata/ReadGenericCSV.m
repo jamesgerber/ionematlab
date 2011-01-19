@@ -35,11 +35,10 @@ fid=fopen(FileName);
 
 for m=1:length(HeaderLines)
     headerline=fgetl(fid);
-    headerline=strrep(headerline,'(','');
+    
+    headerline=FixUpHeaderline(headerline);
 
-        headerline=strrep(headerline,')','');
-        headerline=strrep(headerline,'_','');
-VC=GetStrings(headerline,Delimiter);  %function below.
+    VC=GetStrings(headerline,Delimiter);  %function below.
     FieldNameStructure(m).Vector=VC;
 end
 
@@ -117,7 +116,17 @@ for j=1:length(C)
    
 end
 
-   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        FixUpHeaderline     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function headerline=FixUpHeaderline(headerline);
+headerline=strrep(headerline,'(','');
+    
+headerline=strrep(headerline,')','');
+
+if isequal(headerline(1),'_')
+    headerline=FixUpHeaderline(headerline(2:end));
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

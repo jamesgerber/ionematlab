@@ -448,8 +448,12 @@ switch(lower(plotstates))
         % do nothing
     case {'bric','bricnafta','nafta'}
         AddStates(0.05,gcf,'bricnafta');
-    case {'world','lev0','gadm0'}
+    case {'world','lev0'}
         AddStates(0.05,gcf,'all');
+    case {'gadm0'}
+                AddStates(0.05,gcf,'gadm0');
+    case {'gadm1'}
+                AddStates(0.05,gcf,'gadm1');
     otherwise
         error(['have not yet implemented this in AddStates'])
 end

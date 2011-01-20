@@ -1,49 +1,50 @@
 function ConstructIncomeFilteredCropMaps
 %  CONSTRUCTINCOMEFILTEREDCROPMAPS
-for IP=[25 10 75 5];
+
+for CropNo=[5 7 13];
     
-    for jCrop=8;[1 2 8 6 7 ];
+    switch CropNo
+        case 7
+            name='wheat';
+        case 5
+            name='maize';
+        case 13
+            name='soybean';
+        case 17
+            name='millet'
+        case 9
+            name='sorghum'
+    end
+    
+    
+    
+    
+    
+    S=OpenNetCDF([iddstring '/Crops2000/crops/' name '_5min.nc']);
+    
+    a=S.Data(:,:,1);
+    y=S.Data(:,:,2);
+    
+    
+    
+    for Income=[2];
         
-        switch jCrop
+        
+        switch Income
             case 1
-                name='wheat';
-                CropNo=7;
+                %% High income
+                ii=getOECDincomeoutline('high');
+                NameBase='HiIncome';
             case 2
-                name='maize';
-                CropNo=5;
-            case 8
-                name='soybean'
-                CropNo=13
-            case 6
-                name='millet'
-                CropNo=17
-            case 7
-                name='sorghum'
-                CropNo=9
+                %% Lo income
+                iihi=getOECDincomeoutline('high');              
+                ii=landmasklogical & ~iihi;               
+                NameBase='LoIncome';
+                
         end
         
-        
-        ncid = netcdf.open([iddstring '/MIRCA2000_processed/mirca2000_crop' ...
-            int2str(jCrop) '.nc'], 'NC_NOWRITE');
-        percirrarea = netcdf.getVar(ncid,6);
-        
-        iirainfed=percirrarea<IP/100;
-        ii_irr=percirrarea>=IP/100;
-        disp(['Number of rainfed points / cutoff=' num2str(IP) ])
-        length(find(iirainfed))
-        
-        S=OpenNetCDF([iddstring '/Crops2000/crops/' name '_5min.nc']);
-        
-        a=S.Data(:,:,1);
-        y=S.Data(:,:,2);
-        
-        
-        iiareabig=(a>9e9);
-        
-        
-        a(ii_irr)=0;
-        a(iiareabig)=S.missing_value;
-        y(ii_irr)=S.missing_value;
+        a(~ii & DataMaskLogical)=0;
+        y(~ii)=S.missing_value;
         
         S.Data(:,:,1)=a;
         S.Data(:,:,2)=y;
@@ -55,9 +56,9 @@ for IP=[25 10 75 5];
         DAS=rmfield(DAS,'Data');
         DAS=rmfield(DAS,'Long');
         DAS=rmfield(DAS,'Lat');
-        DAS.Title=['Rainfed ' name '(Irrigation < ' num2str(IP) ];
+        DAS.Title=[NameBase name  ];
         
-        writenetcdf(S.Long,S.Lat,S.Data,[name 'rainfed' num2str(IP) ],[ name 'RF' num2str(IP) '_5min.nc'],DAS)
+        writenetcdf(S.Long,S.Lat,S.Data,[name NameBase ],[ name NameBase '_5min.nc'],DAS)
         
     end
 end
@@ -69,9 +70,33 @@ return
 M=getdata('maize');
 a=M.Data(:,:,1);
 y=M.Data(:,:,2);
+a(a>5)=0;
+a=a.*GetFiveMinGridCellAreas;
 
 
 ii_lo=getOECDincomeoutline('low');
+ii_um=getOECDincomeoutline('um');
+ii_lm=getOECDincomeoutline('lm');
+ii_hi=getOECDincomeoutline('high');
+ii_non=getOECDincomeoutline('high_non');
 
+
+sum(a(ii_hi))/1e6
+sum(a(ii_um))/1e6
+sum(a(ii_lm))/1e6
+sum(a(ii_lo))/1e6
+sum(a(ii_non))/1e6
+
+S=getdata('soybean');
+a=S.Data(:,:,1);
+y=S.Data(:,:,2);
+a(a>5)=0;
+a=a.*GetFiveMinGridCellAreas;
+
+sum(a(ii_hi))/1e6
+sum(a(ii_um))/1e6
+sum(a(ii_lm))/1e6
+sum(a(ii_lo))/1e6
+sum(a(ii_non))/1e6
 
 

@@ -43,8 +43,10 @@ end
 switch lower(AllStates)
     case {'bric','bricnafta'}
         AllStatesFlag=0;
-    case {'all','world'};
+    case {'all','world','gadm1'};
         AllStatesFlag=1;
+    case {'gadm0'}
+        AllStatesFlag=2;
 end
 
 
@@ -53,14 +55,20 @@ hax=gca;
 SystemGlobals
 
 try
-    
-    if AllStatesFlag==0
+    switch AllStatesFlag
+        case 0
         Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
         States=load(WORLDCOUNTRIES_BRIC_NAFTASTATES_VECTORMAP_HIRES);
-    else
+        case 1
         Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
         States=load(WORLDCOUNTRIES_LEVEL1_HIRES);
+        case 2
+         Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
+        States=load(WORLDCOUNTRIES_LEVEL0_HIRES);
+       otherwise
+            error(['Prob with switch statement in ' mfilename ])
     end
+    
 catch
     disp(['did not find system vectormap'])
     disp(['loading default matlab coasts'])

@@ -1,4 +1,4 @@
-% fertilizermaps_v1_6.m
+% fertilizermaps.m
 %
 % A program to make maps of subnational fertilizer application by crop and
 % by nutrient. Written by Nathan Mueller.
@@ -21,373 +21,375 @@
 %    v1.7 Eliminated crop_2000 extrapolation; Apply "other crop" data to
 %    missing crops when possible before doing income extrapolation; Created
 %    a horticulture map in the beginning.
-%    v2.0 Final version of the fertilizer data for the m3 yield model
-%    paper.
+% 
+% Version 2.0 - 1.20.2011 - Final version of the fertilizer data for the m3
+% yield model paper. Added new procedures for scaling trusted and untrusted
+% crops.
 
 
-% % % % 
-% % % % %% record preferences
-% % % % verno = '2';
-% % % % untrustedcropscalingmax = 2;
-% % % % trustedcroptofaoratiomax = .95
-% % % % 
-% % % % 
-% % % % %% initialize diary and time record
-% % % % 
-% % % % ds = datestr(now);
-% % % % diaryfilename = ['fertrunoutput ' ds '.txt'];
-% % % % diary(diaryfilename);
-% % % % disp(diaryfilename);
-% % % % tic;
-% % % % disp(['You are running version ' verno ' of fertilizermaps'])
-% % % % 
-% % % % 
-% % % % 
-% % % % %% read input files
-% % % % 
-% % % % % load fertilizer data file
-% % % % inputfile = ReadGenericCSV('subnationalfert5.csv');
-% % % % save fertinput
-% % % % % load fertinput
-% % % % 
-% % % % % inputarray = {};
-% % % % % fn = fieldnames(inputfile);
-% % % % % for c = 1:length(fn);
-% % % % % inputarray{1,c} = fn{c};
-% % % % % eval(['datacol = inputfile.' fn{c} ';'])
-% % % % % inputarray(2:(length(datacol)+1),c) = datacol;
-% % % % % end
-% % % % 
-% % % % % load crop proxy list (this equates an entry in the fertilizer data file
-% % % % % to a spatially-explicit map from Monfreda et al 2008.
-% % % % cropinput = ReadGenericCSV('proxylist.csv');
-% % % % datalist = cropinput.datalist;
-% % % % proxylist = cropinput.proxylist;
-% % % % 
-% % % % % load FAO average consumption data centered on the year 2000. **NOTE: b/c
-% % % % % FAO only goes back to 2002(?), we must calibrate to data from 2002-03.
-% % % % faoinput = ReadGenericCSV('FAO_0307avg.csv');
-% % % % fao_ctries = unique(faoinput.ctry_codes);
-% % % % 
-% % % % % load input netcdfs
-% % % % disp('Reading input netCDF files')
-% % % % SystemGlobals;
-% % % % path = [iddstring 'misc/area_ha_5min.nc'];
-% % % % [DS] = OpenNetCDF(path);
-% % % % gridcellareas = DS.Data;
-% % % % 
-% % % % 
-% % % % 
-% % % % %% pre-processing of input file to speed up data lookup
-% % % % 
-% % % % % build unique list of 5-letter/number codes for state-level entries
-% % % % 
-% % % % counter = 1;
-% % % % for c = 1:length(inputfile.Sage_admin)
-% % % %     code = inputfile.Sage_admin{c};
-% % % %     if length(code) > 3
-% % % %         inputfile.Sage_state{counter} = code(1:5);
-% % % %         counter = counter + 1;
-% % % %     end
-% % % % end
-% % % % statecodes = unique(inputfile.Sage_state);
-% % % % tmp = strmatch('new_s',statecodes); % remove any "new_snu" issues
-% % % % statecodes(tmp) = [];
-% % % % 
-% % % % % build unique list of 3-letter/number codes for country-level entries
-% % % % countrycodes = unique(inputfile.ctry_code);
-% % % % tmp = strmatch('new',countrycodes); % remove any "new_snu" issues
-% % % % countrycodes(tmp) = [];
-% % % % tmp = strmatch('"IFA/FAO/IFDC_FUBC_5_dataset',countrycodes);
-% % % % countrycodes(tmp) = [];
-% % % % 
-% % % % % add "row_htable" hash table for inputfile - this will return the row
-% % % % % indices for any SAGE admin code (country, state, or county-level).
-% % % % if ~exist('row_htable')
-% % % %     row_htable = java.util.Properties;
-% % % %     for j=1:length(countrycodes);
-% % % %         ii=strmatch(countrycodes{j},inputfile.ctry_code);
-% % % %         row_htable.put(countrycodes{j},ii);
-% % % %     end
-% % % %     for j=1:length(statecodes)
-% % % %         ii=strmatch(statecodes{j},inputfile.Sage_state);
-% % % %         row_htable.put(statecodes{j},ii);
-% % % %     end
-% % % %     for j=1:length(inputfile.Sage_admin)
-% % % %         ii=strmatch(inputfile.Sage_admin{j},inputfile.Sage_admin);
-% % % %         row_htable.put(inputfile.Sage_admin{j},ii);
-% % % %     end
-% % % % end
-% % % % 
-% % % % 
-% % % % 
-% % % % %% pre-processing of crop list data
-% % % % 
-% % % % % Create a list of unique crop types we'll make fertilizer application maps
-% % % % % for. This map is created from all the unique proxies in the proxylist.
-% % % % disp('Building list of unique crop types')
-% % % % tmp = {};
-% % % % for n = 1:length(proxylist);
-% % % %     str = proxylist{n};
-% % % %     % below is Jamie's code to convert the list of proxies into a cell array
-% % % %     clear proxycellarray
-% % % %     str=strrep(str,' ','');
-% % % %     str=strrep(str,'"','');
-% % % %     str(end+1)='+';
-% % % %     ii=find(str=='+');
-% % % %     proxycellarray = {};
-% % % %     proxycellarray{1}=str(1:ii(1)-1);
-% % % %     for j=1:(length(ii)-1)
-% % % %         proxycellarray{j+1}=str(ii(j)+1:ii(j+1)-1);
-% % % %     end
-% % % %     % create a master list & find unique values
-% % % %     x = length(tmp);
-% % % %     for c = 1:length(proxycellarray);
-% % % %         y = x + c;
-% % % %         tmp{y} = proxycellarray{c};
-% % % %     end
-% % % % end
-% % % % croplist = unique(tmp(:));
-% % % % 
-% % % % 
-% % % % 
-% % % % %% build total fertilized land map and initialize data files
-% % % % disp('Building total fertilized land map');
-% % % % totfertlandmap = zeros(4320,2160);
-% % % % for i = 1:length(croplist);
-% % % %     cropname = croplist{i};
-% % % %     disp(['Initializing files for ' cropname]);
-% % % %     x = ([cropname '_5min.nc']);
-% % % %     path = [iddstring 'Crops2000/crops/' x];
-% % % %     [DS] = OpenNetCDF(path);
-% % % %     areamap = DS.Data(:,:,1);
-% % % %     jj = find(areamap>1e20);
-% % % %     areamap(jj) = NaN;
-% % % %     ii = find(areamap < 2 & areamap > 0);
-% % % %     appratemap = nan(4320,2160);
-% % % %     appratemap(ii) = -9; % put -9 where we know we have crop data ...
-% % % %     % but we do not (at least yet) know the application rate
-% % % %     
-% % % %     % save the data files
-% % % %     appratemap = single(appratemap);
-% % % %     areamap = single(areamap);
-% % % %     for n = 1:3
-% % % %         switch n
-% % % %             case 1
-% % % %                 nutrient = 'N';
-% % % %             case 2
-% % % %                 nutrient = 'P';
-% % % %             case 3
-% % % %                 nutrient = 'K';
-% % % %         end
-% % % %         titlestr = [cropname '_' nutrient '_ver' verno];
-% % % %         DataStoreGateway([titlestr '_rate'],appratemap);
-% % % %         DataStoreGateway([titlestr '_datatype'],appratemap);
-% % % %         DataStoreGateway([titlestr '_area'],areamap);
-% % % %     end
-% % % %     
-% % % %     % add to total fertilized land map
-% % % %     areamap(jj) = 0;
-% % % %     areahamap = areamap .* gridcellareas;
-% % % %     totfertlandmap = totfertlandmap + areahamap;
-% % % % end
-% % % % 
-% % % % 
-% % % % 
-% % % % %% fix the spring/summer/winter wheat & barley problem
-% % % % % NOTE: this only works for national-level data right now; as there is not
-% % % % % subnational, crop-specific information for these crops in the affected
-% % % % % countries, there is nothing to worry about! In the future this may need
-% % % % % to be changed though.
-% % % % 
-% % % % disp(['Averaging national-level application rate data for seasonal' ...
-% % % %     ' varieties of wheat and barley']);
-% % % % 
-% % % % for n = 1:3
-% % % %     switch n
-% % % %         case 1
-% % % %             nutrient = 'N';
-% % % %         case 2
-% % % %             nutrient = 'P';
-% % % %         case 3
-% % % %             nutrient = 'K';
-% % % %     end
-% % % %     disp(['Begin calculating weighted averages for ' nutrient ...
-% % % %         ' application rates'])
-% % % %     
-% % % %     for i = 1:2
-% % % %         switch i
-% % % %             case 1
-% % % %                 crop = 'barley';
-% % % %             case 2
-% % % %                 crop = 'wheat';
-% % % %         end
-% % % %         
-% % % %         for s = 1:4;
-% % % %             switch s
-% % % %                 case 1
-% % % %                     season = '';
-% % % %                 case 2
-% % % %                     season = '_spring';
-% % % %                 case 3
-% % % %                     season = '_summer';
-% % % %                 case 4
-% % % %                     season = '_winter';
-% % % %             end
-% % % %             
-% % % %             disp(['Getting data columns for ' nutrient ...
-% % % %                 ' ' season ' ' crop ' data'])
-% % % %             dataentry = [crop season];
-% % % %             dataheader = [dataentry '_' nutrient '_data'];
-% % % %             areaheader = [dataentry '_' nutrient '_areafert'];
-% % % %             eval(['datacol_' num2str(s) ' = inputfile.' dataheader ';']);
-% % % %             eval(['areacol_' num2str(s) ' = inputfile.' areaheader ';']);
-% % % %         end
-% % % %         
-% % % %         for k = 1:length(fao_ctries)
-% % % %             countrycode = fao_ctries{k};
-% % % %             
-% % % %             % Find the rows with data for this country:
-% % % %             ctryrows=row_htable.get(countrycode);
-% % % %             
-% % % %             % Find the rows for data type, source, and the country-level
-% % % %             % data
-% % % %             tmp = strmatch('data type', inputfile.Name_1(ctryrows));
-% % % %             datatyperow = ctryrows(tmp);
-% % % %             tmp = strmatch('data source', inputfile.Name_1(ctryrows));
-% % % %             datasourcerow = ctryrows(tmp);
-% % % %             tmp = strmatch('country data', inputfile.Name_1(ctryrows));
-% % % %             countrydatarow = ctryrows(tmp);
-% % % %             country = inputfile.Cntry_name{datatyperow};
-% % % %             
-% % % %             for s = 1:4;
-% % % %                 eval(['datatype_' num2str(s) ' = str2double(datacol_' ...
-% % % %                     num2str(s) '{datatyperow});']);
-% % % %                 eval(['datasource_' num2str(s) ' = datacol_' ...
-% % % %                     num2str(s) '{datasourcerow};']);
-% % % %                 eval(['countrydata_' num2str(s) ' = str2double(datacol_'...
-% % % %                     num2str(s) '{countrydatarow});']);
-% % % %                 eval(['countryarea_' num2str(s) ' = str2double(areacol_'...
-% % % %                     num2str(s) '{countrydatarow});']);
-% % % %             end
-% % % %             
-% % % %             WAflag = 1;
-% % % %             
-% % % %             if countrydata_1 < 0
-% % % %                 if countrydata_2 < 0
-% % % %                     if countrydata_3 < 0
-% % % %                         if countrydata_4 < 0
-% % % %                             disp(['no ' crop ' ' nutrient ...
-% % % %                                 ' data for ' country]);
-% % % %                             WAflag = 0;
-% % % %                         end
-% % % %                     end
-% % % %                 end
-% % % %             elseif countrydata_2 < 0
-% % % %                 if countrydata_3 < 0
-% % % %                     if countrydata_4 < 0
-% % % %                         disp(['only regular ' crop ' ' nutrient ...
-% % % %                             ' data for ' country]);
-% % % %                         WAflag = 0;
-% % % %                     end
-% % % %                 end
-% % % %             end
-% % % %             if WAflag == 1;
-% % % %                 % switch -9 no data values for both application rate and
-% % % %                 % area to 0 for purposes of calculating a weighted average
-% % % %                 for s = 1:4;
-% % % %                     eval(['countrydata = countrydata_' num2str(s) ';']);
-% % % %                     eval(['countryarea = countryarea_' num2str(s) ';']);
-% % % %                     if countrydata < 0
-% % % %                         countrydata = 0;
-% % % %                     end
-% % % %                     if countryarea < 0
-% % % %                         countryarea = 0;
-% % % %                     end
-% % % %                     eval(['countrydata_' num2str(s) ' = countrydata;']);
-% % % %                     eval(['countryarea_' num2str(s) ' = countryarea;']);
-% % % %                 end
-% % % %                 
-% % % %                 totalcroparea = countryarea_1 + countryarea_2 + ...
-% % % %                     countryarea_3 + countryarea_4;
-% % % %                 
-% % % %                 ratexarea_1 = countryarea_1 .* countrydata_1;
-% % % %                 ratexarea_2 = countryarea_2 .* countrydata_2;
-% % % %                 ratexarea_3 = countryarea_3 .* countrydata_3;
-% % % %                 ratexarea_4 = countryarea_4 .* countrydata_4;
-% % % %                 
-% % % %                 totalratexarea = ratexarea_1 + ratexarea_2 + ...
-% % % %                     ratexarea_3 + ratexarea_4;
-% % % %                 
-% % % %                 WA_rate = totalratexarea ./ totalcroparea;
-% % % %                 
-% % % %                 disp(['weighted average for ' crop ...
-% % % %                     ' ' nutrient ' in ' country ': ' num2str(WA_rate) ...
-% % % %                     ' kg/ha ' nutrient ', ' num2str(totalcroparea) ...
-% % % %                     ' total ha cropland']);
-% % % %                 
-% % % %                 % save the rate and area in the proper data columns
-% % % %                 
-% % % %                 dataheader = [crop '_' nutrient '_data'];
-% % % %                 areaheader = [crop '_' nutrient '_areafert'];
-% % % %                 eval(['datacol = inputfile.' dataheader ';']);
-% % % %                 eval(['areacol = inputfile.' areaheader ';']);
-% % % %                 
-% % % %                 datacol{countrydatarow} = num2str(WA_rate);
-% % % %                 areacol{countrydatarow} = num2str(totalcroparea);
-% % % %                 
-% % % %                 % save the data type: **NOTE** for all countries except the
-% % % %                 % US we are dealing with national-level data so this is
-% % % %                 % hard-coded as data type 3. For the US we will use data
-% % % %                 % type 1 so that we can use subnational wheat app rates
-% % % %                 % where we have them.
-% % % %                 if strmatch(countrycode, 'USA');
-% % % %                     datacol{datatyperow} = '1';
-% % % %                     areacol{datatyperow} = '1';
-% % % %                 else
-% % % %                     datacol{datatyperow} = '3';
-% % % %                     areacol{datatyperow} = '3';
-% % % %                 end
-% % % %                 
-% % % %                 % save the data source
-% % % %                 
-% % % %                 for s = 1:4
-% % % %                     eval(['datasource = datasource_' num2str(s) ';']);
-% % % %                     if datasource == -9
-% % % %                     else
-% % % %                         sourcetosave = datasource;
-% % % %                     end
-% % % %                 end
-% % % %                 
-% % % %                 datacol{datasourcerow} = sourcetosave;
-% % % %                 areacol{datasourcerow} = sourcetosave;
-% % % %                 
-% % % %                 % save to inputfile
-% % % %                 
-% % % %                 eval(['inputfile.' dataheader ' = datacol;']);
-% % % %                 eval(['inputfile.' areaheader ' = areacol;']);
-% % % %                 
-% % % %             end
-% % % %         end
-% % % %     end
-% % % % end
-% % % % 
-% % % % % remove the seasonal data entries from the datalist
-% % % % tmp = datalist([1:9 13:150 154]);
-% % % % datalist = tmp;
-% % % % tmp = proxylist([1:9 13:150 154]);
-% % % % proxylist = tmp;
-% % % % 
-% % % % % delete some extra files after pre-processing
-% % % % clear datacol datacol_1 datacol_2 datacol_3 datacol_4
-% % % % clear areacol areacol_1 areacol_2 areacol_3 areacol_4
-% % % % clear m3pastmap
-% % % % 
-% % % % 
-% % % % 
-% % % % %% save the input stuff after it is complete!
-% % % % 
-% % % % save fertworking
+
+%% record preferences
+verno = '2';
+untrustedcropscalingmax = 2;
+trustedcroptofaoratiomax = .95
+
+
+%% initialize diary and time record
+
+ds = datestr(now);
+diaryfilename = ['fertrunoutput ' ds '.txt'];
+diary(diaryfilename);
+disp(diaryfilename);
+tic;
+disp(['You are running version ' verno ' of fertilizermaps'])
+
+
+
+%% read input files
+
+% load fertilizer data file
+inputfile = ReadGenericCSV('subnationalfert5.csv');
+save fertinput
+% load fertinput
+
+% inputarray = {};
+% fn = fieldnames(inputfile);
+% for c = 1:length(fn);
+% inputarray{1,c} = fn{c};
+% eval(['datacol = inputfile.' fn{c} ';'])
+% inputarray(2:(length(datacol)+1),c) = datacol;
+% end
+
+% load crop proxy list (this equates an entry in the fertilizer data file
+% to a spatially-explicit map from Monfreda et al 2008.
+cropinput = ReadGenericCSV('proxylist.csv');
+datalist = cropinput.datalist;
+proxylist = cropinput.proxylist;
+
+% load FAO average consumption data centered on the year 2000. **NOTE: b/c
+% FAO only goes back to 2002(?), we must calibrate to data from 2002-03.
+faoinput = ReadGenericCSV('FAO_0307avg.csv');
+fao_ctries = unique(faoinput.ctry_codes);
+
+% load input netcdfs
+disp('Reading input netCDF files')
+SystemGlobals;
+path = [iddstring 'misc/area_ha_5min.nc'];
+[DS] = OpenNetCDF(path);
+gridcellareas = DS.Data;
+
+
+
+%% pre-processing of input file to speed up data lookup
+
+% build unique list of 5-letter/number codes for state-level entries
+
+counter = 1;
+for c = 1:length(inputfile.Sage_admin)
+    code = inputfile.Sage_admin{c};
+    if length(code) > 3
+        inputfile.Sage_state{counter} = code(1:5);
+        counter = counter + 1;
+    end
+end
+statecodes = unique(inputfile.Sage_state);
+tmp = strmatch('new_s',statecodes); % remove any "new_snu" issues
+statecodes(tmp) = [];
+
+% build unique list of 3-letter/number codes for country-level entries
+countrycodes = unique(inputfile.ctry_code);
+tmp = strmatch('new',countrycodes); % remove any "new_snu" issues
+countrycodes(tmp) = [];
+tmp = strmatch('"IFA/FAO/IFDC_FUBC_5_dataset',countrycodes);
+countrycodes(tmp) = [];
+
+% add "row_htable" hash table for inputfile - this will return the row
+% indices for any SAGE admin code (country, state, or county-level).
+if ~exist('row_htable')
+    row_htable = java.util.Properties;
+    for j=1:length(countrycodes);
+        ii=strmatch(countrycodes{j},inputfile.ctry_code);
+        row_htable.put(countrycodes{j},ii);
+    end
+    for j=1:length(statecodes)
+        ii=strmatch(statecodes{j},inputfile.Sage_state);
+        row_htable.put(statecodes{j},ii);
+    end
+    for j=1:length(inputfile.Sage_admin)
+        ii=strmatch(inputfile.Sage_admin{j},inputfile.Sage_admin);
+        row_htable.put(inputfile.Sage_admin{j},ii);
+    end
+end
+
+
+
+%% pre-processing of crop list data
+
+% Create a list of unique crop types we'll make fertilizer application maps
+% for. This map is created from all the unique proxies in the proxylist.
+disp('Building list of unique crop types')
+tmp = {};
+for n = 1:length(proxylist);
+    str = proxylist{n};
+    % below is Jamie's code to convert the list of proxies into a cell array
+    clear proxycellarray
+    str=strrep(str,' ','');
+    str=strrep(str,'"','');
+    str(end+1)='+';
+    ii=find(str=='+');
+    proxycellarray = {};
+    proxycellarray{1}=str(1:ii(1)-1);
+    for j=1:(length(ii)-1)
+        proxycellarray{j+1}=str(ii(j)+1:ii(j+1)-1);
+    end
+    % create a master list & find unique values
+    x = length(tmp);
+    for c = 1:length(proxycellarray);
+        y = x + c;
+        tmp{y} = proxycellarray{c};
+    end
+end
+croplist = unique(tmp(:));
+
+
+
+%% build total fertilized land map and initialize data files
+disp('Building total fertilized land map');
+totfertlandmap = zeros(4320,2160);
+for i = 1:length(croplist);
+    cropname = croplist{i};
+    disp(['Initializing files for ' cropname]);
+    x = ([cropname '_5min.nc']);
+    path = [iddstring 'Crops2000/crops/' x];
+    [DS] = OpenNetCDF(path);
+    areamap = DS.Data(:,:,1);
+    jj = find(areamap>1e20);
+    areamap(jj) = NaN;
+    ii = find(areamap < 2 & areamap > 0);
+    appratemap = nan(4320,2160);
+    appratemap(ii) = -9; % put -9 where we know we have crop data ...
+    % but we do not (at least yet) know the application rate
+    
+    % save the data files
+    appratemap = single(appratemap);
+    areamap = single(areamap);
+    for n = 1:3
+        switch n
+            case 1
+                nutrient = 'N';
+            case 2
+                nutrient = 'P';
+            case 3
+                nutrient = 'K';
+        end
+        titlestr = [cropname '_' nutrient '_ver' verno];
+        DataStoreGateway([titlestr '_rate'],appratemap);
+        DataStoreGateway([titlestr '_datatype'],appratemap);
+        DataStoreGateway([titlestr '_area'],areamap);
+    end
+    
+    % add to total fertilized land map
+    areamap(jj) = 0;
+    areahamap = areamap .* gridcellareas;
+    totfertlandmap = totfertlandmap + areahamap;
+end
+
+
+
+%% fix the spring/summer/winter wheat & barley problem
+% NOTE: this only works for national-level data right now; as there is not
+% subnational, crop-specific information for these crops in the affected
+% countries, there is nothing to worry about! In the future this may need
+% to be changed though.
+
+disp(['Averaging national-level application rate data for seasonal' ...
+    ' varieties of wheat and barley']);
+
+for n = 1:3
+    switch n
+        case 1
+            nutrient = 'N';
+        case 2
+            nutrient = 'P';
+        case 3
+            nutrient = 'K';
+    end
+    disp(['Begin calculating weighted averages for ' nutrient ...
+        ' application rates'])
+    
+    for i = 1:2
+        switch i
+            case 1
+                crop = 'barley';
+            case 2
+                crop = 'wheat';
+        end
+        
+        for s = 1:4;
+            switch s
+                case 1
+                    season = '';
+                case 2
+                    season = '_spring';
+                case 3
+                    season = '_summer';
+                case 4
+                    season = '_winter';
+            end
+            
+            disp(['Getting data columns for ' nutrient ...
+                ' ' season ' ' crop ' data'])
+            dataentry = [crop season];
+            dataheader = [dataentry '_' nutrient '_data'];
+            areaheader = [dataentry '_' nutrient '_areafert'];
+            eval(['datacol_' num2str(s) ' = inputfile.' dataheader ';']);
+            eval(['areacol_' num2str(s) ' = inputfile.' areaheader ';']);
+        end
+        
+        for k = 1:length(fao_ctries)
+            countrycode = fao_ctries{k};
+            
+            % Find the rows with data for this country:
+            ctryrows=row_htable.get(countrycode);
+            
+            % Find the rows for data type, source, and the country-level
+            % data
+            tmp = strmatch('data type', inputfile.Name_1(ctryrows));
+            datatyperow = ctryrows(tmp);
+            tmp = strmatch('data source', inputfile.Name_1(ctryrows));
+            datasourcerow = ctryrows(tmp);
+            tmp = strmatch('country data', inputfile.Name_1(ctryrows));
+            countrydatarow = ctryrows(tmp);
+            country = inputfile.Cntry_name{datatyperow};
+            
+            for s = 1:4;
+                eval(['datatype_' num2str(s) ' = str2double(datacol_' ...
+                    num2str(s) '{datatyperow});']);
+                eval(['datasource_' num2str(s) ' = datacol_' ...
+                    num2str(s) '{datasourcerow};']);
+                eval(['countrydata_' num2str(s) ' = str2double(datacol_'...
+                    num2str(s) '{countrydatarow});']);
+                eval(['countryarea_' num2str(s) ' = str2double(areacol_'...
+                    num2str(s) '{countrydatarow});']);
+            end
+            
+            WAflag = 1;
+            
+            if countrydata_1 < 0
+                if countrydata_2 < 0
+                    if countrydata_3 < 0
+                        if countrydata_4 < 0
+                            disp(['no ' crop ' ' nutrient ...
+                                ' data for ' country]);
+                            WAflag = 0;
+                        end
+                    end
+                end
+            elseif countrydata_2 < 0
+                if countrydata_3 < 0
+                    if countrydata_4 < 0
+                        disp(['only regular ' crop ' ' nutrient ...
+                            ' data for ' country]);
+                        WAflag = 0;
+                    end
+                end
+            end
+            if WAflag == 1;
+                % switch -9 no data values for both application rate and
+                % area to 0 for purposes of calculating a weighted average
+                for s = 1:4;
+                    eval(['countrydata = countrydata_' num2str(s) ';']);
+                    eval(['countryarea = countryarea_' num2str(s) ';']);
+                    if countrydata < 0
+                        countrydata = 0;
+                    end
+                    if countryarea < 0
+                        countryarea = 0;
+                    end
+                    eval(['countrydata_' num2str(s) ' = countrydata;']);
+                    eval(['countryarea_' num2str(s) ' = countryarea;']);
+                end
+                
+                totalcroparea = countryarea_1 + countryarea_2 + ...
+                    countryarea_3 + countryarea_4;
+                
+                ratexarea_1 = countryarea_1 .* countrydata_1;
+                ratexarea_2 = countryarea_2 .* countrydata_2;
+                ratexarea_3 = countryarea_3 .* countrydata_3;
+                ratexarea_4 = countryarea_4 .* countrydata_4;
+                
+                totalratexarea = ratexarea_1 + ratexarea_2 + ...
+                    ratexarea_3 + ratexarea_4;
+                
+                WA_rate = totalratexarea ./ totalcroparea;
+                
+                disp(['weighted average for ' crop ...
+                    ' ' nutrient ' in ' country ': ' num2str(WA_rate) ...
+                    ' kg/ha ' nutrient ', ' num2str(totalcroparea) ...
+                    ' total ha cropland']);
+                
+                % save the rate and area in the proper data columns
+                
+                dataheader = [crop '_' nutrient '_data'];
+                areaheader = [crop '_' nutrient '_areafert'];
+                eval(['datacol = inputfile.' dataheader ';']);
+                eval(['areacol = inputfile.' areaheader ';']);
+                
+                datacol{countrydatarow} = num2str(WA_rate);
+                areacol{countrydatarow} = num2str(totalcroparea);
+                
+                % save the data type: **NOTE** for all countries except the
+                % US we are dealing with national-level data so this is
+                % hard-coded as data type 3. For the US we will use data
+                % type 1 so that we can use subnational wheat app rates
+                % where we have them.
+                if strmatch(countrycode, 'USA');
+                    datacol{datatyperow} = '1';
+                    areacol{datatyperow} = '1';
+                else
+                    datacol{datatyperow} = '3';
+                    areacol{datatyperow} = '3';
+                end
+                
+                % save the data source
+                
+                for s = 1:4
+                    eval(['datasource = datasource_' num2str(s) ';']);
+                    if datasource == -9
+                    else
+                        sourcetosave = datasource;
+                    end
+                end
+                
+                datacol{datasourcerow} = sourcetosave;
+                areacol{datasourcerow} = sourcetosave;
+                
+                % save to inputfile
+                
+                eval(['inputfile.' dataheader ' = datacol;']);
+                eval(['inputfile.' areaheader ' = areacol;']);
+                
+            end
+        end
+    end
+end
+
+% remove the seasonal data entries from the datalist
+tmp = datalist([1:9 13:150 154]);
+datalist = tmp;
+tmp = proxylist([1:9 13:150 154]);
+proxylist = tmp;
+
+% delete some extra files after pre-processing
+clear datacol datacol_1 datacol_2 datacol_3 datacol_4
+clear areacol areacol_1 areacol_2 areacol_3 areacol_4
+clear m3pastmap
+
+
+
+%% save the input stuff after it is complete!
+
+save fertworking
 
 
 
@@ -403,524 +405,524 @@ for n = 1:3
             nutrient = 'K';
     end
     
-% % % %     disp(['Begin working on ' nutrient ' data from the input file'])
-% % % %     
-% % % %     % cycle through the countries
-% % % %     for k = 1:length(fao_ctries)
-% % % %         countrycode = fao_ctries{k};
-% % % %         
-% % % %         % Find the rows with data for this country:
-% % % %         ctryrows=row_htable.get(countrycode);
-% % % %         
-% % % %         % Create a list for ctryrows minus the data type row,
-% % % %         % country data row, and data source row
-% % % %         subnationalrows = ctryrows;
-% % % %         subnationalrows([1, 2, 3]) = [];
-% % % %         
-% % % %         % Find the rows for data type, source, and the
-% % % %         % country-level data
-% % % %         tmp = strmatch('data type', inputfile.Name_1(ctryrows));
-% % % %         datatyperow = ctryrows(tmp);
-% % % %         tmp = strmatch('data source', inputfile.Name_1(ctryrows));
-% % % %         datasourcerow = ctryrows(tmp);
-% % % %         tmp = strmatch('country data', inputfile.Name_1(ctryrows));
-% % % %         countrydatarow = ctryrows(tmp);
-% % % %         country = inputfile.Cntry_name{datatyperow};
-% % % %         
-% % % %         % cycle through the data entries
-% % % %         for datano = 1:length(datalist)
-% % % %             dataentry = datalist{datano};
-% % % %             
-% % % %             disp(['Working on ' dataentry ' ' nutrient ' data' ...
-% % % %                 'in ' country])
-% % % %             
-% % % %             dataheader = [dataentry '_' nutrient '_data'];
-% % % %             areaheader = [dataentry '_' nutrient '_areafert'];
-% % % %             
-% % % %             eval(['datacol = inputfile.' dataheader ';']);
-% % % %             eval(['areacol = inputfile.' areaheader ';']);
-% % % %             
-% % % %             tmp = strmatch(dataentry, datalist);
-% % % %             str = proxylist{tmp};
-% % % %             
-% % % %             % below is Jamie's code to convert the list of proxies into a cell
-% % % %             % array
-% % % %             clear proxycellarray
-% % % %             str=strrep(str,' ','');
-% % % %             str=strrep(str,'"','');
-% % % %             str(end+1)='+';
-% % % %             ii=find(str=='+');
-% % % %             proxycellarray = {};
-% % % %             proxycellarray{1}=str(1:ii(1)-1);
-% % % %             for j=1:(length(ii)-1)
-% % % %                 proxycellarray{j+1}=str(ii(j)+1:ii(j+1)-1);
-% % % %             end
-% % % %             
-% % % %             % get the data type, source, and app rate data for the country
-% % % %             % and data entry
-% % % %             datatype = str2double(datacol{datatyperow});
-% % % %             datasource = datacol{datasourcerow};
-% % % %             countrydata = str2double(datacol{countrydatarow});
-% % % %             
-% % % %             if (datatype > 0)
-% % % %                 
-% % % %                 % cycle through crop proxies
-% % % %                 for c = 1:length(proxycellarray);
-% % % %                     cropname = proxycellarray{c};
-% % % %                     titlestr = [cropname '_' nutrient '_ver' verno];
-% % % %                     appratemap = DataStoreGateway([titlestr ...
-% % % %                         '_rate']);
-% % % %                     datatypemap = DataStoreGateway([titlestr ...
-% % % %                         '_datatype']);
-% % % %                     
-% % % %                     % *** ADJUST APP RATES IF THE DATA IS FOR PASTURE ***
-% % % %                     % is this pasture data? if so, we must adjust the
-% % % %                     % application rates based on the amount of fertilized
-% % % %                     % pasture land
-% % % %                     if strmatch('past', cropname)
-% % % %                         
-% % % %                         % get a map of M3 pastureland
-% % % %                         m3pastmap = DataStoreGateway([titlestr '_area']);
-% % % %                         m3pastmap = m3pastmap .* gridcellareas;
-% % % %                         ii = find(isnan(m3pastmap));
-% % % %                         m3pastmap(ii) = 0;
-% % % %                         
-% % % %                         % is this from "crop group pasture and fodder"? if
-% % % %                         % so we must calculate fertilized pasture land as
-% % % %                         % IFA cg_pastureandfodder land - M3 crop areas for
-% % % %                         % all the fodder crops in the group. we assume the
-% % % %                         % remaining fertilized land is pasture land.
-% % % %                         if strmatch('cg', dataentry)
-% % % %                             
-% % % %                             foddermap = zeros(4320,2160);
-% % % %                             % sum up areas of all the fodder crops (the
-% % % %                             % first proxy is pasture, so we skip that
-% % % %                             % entry in the proxy cell array)
-% % % %                             for x = 2:length(proxycellarray)
-% % % %                                 proxyname = proxycellarray{x};
-% % % %                                 titlestr2 = [proxyname '_' nutrient '_ver' verno];
-% % % %                                 areamap = DataStoreGateway([titlestr2 '_area']);
-% % % %                                 areahamap = areamap .* gridcellareas;
-% % % %                                 ii = find(isnan(areahamap));
-% % % %                                 areahamap(ii) = 0;
-% % % %                                 foddermap = foddermap + areahamap;
-% % % %                             end
-% % % %                             [outline] = CountryCodetoOutline(countrycode);
-% % % %                             fodderarea = sum(sum(foddermap.*outline));
-% % % %                             areaheader = [dataentry '_' nutrient '_areafert'];
-% % % %                             eval(['areacol = inputfile.' areaheader ';']);
-% % % %                             tmp = str2double(areacol{countrydatarow});
-% % % %                             IFApastarea = tmp - fodderarea;
-% % % %                             
-% % % %                             clear foddermap
-% % % %                             
-% % % %                         else
-% % % %                             % for pasture data not from the crop group,
-% % % %                             % just get the pasture area from the input file
-% % % %                             areaheader = [dataentry '_' nutrient '_areafert'];
-% % % %                             eval(['areacol = inputfile.' areaheader ';']);
-% % % %                             IFApastarea = str2double(areacol{countrydatarow});
-% % % %                         end
-% % % %                         
-% % % %                         % if pasture area is greater than zero, then scale
-% % % %                         % the application rates appropriately and use the
-% % % %                         % adjusted application rates on the pasture area
-% % % %                         if IFApastarea > 0
-% % % %                             [outline] = CountryCodetoOutline(countrycode);
-% % % %                             m3pastarea = sum(sum(m3pastmap.*outline));
-% % % %                             scalar = IFApastarea ./ m3pastarea;
-% % % %                             if scalar < 1;
-% % % %                                 adjcountrydata = countrydata .* scalar;
-% % % %                             else
-% % % %                                 adjcountrydata = countrydata
-% % % %                             end
-% % % %                         else
-% % % %                             disp(['Calculated pasture area is < 0, ' ...
-% % % %                                 'skipping pasture application for ' ...
-% % % %                                 country]);
-% % % %                             datatype = 0;
-% % % %                         end
-% % % %                         
-% % % %                     else
-% % % %                         % if we're not dealing with pasture, simply use the
-% % % %                         % national-level application rate from the input
-% % % %                         % file.
-% % % %                         adjcountrydata = countrydata;
-% % % %                         
-% % % %                     end
-% % % %                     
-% % % %                     switch datatype
-% % % %                         
-% % % %                         case 1 % subnational, crop-specific application
-% % % %                             % rate is applied directly to each crop proxy
-% % % %                             
-% % % %                             disp(['Processing subnational application ' ...
-% % % %                                 'rate data for ' dataentry ...
-% % % %                                 ', crop proxy: "' cropname '" in ' country])
-% % % %                             
-% % % %                             % cycle through each subnational political unit
-% % % %                             for s = 1:length(subnationalrows);
-% % % %                                 snucode = inputfile.Sage_admin{subnationalrows(s)};
-% % % %                                 snuname1 = inputfile.Name_1{subnationalrows(s)};
-% % % %                                 snuname2 = inputfile.Name_2{subnationalrows(s)};
-% % % %                                 snudata = str2double(datacol{subnationalrows(s)});
-% % % %                                 
-% % % %                                 if isnan(snudata) % snudata will return as
-% % % %                                     % NaN if no data exists for a
-% % % %                                     % particular snu; if this happens need
-% % % %                                     % to just use the national-level
-% % % %                                     % application rate
-% % % %                                     
-% % % %                                     disp(['No subnational rate for '...
-% % % %                                         snuname1 ' ' snuname2 ' so '...
-% % % %                                         'applying national-level ' ...
-% % % %                                         nutrient ' app. rate to '...
-% % % %                                         'crop proxy: "' cropname '"']);
-% % % %                                     
-% % % %                                     outline = CountryCodetoOutline(snucode);
-% % % %                                     ii = find(appratemap > -10 & outline > 0);
-% % % %                                     if length(ii) < 1
-% % % %                                         warning(['No cropland detected in ' ...
-% % % %                                             'this SNU']);
-% % % %                                     else
-% % % %                                         appratemap(ii) = adjcountrydata;
-% % % %                                         datatypemap(ii) = 3;
-% % % %                                     end
-% % % %                                     
-% % % %                                 else
-% % % %                                     
-% % % %                                     disp(['Working on application rates for '...
-% % % %                                         'crop proxy: "' cropname '" in ' ...
-% % % %                                         snuname1 ' ' snuname2]);
-% % % %                                     
-% % % %                                     outline = CountryCodetoOutline(snucode);
-% % % %                                     ii = find(appratemap > -10 & outline > 0);
-% % % %                                     if length(ii) < 1
-% % % %                                         warning(['No cropland detected in ' ...
-% % % %                                             'this SNU']);
-% % % %                                     else
-% % % %                                         appratemap(ii) = snudata;
-% % % %                                         datatypemap(ii) = 1;
-% % % %                                     end
-% % % %                                 end
-% % % %                             end
-% % % %                             
-% % % %                         case 3 % national-level application rate data is
-% % % %                             % applied directly to each country's crop area
-% % % %                             
-% % % %                             disp(['Processing national-level application ' ...
-% % % %                                 'rate data for ' dataentry ...
-% % % %                                 ', crop proxy: "' cropname '" in ' country])
-% % % %                             
-% % % %                             outline = CountryCodetoOutline(countrycode);
-% % % %                             
-% % % %                             titlestr = [cropname '_' nutrient '_ver' verno ];
-% % % %                             appratemap=DataStoreGateway([titlestr '_rate']);
-% % % %                             datatypemap = DataStoreGateway([titlestr ...
-% % % %                                 '_datatype']);
-% % % %                             
-% % % %                             ii = find(appratemap > -10 & outline > 0);
-% % % %                             appratemap(ii) = adjcountrydata;
-% % % %                             datatypemap(ii) = 3;
-% % % %                             
-% % % %                     end
-% % % %                     DataStoreGateway([titlestr '_rate'],appratemap);
-% % % %                     DataStoreGateway([titlestr '_datatype'],datatypemap);
-% % % %                 end
-% % % %                 
-% % % %             else
-% % % %                 
-% % % %                 disp(['No data for ' dataentry ' in ' country]);
-% % % %                 
-% % % %             end
-% % % %         end
-% % % %         
-% % % %     end
-% % % %     
-% % % %     
-% % % %     %% Fill gaps in application rate data with income-based extrapolation
-% % % %     
-% % % %     disp(['Begin filling application rate gaps from countries ' ...
-% % % %         ' of similar economic status']);
-% % % %     
-% % % %     path = [iddstring 'misc/wbiclass.csv'];
-% % % %     WBI = ReadGenericCSV(path);
-% % % %     
-% % % %     WBIhtable = java.util.Properties;
-% % % %     for j=1:length(WBI.countrycode);
-% % % %         income = WBI.class{j};
-% % % %         % get rid of divisions between OECD and non-OECD high income
-% % % %         % countries
-% % % %         if strmatch('High',income);
-% % % %             income = 'High income';
-% % % %         end
-% % % %         WBIhtable.put(WBI.countrycode{j},income);
-% % % %     end
-% % % %     
-% % % %     for c = 1:length(croplist)
-% % % %         cropname = croplist{c};
-% % % %         
-% % % %         if strmatch('horticulture', cropname);
-% % % %             disp(['Skipping extrapolation for horticulture: this is ' ...
-% % % %                 'only present to preserve total nutrient consumption ' ...
-% % % %                 'in a few countries.']);
-% % % %         else
-% % % %             
-% % % %             disp(['Start filling in missing application rate data for ' ...
-% % % %                 cropname]);
-% % % %             
-% % % %             titlestr = [cropname '_' nutrient '_ver' verno ];
-% % % %             appratemap = DataStoreGateway([titlestr '_rate']);
-% % % %             datatypemap = DataStoreGateway([titlestr '_datatype']);
-% % % %             areamap = DataStoreGateway([titlestr '_area']);
-% % % %             areahamap = areamap .* gridcellareas;
-% % % %             
-% % % %             ctries_wodata = {};
-% % % %             ctries_withdata = {};
-% % % %             ctries_nocrop = {};
-% % % %             
-% % % %             % loop through all ctries to find out if they are missing data (-9)
-% % % %             disp(['Finding countries missing data for ' cropname]);
-% % % %             for k = 1:length(countrycodes)
-% % % %                 
-% % % %                 ratelist = [];
-% % % %                 
-% % % %                 countrycode = countrycodes{k};
-% % % %                 outline = CountryCodetoOutline(countrycode);
-% % % %                 
-% % % %                 ratetemp = appratemap .* outline;
-% % % %                 ratetemp = ratetemp(CropMaskIndices);
-% % % %                 ratetemp = ratetemp(~isnan(ratetemp));
-% % % %                 uniquerates = unique(ratetemp);
-% % % %                 tmp = find(uniquerates == 0);
-% % % %                 uniquerates(tmp) = [];
-% % % %                 
-% % % %                 if uniquerates == -9;
-% % % %                     % it is ... let's add it to missing data list
-% % % %                     ctries_wodata{end+1} = countrycode;
-% % % %                 else
-% % % %                     if isempty(uniquerates)
-% % % %                         ctries_nocrop{end+1} = countrycode;
-% % % %                     else
-% % % %                         ctries_withdata{end+1} = countrycode;
-% % % %                     end
-% % % %                 end
-% % % %             end
-% % % %             
-% % % %             % find area-weighted average application rates for the globe and
-% % % %             % for each economic group, using only the points for which we have
-% % % %             % subnational or national-level application rate data
-% % % %             
-% % % %             % get the global average
-% % % %             
-% % % %             ii = find(appratemap > 0);
-% % % %             tmp = appratemap(ii) .* areamap(ii) .* gridcellareas(ii);
-% % % %             tmp = mean(tmp);
-% % % %             meanarea = mean(areamap(ii) .* gridcellareas(ii));
-% % % %             globalavg = tmp ./ meanarea;
-% % % %             
-% % % %             % get the income-specific averages
-% % % %             
-% % % %             uniqueincomes = {};
-% % % %             for i = 1:length(ctries_withdata)
-% % % %                 datactry = ctries_withdata{i};
-% % % %                 tmp = WBIhtable.get(datactry);
-% % % %                 if ~isempty(tmp)
-% % % %                     uniqueincomes = [uniqueincomes; tmp];
-% % % %                 end
-% % % %             end
-% % % %             uniqueincomes = unique(uniqueincomes);
-% % % %             
-% % % %             clear LIrate LIsimilarlist LMIrate LMIsimilarlist UMIrate ...
-% % % %                 UMIsimilarlist HIrate HIsimilarlist;
-% % % %             
-% % % %             for i = 1:length(uniqueincomes)
-% % % %                 incomelevel = uniqueincomes{i};
-% % % %                 
-% % % %                 ratelist = [];
-% % % %                 arealist = [];
-% % % %                 similar = {};
-% % % %                 
-% % % %                 for j = 1:length(ctries_withdata)
-% % % %                     datactry = ctries_withdata{j};
-% % % %                     tmp = WBIhtable.get(datactry);
-% % % %                     
-% % % %                     % if the income levels match, add to ratelist (and similar
-% % % %                     % list)
-% % % %                     if strmatch(incomelevel,tmp);
-% % % %                         
-% % % %                         similar{end+1} = datactry;
-% % % %                         
-% % % %                         outline = CountryCodetoOutline(datactry);
-% % % %                         
-% % % %                         ctry_appratemap = appratemap .* outline;
-% % % %                         ii = find(isfinite(ctry_appratemap));
-% % % %                         
-% % % %                         tmp = ctry_appratemap(ii);
-% % % %                         tmp2 = areahamap(ii);
-% % % %                         
-% % % %                         ii = find(tmp == -9);
-% % % %                         tmp(ii) = [];
-% % % %                         tmp2(ii) = [];
-% % % %                         ii = find(tmp == 0);
-% % % %                         tmp(ii) = [];
-% % % %                         tmp2(ii) = [];
-% % % %                         
-% % % %                         ratelist = [ratelist(:)' tmp(:)'];
-% % % %                         arealist = [arealist(:)' tmp2(:)'];
-% % % %                         
-% % % %                     end
-% % % %                 end
-% % % %                 
-% % % %                 if ~isempty(ratelist)
-% % % %                     
-% % % %                     % create an area-weighted average application rate using
-% % % %                     % the rates from countries of this economic status
-% % % %                     
-% % % %                     tmp = ratelist(:) .* arealist(:);
-% % % %                     tmp = mean(tmp);
-% % % %                     meanarea = mean(arealist);
-% % % %                     simctryrate = tmp ./ meanarea;
-% % % %                     
-% % % %                     % list the countries
-% % % %                     similarlist = [];
-% % % %                     for k = 1:length(similar);
-% % % %                         tmp = similar{k};
-% % % %                         similarlist = [similarlist '; ' tmp];
-% % % %                     end
-% % % %                     
-% % % %                     % save the rate and the similar country list for the
-% % % %                     % appropriate economic status
-% % % %                     if strmatch(incomelevel, 'Low income')
-% % % %                         LIrate = simctryrate;
-% % % %                         LIsimilarlist = similarlist;
-% % % %                     elseif strmatch(incomelevel, 'Lower middle income')
-% % % %                         LMIrate = simctryrate;
-% % % %                         LMIsimilarlist = similarlist;
-% % % %                     elseif strmatch(incomelevel, 'Upper middle income')
-% % % %                         UMIrate = simctryrate;
-% % % %                         UMIsimilarlist = similarlist;
-% % % %                     elseif strmatch(incomelevel, 'High income')
-% % % %                         HIrate = simctryrate;
-% % % %                         HIsimilarlist = similarlist;
-% % % %                     end
-% % % %                     
-% % % %                 else
-% % % %                     warning(['Problem with filling data for ' incomelevel ...
-% % % %                         '; data should be available but was not able to ' ...
-% % % %                         'calculate an application rate'])
-% % % %                 end
-% % % %                 
-% % % %             end
-% % % %             
-% % % %             % fill in the values for countries without data: use data from
-% % % %             % similar economic groups if possible, otherwise use the global
-% % % %             % average
-% % % %             
-% % % %             for k = 1:length(ctries_wodata);
-% % % %                 countrycode =  ctries_wodata{k};
-% % % %                 
-% % % %                 outline = CountryCodetoOutline(countrycode);
-% % % %                 ctry_appratemap = appratemap .* outline;
-% % % %                 ii = find(ctry_appratemap == -9);
-% % % %                 
-% % % %                 incomelevel = WBIhtable.get(countrycode);
-% % % %                 
-% % % %                 if ~isempty(incomelevel)
-% % % %                     switch incomelevel
-% % % %                         case 'Low income'
-% % % %                             tmp = 'LI';
-% % % %                             tmp2 = exist('LIrate');
-% % % %                         case 'Lower middle income'
-% % % %                             tmp = 'LMI';
-% % % %                             tmp2 = exist('LMIrate');
-% % % %                         case 'Upper middle income'
-% % % %                             tmp = 'UMI';
-% % % %                             tmp2 = exist('UMIrate');
-% % % %                         case 'High income'
-% % % %                             tmp = 'HI';
-% % % %                             tmp2 = exist('HIrate');
-% % % %                     end
-% % % %                     
-% % % %                     % if we have an average calculated for this income level,
-% % % %                     % fill in the country data appropriately; otherwise, use
-% % % %                     % the global average. record the accuracy of the average.
-% % % %                     if tmp2 == 1;
-% % % %                         % grab the similar countries list
-% % % %                         eval(['similarlist = ' tmp 'similarlist;']);
-% % % %                         disp(['Filling in ' cropname ' data for ' ...
-% % % %                             countrycode ' with average application rate ' ...
-% % % %                             'data from ' incomelevel ' countries: ' ...
-% % % %                             similarlist]);
-% % % %                         eval(['appratemap(ii) = ' tmp 'rate;']);
-% % % %                         datatypemap(ii) = 5;
-% % % %                     else
-% % % %                         disp(['No similar countries for ' countrycode ...
-% % % %                             '; using global average ' cropname ' data']);
-% % % %                         appratemap(ii) = globalavg;
-% % % %                         datatypemap(ii) = 5.5;
-% % % %                     end
-% % % %                     
-% % % %                 else % if no income level was found, use the global average
-% % % %                     disp(['No income level for ' countrycode '; using ' ...
-% % % %                         'global average ' cropname ' data']);
-% % % %                     appratemap(ii) = globalavg;
-% % % %                     datatypemap(ii) = 5.5;
-% % % %                 end
-% % % %             end
-% % % %             DataStoreGateway([titlestr '_rate'], appratemap);
-% % % %             DataStoreGateway([titlestr '_datatype'], datatypemap);
-% % % %         end
-% % % %     end
-% % % %     
-% % % %     
-% % % %     %% Match everything up with FAO consumption
-% % % %     
-% % % %     disp(['Begin scaling rate data to match with FAO ' ...
-% % % %         'nutrient consumption data']);
-% % % %     
-% % % %     % build total consumption maps: one for trusted crops (tcm_tc) and one
-% % % %     % for "untrusted" (extrapolated) crops (tcm_utc)
-% % % %     disp('Building a map of total nutrient consumption');
-% % % %     tcm_tc = zeros(4320,2160);
-% % % %     tcm_utc = zeros(4320,2160);
-% % % %     for c = 1:length(croplist)
-% % % %         cropname = croplist{c};
-% % % %         titlestr = [cropname '_' nutrient '_ver' verno ];
-% % % %         appratemap=DataStoreGateway([titlestr '_rate']);
-% % % %         areamap=DataStoreGateway([titlestr '_area']);
-% % % %         datatypemap = DataStoreGateway([titlestr '_datatype']);
-% % % %         jj = find(appratemap < 0); % put no data and -9 values to zero
-% % % %         appratemap(jj) = 0;
-% % % %         jj = find(isnan(appratemap)); % put no data and -9 values to zero
-% % % %         appratemap(jj) = 0;
-% % % %         jj = find(areamap < 0); % put no data and -9 values to zero
-% % % %         areamap(jj) = 0;
-% % % %         jj = find(isnan(areamap)); % put no data and -9 values to zero
-% % % %         areamap(jj) = 0;
-% % % %         
-% % % %         crop_consmap = (areamap.*gridcellareas.*appratemap);
-% % % %         ii = find(datatypemap < 3.01);
-% % % %         tcm_tc(ii) = tcm_tc(ii) + crop_consmap(ii);
-% % % %         ii = find(datatypemap > 3.01);
-% % % %         tcm_utc(ii) = tcm_utc(ii) + crop_consmap(ii);
-% % % %     end
-% % % %     
-% % % %     tcm_allcrops = tcm_utc + tcm_tc;
-% % % %     
-% % % %     % store these maps for reference
-% % % %     DataStoreGateway(['tcm_utc_' nutrient '_noscaling'], tcm_utc);
-% % % %     DataStoreGateway(['tcm_tc_' nutrient '_noscaling'], tcm_tc);
-% % % %     DataStoreGateway(['tcm_allcrops_' nutrient '_noscaling'],tcm_allcrops);
-% % % % 
-% % % %     % create scaling maps: one for trusted crops (scalingmap_tc) and one
-% % % %     % for "untrusted" (extrapolated) crops (scalingmap_utc)
-% % % %     scalingmap_tc = ones(4320,2160);
-% % % %     scalingmap_utc = ones(4320,2160);
-% % % % 
-% % % %     % create a binary fao data map; 1 = yes, we have FAO data, 0 =
-% % % %     % no FAO data.
-% % % %     faodatamap = nan(4320,2160);
+    disp(['Begin working on ' nutrient ' data from the input file'])
+    
+    % cycle through the countries
+    for k = 1:length(fao_ctries)
+        countrycode = fao_ctries{k};
+        
+        % Find the rows with data for this country:
+        ctryrows=row_htable.get(countrycode);
+        
+        % Create a list for ctryrows minus the data type row,
+        % country data row, and data source row
+        subnationalrows = ctryrows;
+        subnationalrows([1, 2, 3]) = [];
+        
+        % Find the rows for data type, source, and the
+        % country-level data
+        tmp = strmatch('data type', inputfile.Name_1(ctryrows));
+        datatyperow = ctryrows(tmp);
+        tmp = strmatch('data source', inputfile.Name_1(ctryrows));
+        datasourcerow = ctryrows(tmp);
+        tmp = strmatch('country data', inputfile.Name_1(ctryrows));
+        countrydatarow = ctryrows(tmp);
+        country = inputfile.Cntry_name{datatyperow};
+        
+        % cycle through the data entries
+        for datano = 1:length(datalist)
+            dataentry = datalist{datano};
+            
+            disp(['Working on ' dataentry ' ' nutrient ' data' ...
+                'in ' country])
+            
+            dataheader = [dataentry '_' nutrient '_data'];
+            areaheader = [dataentry '_' nutrient '_areafert'];
+            
+            eval(['datacol = inputfile.' dataheader ';']);
+            eval(['areacol = inputfile.' areaheader ';']);
+            
+            tmp = strmatch(dataentry, datalist);
+            str = proxylist{tmp};
+            
+            % below is Jamie's code to convert the list of proxies into a cell
+            % array
+            clear proxycellarray
+            str=strrep(str,' ','');
+            str=strrep(str,'"','');
+            str(end+1)='+';
+            ii=find(str=='+');
+            proxycellarray = {};
+            proxycellarray{1}=str(1:ii(1)-1);
+            for j=1:(length(ii)-1)
+                proxycellarray{j+1}=str(ii(j)+1:ii(j+1)-1);
+            end
+            
+            % get the data type, source, and app rate data for the country
+            % and data entry
+            datatype = str2double(datacol{datatyperow});
+            datasource = datacol{datasourcerow};
+            countrydata = str2double(datacol{countrydatarow});
+            
+            if (datatype > 0)
+                
+                % cycle through crop proxies
+                for c = 1:length(proxycellarray);
+                    cropname = proxycellarray{c};
+                    titlestr = [cropname '_' nutrient '_ver' verno];
+                    appratemap = DataStoreGateway([titlestr ...
+                        '_rate']);
+                    datatypemap = DataStoreGateway([titlestr ...
+                        '_datatype']);
+                    
+                    % *** ADJUST APP RATES IF THE DATA IS FOR PASTURE ***
+                    % is this pasture data? if so, we must adjust the
+                    % application rates based on the amount of fertilized
+                    % pasture land
+                    if strmatch('past', cropname)
+                        
+                        % get a map of M3 pastureland
+                        m3pastmap = DataStoreGateway([titlestr '_area']);
+                        m3pastmap = m3pastmap .* gridcellareas;
+                        ii = find(isnan(m3pastmap));
+                        m3pastmap(ii) = 0;
+                        
+                        % is this from "crop group pasture and fodder"? if
+                        % so we must calculate fertilized pasture land as
+                        % IFA cg_pastureandfodder land - M3 crop areas for
+                        % all the fodder crops in the group. we assume the
+                        % remaining fertilized land is pasture land.
+                        if strmatch('cg', dataentry)
+                            
+                            foddermap = zeros(4320,2160);
+                            % sum up areas of all the fodder crops (the
+                            % first proxy is pasture, so we skip that
+                            % entry in the proxy cell array)
+                            for x = 2:length(proxycellarray)
+                                proxyname = proxycellarray{x};
+                                titlestr2 = [proxyname '_' nutrient '_ver' verno];
+                                areamap = DataStoreGateway([titlestr2 '_area']);
+                                areahamap = areamap .* gridcellareas;
+                                ii = find(isnan(areahamap));
+                                areahamap(ii) = 0;
+                                foddermap = foddermap + areahamap;
+                            end
+                            [outline] = CountryCodetoOutline(countrycode);
+                            fodderarea = sum(sum(foddermap.*outline));
+                            areaheader = [dataentry '_' nutrient '_areafert'];
+                            eval(['areacol = inputfile.' areaheader ';']);
+                            tmp = str2double(areacol{countrydatarow});
+                            IFApastarea = tmp - fodderarea;
+                            
+                            clear foddermap
+                            
+                        else
+                            % for pasture data not from the crop group,
+                            % just get the pasture area from the input file
+                            areaheader = [dataentry '_' nutrient '_areafert'];
+                            eval(['areacol = inputfile.' areaheader ';']);
+                            IFApastarea = str2double(areacol{countrydatarow});
+                        end
+                        
+                        % if pasture area is greater than zero, then scale
+                        % the application rates appropriately and use the
+                        % adjusted application rates on the pasture area
+                        if IFApastarea > 0
+                            [outline] = CountryCodetoOutline(countrycode);
+                            m3pastarea = sum(sum(m3pastmap.*outline));
+                            scalar = IFApastarea ./ m3pastarea;
+                            if scalar < 1;
+                                adjcountrydata = countrydata .* scalar;
+                            else
+                                adjcountrydata = countrydata
+                            end
+                        else
+                            disp(['Calculated pasture area is < 0, ' ...
+                                'skipping pasture application for ' ...
+                                country]);
+                            datatype = 0;
+                        end
+                        
+                    else
+                        % if we're not dealing with pasture, simply use the
+                        % national-level application rate from the input
+                        % file.
+                        adjcountrydata = countrydata;
+                        
+                    end
+                    
+                    switch datatype
+                        
+                        case 1 % subnational, crop-specific application
+                            % rate is applied directly to each crop proxy
+                            
+                            disp(['Processing subnational application ' ...
+                                'rate data for ' dataentry ...
+                                ', crop proxy: "' cropname '" in ' country])
+                            
+                            % cycle through each subnational political unit
+                            for s = 1:length(subnationalrows);
+                                snucode = inputfile.Sage_admin{subnationalrows(s)};
+                                snuname1 = inputfile.Name_1{subnationalrows(s)};
+                                snuname2 = inputfile.Name_2{subnationalrows(s)};
+                                snudata = str2double(datacol{subnationalrows(s)});
+                                
+                                if isnan(snudata) % snudata will return as
+                                    % NaN if no data exists for a
+                                    % particular snu; if this happens need
+                                    % to just use the national-level
+                                    % application rate
+                                    
+                                    disp(['No subnational rate for '...
+                                        snuname1 ' ' snuname2 ' so '...
+                                        'applying national-level ' ...
+                                        nutrient ' app. rate to '...
+                                        'crop proxy: "' cropname '"']);
+                                    
+                                    outline = CountryCodetoOutline(snucode);
+                                    ii = find(appratemap > -10 & outline > 0);
+                                    if length(ii) < 1
+                                        warning(['No cropland detected in ' ...
+                                            'this SNU']);
+                                    else
+                                        appratemap(ii) = adjcountrydata;
+                                        datatypemap(ii) = 3;
+                                    end
+                                    
+                                else
+                                    
+                                    disp(['Working on application rates for '...
+                                        'crop proxy: "' cropname '" in ' ...
+                                        snuname1 ' ' snuname2]);
+                                    
+                                    outline = CountryCodetoOutline(snucode);
+                                    ii = find(appratemap > -10 & outline > 0);
+                                    if length(ii) < 1
+                                        warning(['No cropland detected in ' ...
+                                            'this SNU']);
+                                    else
+                                        appratemap(ii) = snudata;
+                                        datatypemap(ii) = 1;
+                                    end
+                                end
+                            end
+                            
+                        case 3 % national-level application rate data is
+                            % applied directly to each country's crop area
+                            
+                            disp(['Processing national-level application ' ...
+                                'rate data for ' dataentry ...
+                                ', crop proxy: "' cropname '" in ' country])
+                            
+                            outline = CountryCodetoOutline(countrycode);
+                            
+                            titlestr = [cropname '_' nutrient '_ver' verno ];
+                            appratemap=DataStoreGateway([titlestr '_rate']);
+                            datatypemap = DataStoreGateway([titlestr ...
+                                '_datatype']);
+                            
+                            ii = find(appratemap > -10 & outline > 0);
+                            appratemap(ii) = adjcountrydata;
+                            datatypemap(ii) = 3;
+                            
+                    end
+                    DataStoreGateway([titlestr '_rate'],appratemap);
+                    DataStoreGateway([titlestr '_datatype'],datatypemap);
+                end
+                
+            else
+                
+                disp(['No data for ' dataentry ' in ' country]);
+                
+            end
+        end
+        
+    end
+    
+    
+    %% Fill gaps in application rate data with income-based extrapolation
+    
+    disp(['Begin filling application rate gaps from countries ' ...
+        ' of similar economic status']);
+    
+    path = [iddstring 'misc/wbiclass.csv'];
+    WBI = ReadGenericCSV(path);
+    
+    WBIhtable = java.util.Properties;
+    for j=1:length(WBI.countrycode);
+        income = WBI.class{j};
+        % get rid of divisions between OECD and non-OECD high income
+        % countries
+        if strmatch('High',income);
+            income = 'High income';
+        end
+        WBIhtable.put(WBI.countrycode{j},income);
+    end
+    
+    for c = 1:length(croplist)
+        cropname = croplist{c};
+        
+        if strmatch('horticulture', cropname);
+            disp(['Skipping extrapolation for horticulture: this is ' ...
+                'only present to preserve total nutrient consumption ' ...
+                'in a few countries.']);
+        else
+            
+            disp(['Start filling in missing application rate data for ' ...
+                cropname]);
+            
+            titlestr = [cropname '_' nutrient '_ver' verno ];
+            appratemap = DataStoreGateway([titlestr '_rate']);
+            datatypemap = DataStoreGateway([titlestr '_datatype']);
+            areamap = DataStoreGateway([titlestr '_area']);
+            areahamap = areamap .* gridcellareas;
+            
+            ctries_wodata = {};
+            ctries_withdata = {};
+            ctries_nocrop = {};
+            
+            % loop through all ctries to find out if they are missing data (-9)
+            disp(['Finding countries missing data for ' cropname]);
+            for k = 1:length(countrycodes)
+                
+                ratelist = [];
+                
+                countrycode = countrycodes{k};
+                outline = CountryCodetoOutline(countrycode);
+                
+                ratetemp = appratemap .* outline;
+                ratetemp = ratetemp(CropMaskIndices);
+                ratetemp = ratetemp(~isnan(ratetemp));
+                uniquerates = unique(ratetemp);
+                tmp = find(uniquerates == 0);
+                uniquerates(tmp) = [];
+                
+                if uniquerates == -9;
+                    % it is ... let's add it to missing data list
+                    ctries_wodata{end+1} = countrycode;
+                else
+                    if isempty(uniquerates)
+                        ctries_nocrop{end+1} = countrycode;
+                    else
+                        ctries_withdata{end+1} = countrycode;
+                    end
+                end
+            end
+            
+            % find area-weighted average application rates for the globe and
+            % for each economic group, using only the points for which we have
+            % subnational or national-level application rate data
+            
+            % get the global average
+            
+            ii = find(appratemap > 0);
+            tmp = appratemap(ii) .* areamap(ii) .* gridcellareas(ii);
+            tmp = mean(tmp);
+            meanarea = mean(areamap(ii) .* gridcellareas(ii));
+            globalavg = tmp ./ meanarea;
+            
+            % get the income-specific averages
+            
+            uniqueincomes = {};
+            for i = 1:length(ctries_withdata)
+                datactry = ctries_withdata{i};
+                tmp = WBIhtable.get(datactry);
+                if ~isempty(tmp)
+                    uniqueincomes = [uniqueincomes; tmp];
+                end
+            end
+            uniqueincomes = unique(uniqueincomes);
+            
+            clear LIrate LIsimilarlist LMIrate LMIsimilarlist UMIrate ...
+                UMIsimilarlist HIrate HIsimilarlist;
+            
+            for i = 1:length(uniqueincomes)
+                incomelevel = uniqueincomes{i};
+                
+                ratelist = [];
+                arealist = [];
+                similar = {};
+                
+                for j = 1:length(ctries_withdata)
+                    datactry = ctries_withdata{j};
+                    tmp = WBIhtable.get(datactry);
+                    
+                    % if the income levels match, add to ratelist (and similar
+                    % list)
+                    if strmatch(incomelevel,tmp);
+                        
+                        similar{end+1} = datactry;
+                        
+                        outline = CountryCodetoOutline(datactry);
+                        
+                        ctry_appratemap = appratemap .* outline;
+                        ii = find(isfinite(ctry_appratemap));
+                        
+                        tmp = ctry_appratemap(ii);
+                        tmp2 = areahamap(ii);
+                        
+                        ii = find(tmp == -9);
+                        tmp(ii) = [];
+                        tmp2(ii) = [];
+                        ii = find(tmp == 0);
+                        tmp(ii) = [];
+                        tmp2(ii) = [];
+                        
+                        ratelist = [ratelist(:)' tmp(:)'];
+                        arealist = [arealist(:)' tmp2(:)'];
+                        
+                    end
+                end
+                
+                if ~isempty(ratelist)
+                    
+                    % create an area-weighted average application rate using
+                    % the rates from countries of this economic status
+                    
+                    tmp = ratelist(:) .* arealist(:);
+                    tmp = mean(tmp);
+                    meanarea = mean(arealist);
+                    simctryrate = tmp ./ meanarea;
+                    
+                    % list the countries
+                    similarlist = [];
+                    for k = 1:length(similar);
+                        tmp = similar{k};
+                        similarlist = [similarlist '; ' tmp];
+                    end
+                    
+                    % save the rate and the similar country list for the
+                    % appropriate economic status
+                    if strmatch(incomelevel, 'Low income')
+                        LIrate = simctryrate;
+                        LIsimilarlist = similarlist;
+                    elseif strmatch(incomelevel, 'Lower middle income')
+                        LMIrate = simctryrate;
+                        LMIsimilarlist = similarlist;
+                    elseif strmatch(incomelevel, 'Upper middle income')
+                        UMIrate = simctryrate;
+                        UMIsimilarlist = similarlist;
+                    elseif strmatch(incomelevel, 'High income')
+                        HIrate = simctryrate;
+                        HIsimilarlist = similarlist;
+                    end
+                    
+                else
+                    warning(['Problem with filling data for ' incomelevel ...
+                        '; data should be available but was not able to ' ...
+                        'calculate an application rate'])
+                end
+                
+            end
+            
+            % fill in the values for countries without data: use data from
+            % similar economic groups if possible, otherwise use the global
+            % average
+            
+            for k = 1:length(ctries_wodata);
+                countrycode =  ctries_wodata{k};
+                
+                outline = CountryCodetoOutline(countrycode);
+                ctry_appratemap = appratemap .* outline;
+                ii = find(ctry_appratemap == -9);
+                
+                incomelevel = WBIhtable.get(countrycode);
+                
+                if ~isempty(incomelevel)
+                    switch incomelevel
+                        case 'Low income'
+                            tmp = 'LI';
+                            tmp2 = exist('LIrate');
+                        case 'Lower middle income'
+                            tmp = 'LMI';
+                            tmp2 = exist('LMIrate');
+                        case 'Upper middle income'
+                            tmp = 'UMI';
+                            tmp2 = exist('UMIrate');
+                        case 'High income'
+                            tmp = 'HI';
+                            tmp2 = exist('HIrate');
+                    end
+                    
+                    % if we have an average calculated for this income level,
+                    % fill in the country data appropriately; otherwise, use
+                    % the global average. record the accuracy of the average.
+                    if tmp2 == 1;
+                        % grab the similar countries list
+                        eval(['similarlist = ' tmp 'similarlist;']);
+                        disp(['Filling in ' cropname ' data for ' ...
+                            countrycode ' with average application rate ' ...
+                            'data from ' incomelevel ' countries: ' ...
+                            similarlist]);
+                        eval(['appratemap(ii) = ' tmp 'rate;']);
+                        datatypemap(ii) = 5;
+                    else
+                        disp(['No similar countries for ' countrycode ...
+                            '; using global average ' cropname ' data']);
+                        appratemap(ii) = globalavg;
+                        datatypemap(ii) = 5.5;
+                    end
+                    
+                else % if no income level was found, use the global average
+                    disp(['No income level for ' countrycode '; using ' ...
+                        'global average ' cropname ' data']);
+                    appratemap(ii) = globalavg;
+                    datatypemap(ii) = 5.5;
+                end
+            end
+            DataStoreGateway([titlestr '_rate'], appratemap);
+            DataStoreGateway([titlestr '_datatype'], datatypemap);
+        end
+    end
+    
+    
+    %% Match everything up with FAO consumption
+    
+    disp(['Begin scaling rate data to match with FAO ' ...
+        'nutrient consumption data']);
+    
+    % build total consumption maps: one for trusted crops (tcm_tc) and one
+    % for "untrusted" (extrapolated) crops (tcm_utc)
+    disp('Building a map of total nutrient consumption');
+    tcm_tc = zeros(4320,2160);
+    tcm_utc = zeros(4320,2160);
+    for c = 1:length(croplist)
+        cropname = croplist{c};
+        titlestr = [cropname '_' nutrient '_ver' verno ];
+        appratemap=DataStoreGateway([titlestr '_rate']);
+        areamap=DataStoreGateway([titlestr '_area']);
+        datatypemap = DataStoreGateway([titlestr '_datatype']);
+        jj = find(appratemap < 0); % put no data and -9 values to zero
+        appratemap(jj) = 0;
+        jj = find(isnan(appratemap)); % put no data and -9 values to zero
+        appratemap(jj) = 0;
+        jj = find(areamap < 0); % put no data and -9 values to zero
+        areamap(jj) = 0;
+        jj = find(isnan(areamap)); % put no data and -9 values to zero
+        areamap(jj) = 0;
+        
+        crop_consmap = (areamap.*gridcellareas.*appratemap);
+        ii = find(datatypemap < 3.01);
+        tcm_tc(ii) = tcm_tc(ii) + crop_consmap(ii);
+        ii = find(datatypemap > 3.01);
+        tcm_utc(ii) = tcm_utc(ii) + crop_consmap(ii);
+    end
+    
+    tcm_allcrops = tcm_utc + tcm_tc;
+    
+    % store these maps for reference
+    DataStoreGateway(['tcm_utc_' nutrient '_noscaling'], tcm_utc);
+    DataStoreGateway(['tcm_tc_' nutrient '_noscaling'], tcm_tc);
+    DataStoreGateway(['tcm_allcrops_' nutrient '_noscaling'],tcm_allcrops);
+
+    % create scaling maps: one for trusted crops (scalingmap_tc) and one
+    % for "untrusted" (extrapolated) crops (scalingmap_utc)
+    scalingmap_tc = ones(4320,2160);
+    scalingmap_utc = ones(4320,2160);
+
+    % create a binary fao data map; 1 = yes, we have FAO data, 0 =
+    % no FAO data.
+    faodatamap = nan(4320,2160);
     
     % loop through countries and calculate consumption; compare to
     % FAO consumption
@@ -1304,6 +1306,14 @@ for n = 1:3
                     % all else)
                     scalar = (snu_cons_data - snu_cons_sn) ./ snu_cons_n;
                     
+                    % for the provinces in Canada where we assume no
+                    % fertilizer consumption (0) we end up with NaN - make
+                    % this into 1
+                    if isnan(scalar)
+                        scalar = 1;
+                    end
+                    
+                    % limit scalar to + or - 50%
                     if scalar > 1.5
                         scalar = 1.5;
                         disp(['Scalar for ' nutrient ' ' country...

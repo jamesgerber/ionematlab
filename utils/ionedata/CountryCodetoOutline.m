@@ -24,8 +24,11 @@ function [outline, indices] = CountryCodetoOutline(countrycode)
 % tables. To see how to increase Java memory, see this MathWorks tutorial:
 % http://www.mathworks.com/support/solutions/en/data/1-18I2C/
 %
-% Written by Nathan Mueller
-% last modified 7.8.2010
+% Written by Nathan Mueller (~7.8.2010)
+%  - Last modified 1.20.2011 to use AdminUnits2010 revised data (fixes
+%  problem in Brazil of missing area not in a SN unit & fixes messed up
+%  Canadian county-level units). This will save a new hashtable in misc
+%  file - you can delete the old one if you want.
 %
 % see also StandardCountryNames.m
 
@@ -39,7 +42,7 @@ SystemGlobals;
 if isempty(snu_htable);
     
     % if the hash table doesn't exist, try to load it from misc folder
-    ht_path = [IoneDataDir '/misc/admin_hashtable.mat'];
+    ht_path = [IoneDataDir '/misc/admin_hashtable2010.mat'];
     if exist(ht_path) == 2
         eval(['load ' ht_path]);
         
@@ -47,7 +50,7 @@ if isempty(snu_htable);
         % AdminBoundary data
     else
         
-        path = [IoneDataDir 'AdminBoundary2005/Raster_NetCDF/' ...
+        path = [IoneDataDir 'AdminBoundary2010/Raster_NetCDF/' ...
             '3_M3lcover_5min/admincodes.csv'];
         admincodes = ReadGenericCSV(path);
         
@@ -64,8 +67,8 @@ if isempty(snu_htable);
         sagecodes = unique(admincodes.SAGE_ADMIN);
         
         
-        path = [IoneDataDir 'AdminBoundary2005/Raster_NetCDF/3_M3lcover_5min/' ...
-            'admin_5min.nc'];
+        path = [IoneDataDir 'AdminBoundary2010/Raster_NetCDF/' ...
+            '3_M3lcover_5min/admin_5min_r2.nc'];
         [DS] = OpenNetCDF(path);
         AdminGrid = DS.Data;
         
@@ -124,7 +127,7 @@ if isempty(snu_htable);
             ctry_htable.put(ccode,c);
         end
         
-        savepath = ['save ' IoneDataDir '/misc/admin_hashtable.mat ' ...
+        savepath = ['save ' IoneDataDir '/misc/admin_hashtable2010.mat '...
             'snu_htable state_htable ctry_htable ctry_outlines'];
         eval(savepath);
         

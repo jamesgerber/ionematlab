@@ -29,7 +29,7 @@ if nargout==1
   data(ii)=store(:);  %note that store is dataname within saved file
     varargout{1}=data;
 else
-    ii=CropMaskIndices;
+    ii=AgriMaskIndices;
     N=length(ii);
     store=data(ii);
     save(name,'store');

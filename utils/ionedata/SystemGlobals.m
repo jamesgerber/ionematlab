@@ -13,7 +13,7 @@ else
 end
 
 switch username
-    case {'muell512','cass0131'}
+    case {'muell512','cass0131','oconn568'}
         IoneDataDir=['~/Library/IonE/data/'];
     case 'jsgerber'
         IoneDataDir=['/Library/IonE/data/'];

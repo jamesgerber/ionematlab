@@ -57,6 +57,13 @@ function varargout=finemap(cmap,lowercolor,uppercolor);
 %    summer     - Shades of green and yellow color map.
 
 
+if nargin==0
+    disp(['Here are existing colormaps.  Built-in ones OK also.'])
+    ls([iddstring '/misc/colormaps/*.tiff']);
+    return
+end
+
+
 if nargin==1 & isstr(cmap) & isequal(lower(cmap),'version')
 
     [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo;

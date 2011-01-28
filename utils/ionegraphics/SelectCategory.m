@@ -1,5 +1,5 @@
 function selectCategory(InputFlag)
-
+% selectCategory - helper function to CategorySelectMap
 switch(InputFlag)
     case 'Initialize'
         uicontrol('String','Clear','Callback', ...

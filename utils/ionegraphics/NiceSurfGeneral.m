@@ -410,6 +410,10 @@ minstep= (cmax-cmin)*.001;
 Data(Data>cmax)=cmax;
 Data(cmin>Data)=cmin;
 
+if minstep==0
+    minstep=.001;
+end
+
 
 
 OceanVal=coloraxis(1)-minstep;

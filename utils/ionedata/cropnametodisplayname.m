@@ -8,9 +8,11 @@ switch lower(cropname)
     case 'greenpeas'
         displayname='Green Pea';
     case 'bean'
-        displayname='Bean (black)'
+        displayname='Bean (black)';
     case 'oats'
-        displayname= 'oat'
+        displayname= 'oat';
+    case 'oilpalm'
+        displayname= 'oil palm';
     otherwise
         displayname=cropname;
 end

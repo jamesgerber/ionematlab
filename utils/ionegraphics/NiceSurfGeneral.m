@@ -295,6 +295,9 @@ else
         case {'southafrica'}
             longlatbox=[15 40 -40 -20];
             filename=[filename '_southafrica'];
+        case {'southeastasia'}
+            longlatbox=[90 150 -15 +30];
+            filename=[filename 'southeastasia'];
 %            ylim=.22;
         otherwise
             error(['Don''t recognize plotarea ' plotarea]);

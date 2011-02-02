@@ -1,4 +1,4 @@
-function CategorySelectMap(Data,cmap,backdata,bmap);
+function CategorySelectMap(Data,cmap,backdata,bmap,selectcolor);
 % CATEGORYSELECTMAP - interactive category selection tool
 %
 %   Syntax:
@@ -44,6 +44,10 @@ if (nargin<4)
     bmap=jet(500);
 end
 
+if (nargin<5)
+    selectcolor=[.95,.95,0];
+end
+
 Data=double(Data);
 bmax=-9;
 
@@ -67,8 +71,8 @@ cmap(length(cmap)+1,:)=.7;
 for i=length(bmap)+1:-1:2
     bmap(i,:)=bmap(i-1,:);
 end
-bmap(1,:)=.7;
-bmap(length(bmap)+1,:)=.7;
+bmap(1,:)=selectcolor;
+bmap(length(bmap)+1,:)=selectcolor;
 
 [Long,Lat]=InferLongLat(Data);
 Units='';

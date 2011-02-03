@@ -99,6 +99,7 @@ switch lower(Force)
 end
 
 
+FileName=fixextension(FileName,'.nc');
 
 if exist(FileName,'file')==2
     if ForceWrite==0

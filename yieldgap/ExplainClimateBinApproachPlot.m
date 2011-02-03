@@ -16,6 +16,7 @@ COLORMAP='jgbrownyellowgreen';
 TitleStr=['Wheat yield vs yield-sorted cultivated area. "Ramsey County" climate bin']
 
 spare ibin OS COLORMAP TitleStr
+personalpreferences('printingres' ,     '-r600' ) 
 
 %NSS.FastPlot='on';
 

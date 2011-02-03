@@ -13,6 +13,8 @@ switch lower(cropname)
         displayname= 'oat';
     case 'oilpalm'
         displayname= 'oil palm';
+    case 'sugarcane'
+        displayname= 'sugar cane';
     otherwise
         displayname=cropname;
 end

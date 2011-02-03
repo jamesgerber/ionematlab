@@ -1,7 +1,7 @@
 FileDir=[iddstring 'Irrigation/Seibert/Seibert_Irrigation_Jan2011_Raw/'];
 wd=pwd;
 
-a=dir([FileDir '/' '*_1998*.ASC']);
+a=dir([FileDir '/' 'YIELD*.ASC']);
 
 %ncols         4320
 %nrows         2160
@@ -12,7 +12,7 @@ a=dir([FileDir '/' '*_1998*.ASC']);
 
 
 
-for j=1:length(a);
+for j=55:length(a);
     %j=1
     
     ThisName=a(j).name
@@ -26,16 +26,16 @@ for j=1:length(a);
     % need to choose one of these lines
     NewData(1:4320,:)=b(:,1:4320)'; 
     
-    ii=findstr(ThisName,'MM');
-    MIRCACROPNo=str2num(ThisName(ii+ (4:5)));
+   % ii=findstr(ThisName,'MM');
+   % MIRCACROPNo=str2num(ThisName(ii+ (4:5)));
     
     ii=find(ThisName=='.');
     
     NewName=ThisName(1:ii-1);
     
     
-    NewFileName=['blahblahblah_MIRCACropCode' num2str(MIRCACROPNo) ...
-        '.nc'];
+  %  NewFileName=['blahblahblah_MIRCACropCode' num2str(MIRCACROPNo) ...
+  %      '.nc'];
     
     DAS.MissingDataValue=-9;
     DAS.DateProcessed=datestr(now)

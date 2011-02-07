@@ -31,7 +31,8 @@
 %% record preferences
 verno = '2';
 untrustedcropscalingmax = 2;
-trustedcroptofaoratiomax = .95
+allcropsscalingmax = 2;
+trustedcroptofaoratiomax = .95;
 
 
 %% initialize diary and time record
@@ -42,7 +43,16 @@ diary(diaryfilename);
 disp(diaryfilename);
 tic;
 disp(['You are running version ' verno ' of fertilizermaps'])
-
+disp(['Maximum scaling for untrusted crops = ' ...
+    num2str(untrustedcropscalingmax) ' (if the untrusted crop scalar ' ...
+    'is greater than this number, all crops will be scaled up ' ...
+    'to match FAO consumption)']);
+disp(['Maximum ratio of trusted crop consumption to FAO consumption = ' ...
+    num2str(trustedcroptofaoratiomax) ' (any ratio larger than this ' ...
+    'will trigger the code to scale both trusted and untrusted crops ' ...
+    'to match FAO consumption)']);
+disp(['Maximum scaling for all crops to match FAO = ' ...
+    num2str(untrustedcropscalingmax)]);
 
 
 %% read input files
@@ -876,7 +886,7 @@ for n = 1:3
     end
     
     
-    %% Match everything up with FAO consumption
+    %% Match everything up with FAO consumption (first pass)
     
     disp(['Begin scaling rate data to match with FAO ' ...
         'nutrient consumption data']);
@@ -921,8 +931,10 @@ for n = 1:3
     scalingmap_utc = ones(4320,2160);
 
     % create a binary fao data map; 1 = yes, we have FAO data, 0 =
-    % no FAO data.
+    % no FAO data. also create a "faoscalarmaxmap" to indicate which
+    % countries will not match the FAO data b/c they will max out.
     faodatamap = nan(4320,2160);
+    faoscalarmaxmap = zeros(4320,2160);
     
     % loop through countries and calculate consumption; compare to
     % FAO consumption
@@ -949,7 +961,7 @@ for n = 1:3
             if ~isempty(tmp)
                 
                 datarow = ctryrows(tmp);
-                country_cons_fao = faoinput.avg_0203(datarow) .* 1000;
+                country_cons_fao = faoinput.avg_9703(datarow) .* 1000;
                 country_cons_utc = sum(sum(tcm_utc .* outline));
                 country_cons_tc = sum(sum(tcm_tc .* outline));
                 
@@ -967,7 +979,7 @@ for n = 1:3
                     % application rate. otherwise, use the scalar_utc for
                     % the scalingmap_utc.
                     if scalar_utc > untrustedcropscalingmax
-                        warning(['The scalar for untrusted crops ' ...
+                        disp(['The scalar for untrusted crops ' ...
                             'exceeds ' num2str(untrustedcropscalingmax)...
                             ' in ' country ' (scalar = ' ...
                             num2str(scalar_utc) ')']);
@@ -978,8 +990,10 @@ for n = 1:3
                     if (country_cons_tc ./ country_cons_fao) > ...
                             trustedcroptofaoratiomax;
                         tmp = (country_cons_tc ./ country_cons_fao);
-                        warning(['Trusted crop consumption exceeds or '...
-                            ' nearly exceeds (> 0.9) FAO consumption ' ...
+                        disp(['Trusted crop consumption exceeds or '...
+                            ' nearly exceeds (> ' ...
+                            num2str(trustedcroptofaoratiomax) ...
+                            ') FAO consumption ' ...
                             ' in ' country '. Ratio of trusted crop '...
                             'consumption to FAO consumption = ' ...
                             num2str(tmp)]);
@@ -988,13 +1002,24 @@ for n = 1:3
 
                     % calculate a scalar using all crops if the flag is on
                     if scaleeverythingflag == 1
+                        disp(['Scaling all crop data to match FAO.']);
                         scalar = country_cons_fao ./ (country_cons_utc ...
                             + country_cons_tc);
+                        % if the scalar exceeds the allcropsscalingmax,
+                        % adjust it downward to the max allowable scalar
+                        if scalar > allcropsscalingmax
+                            disp(['Scalar for ' nutrient ' all crop ' ...
+                            'data in ' country ' (' num2str(scalar) ...
+                            ') exceeds max allowable, will be adjusted' ...
+                            ' to ' num2str(allcropsscalingmax)]);
+                            scalar = allcropsscalingmax;
+                            faoscalarmaxmap(ii) = 1;
+                        else
+                            disp(['Scalar for ' nutrient ' all crop ' ...
+                            'data in ' country ' = ' num2str(scalar)]);
+                        end
                         scalingmap_tc(ii) = scalar;
                         scalingmap_utc(ii) = scalar;
-                        disp(['Scaling all crop data to match FAO.']);
-                        disp(['Scalar for ' nutrient ' all crop ' ...
-                            'data in ' country ' = ' num2str(scalar)]);
                     else
                         scalingmap_utc(ii) = scalar_utc;
                         disp(['Scalar for ' nutrient ' untrusted crop ' ...
@@ -1006,7 +1031,7 @@ for n = 1:3
                     
                     scalingmap_utc(ii) = 0;
                     faodatamap(ii) = 0;
-                    warning(['No map data for ' country '; ' ...
+                    disp(['No map data for ' country '; ' ...
                         'check for problem with CropMaskIndices']);
                 end
             else
@@ -1248,7 +1273,7 @@ for n = 1:3
                 tmp = strmatch(nutrient, faoinput.nutrient(ctryrows));
                 if tmp > 0
                     datarow = ctryrows(tmp);
-                    FAOcons = faoinput.avg_0203(datarow);
+                    FAOcons = faoinput.avg_9703(datarow);
                 end
                 
                 percent_nutrient = FAOcons .* 1000 ./ countrycons;
@@ -1310,6 +1335,8 @@ for n = 1:3
                     % fertilizer consumption (0) we end up with NaN - make
                     % this into 1
                     if isnan(scalar)
+                        scalar = 1;
+                    elseif snu_cons_data == 0
                         scalar = 1;
                     end
                     
@@ -1381,6 +1408,11 @@ for n = 1:3
         % data, call it data type 4.5
         jj = find(snudatamap == 1 & datatypemap == 5.5);
         datatypemap(jj) = 4.5;
+        % now add .25 if the application rate was maxed out against the
+        % faoscalingmax
+        jj = find(faoscalarmaxmap == 1);
+        datatypemap(jj) = datatypemap(jj) + .25;
+        % save the datatypemap
         DataStoreGateway([titlestr '_datatype_FAO_SNS'], ...
             datatypemap);
         
@@ -1443,52 +1475,63 @@ for n = 1:3
         country = inputfile.Cntry_name{datatyperow};
         [outline, ii] = CountryCodetoOutline(countrycode);
         
-        % check if there are data rows in the FAO file for this
-        % country
-        ctryrows = strmatch(countrycode, faoinput.ctry_codes);
-        
-        if ~isempty(ctryrows)
-            % Find the row with the nutrient of interest:
-            tmp = strmatch(nutrient, faoinput.nutrient(ctryrows));
-            if ~isempty(tmp)
-                
-                datarow = ctryrows(tmp);
-                country_cons_fao = faoinput.avg_0203(datarow) ...
-                    .* 1000;
-                
-                [outline, ii] = CountryCodetoOutline(snucode);
-                
-                country_cons_sn = sum(sum(tcm_sn .* outline));
-                country_cons_n = sum(sum(tcm_n_sncscaled .* outline));
-                
-                if country_cons_n > 0;
+        % check to see if this country maxed out on the initial scaling to
+        % match FAO consumption. if so, we will not try to match the
+        % consumption yet again.
+        if sum(sum(faoscalarmaxmap .* outline)) > 0
+            disp(['skipping adjustment of ' country ' ' nutrient ...
+                ' data since we previously hit the scaling max when ' ...
+                'attempting to normalize to FAO consumption.']);
+        else
+            
+            % check if there are data rows in the FAO file for this
+            % country
+            ctryrows = strmatch(countrycode, faoinput.ctry_codes);
+            
+            if ~isempty(ctryrows)
+                % Find the row with the nutrient of interest:
+                tmp = strmatch(nutrient, faoinput.nutrient(ctryrows));
+                if ~isempty(tmp)
                     
-                    % the scalar is only for national-level data (we
-                    % choose to trust a subnational application rate over
-                    % all else)
-                    scalar = (country_cons_fao - country_cons_sn) ./ ...
-                        country_cons_n;
-                    scalingmap(ii) = scalar;
-                    faodatamap(ii) = 1;
-                    disp(['Final scalar for ' nutrient ' national data '...
-                        'in ' country ' = ' num2str(scalar)]);
+                    datarow = ctryrows(tmp);
+                    country_cons_fao = faoinput.avg_9703(datarow) ...
+                        .* 1000;
+                    
+                    [outline, ii] = CountryCodetoOutline(countrycode);
+                    
+                    country_cons_sn = sum(sum(tcm_sn .* outline));
+                    country_cons_n = sum(sum(tcm_n_sncscaled .* outline));
+                    
+                    if country_cons_n > 0;
+                        
+                        % the scalar is only for national-level data (we
+                        % choose to trust a subnational application rate
+                        % over all else)
+                        scalar = (country_cons_fao - country_cons_sn) ...
+                            ./ country_cons_n;
+                        scalingmap(ii) = scalar;
+                        faodatamap(ii) = 1;
+                        disp(['Final scalar for ' nutrient ...
+                            ' national data '...
+                            'in ' country ' = ' num2str(scalar)]);
+                        
+                    else
+                        
+                        scalingmap(ii) = 0;
+                        faodatamap(ii) = 0;
+                        disp(['No map data for ' country '; ' ...
+                            'check for problem with CropMaskIndices']);
+                    end
                     
                 else
-                    
-                    scalingmap(ii) = 0;
+                    disp(['No FAO ' nutrient ' entry for ' country]);
                     faodatamap(ii) = 0;
-                    warning(['No map data for ' country '; ' ...
-                        'check for problem with CropMaskIndices']);
                 end
                 
             else
-                disp(['No FAO ' nutrient ' entry for ' country]);
+                disp(['No FAO country entry for: ' country]);
                 faodatamap(ii) = 0;
             end
-            
-        else
-            disp(['No FAO country entry for: ' country]);
-            faodatamap(ii) = 0;
         end
     end
     
@@ -1526,7 +1569,7 @@ for n = 1:3
     end
     
     % save the total consumption map
-    tcm_allcrops_final(faodatamap == 0) = 0;
+    tcm_allcrops_final(faodatamap == 0) = NaN;
     DataStoreGateway(['tcm_allcrops_' nutrient ...
         '_FAO_SNS_FINAL'], tcm_allcrops_final);
     

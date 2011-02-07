@@ -21,14 +21,16 @@ end
 
 a=imread(FileName);
 
-colormap=double(squeeze(a(1,1:256,[1 2 3])))/256;
+N=size(a,2);
+
+colormap=double(squeeze(a(1,1:N,[1 2 3])))/256;
 
 %% determine if this is a 16 element color bar
 
 if length( unique(colormap,'rows'))==16
     colormap=double(squeeze(a(1,1:16:256,[1 2 3])))/256;
 else
-    colormap=double(squeeze(a(1,1:256,[1 2 3])))/256;
+    colormap=double(squeeze(a(1,1:N,[1 2 3])))/256;
 end
 reversecolormap=colormap(end:-1:1,:);
 

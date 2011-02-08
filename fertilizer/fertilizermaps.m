@@ -175,7 +175,8 @@ for i = 1:length(croplist);
     areamap = DS.Data(:,:,1);
     jj = find(areamap>1e20);
     areamap(jj) = NaN;
-    ii = find(areamap < 2 & areamap > 0);
+    ii = find(areamap < 2 & areamap > 0 & (areamap .* gridcellareas) > ...
+        0.0001); % must be at least a square meter of cropland!
     appratemap = nan(4320,2160);
     appratemap(ii) = -9; % put -9 where we know we have crop data ...
     % but we do not (at least yet) know the application rate

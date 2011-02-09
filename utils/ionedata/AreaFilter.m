@@ -1,4 +1,4 @@
-function [LogicalInclude,FilteredData,AreaCutoff]=AreaFilter(AreaFraction,Data,p);
+function [LogicalInclude,FilteredData,AreaCutoff]=AreaFilter(AreaFraction,Data,p)
 %  AreaFilter  - Filter out data below cumulative percentage of area
 %
 %   SYNTAX:

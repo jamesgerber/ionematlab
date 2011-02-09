@@ -1,22 +1,109 @@
 function ygpatchplot(CDS,Vector)
 % YGPatchPlot - make a patch plot given a vector and a CDS structure
 %
-%  
-for ibin=1:length(CDS)
+%  basedir= ...
+%  '/Users/jsgerber/sandbox/jsg003_YieldGapWork/DeltaClimate/ClimateSpace0/YieldGaps/ContourFiltered'
+%
+%  load([basedir '/' 'YieldGap_MaizeHiIncome_MaxYieldPct'...
+%  '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+% figure
+% ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
+% title([OS.cropname]);
+% caxis([0 10])
+% colorbar
+% finemap('yield')
 
-  S=CDS(ibin);
-  x(1)=S.GDDmin;
-  x(2)=S.GDDmin;
-  x(3)=S.GDDmax;
-  x(4)=S.GDDmax;  
-  x(5)=S.GDDmin;    
-  
-  y(1)=S.Precmin;
-  y(2)=S.Precmax;  
-  y(3)=S.Precmax;    
-  y(4)=S.Precmin;  
-  y(5)=S.Precmin;       
-  x=double(x);y=double(y);
- 
-  patch(x,y,Vector(ibin));
+for ibin=1:length(CDS)
+    
+    S=CDS(ibin);
+    x(1)=S.GDDmin;
+    x(2)=S.GDDmin;
+    x(3)=S.GDDmax;
+    x(4)=S.GDDmax;
+    x(5)=S.GDDmin;
+    
+    y(1)=S.Precmin;
+    y(2)=S.Precmax;
+    y(3)=S.Precmax;
+    y(4)=S.Precmin;
+    y(5)=S.Precmin;
+    x=double(x);y=double(y);
+    
+    patch(x,y,Vector(ibin));
 end
+
+
+return
+
+
+
+basedir= ...
+    '/Users/jsgerber/sandbox/jsg003_YieldGapWork/DeltaClimate/ClimateSpace0/YieldGaps/ContourFiltered'
+
+load([basedir '/' 'YieldGap_MaizeLoIncome_MaxYieldPct'...
+    '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+figure
+ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
+title([OS.cropname]);
+caxis([0 13])
+zeroxlim(0,8000);
+zeroylim(0, 3500);
+colorbar
+finemap('revsixteencolors')
+
+load([basedir '/' 'YieldGap_MaizeHiIncome_MaxYieldPct'...
+    '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+figure
+ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
+title([OS.cropname]);
+caxis([0 13])
+zeroxlim(0,8000);
+zeroylim(0, 3500);
+colorbar
+finemap('revsixteencolors')
+
+load([basedir '/' 'YieldGap_Maize_MaxYieldPct'...
+    '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+figure
+ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
+title([OS.cropname]);
+caxis([0 13])
+zeroxlim(0,8000);
+zeroylim(0, 3500);
+colorbar
+finemap('revsixteencolors')
+
+
+load([basedir '/' 'YieldGap_soybeanLoIncome_MaxYieldPct'...
+    '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+figure
+ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
+title([OS.cropname]);
+caxis([0 4])
+zeroxlim(0,8000);
+zeroylim(0, 3500);
+colorbar
+finemap('revsixteencolors')
+
+
+load([basedir '/' 'YieldGap_soybeanHiIncome_MaxYieldPct'...
+    '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+figure
+ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
+title([OS.cropname]);
+caxis([0 4])
+zeroxlim(0,8000);
+zeroylim(0, 3500);
+colorbar
+finemap('revsixteencolors')
+
+load([basedir '/' 'YieldGap_soybean_MaxYieldPct'...
+    '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+figure
+ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
+title([OS.cropname]);
+caxis([0 4])
+zeroxlim(0,8000);
+zeroylim(0, 3500);
+colorbar
+finemap('revsixteencolors')

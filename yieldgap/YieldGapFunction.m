@@ -155,6 +155,13 @@ end
 N  =ClimateSpaceN;
 Rev=ClimateSpaceRev;
 
+
+
+switch Rev
+    case 'H'
+        IndividualAreaMethod='none';
+        disp(['setting IndividualAreaMethod=''none'' since Rev = ' Rev ]); 
+end
 %%% Preliminaries
 
 % Get Area per grid cell

@@ -105,6 +105,9 @@ function OS=NiceSurfGeneral(varargin);
 %   OSS will contain field coloraxis, and no plot will be made.
 %
 %
+%   See Also:  IoneSurf ShowUi HideUi FastSurf
+
+
 %% preliminaries to handle inputs
 if nargin==0
     help(mfilename)

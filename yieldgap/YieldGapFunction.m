@@ -529,6 +529,9 @@ for ibin=ListOfBins(:)';
         potentialyield(iihighyield)=Yield90;
         PassFail='PASS: ';
         
+        if Yield90<4
+            dbstop YieldGapFunction 534
+        end
         
         %  AllPoints
         tmp=Yield(AllBinIndices);

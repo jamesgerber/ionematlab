@@ -3,7 +3,7 @@
 
 wd=pwd;
 try
-    cd /Applications/MATLAB_R2009a.app/etc/
+    cd /Applications/MATLAB_R2010a.app/etc/
     dos(['./lmstat -a > ~/.lmstatoutput']);
     cd(wd)
 catch
@@ -16,6 +16,12 @@ catch
             cd /Applications/MATLAB_R2009b.app/etc/
             dos(['./lmstat -a >  ~/.lmstatoutput']);
             cd(wd)
+        catch
+            try
+                cd /Applications/MATLAB_R2009a.app/etc/
+                dos(['./lmstat -a >  ~/.lmstatoutput']);
+                cd(wd)
+            end
         end
     end
     

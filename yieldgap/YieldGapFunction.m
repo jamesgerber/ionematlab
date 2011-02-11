@@ -211,6 +211,11 @@ suitbins=NS.col5(j);
 cropconv=NS.col6(j);
 areafilter=NS.col7(j);
 
+
+a=DS.Suitability{j};
+GDDBaseTemp=a(end-6);
+
+
 systemglobals
 croppath=[ CropBasePath croppath];
 
@@ -354,7 +359,7 @@ for ibin=ListOfBins(:)';
     
     switch IndividualAreaMethod
         case 'none'
-            IndicesToKeep=(BinFilter  );
+            IndicesToKeep=(BinFilter  & isfinite(CultivatedArea) );
         case 'fixed'
             IndicesToKeep=( BinFilter  & CultivatedArea >= areafilter);
         case 'AllBinFifthPercentile'
@@ -638,7 +643,8 @@ OutputStructure.Area=CultivatedArea;
 OutputStructure.cropname=cropname;
 OutputStructure.ClimateDefs=ClimateDefs;
 OutputStructure.CDS=CDS;
-OutputStructure.MaxYield=Yield90;
+OutputStructure.GDDBaseTemp=GDDBaseTempstr;
+%OutputStructure.MaxYield=Yield90;
 OutputStructure.VectorOfPotentialYields=VectorOfPotentialYields;
 OutputStructure.LogicalArrayOfGridPointsInABin=...
     LogicalArrayOfGridPointsInABin;

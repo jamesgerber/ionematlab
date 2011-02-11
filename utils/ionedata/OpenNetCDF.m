@@ -47,8 +47,23 @@ if CallUIGetfile==1
 end
 
 %% look to see if there is a .mat file saved locally
+[pathstr,name,ext]=fileparts(FileName);
 
-MatFileName=[FileName '.mat'];
+try
+    if ~exist([pathstr '/ncmat/'])
+        mkdir([pathstr '/ncmat/']);
+        
+        
+        fid=fopen([pathstr '/ncmat/readme.txt'],'w')
+        fprintf(fid,'this directory contains .mat files each of which \n');
+        fprintf(fid,'contains the contents of a .nc file from the directory \n');
+        fprintf(fid,'above.  See OpenNetCDF.m \n');
+        fclose(fid);
+    end
+catch
+   disp(['not able to make '  pathstr '/ncmat/ directory'])
+end
+MatFileName=[pathstr '/ncmat/' name '.mat'];
 
 if exist(MatFileName)==2
     load(MatFileName)

@@ -59,7 +59,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.categorical='off';
 %   NSS.categoryranges={};
 %   NSS.categoryvalues={};
-%
+%   NSS.DataCutoff=9e9;
 %  Example
 %
 %  S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
@@ -181,7 +181,7 @@ ListOfProperties={
     'logicalinclude','coloraxis','displaynotes','description',...
     'uppermap','lowermap','colorbarpercent','resolution',...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
-    'categoryranges','categoryvalues','categorycolors'};
+    'categoryranges','categoryvalues','categorycolors','datacutoff'};
 
 %% set defaults for these properties
 units='';
@@ -194,6 +194,8 @@ logicalinclude=[];
 coloraxis=[];
 displaynotes='';
 description='';
+datacutoff=9e9;
+
 
 uppermap=callpersonalpreferences('nodatacolor');
 lowermap=callpersonalpreferences('oceancolor');
@@ -318,7 +320,7 @@ switch S
 end
 Data=double(Data);
 
-ii=find(abs(Data) >= 1e9);
+ii=find(abs(Data) >= datacutoff);
 if ~isempty(ii)
     disp([' Found elements >= 1E9.  replacing with NaN. '])
     Data(ii)=NaN;

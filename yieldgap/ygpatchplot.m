@@ -35,39 +35,43 @@ end
 
 return
 
+Filter='ContourFiltered'
+Filter='AreaFiltered'
+nbyn='10x10'
+crop='Maize'; cax=[0 13];
 
 
 basedir= ...
-    '/Users/jsgerber/sandbox/jsg003_YieldGapWork/DeltaClimate/ClimateSpace0/YieldGaps/ContourFiltered'
+    ['/Users/jsgerber/sandbox/jsg003_YieldGapWork/DeltaClimate/ClimateSpace0/YieldGaps/' Filter]
 
-load([basedir '/' 'YieldGap_MaizeLoIncome_MaxYieldPct'...
-    '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+load([basedir '/' 'YieldGap_' crop 'LoIncome_MaxYieldPct'...
+    '_95_' Filter 'ClimateSpace_' nbyn '_prec.mat']);
 figure
 ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
 title([OS.cropname]);
-caxis([0 13])
+caxis(cax)
 zeroxlim(0,8000);
 zeroylim(0, 3500);
 colorbar
 finemap('revsixteencolors')
 
-load([basedir '/' 'YieldGap_MaizeHiIncome_MaxYieldPct'...
-    '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+load([basedir '/' 'YieldGap_' crop 'HiIncome_MaxYieldPct'...
+    '_95_' Filter 'ClimateSpace_' nbyn '_prec.mat']);
 figure
 ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
 title([OS.cropname]);
-caxis([0 13])
+caxis(cax)
 zeroxlim(0,8000);
 zeroylim(0, 3500);
 colorbar
 finemap('revsixteencolors')
 
-load([basedir '/' 'YieldGap_Maize_MaxYieldPct'...
-    '_95_ContourFilteredClimateSpace_5x5_prec.mat']);
+load([basedir '/' 'YieldGap_' crop '_MaxYieldPct'...
+    '_95_' Filter 'ClimateSpace_' nbyn '_prec.mat']);
 figure
 ygpatchplot(OS.CDS,OS.VectorOfPotentialYields);
 title([OS.cropname]);
-caxis([0 13])
+caxis(cax)
 zeroxlim(0,8000);
 zeroylim(0, 3500);
 colorbar

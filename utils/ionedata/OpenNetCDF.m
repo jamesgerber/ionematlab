@@ -10,8 +10,13 @@ function varargout=OpenNetCDF(FileName);
 %
 %    [Long,Lat,Data]=OpenNetCDF(FileName);
 %
+%  a=dir('*.nc');
+%  for j=1:length(a); S=OpenNetCDF(a(j).name); end
+%  !gzip *.nc
 %
 %   See also OPENGENERALNETCDF, WRITENETCDF
+%
+%
 if nargout==0
     help(mfilename)
     return
@@ -48,6 +53,10 @@ end
 
 %% look to see if there is a .mat file saved locally
 [pathstr,name,ext]=fileparts(FileName);
+
+if isempty(pathstr)
+    pathstr='.';
+end
 
 try
     if ~exist([pathstr '/ncmat/'])

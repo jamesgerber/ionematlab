@@ -29,14 +29,21 @@ if nargin==0
     CallUIGetfile=1;
 else
     
-    % are we just a .nc away from something we can read?  If so, append it, and
-    % keep going.   Purists - avert your eyes.
-    if exist([FileName '.nc']) ==2
-        FileName=[FileName '.nc'];
+    FileName=FixExtension(FileName,'.nc');
+    
+    % see if we can figure out the matlab path file
+    [pathstr,name,ext]=fileparts(FileName);
+
+    if isempty(pathstr)
+        pathstr='.';
     end
     
+    MatFileName=[pathstr '/ncmat/' name '.mat'];
+
+    
+    
     %look and see if FileName exists.
-    if exist(FileName)==2;
+    if exist(FileName,'file') | exist(MatFileName,'file');
         % it exists.  Don't call UIGetFile below.
         CallUIGetfile=0;
     else

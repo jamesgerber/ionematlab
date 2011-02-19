@@ -36,7 +36,7 @@ function OS=NiceSurfGeneral(varargin);
 %
 %
 %   NSS.Units ['']
-%   NSS.TitleString
+%   NSS.TitleString   %or NSS.Title
 %   NSS.FileName   = if 'on' will use titlestring
 %   NSS.cmap
 %   NSS.LongLatBox
@@ -46,8 +46,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.coloraxis=[];
 %   NSS.Description='';
 %   NSS.DisplayNotes='';
-%   NSS.uppermap='white';
-%   NSS.lowermap='emblue';
+%   NSS.uppermap='white'; %or nodatacolor
+%   NSS.lowermap='emblue'; % or ocean or oceancolor
 %   NSS.colorbarpercent='off';%
 %   NSS.resolution='-r600';%
 %   NSS.figfilesave='on';%
@@ -172,6 +172,8 @@ for j=1:2:length(PropsList)
     NSS=setfield(NSS,PropsList{j},PropsList{j+1});
 end
 
+NSS=CorrectCallingSyntax(NSS)
+
 
 %% sort through everything passed in ...
 
@@ -218,6 +220,10 @@ if strcmp(categorical,'on')
 end
 
 a=fieldnames(NSS);
+
+
+
+
 for j=1:length(a)
     ThisProperty=a{j};
     if isempty(strmatch(lower(ThisProperty),lower(ListOfProperties),'exact'))
@@ -228,7 +234,7 @@ for j=1:length(a)
     eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
 end
 
-if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so as to define NSS
+if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so as to define OSS
     return
 end
 
@@ -244,66 +250,66 @@ else
     switch lower(plotarea)
         case 'world'
             longlatbox=[-180 180 -90 90];
-%            ylim=pi/2;
+            %            ylim=pi/2;
         case 'europe'
             longlatbox=[-15 65 30 80];
             filename=[filename '_europe'];
-%            ylim=.51;
+            %            ylim=.51;
         case {'usmexico','usmex'}
             longlatbox=[-130 -60 10 55];
             filename=[filename '_usmexico'];
-%            ylim=.43;
+            %            ylim=.43;
         case 'africa'
             longlatbox=[-20 60 -35 40];
             filename=[filename '_africa'];
-%            ylim=.77;
+            %            ylim=.77;
         case 'midwest'
             longlatbox=[-105 -75 25 55];
             filename=[filename '_midwest'];
-%            ylim=.32;
+            %            ylim=.32;
         case 'tropics'
             longlatbox=[-180 180 -30 30];
             filename=[filename '_tropics'];
-%            ylim=.32;
+            %            ylim=.32;
         case {'brazil','brasil'}
             longlatbox=[-80 -20 -40 10];
             filename=[filename '_brazil'];
-%            ylim=.52;
+            %            ylim=.52;
         case {'southamerica'}
             longlatbox=[-80 -20 -40 10];
             filename=[filename '_southamerica'];
-%            ylim=.52;
+            %            ylim=.52;
         case {'argentina'}
             longlatbox=[-80 -20 -60 -20];
             filename=[filename 'argentina'];
-%            ylim=.45;
+            %            ylim=.45;
         case {'china'}
             longlatbox=[75 140 15 60];
             filename=[filename '_china'];
-%            ylim=.42;%.37;%.32;%52
+            %            ylim=.42;%.37;%.32;%52
         case {'india'}
             longlatbox=[65 100 5 40];
             filename=[filename '_india'];
-%            ylim=.35%.32;
+            %            ylim=.35%.32;
         case {'indonesia'}
             longlatbox=[90 145 -15 10];
             filename=[filename '_indonesia'];
-%            ylim=.27;%.32;
+            %            ylim=.27;%.32;
         case {'chinatropical'}
             longlatbox=[80 140 10 35];
             filename=[filename '_chinatropical'];
-%            ylim=.32;
+            %            ylim=.32;
         case {'mexico'}
             longlatbox=[-125 -80 10 35];
             filename=[filename '_mexico'];
-%            ylim=.27;%.32;
+            %            ylim=.27;%.32;
         case {'southafrica'}
             longlatbox=[15 40 -40 -20];
             filename=[filename '_southafrica'];
         case {'southeastasia'}
             longlatbox=[90 150 -15 +30];
             filename=[filename 'southeastasia'];
-%            ylim=.22;
+            %            ylim=.22;
         otherwise
             error(['Don''t recognize plotarea ' plotarea]);
     end
@@ -463,9 +469,9 @@ switch(lower(plotstates))
     case {'world','lev0'}
         AddStates(0.05,gcf,'all');
     case {'gadm0'}
-                AddStates(0.05,gcf,'gadm0');
+        AddStates(0.05,gcf,'gadm0');
     case {'gadm1'}
-                AddStates(0.05,gcf,'gadm1');
+        AddStates(0.05,gcf,'gadm1');
     otherwise
         error(['have not yet implemented this in AddStates'])
 end
@@ -545,7 +551,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         axis([g1 g2 t1 t2])
         
     end
-ylim=(t2-t1)/100;
+    ylim=(t2-t1)/100;
     ht=text(0, ylim,titlestring)
 else
     ht=text(0,pi/2,titlestring);
@@ -618,5 +624,42 @@ if ~isempty(description) & ~isequal(fastplot,'on')
     end
     a=imread(ActualFileName);
     imwrite(a,ActualFileName,'Description',description);
+end
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  CorrectCallingSyntax     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+function NSS=CorrectCallingSyntax(NSS)
+% in case user used wrong calling syntax, correct
+
+a=fieldnames(NSS);
+
+for j=1:length(a)
+    
+    ThisProperty=a{j};
+    ThisValue=getfield(NSS,a{j});
+    switch lower(ThisProperty)
+        case {'title','titlestr'}
+            NSS=rmfield(NSS,ThisProperty);
+            NSS=setfield(NSS,'titlestring',ThisValue);
+        case {'colormap'}
+            NSS=rmfield(NSS,ThisProperty);
+            NSS=setfield(NSS,'cmap',ThisValue);
+        case {'caxis'}
+            NSS=rmfield(NSS,ThisProperty);
+            NSS=setfield(NSS,'coloraxis',ThisValue);
+        case {'ocean','oceancolor'}
+            NSS=rmfield(NSS,ThisProperty);
+            NSS=setfield(NSS,'lowermap',ThisValue);
+        case {'nodata','nodatacolor'}
+            NSS=rmfield(NSS,ThisProperty);
+            NSS=setfield(NSS,'uppermap',ThisValue);
+        case {'fast','quick'}
+            NSS=rmfield(NSS,ThisProperty);
+            NSS=setfield(NSS,'fastplot',ThisValue);
+    end
 end
 

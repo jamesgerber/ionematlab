@@ -1,5 +1,5 @@
 function [ContourMask,CutoffValue]=FindContour(jp,jpmax,p)
-
+%FindContour - find contour containing a certain fraction of a distribution
 
 if p==1
     ContourMask=logical(ones(size(jp)));

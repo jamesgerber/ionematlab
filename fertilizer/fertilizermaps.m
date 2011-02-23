@@ -29,10 +29,12 @@
 
 
 %% record preferences
-verno = '2';
+verno = '2_50';
 untrustedcropscalingmax = 2;
 allcropsscalingmax = 2;
 trustedcroptofaoratiomax = .95;
+snscalarmax = 1.5;
+snscalarmin = 0.5;
 
 
 %% initialize diary and time record
@@ -1177,18 +1179,18 @@ for n = 1:3
                     % all else)
                     scalar = (snu_cons_data - snu_cons_sn) ./ snu_cons_n;
                     
-                    if scalar > 1.5
-                        scalar = 1.5;
+                    if scalar > snscalarmax
+                        scalar = snscalarmax;
                         disp(['Scalar for ' nutrient ' ' country...
                             ': ' snuname1 ' ' snuname2 ...
-                            ' is > 1.5 (' num2str(scalar) ...
-                            ') - limiting scalar to 1.5']);
-                    elseif scalar < 0.5
-                        scalar = 0.5;
+                            ' is > ' num2str(snscalarmax) ' (' num2str(scalar) ...
+                            ') - limiting scalar to ' num2str(snscalarmax)]);
+                    elseif scalar < snscalarmin
+                        scalar = snscalarmin;
                         disp(['Scalar for ' nutrient ' ' country...
                             ': ' snuname1 ' ' snuname2 ...
-                            ' is < 0.5 (' num2str(scalar) ...
-                            ') - limiting scalar to 0.5']);
+                            ' is < ' num2str(snscalarmin) ' (' num2str(scalar) ...
+                            ') - limiting scalar to ' num2str(snscalarmin)]);
                     end
                     
                     scalingmap(ii) = scalar;

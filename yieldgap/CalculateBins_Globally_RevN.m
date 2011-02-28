@@ -35,10 +35,10 @@ p=0.95;
 
 Dist=jp;
 Lsmooth=1;  %bec. need to smooth via kx / ky
-MaxNumCont=4;  % can have many contours ... why not?
+MaxNumCont=1;  % can have many contours ... why not?
 
-kx=1/(Nsurface/40);  %x/y will go from -Nbin/2 to Nbin/2.   So make Lsmooth (Nbin/20)
-ky=1/(Nsurface/40);
+kx=1/(Nsurface/20);  %x/y will go from -Nbin/2 to Nbin/2.   So make Lsmooth (Nbin/20)
+ky=1/(Nsurface/20);
 
 [ContourMask,CutoffValue,NumContours,RecLevel]=...
     FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont);
@@ -58,7 +58,7 @@ if debugplots==1
     ylims=get(gca,'YLim');
     title([' All cultivated areas. ' cropname ' ' WetFlag ]);
     fattenplot
-    finemap('area2')
+    finemap('ecorangered')
     OutputFig('Force')
     
     figure;surface(xbins,ybins,double(jp.*ContourMask).')
@@ -70,7 +70,7 @@ if debugplots==1
     title([' Contour-filtered areas. ' cropname ' ' WetFlag ' RevN']);
     fattenplot
     shading flat
-    finemap('area2')
+    finemap('ecorangered')
     OutputFig('Force',['Figures/Contour-filteredareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevN  '])
 
     figure;surface(xbins,ybins,double(ContourMask).')
@@ -139,7 +139,7 @@ if debugplots==1
          ' ' WetFlag ' RevN']);
     fattenplot
     shading flat
-    finemap('area2')
+    finemap('ecorangered')
     OutputFig('Force')
 end
 

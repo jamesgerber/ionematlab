@@ -31,8 +31,7 @@ MakeGlobalMaps=1;
 % Get Area per grid cell (sort of silly ... should probably just put
 % analytical expression into a function)
 
-[Long,Lat,FiveMinGridCellAreas]=OpenNetCDF(['/Users/jsgerber/sandbox/jsg003_YieldGapWork/' ...
-    'YieldGap/area_ha_5min.nc']);
+[Long,Lat,FiveMinGridCellAreas]=GetFiveMinGridCellAreas;
 [Lat2d,Long2d]=meshgrid(Lat,Long);
 
 AllIndices=1:9331200;

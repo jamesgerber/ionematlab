@@ -534,9 +534,6 @@ for ibin=ListOfBins(:)';
         potentialyield(iihighyield)=Yield90;
         PassFail='PASS: ';
         
-        if Yield90<4
-            dbstop YieldGapFunction 534
-        end
         
         %  AllPoints
         tmp=Yield(AllBinIndices);
@@ -643,7 +640,7 @@ OutputStructure.Area=CultivatedArea;
 OutputStructure.cropname=cropname;
 OutputStructure.ClimateDefs=ClimateDefs;
 OutputStructure.CDS=CDS;
-OutputStructure.GDDBaseTemp=GDDBaseTempstr;
+OutputStructure.GDDBaseTemp=GDDBaseTemp;
 %OutputStructure.MaxYield=Yield90;
 OutputStructure.VectorOfPotentialYields=VectorOfPotentialYields;
 OutputStructure.LogicalArrayOfGridPointsInABin=...

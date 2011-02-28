@@ -45,7 +45,7 @@ grid on
 ylims=get(gca,'YLim');
 title([' All cultivated areas. ' cropname ' ' WetFlag ' Rev' Rev]);
 fattenplot
-finemap('area2')
+finemap('ecorangered')
 
 hold on
 

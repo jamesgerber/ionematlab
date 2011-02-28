@@ -1,5 +1,5 @@
 function MakeClimateSpaceLibraryFunctionRevH(FlagStructure)
-%% MakeClimateSpaceLibraryFunctionRevH   New Yield Gap Work - J. Gerber, N. Mueller
+% MakeClimateSpaceLibraryFunctionRevH   New Yield Gap Work - J. Gerber, N. Mueller
 %
 %  SYNTAX
 %      YieldGapFunction  Will compute yield gaps according to
@@ -23,6 +23,7 @@ function MakeClimateSpaceLibraryFunctionRevH(FlagStructure)
 Rev='H';
 
 
+% these are default values
 jcropvector=[5 7];
 Nspace=[5 10];
 GDDBaseDir='GDDLibrary/';
@@ -30,11 +31,14 @@ TMILocation='./TMI.mat';
 AnnualMeanPrec='./AnnualMeanPrec.mat';
 SaveFileNameBaseDir='./ClimateLibrary';
 GetBinsElsewhere='';
+
+% overwrite any default values
 if nargin==1
     expandstructure(FlagStructure)  %Cheating with matlab.  step through with
     %debugger to understand.
 end
 
+% make sure we'll be able to save (check that directory exists)
 try
     ls(SaveFileNameBaseDir)
 catch

@@ -350,9 +350,9 @@ if isequal(fastplot,'on')
         Data=Data(1:2:end,1:2:end);
         logicalinclude=logicalinclude(1:2:end,1:2:end);
     end
-    disp(['Turning off saving file ... fastplot is on'])
-    figfilesave='off';
-    filename='';
+ %   disp(['Turning off saving file ... fastplot is on'])
+ %   figfilesave='off';
+ %   filename='';
 end
 
 Data=double(Data);
@@ -657,7 +657,7 @@ for j=1:length(a)
         case {'nodata','nodatacolor'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'uppermap',ThisValue);
-        case {'fast','quick'}
+        case {'fast','quick','quickplot'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'fastplot',ThisValue);
     end

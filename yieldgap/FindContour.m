@@ -18,7 +18,7 @@ level=fzero(@(level) testlevel(level,jp,jpmax_norm,p),.1);
 
 ContourMask=(jpmax_norm>level);
 CutoffValue=level*max(max(jpmax));  %need to renormalize
-
+C=contourc(double(ContourMask),[.5 .5])
 
 function tlerror=testlevel(level,jp,jpmax,p)
 % returns an error measure of how far off level is from giving

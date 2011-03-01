@@ -48,6 +48,7 @@ ky=1/(Nsurface/20);
 %% now need to find indices of points which live inside the selected area.
 
 if debugplots==1
+    
     figure
     surface(double(xbins),double(ybins),double(jp).');
     shading flat
@@ -58,7 +59,7 @@ if debugplots==1
     ylims=get(gca,'YLim');
     title([' All cultivated areas. ' cropname ' ' WetFlag ]);
     fattenplot
-    finemap('ecorangered')
+    finemap('area2','','')
     OutputFig('Force')
     
     figure;surface(xbins,ybins,double(jp.*ContourMask).')
@@ -70,7 +71,7 @@ if debugplots==1
     title([' Contour-filtered areas. ' cropname ' ' WetFlag ' RevN']);
     fattenplot
     shading flat
-    finemap('ecorangered')
+    finemap('area2','','')
     OutputFig('Force',['Figures/Contour-filteredareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevN  '])
 
     figure;surface(xbins,ybins,double(ContourMask).')
@@ -81,7 +82,7 @@ if debugplots==1
     title([' 95% Contour ' cropname ' ' WetFlag  'Nbins ' int2str(Nbin) ' RevN']);
     fattenplot
     shading flat
-    finemap('jet')
+    finemap('area2','','')
     OutputFig('Force')
 end
 
@@ -139,7 +140,7 @@ if debugplots==1
          ' ' WetFlag ' RevN']);
     fattenplot
     shading flat
-    finemap('ecorangered')
+    finemap('area2','','')
     OutputFig('Force')
 end
 

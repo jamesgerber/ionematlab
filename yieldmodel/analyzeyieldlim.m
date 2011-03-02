@@ -1,7 +1,7 @@
 function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
     dI, dIquality] = analyzeyieldlim(cropname, modelnumber, ...
-    desiredyield, pylimitdef, yieldmap, datamask, climatemask, nfert, ...
-    pfert, kfert, avgpercirr)
+    desiredyield, potentialyield, yieldmap, datamask, climatemask, ...
+    nfert, pfert, kfert, avgpercirr)
 
 % [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %     dI, dIquality] = analyzeyieldlim(cropname, modelnumber, ...
@@ -16,18 +16,11 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %     10%, 20%, etc?
 %  2) It can be a map of the yield you would like to obtain.
 %
-% pylimitdef = defines "limited by potential" as yields > (pylimitdef *
-%     potential yield). In other words, do you count being at 90%, 100%,
-%     80% of potential yield being maxed out? NOTE: need to update this to
-%     USE A MATRIX OF 90th PERCENTILE POTENTIALS
+% potentialyield is a map defining what areas are "yield cieling limited" -
+%     we usually define this as 90th percentile yields within a climate bin
 %
 % 
 
-
-
-
-% manipulate pylimitdef to become a multiplier
-pylimitdef = pylimitdef ./ 100;
 
 % create desired yield map if necessary
 if length(desiredyield) == 1
@@ -81,6 +74,7 @@ for bin = 1:100
     
     % make double & select bin area
     yield_bin = double(yieldmap(ii));
+    potentialyield_bin = double(potentialyield(ii));
     irr_bin = double(avgpercirr(ii));
     nfert_bin = double(nfert(ii));
     pfert_bin = double(pfert(ii));
@@ -255,7 +249,7 @@ for bin = 1:100
     end
     
     % place lim_bin into yieldlim map
-    jj = find(desiredyield_bin > (pylimitdef .* potyieldbin));
+    jj = find(desiredyield_bin > potentialyield_bin);
     lim_bin(jj) = 4;
     yieldlim(ii) = lim_bin;
     dN(ii) = dN_bin;

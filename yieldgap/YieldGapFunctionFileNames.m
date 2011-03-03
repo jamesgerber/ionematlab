@@ -44,6 +44,9 @@ switch FS.ClimateSpaceRev
     case 'H'
         ClimateSpaceDescription='ContourFilteredClimateSpace';
         SubDir='ContourFiltered';
+    case 'N'
+        ClimateSpaceDescription='ContourFilteredClimateSpace';
+        SubDir='ContourFiltered';
     case 'M'
         ClimateSpaceDescription='ContourFilteredClimateSpaceWithSoil';
         SubDir='ContourFiltered_Soil';
@@ -56,7 +59,7 @@ end
 try
     SystemGlobals
     switch FS.ClimateSpaceRev
-        case {'F','H','I','J','K','L','M'}
+        case {'F','H','I','J','K','L','M','N'}
             FileName=[OutputDirBase '/' SubDir '/YieldGap_' cropname '_' ...
                 'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
                 '_'  ClimateSpaceDescription ...

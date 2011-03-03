@@ -243,7 +243,7 @@ a=DS.Suitability{j};
 GDDTempstr=a(end-6);
 Nstr=int2str(N);
 switch Rev
-    case {'F','H','J','I','K','L','M'}
+    case {'F','H','J','I','K','L','M','N'}
 ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
     WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
 

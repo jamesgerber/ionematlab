@@ -40,6 +40,20 @@ MaxNumCont=1;  % can have many contours ... why not?
 kx=1/(Nsurface/20);  %x/y will go from -Nbin/2 to Nbin/2.   So make Lsmooth (Nbin/20)
 ky=1/(Nsurface/20);
 
+
+% make modification to Lsmooth and kx/ky.  Want them both to increase in
+% size.  We get the same effects, but FCSC uses Lsmooth.
+
+
+Lsmooth=Lsmooth*10;
+kx=kx*10;
+ky=ky*10;
+
+
+
+
+
+
 [ContourMask,CutoffValue,NumContours,RecLevel]=...
     FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont);
 
@@ -60,7 +74,7 @@ if debugplots==1
     title([' All cultivated areas. ' cropname ' ' WetFlag ]);
     fattenplot
     finemap('area2','','')
-    OutputFig('Force')
+    OutputFig('Force',['Figures/AllCultivatedareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevN  '])
     
     figure;surface(xbins,ybins,double(jp.*ContourMask).')
     xlabel(HeatFlag);
@@ -74,16 +88,16 @@ if debugplots==1
     finemap('area2','','')
     OutputFig('Force',['Figures/Contour-filteredareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevN  '])
 
-    figure;surface(xbins,ybins,double(ContourMask).')
-    xlabel(HeatFlag);
-    ylabel(WetFlag);
-    zeroylim(ylims(1),ylims(2));
-    grid on
-    title([' 95% Contour ' cropname ' ' WetFlag  'Nbins ' int2str(Nbin) ' RevN']);
-    fattenplot
-    shading flat
-    finemap('area2','','')
-    OutputFig('Force')
+ %   figure;surface(xbins,ybins,double(ContourMask).')
+ %   xlabel(HeatFlag);
+ %   ylabel(WetFlag);
+ %   zeroylim(ylims(1),ylims(2));
+ %   grid on
+ %   title([' 95% Contour ' cropname ' ' WetFlag  'Nbins ' int2str(Nbin) ' RevN']);
+  %  fattenplot
+  %  shading flat
+  %  finemap('area2','','')
+   % OutputFig('Force')
 end
 
 
@@ -141,7 +155,7 @@ if debugplots==1
     fattenplot
     shading flat
     finemap('area2','','')
-    OutputFig('Force')
+    OutputFig('Force',['Figures/scatterplotfromContour-filteredareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevN  '])
 end
 
 p=PercentToDrop/100;

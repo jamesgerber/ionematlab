@@ -1,12 +1,19 @@
 function [BinMatrix,ClimateDefs]=...
-    ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag);
+    ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag,iiMask);
 % ClimateDataStructureToClimateBins
 %
 %  Called by MakeClimateSpaceLibraryFunctionRevH
 
 %DataQualityGood=(isfinite(CultivatedArea) & CultivatedArea>eps & isfinite(Heat) & isfinite(Prec) );
-DataQualityGood=(isfinite(Heat) & isfinite(Prec) );
-BinMatrix=0*Heat;
+
+
+if nargin < 7
+    DataQualityGood=(isfinite(Heat) & isfinite(Prec) );
+else
+    DataQualityGood=(isfinite(Heat) & isfinite(Prec) & iiMask);
+end
+    
+    BinMatrix=0*Heat;
 
 for j=1:length(CDS)
     CD=CDS(j);

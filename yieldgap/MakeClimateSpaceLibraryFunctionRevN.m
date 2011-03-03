@@ -20,7 +20,7 @@ function MakeClimateSpaceLibraryFunctionRevN(FlagStructure)
 %
 % Get crop information section
 
-Rev='H';
+Rev='N';
 
 
 jcropvector=[5 7];
@@ -194,7 +194,8 @@ for N=Nspace;
                     load([GetBinsElsewhere filesep NoBaseFileName],'CDS','InsideContourLogical');
                 end
                 
-                [BinMatrix,ClimateDefs]=ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag);
+                [BinMatrix,ClimateDefs]=...
+                    ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag,InsideContourLogical);
 
                 
                 %%

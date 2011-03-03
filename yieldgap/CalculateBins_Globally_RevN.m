@@ -201,7 +201,7 @@ if p>0
     xbins=[min(x) xbins max(x)];
 end
 
-MakePlot=1;
+MakePlot=0;
 if MakePlot
     figure
     plot(xsort,AreaNorm);

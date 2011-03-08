@@ -13,14 +13,14 @@ end
 
 
 
-a=dir([iddstring '/Crops2000/crops/*' DirString '*_5min.nc']);
+a=dir([iddstring '/Crops2000/crops/*' DirString '*_5min.nc*']);
 
 
 switch flag
     case 'limited'
         
-        b=dir([iddstring '/Crops2000/crops/*' 'RF' '*_5min.nc']);
-        c=dir([iddstring '/Crops2000/crops/*' 'ncome' '*_5min.nc']);
+        b=dir([iddstring '/Crops2000/crops/*' 'RF' '*_5min.nc*']);
+        c=dir([iddstring '/Crops2000/crops/*' 'ncome' '*_5min.nc*']);
         
         for j=1:length(a);
             anames{j}=a(j).name;

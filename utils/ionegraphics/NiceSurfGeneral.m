@@ -443,11 +443,24 @@ if isequal(plotflag,'off')   %if nargout ~= 0, need to keep going so as to defin
     OS.Data=Data;
     return
 end
+%% Check to see if lat/long is limited
+if ~isequal(longlatbox,[-180 180 -90 90])
+    [Long,Lat]=InferLongLat(Data);
+    
+    iilong=find(Long >= longlatbox(1) & Long <=longlatbox(2));
+    jjlat=find(Lat >= longlatbox(3) & Lat <=longlatbox(4));
+    
+        IonESurf(Long(iilong),Lat(jjlat),Data(iilong,jjlat));
 
+else    
+    IonESurf(Data);
+
+    
+end
 
 
 %% Make graph
-IonESurf(Data);
+
 
 finemap(cmap,lowermap,uppermap);
 

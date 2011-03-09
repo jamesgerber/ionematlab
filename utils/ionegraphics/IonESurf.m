@@ -141,7 +141,8 @@ else
         [lat2D,lon2D]=meshgrat(RedLat,RedLong);
         h=surfm(lat2D,lon2D,double(RedData.'));
     else
-        NumPointsPerDegree=12*numel(RedLat)/2160;
+      NumPointsPerDegree=12*numel(RedLat)/2160;
+   %     NumPointsPerDegree=1/(RedLat(2)-RedLat(1));
         R=[NumPointsPerDegree,90,-180];
         h=meshm(double(RedData.'),R,[50 100],-1);
     end

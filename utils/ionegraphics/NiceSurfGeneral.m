@@ -256,6 +256,10 @@ else
             longlatbox=[-130 -60 10 55];
             filename=[filename '_usmexico'];
             %            ylim=.43;
+        case {'nafta'}
+            longlatbox=[-130 -60 10 60];
+            filename=[filename '_nafta'];
+            %            ylim=.43;
         case 'africa'
             longlatbox=[-20 60 -35 40];
             filename=[filename '_africa'];

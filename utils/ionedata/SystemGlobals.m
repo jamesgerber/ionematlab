@@ -17,14 +17,14 @@ switch username
         IoneDataDir=['~/Library/IonE/data/'];
     case 'jsgerber'
         IoneDataDir=['/Library/IonE/data/'];
-	case 'mattj'
-		IoneDataDir=['C:\Users\mattj\Documents\UMN\ionedata\'];
+    case 'mattj'
+        IoneDataDir=['C:\Users\mattj\Documents\UMN\ionedata\'];
     otherwise
         IoneDataDir=['/Library/IonE/data/'];
 end
 
 if ismalthus==1
-            IoneDataDir=['/Library/IonE/data/'];
+    IoneDataDir=['/Library/IonE/data/'];
 end
 
 

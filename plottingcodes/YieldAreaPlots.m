@@ -1,5 +1,20 @@
-function MakeYieldPlots(crop,PFS,NSSBase,ExternalMask)
-
+function YieldAreaPlots(crop,PFS,NSSBase,ExternalMask)
+%   YieldAreaPlots
+%
+%   Syntax
+%      YieldAreaPlots(crop,PFS,NSSBase,ExternalMask)
+%  example
+%
+%  clear NSSBase
+%  NSSBase.fastplot='on';
+%
+%  PFS.AreaFilter=1;
+%  PFS.YieldPlotFlag=1;
+%  PFS.AreaPlotFlag=0;
+%  PFS.TitleSuffix='';
+%  PFS.FileNameBase='';
+%  crop='wheat'
+%  YieldAreaPlots(crop,PFS,NSSBase,DataBlank(1));
 
 
 %

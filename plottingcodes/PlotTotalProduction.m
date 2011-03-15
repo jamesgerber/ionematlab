@@ -20,7 +20,8 @@ for j=1:length(cl)
     SumProduction(DataMask)=SumProduction(DataMask)+Area(DataMask).*Yield(DataMask).*fma(DataMask);
     SumArea(DataMask)=SumArea(DataMask)+Area(DataMask);
 end
-    
+save savingPlotTotalProductionWorkspace
+
     
 %% Yield
 NSS.TitleString=lower(['  Total production.  All crops, All land ' ]);

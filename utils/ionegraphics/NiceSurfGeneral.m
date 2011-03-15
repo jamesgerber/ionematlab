@@ -69,10 +69,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.Units='tons/ha';
 %   NSS.TitleString='Yield Maize';
 %   NSS.FileName='YieldTestPlot4';
-%   NSS.cmap='revsummer'
-%   NSS.LongLatBox=[];
-%   NSS.coloraxis=[];
-%   NSS.LogicalInclude=[];
+%   NSS.cmap='orange_white_purple_deep';
+%   NSS.caxis=[.98];
 %   NiceSurfGeneral(Yield,NSS)
 %
 %   NSS.LongLatBox=[-120 -80 10 35]; %PlotArea takes precedence
@@ -195,9 +193,11 @@ displaynotes='';
 description='';
 datacutoff=9e9;
 
+lowermap=[0.835294118 0.894117647 0.960784314];
+uppermap=[.92 .92 .92];
 
-uppermap=callpersonalpreferences('nodatacolor');
-lowermap=callpersonalpreferences('oceancolor');
+%uppermap=callpersonalpreferences('nodatacolor');
+%lowermap=callpersonalpreferences('oceancolor');
 resolution=callpersonalpreferences('printingres');
 
 colorbarpercent='off';

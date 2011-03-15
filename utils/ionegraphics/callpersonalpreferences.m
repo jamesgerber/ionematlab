@@ -34,9 +34,9 @@ GraphicsFileType='-dpng';% '-djpg' ; '-dtiff';
 
 
 %% NiceSurf / NiceSurfGeneral
-oceancolor='emblue';
-nodatacolor='gray';
-latlongcolor=[.5 .5 .5];
+oceancolor=[0.835294118 0.894117647 0.960784314];
+nodatacolor=[.92 .92 .92];
+latlongcolor=[.3 .3 .3];
 maxnumfigsNSG=0;
 try
     out=personalpreferences(in);

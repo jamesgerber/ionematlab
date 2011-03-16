@@ -24,7 +24,7 @@ end
  
 
 W=CultivatedArea(IsValidData); %Weight is the area, but only for these points.
-[jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(Heat(IsValidData),Prec(IsValidData),Nsurface,Nsurface+10,W);
+[jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(Heat(IsValidData),Prec(IsValidData),Nsurface,Nsurface,W);
 
 
 

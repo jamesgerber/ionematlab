@@ -193,11 +193,12 @@ displaynotes='';
 description='';
 datacutoff=9e9;
 
-lowermap=[0.835294118 0.894117647 0.960784314];
-uppermap=[.92 .92 .92];
+% new Joanne colors - now set in personalpreferencestemplate
+% lowermap=[0.835294118 0.894117647 0.960784314];
+% uppermap=[.92 .92 .92];
 
-%uppermap=callpersonalpreferences('nodatacolor');
-%lowermap=callpersonalpreferences('oceancolor');
+uppermap=callpersonalpreferences('nodatacolor');
+lowermap=callpersonalpreferences('oceancolor');
 resolution=callpersonalpreferences('printingres');
 
 colorbarpercent='off';

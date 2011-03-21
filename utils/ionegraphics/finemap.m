@@ -120,6 +120,8 @@ else
             lc=[0.451    0.616    0.878];
         case {'gray'}
             lc=[.8 .8 .8];
+        case 'joanneblue'
+            lc = [0.835294118 0.894117647 0.960784314];
         otherwise
             error(['don''t know this lowercolor bound: ' lowercolor])
     end
@@ -140,6 +142,8 @@ else
             uc=[        0.5977    0.7969    0.9961];
         case 'bluemarble'
             uc=[0.0588    0.1176    0.5490];
+        case 'joannegray'
+            uc =[.92 .92 .92];
         otherwise
             error(['don''t know this uppercolor bound: ' uppercolor]);
             

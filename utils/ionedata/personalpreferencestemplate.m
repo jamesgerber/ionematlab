@@ -39,8 +39,8 @@ if isempty(latlongcolor)
     
     
     %% NiceSurf / NiceSurfGeneral
-    oceancolor=[0.835294118 0.894117647 0.960784314]; % old color: 'emblue';
-    nodatacolor=[.92 .92 .92]; % old color: 'gray';
+    oceancolor='joanneblue'; % old color: 'emblue';
+    nodatacolor='joannegray'; % old color: 'gray';
     latlongcolor=[.3 .3 .3];
     maxnumfigsNSG=3;
 

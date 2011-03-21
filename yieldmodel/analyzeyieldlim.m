@@ -16,7 +16,7 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %     10%, 20%, etc?
 %  2) It can be a map of the yield you would like to obtain.
 %
-% potentialyield is a map defining what areas are "yield cieling limited" -
+% potentialyield is a map defining what areas are "yield ceiling limited" -
 %     we usually define this as 90th percentile yields within a climate bin
 %
 % 
@@ -34,15 +34,15 @@ else
         cropname ' yield specified by the "desiredyield" matrix'])
 end
 
-% set model choice and load (VL ELM OR VL MB)
+% set model choice and load (VL LM OR VL MBM)
 switch modelnumber
     case 1
-        modelname = 'VL_ELM';
+        modelname = 'VL_LM';
     case 2
-        modelname = 'VL_MB';
+        modelname = 'VL_MBM';
 end
-filestr = ['/Users/muell512/Documents/MATLAB/ndm005_mgmtregression/' ...
-    'modeloutput/' cropname '_m3yieldmodeldata_' modelname '.csv'];
+filestr = [iddstring 'ClimateBinAnalysis/YieldModel/' ...
+    cropname '_m3yieldmodeldata_' modelname '.csv'];
 MS = ReadGenericCSV(filestr);
 
 % initialize yieldlim map output

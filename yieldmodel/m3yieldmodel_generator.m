@@ -50,12 +50,14 @@ cropOS.bnutlist = [];
 cropOS.potyieldlist = [];
 cropOS.minyieldlist = [];
 
-% set model choice: VL ELM OR VL MB
+% set model choice: VL LM OR VL MBM
 switch modelnumber
     case 1
-        modelname = 'VL_ELM';
+        modelname = 'VL_LM';
+        modelnamelong = 'von Liebig logistic model'; 
     case 2
-        modelname = 'VL_MB';
+        modelname = 'VL_MBM';
+        modelnamelong = 'von Liebig Mitscherlich-Baule model';
 end
 
 
@@ -114,8 +116,8 @@ if LSQflag == 1
             case 1
                 %%% LM
                 agmgmt = @(b,x) potyieldglobal ...
-                    ./ (1 + bnut - abs(b(1)) ...
-                    .* x(:,1));
+                    ./ (1 + exp(bnut - abs(b(1)) ...
+                    .* x(:,1)));
             case 2
                 %%% MB
                 agmgmt = @(b,x) potyieldglobal .* ...
@@ -126,15 +128,15 @@ if LSQflag == 1
         agmgmtw = @(b,x) double(sqrt(w).*agmgmt(b,x));
         
         % set beta0 and run regression
-        slope0 = 0.03;
+        slope0 = 0.01;
         blist={};rlist={};mlist=[];
-        for m = 1 %[0.1 0.25 0.5 0.75 1 1.25 1.5 2 4 10]
+        for m = [0.1 0.25 0.5 0.75 1 1.5 2 4 10]
             sm = slope0.*m;
             beta0 = sm;
             if LSQflag == 1
                 [bFitw,resnorm,rw,exitflag,output] = ...
                     lsqcurvefit(agmgmtw,double(beta0),x,yw);
-                msew = mean((rw.^2).*x.*yw);
+                msew = mean(rw.^2);
             else
                 [bFitw,rw,Jw,Sigmaw,msew] = ...
                     nlinfit(x,yw,agmgmtw,beta0);
@@ -1246,6 +1248,12 @@ SStot = sum(((double(input.Yield(ii)) - mean_yieldw).*sqrt(w)).^2);
 gRsq = 1 - SSerr ./ SStot;
 cropOS.r2global = gRsq;
 
+% % calculate a global rmse - need to double check calculation
+% tmp = cropOS.modyieldmap(ii) - cropOS.monfredayieldmap(ii);
+% normalizedarea = area ./ mean(area);
+% normalizederrors = tmp.*normalizedarea;
+% rmseglobal = sqrt(mean(normalizederrors.^2));
+
 % put cropOS components into single & add monfreda yield
 cropOS.statslist = single(cropOS.statslist);
 cropOS.r2map = single(cropOS.r2map);
@@ -1263,10 +1271,12 @@ cropOS.errormap = (cropOS.modyieldmap - cropOS.monfredayieldmap);
 mkdir('modeloutput');
 eval(['cd modeloutput'])
 cropOS.cropname = input.cropname;
+cropOS.processingdate = date;
+cropOS.modelversion = input.modelversion;
 csdim = sqrt(double(max(max(input.ClimateMask))));
 climspace = [num2str(csdim) 'x' num2str(csdim)];
-eval(['save ' input.cropname 'OS_nlinfit_m3yield_' ...
-    modelname '_BF_' climspace ' cropOS']);
+eval(['save ' input.cropname 'OS_m3yield_' ...
+    modelname '_' climspace ' cropOS']);
 
 % output modeled vs observed yield plot
 X = double(cropOS.monfredayieldmap(ii));
@@ -1448,18 +1458,19 @@ for c = 1:100;
     output{c+1,16} = cropOS.statslist(c,1);
 end
 
-output{1,15} = 'model info';
-output{2,15} = [input.cropname ' ' modelname ' model'];
+output{1,17} = 'model info';
+output{2,17} = [input.cropname ' ' modelnamelong ' model'];
 switch LSQflag
     case 0
         tmp = 'nlinfit';
     case 1
         tmp = 'lsqcurvefit';
 end
-output{3,15} = ['optimization done with MATLAB function ' tmp];
-output{4,15} = ['processed on ' date];
-output{5,15} = ['version ' input.modelversion];
-% insert GDD info?
+output{3,17} = ['optimization done with MATLAB function ' tmp];
+output{4,17} = ['processed on ' date];
+output{5,17} = ['version ' input.modelversion];
+output{6,17} = [input.cropname ' GDD base temp = ' input.GDDBaseTemp];
+
 cell2csv([input.cropname '_m3yieldmodeldata_' modelname '.csv'] ...
     ,output,',');
 

@@ -14,13 +14,13 @@ function [modyield] = m3yieldmodel_UI(cropname, datamask, ...
 % set model choice: VL ELM OR VL MB
 switch modelnumber
     case 1
-        modelname = 'VL_ELM';
+        modelname = 'VL_LM';
     case 2
-        modelname = 'VL_MB';
+        modelname = 'VL_MBM';
 end
 
-filestr = ['/Users/muell512/Documents/MATLAB/ndm005_mgmtregression/' ...
-    'modeloutput/' cropname '_m3yieldmodeldata_' modelname '.csv'];
+filestr = [iddstring 'ClimateBinAnalysis/YieldModel/' ...
+    cropname '_m3yieldmodeldata_' modelname '.csv'];
 MS = ReadGenericCSV(filestr);
 
 % initialize modyield output

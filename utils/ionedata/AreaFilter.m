@@ -112,4 +112,7 @@ if nargout==0
     
 end
 
+function [varargout] = nanmax(varargin)
+[varargout{1:nargout}] = max(varargin{:});
+
 %

@@ -37,10 +37,8 @@ function Outline=ContinentOutline(ContinentName)
 %    'Western Asia'
 %    'Western Europe'
 
-%ContinentName='Oceania';
 
 load([iddstring '/misc/ContinentOutlineData.mat'])
-
 
 ii=strmatch(ContinentName,UNREGION2,'exact');
 
@@ -60,7 +58,7 @@ end
 Outline=DataBlank;
 
 for j=1:length(ii)
-    j
+    
     FAO=NAME_FAO(ii(j));
     if isempty(FAO{1})
         disp(['ignoring ' NAME_ISO(ii(j))]);

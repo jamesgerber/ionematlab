@@ -1,15 +1,33 @@
 function [modyield] = m3yieldmodel_UI(cropname, datamask, ...
-    climatemask, nfert, pfert, kfert, avgpercirr, modelnumber)
+    climatemask, nfert, pfert, kfert, avgpercirr, modelnumber, ...
+    errorflag, errormap)
 
-% function [modyield] = m3yieldmodel_UI(cropname, datamask, ...
-%     climatemask, nfert, pfert, kfert, avgpercirr, modelnumber)
+% [modyield] = m3yieldmodel_UI(cropname, datamask, ...
+%     climatemask, nfert, pfert, kfert, avgpercirr, modelnumber, ...
+%     errorflag, errormap)
 %
 % m3yieldmodel_UI will return a modeled yield map based on crop and
 % management characteristics.
+% 
+% v1.0 functional March 2011. Written by Nathan Mueller.
+% v1.1 3.23.2011 - added capability to utilize spatial modeling errors
+%      (residuals)
 %
-% NOTE: still accesses preliminary results
+% model options:
+%    modelnumber 1 = Von Liebig logistic model
+%    modelnumber 2 = Von Liebig Mitscherlich Baule model
 %
-%
+% errorflag:
+%    errorflag = 1 indicates to use error correction where possible
+%    errorflag = 0 no error correction will be used
+%    *note* - Errors are observed - modeled yields from the model output.
+%    These may account for site-specific variation in seeds, soils, etc.
+%    When the errorflag is turned on, this code will use the errors but max
+%    out and minimize any yields at the 98th and 2nd percentiles,
+%    respectively. This will avoid the situation where you end up modeling
+%    a negative yield.
+
+
 
 % set model choice: VL ELM OR VL MB
 switch modelnumber
@@ -19,10 +37,42 @@ switch modelnumber
         modelname = 'VL_MBM';
 end
 
+% load yield model output
 filestr = [iddstring 'ClimateBinAnalysis/YieldModel/' ...
     cropname '_m3yieldmodeldata_' modelname '.csv'];
 MS = ReadGenericCSV(filestr);
+disp(['running m3yieldmodel_UI for ' cropname ' using a ' modelname ...
+    ' model'])
 
+% check for error flag - if this flag is turned on the function will use
+% model errors (residuals) to the output of the function
+if errorflag == 1
+    disp(['errorflag = 1, will use spatial residuals (error) to adjust '...
+        'model output. Maximum yields will be 98th percentile yields, '...
+        'minimum yields will be set to 2nd percentile yields.'])
+    potpercentstr = '98';
+    minpercentstr = '2';
+    climspace = '10x10';
+    if strmatch(cropname,'oilpalm')
+        cropnamecaps = 'Oil_Palm';
+    else
+        cropnamecaps = regexprep(cropname, '(^.)', '${upper($1)}');
+    end
+    ygpath = [iddstring 'ClimateBinAnalysis/YieldGap/ContourFiltered/' ...
+        'YieldGap_' cropnamecaps '_MaxYieldPct_' potpercentstr ...
+        '_ContourFilteredClimateSpace_' climspace '_prec.mat'];
+    eval(['load ' ygpath ';']);
+    maxyield = OS.potentialyield;
+    ygpath = [iddstring 'ClimateBinAnalysis/YieldGap/ContourFiltered/' ...
+        'YieldGap_' cropnamecaps '_MaxYieldPct_' minpercentstr ...
+        '_ContourFilteredClimateSpace_' climspace '_prec.mat'];
+    eval(['load ' ygpath ';']);
+    maxyield = OS.potentialyield;
+elseif errorflag == 0
+    disp(['errorflag = 0, not using spatial residuals when ' ...
+        'calculating yields'])
+end
+    
 % initialize modyield output
 modyield = nan(4320,2160);
 
@@ -351,6 +401,14 @@ for bin = 1:100
     modyield(ii) = modY;
 end
 
-
-
-
+% use error correction if errorflag is activated
+if errorflag == 1
+    disp('finalizing modeled yield using spatially-explicit residuals')
+    errormap(isnan(errormap)) = 0;
+    % note: subtract the errors b/c the errors were derived as modeled -
+    % observed (M3)
+    modyield = modyield - errormap;
+    % now make sure no place exceeds min or max yields
+    modyield(modyield > maxyield) = maxyield(modyield > maxyield);
+    modyield(modyield > minyield) = maxyield(modyield > minyield);
+end

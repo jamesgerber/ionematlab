@@ -21,7 +21,7 @@ for j=1:length(ii)
   j
   FAO=NAME_FAO(ii(j));
   S3=standardcountrynames(FAO,'NAME_FAO','sage3');
-  Outline=Outline | CountryCodetoOutline(S3);
+  Outline=Outline | CountryCodetoOutline(S3{1});
 end
 
 
@@ -38,3 +38,4 @@ for j=1:248;
   NAME_FAO{j}=S(j).NAME_FAO;
 end
 
+save ContinentOutlineData NAME_FAO NAME_ISO UNREGION1 UNREGION2

@@ -1,9 +1,14 @@
-function Outline=ContinentOutline(ContinentName)
+function Outline=ContinentOutline(ContinentList)
 %  ContinentOutline - return outline of continents
 %
 %  SYNTAX
 %     Outline=ContinentOutline(ContinentName)
-%    where ContinentName can be one of the following:
+%
+%
+%    where ContinentName can be one of the names below.
+%
+%  Outline=...
+%  ContinentOutline({'Western Europe','Northern Europe','Southern Europe'});
 %
 %
 %     'Africa'
@@ -37,21 +42,34 @@ function Outline=ContinentOutline(ContinentName)
 %    'Western Asia'
 %    'Western Europe'
 
+if nargin==0
+        help(mfilename)
+        return
+end
+
+if length(ContinentList)==1
+    ContinentName=ContinentList;
+    if iscell(ContinentName)
+        ContinentName=ContinentName{1};
+    end
+else
+    ii=DataBlank;
+    TempOutline=ContinentOutline(ContinentList(1));
+    Outline=TempOutline | ContinentOutline(ContinentList(2:end));
+    return
+end
+
 
 load([iddstring '/misc/ContinentOutlineData.mat'])
 
 ii=strmatch(ContinentName,UNREGION2,'exact');
 
-if isempty(ii)
-    
-    try
-        ii=strmatch(ContinentName,UNREGION1,'exact');
-    catch
-        
-    disp(['Don''t know ' Continent ])
-    disp(['try '])
-    unique(UNREGION2);
-    error
+if isempty(ii)   
+    ii=strmatch(ContinentName,UNREGION1,'exact');
+    if isempty(ii)       
+        disp(['try '])
+        unique(UNREGION2),unique(UNREGION1)
+        error(['Don''t know ' ContinentName ])
     end
 end
 
@@ -78,6 +96,7 @@ for j=1:248;
     UNREGION2{j}=S(j).UNREGION2;
     NAME_ISO{j}=S(j).NAME_ISO;
     NAME_FAO{j}=S(j).NAME_FAO;
+    WBREGION{j}=S(j).WBREGION;
 end
 
 save ContinentOutlineData NAME_FAO NAME_ISO UNREGION1 UNREGION2

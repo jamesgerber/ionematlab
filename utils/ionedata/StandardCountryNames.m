@@ -156,7 +156,7 @@ end
 
 function Row=GetRow(Input,List)
 %% GetRow
-
+Input=strrep(Input,'ô','o');  %fix Cote d'Ivoire
 if length(Input)==0
     error
 end
@@ -184,6 +184,8 @@ end
 
 % now remove constraint of exactness
 Row=strmatch(Input,List);
+
+
 if length(Row)==1
     return
 end

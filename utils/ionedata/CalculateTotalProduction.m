@@ -42,6 +42,10 @@ for j=1:length(cl)
     SumDryProduction(DataMask)=SumDryProduction(DataMask)+...
         Area(DataMask).*Yield(DataMask).*fma(DataMask)*DryFraction;
     SumArea(DataMask)=SumArea(DataMask)+Area(DataMask);
+    
+    ProductionVector(j)=sum(Area(DataMask).*Yield(DataMask).*fma(DataMask));
+    DryProductionVector(j)=sum(Area(DataMask).*Yield(DataMask).*fma(DataMask)*DryFraction);
+    NameVector{j}=cl{j};
 end
 
 OS.SumProduction=SumProduction;
@@ -49,8 +53,11 @@ OS.SumDryProduction=SumDryProduction;
 OS.SumArea=SumArea;
 OS.cropdata_datestamp=a.date;
 OS.cropdata_datenum=a.datenum;
+OS.ProductionVector=ProductionVector;
+OS.DryProductionVector=DryProductionVector;
+OS.NameVector=NameVector;
 
-save savingPlotTotalProductionWorkspace  S
+save savingPlotTotalProductionWorkspace  
     save([iddstring '/misc/TotalCropProductionData.mat'],'OS');
 
    

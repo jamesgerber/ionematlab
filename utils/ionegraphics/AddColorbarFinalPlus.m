@@ -1,5 +1,5 @@
-function AddColorbarPercent(Handle);
-% ADDCOLORBARPERCENT - add a % sign to each number on colorbar
+function AddColorbarFinalPlus(Handle);
+% AddColorbarFinalPlus - add a "+"  to final number on colorbar
 if nargin==0;
   Handle=gcf;
 end

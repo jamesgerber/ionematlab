@@ -165,3 +165,5 @@ else
     warning('invalid SAGE code');
     
 end
+
+outline = logical(outline);

@@ -83,7 +83,11 @@ for j=1:length(ii)
         disp(['ignoring ' NAME_ISO(ii(j))]);
     else
         S3=standardcountrynames(FAO,'NAME_FAO','sage3');
-        Outline=Outline | CountryCodetoOutline(S3{1});
+        if isempty(S3{1})
+            disp(['ignoring ' FAO])
+        else
+            Outline=Outline | CountryCodetoOutline(S3{1});
+        end
     end
 end
 

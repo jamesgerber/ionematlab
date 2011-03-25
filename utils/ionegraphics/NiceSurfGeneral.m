@@ -624,6 +624,12 @@ MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
 
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
+    OS.Data=single(OS.Data);
+    
+    FN=fixextension(ActualFileName,'.png')
+    %save to disk
+    save([strrep(FN,'.png','') '_SavedFigureData'],'OS','NSS')
+     
     if isequal(figfilesave,'on')
         hgsave(filename);
     end

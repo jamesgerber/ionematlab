@@ -4,9 +4,10 @@ function Outline=ContinentOutline(ContinentList)
 %  SYNTAX
 %     Outline=ContinentOutline(ContinentName)
 %
-%
+%   
 %    where ContinentName can be one of the names below.
-%
+%   EXAMPLES
+%  Outline=ContinentOutline({'Africa'});
 %  Outline=...
 %  ContinentOutline({'Western Europe','Northern Europe','Southern Europe'});
 %

@@ -48,7 +48,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.DisplayNotes='';
 %   NSS.uppermap='white'; %or nodatacolor
 %   NSS.lowermap='emblue'; % or ocean or oceancolor
-%   NSS.colorbarpercent='off';%
+%   NSS.colorbarpercent='off';
+%   NSS.colorbarfinalplus='off';%
 %   NSS.resolution='-r600';%
 %   NSS.figfilesave='on';%
 %   NSS.plotflag='on';  %allows for calling functions to turn off plotting
@@ -176,7 +177,7 @@ NSS=CorrectCallingSyntax(NSS)
 ListOfProperties={
     'units','titlestring','filename','cmap','longlatbox','plotarea', ...
     'logicalinclude','coloraxis','displaynotes','description',...
-    'uppermap','lowermap','colorbarpercent','resolution',...
+    'uppermap','lowermap','colorbarpercent','colorbarfinalplus','resolution',...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff'};
 
@@ -202,6 +203,7 @@ lowermap=callpersonalpreferences('oceancolor');
 resolution=callpersonalpreferences('printingres');
 
 colorbarpercent='off';
+colorbarfinalplus='off';
 figfilesave='off';
 plotflag='on';
 fastplot='off';
@@ -534,7 +536,9 @@ end
 if isequal(colorbarpercent,'on')
     AddColorbarPercent;
 end
-
+if isequal(colorbarfinalplus,'on')
+    AddColorbarFinalPlus;
+end
 
 if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     

@@ -12,11 +12,11 @@ function newmap=StretchColorMap(cmap,cmin,cmax);
 %   clear NSS
 %   NSS.FastPlot='on';
 %   NSS.colormap='orange_white_purple_deep';
-%   NSS.caxis=[-5 14];
+%   NSS.caxis=[-5 15];
 %   NiceSurfGeneral(DelYield,NSS)
 %   cmap=finemap('orange_white_purple_deep','','');
-%   NewMap=StretchColorMap(cmap,-5,14);
-%   NSS.caxis=[-5 14];
+%   NewMap=StretchColorMap(cmap,-5,15);
+%   NSS.caxis=[-5 15];
 %   NSS.colormap=NewMap;
 %   NiceSurfGeneral(DelYield,NSS)
 %

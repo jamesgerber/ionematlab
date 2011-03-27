@@ -5,8 +5,8 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 
 % [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %     dI, dIquality] = analyzeyieldlim(cropname, modelnumber, ...
-%     desiredyield, pylimitdef, yieldmap, datamask, climatemask, nfert, ...
-%     pfert, kfert, avgpercirr)
+%     desiredyield, potentialyield, yieldmap, datamask, climatemask, ...
+%     nfert, pfert, kfert, avgpercirr, errorflag, errormap)
 %
 % NOTES ON VARIABLES:
 %
@@ -73,6 +73,7 @@ for bin = 1:100
         & isfinite(nfert) & isfinite(pfert) & isfinite(kfert));
     
     % make double & select bin area
+
     yield_bin = double(yieldmap(ii));
     potentialyield_bin = double(potentialyield(ii));
     irr_bin = double(avgpercirr(ii));
@@ -80,6 +81,7 @@ for bin = 1:100
     pfert_bin = double(pfert(ii));
     kfert_bin = double(kfert(ii));
     desiredyield_bin = double(desiredyield(ii));
+    error_bin = double(errormap(ii));
     
     % identify potential and min yields in the bin
     potyieldbin = MS.potential_yield(bin);
@@ -202,23 +204,6 @@ for bin = 1:100
         lim_bin(jj) = 1;
     end
     
-    
-    
-    %     % examine for phosphorus limitation
-    %     if str2num(cb(2)) == 1
-    %         bFitw = str2num(MS.c_P2O5{bin});
-    %         switch modelnumber
-    %             case 1 % VL ELM
-    %                 pfertplus_bin = (log((potyieldbin ./ ...
-    %                     desiredyield_bin) - 1) - bnut) ./ - bFitw;
-    %             case 2 % VL MB
-    %                 pfertplus_bin = log((1 - (desiredyield_bin ./ ...
-    %                     potyieldbin)) ./ bnut) ./ -bFitw;
-    %         end
-    %         jj = find(pfertplus_bin > pfert_bin);
-    %         lim_bin(jj) = 1;
-    %     end
-    
     % examine for water limitation
     if str2num(cb(4)) == 1
         bFitw(1) = str2num(MS.b_irr{bin});
@@ -249,8 +234,13 @@ for bin = 1:100
     end
     
     % place lim_bin into yieldlim map
-    jj = find(desiredyield_bin > potentialyield_bin);
-    lim_bin(jj) = 4;
+    if errorflag == 1
+        jj = find((desiredyield_bin - error_bin) > potentialyield_bin);
+        lim_bin(jj) = 4;
+    elseif errorflag == 0
+        jj = find(desiredyield_bin > potentialyield_bin);
+        lim_bin(jj) = 4;
+    end
     yieldlim(ii) = lim_bin;
     dN(ii) = dN_bin;
     dNquality(ii) = dNQ_bin;

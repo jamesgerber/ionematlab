@@ -36,13 +36,11 @@ if nargin==0;help(mfilename);return;end
 
 persistent snu_htable state_htable ctry_htable ctry_outlines
 
-SystemGlobals;
-
 % check to see if the 'state_htable' hash table exists in memory
 if isempty(snu_htable);
     
     % if the hash table doesn't exist, try to load it from misc folder
-    ht_path = [IoneDataDir '/misc/admin_hashtable2010.mat'];
+    ht_path = [iddstring '/misc/admin_hashtable2010.mat'];
     if exist(ht_path) == 2
         eval(['load ' ht_path]);
         
@@ -50,7 +48,7 @@ if isempty(snu_htable);
         % AdminBoundary data
     else
         
-        path = [IoneDataDir 'AdminBoundary2010/Raster_NetCDF/' ...
+        path = [iddstring 'AdminBoundary2010/Raster_NetCDF/' ...
             '3_M3lcover_5min/admincodes.csv'];
         admincodes = ReadGenericCSV(path);
         
@@ -67,7 +65,7 @@ if isempty(snu_htable);
         sagecodes = unique(admincodes.SAGE_ADMIN);
         
         
-        path = [IoneDataDir 'AdminBoundary2010/Raster_NetCDF/' ...
+        path = [iddstring 'AdminBoundary2010/Raster_NetCDF/' ...
             '3_M3lcover_5min/admin_5min_r2.nc'];
         [DS] = OpenNetCDF(path);
         AdminGrid = DS.Data;
@@ -127,7 +125,7 @@ if isempty(snu_htable);
             ctry_htable.put(ccode,c);
         end
         
-        savepath = ['save ' IoneDataDir '/misc/admin_hashtable2010.mat '...
+        savepath = ['save ' iddstring '/misc/admin_hashtable2010.mat '...
             'snu_htable state_htable ctry_htable ctry_outlines'];
         eval(savepath);
         

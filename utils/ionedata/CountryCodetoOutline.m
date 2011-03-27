@@ -37,8 +37,6 @@ function [outline, indices] = CountryCodetoOutline(countrycode)
 %
 % see also: StandardCountryNames.m ContinentOutline.m
 
-disp('calling CountryCodetoOutline')
-
 if nargin==0;
     help(mfilename);
     return;

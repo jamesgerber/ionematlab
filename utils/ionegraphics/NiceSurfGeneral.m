@@ -50,6 +50,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.lowermap='emblue'; % or ocean or oceancolor
 %   NSS.colorbarpercent='off';
 %   NSS.colorbarfinalplus='off';%
+%   NSS.eastcolorbar='off';%
 %   NSS.resolution='-r600';%
 %   NSS.figfilesave='on';%
 %   NSS.plotflag='on';  %allows for calling functions to turn off plotting
@@ -179,7 +180,8 @@ ListOfProperties={
     'logicalinclude','coloraxis','displaynotes','description',...
     'uppermap','lowermap','colorbarpercent','colorbarfinalplus','resolution',...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
-    'categoryranges','categoryvalues','categorycolors','datacutoff'};
+    'categoryranges','categoryvalues','categorycolors','datacutoff',...
+    'eastcolorbar'};
 
 %% set defaults for these properties
 units='';
@@ -192,6 +194,8 @@ logicalinclude=[];
 coloraxis=[];
 displaynotes='';
 description='';
+eastcolorbar='off';%
+
 datacutoff=9e9;
 
 % new Joanne colors - now set in personalpreferencestemplate
@@ -432,11 +436,8 @@ if minstep==0
     minstep=.001;
 end
 
-
-
 OceanVal=coloraxis(1)-minstep;
 NoDataLandVal=coloraxis(2)+minstep;
-
 
 %Any points off of the land mask must be set to ocean color.
 land=LandMaskLogical(Data);
@@ -457,22 +458,17 @@ if ~isequal(longlatbox,[-180 180 -90 90])
     iilong=find(Long >= longlatbox(1) & Long <=longlatbox(2));
     jjlat=find(Lat >= longlatbox(3) & Lat <=longlatbox(4));
     
-        IonESurf(Long(iilong),Lat(jjlat),Data(iilong,jjlat));
+    IonESurf(Long(iilong),Lat(jjlat),Data(iilong,jjlat));
 
 else    
     IonESurf(Data);
-
-    
 end
 
 
 %% Make graph
 
-
 finemap(cmap,lowermap,uppermap);
-
 caxis([(cmin-minstep)  (cmax+minstep)]);
-
 
 %% plotstates section
 
@@ -496,19 +492,14 @@ end
 
 fud=get(gcf,'UserData');
 
-
-
 % let's store the cut-off values
 
 fud.NiceSurfLowerCutoff=(cmin+minstep/2);
 fud.NiceSurfUpperCutoff=(cmax-minstep/2);
 set(gcf,'UserData',fud);
 
-
-
 if fud.MapToolboxFig==1
-    gridm
-    
+    gridm    
     if strcmp(longlatlines,'off')
         gridm('off');
     end
@@ -527,10 +518,16 @@ if strcmp(categorical,'on')
 end
 %set(fud.ColorbarHandle,'Position',[0.1811+.1 0.08 0.6758-.2 0.0568])
 drawnow
-if fud.MapToolboxFig==0
-    set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02])
+
+
+if isequal(eastcolorbar,'off')
+    if fud.MapToolboxFig==0
+        set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02])
+    else
+        set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
+    end
 else
-    set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
+    error('haven''t yet implemented eastcolorbar')
 end
 
 if isequal(colorbarpercent,'on')
@@ -629,7 +626,7 @@ MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
     OS.Data=single(OS.Data);
-    
+    OS.cmap=cmap;
     FN=fixextension(ActualFileName,'.png')
     %save to disk
     save([strrep(FN,'.png','') '_SavedFigureData'],'OS','NSS')
@@ -676,10 +673,10 @@ for j=1:length(a)
         case {'caxis'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'coloraxis',ThisValue);
-        case {'ocean','oceancolor'}
+        case {'ocean','oceancolor','lowercolor'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'lowermap',ThisValue);
-        case {'nodata','nodatacolor'}
+        case {'nodata','nodatacolor','uppercolor'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'uppermap',ThisValue);
         case {'fast','quick','quickplot'}

@@ -96,17 +96,26 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.Units='tons/ha';
 %   NSS.categorical='on';
 %   NSS.categoryranges={[0 4],[4 6],[6 8],[8 20]}
-%   NSS.categoryvalues={'[0 4]','[4 6]','[6 8]','[8 20]'}
-%   NSS.cmap='revsummer';
+%   NSS.cmap={'lime',[0 .3 .8],'b','magenta'};
+%   NiceSurfGeneral(Yield,NSS);
+%  %or%
+%   NSS.categoryvalues={'[0 4]','[4 6]','[6 8]','[8 20]'}  
+%   NSS.cmap='revsummer'
 %   NiceSurfGeneral(Yield,NSS);
 %
-%   Tricky syntax for getting coloraxis.
+%   Syntax for getting coloraxis.
 %   OSS=NiceSurfGeneral(DATA,'coloraxis',[.99],'plotflag','off')
 %   OSS will contain field coloraxis, and no plot will be made.
 %
 %
 %   See Also:  IoneSurf ShowUi HideUi FastSurf
 
+% desired changes
+%  - fix cvector warning in underlying IonESurf code
+%  - add a 'super fast' variant
+%  - when resize a map, keep title visible
+%  - when plotarea flag is used, discard extraneous data to make coordinate
+%  rotation faster
 
 %% preliminaries to handle inputs
 if nargin==0
@@ -242,85 +251,29 @@ if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so
     return
 end
 
-
-%ylim=pi/2;  % need to initialize variable.
-% Now a section to look for PlotArea
-
+%% did user input flags, or shorthand inputs
+% is 'plotarea' specified?
 if isempty(plotarea)
-    %we are done.  keep longlatbox as is.
+    % don't change longlatbox
     PlotAllStates=0;
 else
+    [longlatbox,filename]=ModifyLongLatBox(plotarea,filename);
     PlotAllStates=1;
-    switch lower(plotarea)
-        case 'world'
-            longlatbox=[-180 180 -90 90];
-            %            ylim=pi/2;
-        case 'europe'
-            longlatbox=[-15 65 30 80];
-            filename=[filename '_europe'];
-            %            ylim=.51;
-        case {'usmexico','usmex'}
-            longlatbox=[-130 -60 10 55];
-            filename=[filename '_usmexico'];
-            %            ylim=.43;
-        case {'nafta'}
-            longlatbox=[-130 -60 10 60];
-            filename=[filename '_nafta'];
-            %            ylim=.43;
-        case 'africa'
-            longlatbox=[-20 60 -35 40];
-            filename=[filename '_africa'];
-            %            ylim=.77;
-        case 'midwest'
-            longlatbox=[-105 -75 25 55];
-            filename=[filename '_midwest'];
-            %            ylim=.32;
-        case 'tropics'
-            longlatbox=[-180 180 -30 30];
-            filename=[filename '_tropics'];
-            %            ylim=.32;
-        case {'brazil','brasil'}
-            longlatbox=[-80 -20 -40 10];
-            filename=[filename '_brazil'];
-            %            ylim=.52;
-        case {'southamerica'}
-            longlatbox=[-80 -20 -40 10];
-            filename=[filename '_southamerica'];
-            %            ylim=.52;
-        case {'argentina'}
-            longlatbox=[-80 -20 -60 -20];
-            filename=[filename 'argentina'];
-            %            ylim=.45;
-        case {'china'}
-            longlatbox=[75 140 15 60];
-            filename=[filename '_china'];
-            %            ylim=.42;%.37;%.32;%52
-        case {'india'}
-            longlatbox=[65 100 5 40];
-            filename=[filename '_india'];
-            %            ylim=.35%.32;
-        case {'indonesia'}
-            longlatbox=[90 145 -15 10];
-            filename=[filename '_indonesia'];
-            %            ylim=.27;%.32;
-        case {'chinatropical'}
-            longlatbox=[80 140 10 35];
-            filename=[filename '_chinatropical'];
-            %            ylim=.32;
-        case {'mexico'}
-            longlatbox=[-125 -80 10 35];
-            filename=[filename '_mexico'];
-            %            ylim=.27;%.32;
-        case {'southafrica'}
-            longlatbox=[15 40 -40 -20];
-            filename=[filename '_southafrica'];
-        case {'southeastasia'}
-            longlatbox=[90 150 -15 +30];
-            filename=[filename 'southeastasia'];
-            %            ylim=.22;
-        otherwise
-            error(['Don''t recognize plotarea ' plotarea]);
+end
+
+% was cmap a cell array?
+if iscell(cmap)
+    cmap=ExpandCellCmap(cmap);
+end
+
+% is categoryvalues empty?  make it category values
+if ~isempty(categoryranges) & isempty(categoryvalues)
+    
+    for j=1:length(categoryranges)
+        range=categoryranges{j};
+        categoryvalues(j)={['[' num2str(range(1)) ' ' num2str(range(2)) ']' ]};
     end
+    
 end
 
 %% check class of Data, data conditioning
@@ -358,9 +311,9 @@ if isequal(fastplot,'on')
         Data=Data(1:2:end,1:2:end);
         logicalinclude=logicalinclude(1:2:end,1:2:end);
     end
- %   disp(['Turning off saving file ... fastplot is on'])
- %   figfilesave='off';
- %   filename='';
+    %   disp(['Turning off saving file ... fastplot is on'])
+    %   figfilesave='off';
+    %   filename='';
 end
 
 Data=double(Data);
@@ -410,18 +363,22 @@ if length(coloraxis)<2
     end
 end
 
-if strcmp(categorical,'on')
-    coloraxis=[1,length(categoryvalues)];
-    for ii=1:length(categoryranges)
-        cur=categoryranges{ii};
-        Data(Data>=cur(1)&Data<cur(2))=ii;
-    end
-end
-
 %% prepare output data
 % do it before turn nan to NoData value.
 OS.coloraxis=coloraxis;
 OS.Data=Data;
+
+temp=Data;
+if strcmp(categorical,'on')
+    coloraxis=[1,length(categoryvalues)];
+    for ii=1:length(categoryranges)
+        cur=categoryranges{ii};
+        temp(Data>=cur(1)&Data<cur(2))=ii;
+    end
+end
+
+Data=temp;
+clear temp
 
 
 %% Color axis manipulation
@@ -459,8 +416,8 @@ if ~isequal(longlatbox,[-180 180 -90 90])
     jjlat=find(Lat >= longlatbox(3) & Lat <=longlatbox(4));
     
     IonESurf(Long(iilong),Lat(jjlat),Data(iilong,jjlat));
-
-else    
+    
+else
     IonESurf(Data);
 end
 
@@ -499,7 +456,7 @@ fud.NiceSurfUpperCutoff=(cmax-minstep/2);
 set(gcf,'UserData',fud);
 
 if fud.MapToolboxFig==1
-    gridm    
+    gridm
     if strcmp(longlatlines,'off')
         gridm('off');
     end
@@ -630,7 +587,7 @@ if ~isempty(filename)
     FN=fixextension(ActualFileName,'.png')
     %save to disk
     save([strrep(FN,'.png','') '_SavedFigureData'],'OS','NSS')
-     
+    
     if isequal(figfilesave,'on')
         hgsave(filename);
     end
@@ -649,6 +606,83 @@ if ~isempty(description) & ~isequal(fastplot,'on')
 end
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  ModifyLongLatBox     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function [longlatbox,filename]=ModifyLongLatBox(plotarea,filename);
+
+
+switch lower(plotarea)
+    case 'world'
+        longlatbox=[-180 180 -90 90];
+        %            ylim=pi/2;
+    case 'europe'
+        longlatbox=[-15 65 30 80];
+        filename=[filename '_europe'];
+        %            ylim=.51;
+    case {'usmexico','usmex'}
+        longlatbox=[-130 -60 10 55];
+        filename=[filename '_usmexico'];
+        %            ylim=.43;
+    case {'nafta'}
+        longlatbox=[-130 -60 10 60];
+        filename=[filename '_nafta'];
+        %            ylim=.43;
+    case 'africa'
+        longlatbox=[-20 60 -35 40];
+        filename=[filename '_africa'];
+        %            ylim=.77;
+    case 'midwest'
+        longlatbox=[-105 -75 25 55];
+        filename=[filename '_midwest'];
+        %            ylim=.32;
+    case 'tropics'
+        longlatbox=[-180 180 -30 30];
+        filename=[filename '_tropics'];
+        %            ylim=.32;
+    case {'brazil','brasil'}
+        longlatbox=[-80 -20 -40 10];
+        filename=[filename '_brazil'];
+        %            ylim=.52;
+    case {'southamerica'}
+        longlatbox=[-80 -20 -40 10];
+        filename=[filename '_southamerica'];
+        %            ylim=.52;
+    case {'argentina'}
+        longlatbox=[-80 -20 -60 -20];
+        filename=[filename 'argentina'];
+        %            ylim=.45;
+    case {'china'}
+        longlatbox=[75 140 15 60];
+        filename=[filename '_china'];
+        %            ylim=.42;%.37;%.32;%52
+    case {'india'}
+        longlatbox=[65 100 5 40];
+        filename=[filename '_india'];
+        %            ylim=.35%.32;
+    case {'indonesia'}
+        longlatbox=[90 145 -15 10];
+        filename=[filename '_indonesia'];
+        %            ylim=.27;%.32;
+    case {'chinatropical'}
+        longlatbox=[80 140 10 35];
+        filename=[filename '_chinatropical'];
+        %            ylim=.32;
+    case {'mexico'}
+        longlatbox=[-125 -80 10 35];
+        filename=[filename '_mexico'];
+        %            ylim=.27;%.32;
+    case {'southafrica'}
+        longlatbox=[15 40 -40 -20];
+        filename=[filename '_southafrica'];
+    case {'southeastasia'}
+        longlatbox=[90 150 -15 +30];
+        filename=[filename 'southeastasia'];
+        %            ylim=.22;
+    otherwise
+        error(['Don''t recognize plotarea ' plotarea]);
+        
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CorrectCallingSyntax     %
@@ -682,6 +716,46 @@ for j=1:length(a)
         case {'fast','quick','quickplot'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'fastplot',ThisValue);
+    end
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  CorrectCallingSyntax     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function newcmap=ExpandCellCmap(cmap);
+
+for j=1:length(cmap)
+    thiselement=cmap{j};
+    if ~ischar(thiselement)
+        newcmap(j,:)=thiselement(:);
+    else
+        switch thiselement  %it's the name of a color
+            case {'r','red'}
+                vec=[1 0 0];
+            case {'m','magenta','mag'}
+                vec=[1 0 1];
+            case {'k','black'}
+                vec=[0 0 0];
+            case {'c','cyan'}
+                vec=[0 1 1];
+            case {'y','yellow'}
+                vec=[1 1 0];
+            case {'maroon'}
+                vec=[.5 0 0];
+            case {'purple'}
+                vec=[.5 0 .5];
+            case {'b','blue'}
+                vec=[0 0 1];
+            case 'navy'
+                vec=[0 0 .5];
+            case 'teal'
+                vec=[0 0.5 .5];
+            case {'g','green'}
+                vec=[0 1 0];
+            case 'lime'
+                vec=[50 205 50]/255;
+        end
+        newcmap(j,:)=vec(:);
     end
 end
 

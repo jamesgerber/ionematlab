@@ -162,7 +162,7 @@ N.crop=crop;
 
 %% Phosphate (P)
 x=load([iddstring '/Fertilizer2000/ncmat/' crop 'P2O5apprate.mat']);
-AppliedPhosphorusPerHA=x.DS.Data(:,:,1);
+AppliedPhosphorusPerHA=x.DS.Data(:,:,1)*0.4366; %(31/(31+2.5*16)), 31=atomic mass P, 16 atomic mass O
 %AppliedPhosphorusPerHA=datastore([...
 %    'fert_app_ver7/'   crop '_P_ver2_25_rate_FAO_SNS_FINAL.mat']);
 

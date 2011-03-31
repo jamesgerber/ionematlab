@@ -66,6 +66,7 @@ x=strrep(x,' ','_');
 x=strrep(x,'__','_');
 x=strrep(x,'__','_');
 x=strrep(x,'__','_');
+x=strrep(x,'*','');
 x=strrep(x,'__','_');
 OutString=x;
 

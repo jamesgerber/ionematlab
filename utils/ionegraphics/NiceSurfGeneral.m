@@ -196,7 +196,7 @@ ListOfProperties={
 units='';
 titlestring='';
 filename='';
-cmap='summer';
+cmap='dark_greens_deep';
 longlatbox=[-180 180 -90 90];
 plotarea='';
 logicalinclude=[];
@@ -425,6 +425,7 @@ end
 %% Make graph
 
 finemap(cmap,lowermap,uppermap);
+tmp=finemap(cmap,lowermap,uppermap);
 caxis([(cmin-minstep)  (cmax+minstep)]);
 
 %% plotstates section
@@ -525,11 +526,13 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         
     end
     ylim=(t2-t1)/100;
-    ht=text(0, ylim,titlestring)
+    ht=text(0, ylim,titlestring);
+    set(ht,'interp','none');
 else
     ht=text(0,pi/2,titlestring);
     if length(titlestring)>1
         set(ht,'Position',[0 1.635 0]);
+        set(ht,'interp','none')
     end
 end
 
@@ -540,6 +543,7 @@ set(fud.DataAxisHandle,'Visible','off');%again to make it current
 set(ht,'HorizontalAlignment','center');
 set(ht,'FontSize',14)
 set(ht,'FontWeight','Bold')
+set(ht,'tag','NSGTitleTag')
 
 
 hcbtitle=get(fud.ColorbarHandle,'Title');

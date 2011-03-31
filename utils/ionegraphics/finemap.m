@@ -147,7 +147,7 @@ else
         case 'bluemarble'
             uc=[0.0588    0.1176    0.5490];
         case {'joannegray','joannegrey'}
-            uc =[.74 .74 .74]*.1;
+            uc =[.74 .74 .74];
         otherwise
             error(['don''t know this uppercolor bound: ' uppercolor]);
             

@@ -55,6 +55,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.figfilesave='on';%
 %   NSS.plotflag='on';  %allows for calling functions to turn off plotting
 %   NSS.fastplot='off'; %downsamples data/turns off printing for fast plots
+%                       % acceptable values 'on', 'halfdegree'
 %   NSS.longlatlines='on' %turns lat long grid on or off
 %   NSS.plotstates='bricnafta' %adm bounds.
 %         {'off','countries','bricnafta','states','gadm0','gadm1','gadm2'}
@@ -315,6 +316,20 @@ if isequal(fastplot,'on')
     %   figfilesave='off';
     %   filename='';
 end
+
+%% check to see if fastplot==1
+if isequal(fastplot,'halfdegree')
+    % downsample data if it is 5min
+    if length(size(Data,2))<=1080
+        disp([' data is 20 min or coarser.  not downsampling.']);
+        Data=Data(1:6:end,1:6:end);
+        logicalinclude=logicalinclude(1:6:end,1:6:end);
+    end
+    %   disp(['Turning off saving file ... fastplot is on'])
+    %   figfilesave='off';
+    %   filename='';
+end
+
 
 Data=double(Data);
 

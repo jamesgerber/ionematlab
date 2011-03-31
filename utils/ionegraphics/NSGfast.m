@@ -11,13 +11,11 @@ if nargin==0
 end
 Data=varargin{1};
 
-RedData=Data(1:6:end,1:6:end);
+%RedData=Data(1:6:end,1:6:end);
 
 if length(varargin)==1;
-    OS=NiceSurfGeneral(RedData,'caxis',[.99]);
-
+    OS=NiceSurfGeneral(Data,'caxis',[.99],'fastplot','halfdegree');
 else
-    OS=NiceSurfGeneral(RedData,varargin{2:end});
-
+    OS=NiceSurfGeneral(Data,varargin{2:end},'fastplot','halfdegree');
 end
 

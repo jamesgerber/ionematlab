@@ -425,7 +425,6 @@ end
 %% Make graph
 
 finemap(cmap,lowermap,uppermap);
-tmp=finemap(cmap,lowermap,uppermap);
 caxis([(cmin-minstep)  (cmax+minstep)]);
 
 %% plotstates section

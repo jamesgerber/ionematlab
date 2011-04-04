@@ -22,10 +22,17 @@ for j=1:N;
     xtlcell{j}=xtl(j,:);
 end
 
-for j=length(xtlcell);  %only this line changed from AddColorbarPercent
+
+
+for j=1:length(xtlcell);  %only this line changed from AddColorbarPercent
     tmp=xtlcell{j};
     tmp=strrep(tmp,' ','');
-    xtlcell{j}=[ tmp '(+)'];
+  
+    if j<length(xtlcell)
+      %  xtlcell{j}=[ tmp '  '];
+    else
+        xtlcell{j}=[ '>' tmp ' '];
+    end
     %  xtlcell{j}=[ '\geq ' tmp ];  %doesn't work ... no tex interpreter
     %  for colorbar
 end

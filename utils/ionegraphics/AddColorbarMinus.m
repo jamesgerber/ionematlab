@@ -25,7 +25,7 @@ end
 for j=1;  %only this line changed from AddColorbarPercent
     tmp=xtlcell{j};
     tmp=strrep(tmp,' ','');
-    xtlcell{j}=[tmp '(-)'];
+    xtlcell{j}=['<' tmp ' '];
 end
 
 %set(cbh,'XTickLabel',xtlcell);

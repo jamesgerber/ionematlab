@@ -6,9 +6,10 @@ function AddAlphaOutline(OldFileName,NewFileName);
 %   AddAlphaOutline(OLDFILENAME,NEWFILENAME);
 %
 
+OldFileName=fixextension(OldFileName,'.png');
+
 plotimage=imread(OldFileName);
 
-OldFileName=fixextension(OldFileName,'.png');
 
 if nargin==1
     NewFileName=strrep(OldFileName,'.png','_alpha.png');

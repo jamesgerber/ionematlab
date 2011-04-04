@@ -17,6 +17,9 @@ function varargout=getdata(DataString,matrixflag);
 %
 %    [Long,Lat,Crop]=getdata('croparea');
 %    [Long,Lat,totc]=getdata('totc1');
+%
+%  if DataString is a crop, and there are three output arguments
+%   [CropStruct,area,yield]=getdata('croparea');
 if nargin==0 | nargout==0
     help(mfilename)
     return
@@ -26,6 +29,7 @@ if nargin<1
     matrixflag=0;
 end
 
+iscrop=0;
 
 SystemGlobals
 switch lower(DataString)
@@ -99,6 +103,7 @@ switch lower(DataString)
         %%%% assume that this is a cropname
         try
             S=OpenNetCDF([iddstring '/Crops2000/crops/' DataString '_5min.nc']);
+            iscrop=1;
         catch
             error([' haven''t coded in ' DataString]);
         end
@@ -114,7 +119,19 @@ switch nargout
     case 1
         varargout{1}=S;
     case 3
-        varargout{1}=S.Long;
-        varargout{2}=S.Lat;
-        varargout{3}=S.Data;
+        if iscrop==0
+            varargout{1}=S.Long;
+            varargout{2}=S.Lat;
+            varargout{3}=S.Data;
+        else
+            varargout{1}=S;
+            ii=GoodDataIndices(S);
+            tmp=S.Data(:,:,1);
+            tmp(~ii)=NaN;
+            varargout{2}=tmp;
+            tmp=S.Data(:,:,2);
+            tmp(~ii)=NaN;
+            varargout{3}=tmp;
+        end
+        
 end

@@ -138,7 +138,7 @@ catch
     return
 end
 
-AppliedNitrogenPerHA=x.DS.Data(:,:,1);
+AppliedNitrogenPerHA=x.DS.Data(:,:,1);   % per 
 %AppliedNitrogenPerHA=datastore([...
 %    'fert_app_ver7/'   crop '_N_ver2_25_rate_FAO_SNS_FINAL.mat']);
 %    else

@@ -255,7 +255,12 @@ if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so
     return
 end
 
-%% did user input flags, or shorthand inputs
+
+
+%%
+%  Now all user input is collected.  We can start changing things in response to
+% user-supplied flags
+%
 % is 'plotarea' specified?
 if isempty(plotarea)
     % don't change longlatbox
@@ -356,10 +361,17 @@ if length(coloraxis)<2
                 tmp01=sort(tmp01);
                 loval=min(tmp01);
                 hiaverage=tmp01(round(length(tmp01)*f));
+                loaverage=tmp01(round(length(tmp01)*(1-f)));
+
                 if coloraxis>0
                     coloraxis=[loval hiaverage];
-                else
+                elseif coloraxis==0
                     coloraxis=[-hiaverage hiaverage];
+                else
+                    coloraxis=[-loaverage hiaverage];
+                    
+                    cmaptemp=finemap(cmap,'','');
+                    cmap=TruncateColorMap(cmaptemp,coloraxis(1),coloraxis(2));                  
                 end
             end
         end

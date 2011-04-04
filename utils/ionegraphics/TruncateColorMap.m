@@ -6,9 +6,9 @@ function newmap=TruncateColorMap(cmap,cmin,cmax);
 %
 %   Example
 %
-%   M=getdata('maize');
-%   W=getdata('wheat');
-%   DelYield=M.Data(:,:,2)-W.Data(:,:,2);  %meaningless data
+%   [M,am,ym]=getdata('maize');
+%   [W,aw,yw]=getdata('wheat');
+%   DelYield=am-aw;  %meaningless data
 %   clear NSS
 %   NSS.FastPlot='on';
 %   NSS.colormap='orange_white_purple_deep';

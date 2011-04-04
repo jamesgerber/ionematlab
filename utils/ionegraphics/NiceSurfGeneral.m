@@ -368,8 +368,9 @@ if length(coloraxis)<2
                 elseif coloraxis==0
                     coloraxis=[-hiaverage hiaverage];
                 else
-                    coloraxis=[-loaverage hiaverage];
+                    coloraxis=[loaverage hiaverage];
                     
+                    coloraxis=SmartCAxisLimit([loaverage hiaverage]);
                     cmaptemp=finemap(cmap,'','');
                     cmap=TruncateColorMap(cmaptemp,coloraxis(1),coloraxis(2));                  
                 end
@@ -588,6 +589,9 @@ set(hcbtitle,'string',[' ' units ' '])
 set(hcbtitle,'fontsize',12);
 set(hcbtitle,'fontweight','bold');
 %cblabel(Units)
+
+
+
 
 %% Was there text for an archival statement on the plot?
 if ~isempty(displaynotes)

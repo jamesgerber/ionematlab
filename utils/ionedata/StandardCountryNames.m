@@ -27,7 +27,7 @@ function varargout=StandardCountryNames(Input,NameForm,OutputForm);
 %      'struct' [default]
 %      'sagecountry' 
 %      'sage3'
-%      'ISO3'
+%      'ISO3'  %note this stands for three-digit ISO code
 %      'NAME_ISO'
 %      'NAME_FAO'      
 %
@@ -37,6 +37,10 @@ function varargout=StandardCountryNames(Input,NameForm,OutputForm);
 %      StandardCountryNames({'Bulgaria','France'})
 %
 
+if nargin==0
+    help(mfilename)
+    return
+end
 
 
     

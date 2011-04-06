@@ -11,12 +11,18 @@ else
        return
    end
    
-   
-   newc2= RoundUp(c2);
-   newc1= -RoundUp(-c1);
-   
+   if (ceil(log10(abs(c2)))-ceil(log10(abs(c1)))==1)
+       newc2= RoundUp(c2);
+       newc1= -RoundUpRough(-c1);
+   else if (ceil(log10(abs(c1)))-ceil(log10(abs(c2)))==1)
+       newc2= RoundUpRough(c2);
+       newc1= -RoundUp(-c1);
+       else
+          newc2= RoundUp(c2);
+          newc1= -RoundUp(-c1);
+       end
+   end
    newlims=[newc1 newc2];
-   
    
 end
 end
@@ -30,4 +36,11 @@ bigpart=floor(x/10^floor(order));
 smallpart=x/10^floor(order)-bigpart;
 smallpart=ceil(smallpart*10)/10;
 a=(bigpart+smallpart)*10^floor(order);
+end
+
+function a=RoundUpRough(x);
+% round up x to the nearest value w/ <3 sig figs
+order=log10(x);
+bigpart=ceil(x/10^floor(order));
+a=bigpart*10^floor(order);
 end

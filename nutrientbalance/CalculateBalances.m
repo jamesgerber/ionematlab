@@ -31,7 +31,7 @@ if isempty(D)
     D=ReadGenericCSV([adstring 'croptype_NPK.csv']);
     NDS=OpenGeneralNetCDF(['/Users/jsgerber/sandbox/jsg029_NitrogenBalance/NandCdatamethods/NOyTDEP_S1_5min.nc']);
     Ndep=NDS(1).Data;
-    Ndep(Ndep<-9000)=NaN;
+    Ndep(Ndep<-9000)=0;
 end
 
 cropnames=D.CROPNAME;
@@ -138,7 +138,10 @@ catch
     return
 end
 
-AppliedNitrogenPerHA=x.DS.Data(:,:,1);   % per 
+AppliedNitrogenPerHA=x.DS.Data(:,:,1);   
+AppliedNitrogenPerHA(isnan(AppliedNitrogenPerHA))=0;
+
+% per 
 %AppliedNitrogenPerHA=datastore([...
 %    'fert_app_ver7/'   crop '_N_ver2_25_rate_FAO_SNS_FINAL.mat']);
 %    else
@@ -165,6 +168,9 @@ x=load([iddstring '/Fertilizer2000/ncmat/' crop 'P2O5apprate.mat']);
 AppliedPhosphorusPerHA=x.DS.Data(:,:,1)*0.4366; %(31/(31+2.5*16)), 31=atomic mass P, 16 atomic mass O
 %AppliedPhosphorusPerHA=datastore([...
 %    'fert_app_ver7/'   crop '_P_ver2_25_rate_FAO_SNS_FINAL.mat']);
+AppliedPhosphorusPerHA(isnan(AppliedPhosphorusPerHA))=0;
+
+
 
 HarvestedPhosphorusPerHA=Yield.*DryFraction*Pfrac*1000;
 ExcessPhosphorusPerHA=AppliedPhosphorusPerHA-HarvestedPhosphorusPerHA;

@@ -155,6 +155,7 @@ function ZoomToPointButtonDownCallback(src,event)
 
 if strcmp(get(src,'SelectionType'),'normal')
     UDS=get(gcbf,'UserData');
+    set(UDS.DataAxisHandle,'EdgeColor','r');
     cp=get(UDS.DataAxisHandle,'CurrentPoint');
     x1=cp(1,1);
     y1=cp(1,2);
@@ -189,6 +190,7 @@ if strcmp(get(src,'SelectionType'),'normal')
      delete(h);
      
      %now new text
+     set(UDS.DataAxisHandle,'EdgeColor','r');
      hc=UDS.ConsoleAxisHandle;
      axes(hc)
      set(hc,'xlim',[0 1]);

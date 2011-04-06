@@ -1,4 +1,4 @@
-function [ro,co,perim]=analyzeisland(r,c,N)
+function [ro,co,area,perim]=analyzeisland(r,c,N)
 global core;
 core=N(r,c);
 global A;
@@ -13,6 +13,7 @@ examine(r,c);
 ro=rv;
 co=cv;
 perim=edge;
+area=length(rv);
 clear global core A check rv cv edge;
 
 function examine(r2,c2)

@@ -114,7 +114,6 @@ function OS=NiceSurfGeneral(varargin);
 
 % desired changes
 %  - fix cvector warning in underlying IonESurf code
-%  - add a 'super fast' variant
 %  - when resize a map, keep title visible
 %  - when plotarea flag is used, discard extraneous data to make coordinate
 %  rotation faster
@@ -370,7 +369,7 @@ if length(coloraxis)<2
                 else
                     coloraxis=[loaverage hiaverage];
                     
-                    coloraxis=SmartCAxisLimit([loaverage hiaverage]);
+                    coloraxis=AMTSmartCAxisLimit([loaverage hiaverage]);
                     cmaptemp=finemap(cmap,'','');
                     cmap=TruncateColorMap(cmaptemp,coloraxis(1),coloraxis(2));                  
                 end

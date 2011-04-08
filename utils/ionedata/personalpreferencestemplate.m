@@ -29,7 +29,7 @@ end
 
 
 persistent latlongcolor printingres GraphicsFileType oceancolor ...
-    maxnumfigsNSG nodatacolor
+    maxnumfigsNSG nodatacolor texinterpreter
 
 
 if isempty(latlongcolor)   
@@ -39,11 +39,11 @@ if isempty(latlongcolor)
     
     
     %% NiceSurf / NiceSurfGeneral
-    oceancolor='joanneblue'; % old color: 'emblue';
-    nodatacolor='joannegray'; % old color: 'gray';
+    oceancolor=[0.3765 0.4824 0.5451]; % old color: 'emblue';
+    nodatacolor=[.74 .74 .74]; % old color: 'gray';
     latlongcolor=[.3 .3 .3];
-    maxnumfigsNSG=3;
-
+    maxnumfigsNSG=3; 
+    texinterpreter='none'; % or 'latex';
 end
 
 

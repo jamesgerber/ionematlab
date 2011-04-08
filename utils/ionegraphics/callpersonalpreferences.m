@@ -4,7 +4,7 @@ function out=callpersonalpreferences(in);
 
 
 ListOfPreferences={'printingres','GraphicsFileType','oceancolor',...
-    'nodatacolor','latlongcolor','maxnumfigsNSG'};
+    'nodatacolor','latlongcolor','maxnumfigsNSG','texinterpreter'};
 %% if called with no arguments, tell user what defaults are
 if nargin==0
     for j=1:length(ListOfPreferences)
@@ -34,10 +34,13 @@ GraphicsFileType='-dpng';% '-djpg' ; '-dtiff';
 
 
 %% NiceSurf / NiceSurfGeneral
-oceancolor=[0.835294118 0.894117647 0.960784314];
-nodatacolor=[.92 .92 .92];
+ oceancolor=[0.3765 0.4824 0.5451]; % old color: 'emblue';
+    nodatacolor=[.74 .74 .74]; % old color: 'gray';
 latlongcolor=[.3 .3 .3];
 maxnumfigsNSG=0;
+texinterpreter='none';  %or 'latex'
+
+
 try
     out=personalpreferences(in);
     return

@@ -564,13 +564,24 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     end
     ylim=(t2-t1)/100;
     ht=text(0, ylim,titlestring);
-    set(ht,'interp','none');
+    
+    UserInterpPreference=callpersonalpreferences('texinterpreter');
+    
+    set(ht,'interp',UserInterpPreference);
 else
     ht=text(0,pi/2,titlestring);
     if length(titlestring)>1
         set(ht,'Position',[0 1.635 0]);
-        set(ht,'interp','none')
+    UserInterpPreference=callpersonalpreferences('texinterpreter');
+    
+    set(ht,'interp',UserInterpPreference);
     end
+    
+    
+    
+    
+    
+    
 end
 
 
@@ -598,7 +609,9 @@ if ~isempty(displaynotes)
     ht=text(0,0.5,displaynotes)
     set(hx,'visible','off')
     set(ht,'fontsize',6)
-    set(ht,'interpreter','none')
+        UserInterpPreference=callpersonalpreferences('texinterpreter');
+    
+    set(ht,'interp',UserInterpPreference);
 end
 
 hideui

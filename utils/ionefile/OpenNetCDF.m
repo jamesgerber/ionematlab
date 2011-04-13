@@ -33,23 +33,29 @@ else
     
     % see if we can figure out the matlab path file
     [pathstr,name,ext]=fileparts(FileName);
-
+    
     if isempty(pathstr)
         pathstr='.';
     end
     
     MatFileName=[pathstr '/ncmat/' name '.mat'];
-
+    
     
     
     %look and see if FileName exists.
     if exist(FileName,'file') | exist(MatFileName,'file');
         % it exists.  Don't call UIGetFile below.
         CallUIGetfile=0;
+        
+        
+        
     else
         CallUIGetfile=1;
         InitialGuess=(FileName);
     end
+    
+    
+    
 end
 
 if CallUIGetfile==1
@@ -77,11 +83,29 @@ try
         fclose(fid);
     end
 catch
-   disp(['not able to make '  pathstr '/ncmat/ directory'])
+    disp(['not able to make '  pathstr '/ncmat/ directory'])
 end
+
 MatFileName=[pathstr '/ncmat/' name '.mat'];
 
-if exist(MatFileName)==2
+if exist(FileName,'file') & exist(MatFileName,'file');
+    % if they both exist, check to see who is older
+    amat=dir(MatFileName);
+    afile=dir(FileName);
+    
+    if amat.datenum < afile.datenum
+        OutOfDate=1;
+        disp(['.mat file out of date'])
+    else
+        OutOfDate=0;
+    end
+else
+    OutOfDate=0;
+    
+end
+
+
+if exist(MatFileName)==2 & ~OutOfDate
     load(MatFileName)
 else
     

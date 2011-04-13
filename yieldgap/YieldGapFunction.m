@@ -646,7 +646,7 @@ OutputStructure.VectorOfPotentialYields=VectorOfPotentialYields;
 OutputStructure.LogicalArrayOfGridPointsInABin=...
     LogicalArrayOfGridPointsInABin;
 OutputStructure.InputStructureRecord=FlagStructure;
-[RevNo,RevString,LastChangeRevNo,LCRString,AI]=GetSVNInfo;
+[RevNo,RevString,LastChangeRevNo,LCRString,AI]=GetSVNInfo(mfilename);
 RevData.CodeRevisionNo=RevNo;
 RevData.CodeRevisionString=RevString;
 RevData.LastChangeRevNo=LastChangeRevNo;

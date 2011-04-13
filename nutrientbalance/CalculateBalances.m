@@ -162,6 +162,10 @@ N.Area=Area;
 
 N.AppliedNitrogenPerHA=AppliedNitrogenPerHA;
 N.crop=crop;
+N.Nfrac=Nfrac;
+N.DryFraction=DryFraction;
+
+
 
 %% Phosphate (P)
 x=load([iddstring '/Fertilizer2000/ncmat/' crop 'P2O5apprate.mat']);
@@ -177,7 +181,7 @@ ExcessPhosphorusPerHA=AppliedPhosphorusPerHA-HarvestedPhosphorusPerHA;
 P.ExcessPhosphorusPerHA=ExcessPhosphorusPerHA;
 P.AppliedPhosphorusPerHA=AppliedPhosphorusPerHA;
 P.HarvestedPhosphorusPerHA=HarvestedPhosphorusPerHA;
-
+P.Pfrac=Pfrac;
 P.crop=crop;
 P.ExcessPhosphorusPerHA_x_Area=ExcessPhosphorusPerHA.*Area;
 

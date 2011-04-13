@@ -1,3 +1,6 @@
+function YieldGapToNetCDF
+% YieldGapToNetCDF - turn yield gap codes into a bunch of netcdfs
+
 a=dir('YieldGap*95*10*.mat');
 for j=1:length(a);
     
@@ -17,12 +20,12 @@ for j=1:length(a);
     
     DAS.Units='tons/ha';
     DAS.Description='Yield Potential';
-    WriteNetCDF(single(OS.ClimateMask),'YieldPotential',[ShortFileBase '_YieldPotential.nc'],DAS);
+    WriteNetCDF(single(OS.potentialyield),'YieldPotential',[ShortFileBase '_YieldPotential.nc'],DAS);
 
     MissingYield=OS.potentialyield-OS.Yield;
     MissingYield(MissingYield<0)=0;
     
     DAS.Description='Yield Gap'
-    WriteNetCDF(single(OS.ClimateMask),'YieldGap',[ShortFileBase '_YieldGap.nc'],DAS);
+    WriteNetCDF(single(MissingYield),'YieldGap',[ShortFileBase '_YieldGap.nc'],DAS);
         
 end

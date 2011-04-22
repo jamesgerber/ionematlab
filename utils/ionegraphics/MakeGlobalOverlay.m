@@ -1,9 +1,9 @@
-function MakeGlobalOverlay(Data,colormap,coloraxis,FullFileName,BaseTransparency);
-% MakeGlobalOverlay - 
+function MakeGlobalOverlay(Data,colormap,coloraxis,FullFileName,BaseTransparency,Nlong,Nlat);
+% MakeGlobalOverlay - Make a .png with an alpha channel background 
 %
 %  Syntax
 %  
-%      MakeGlobalOverlay(Data,colormap,coloraxis,FileSaveName,BaseOpacity);
+%      MakeGlobalOverlay(Data,colormap,coloraxis,FileSaveName,BaseOpacity,Nlong,Nlat);
 %
 %  Note:  any values with NaN will be made completely transparent
 % 
@@ -25,6 +25,17 @@ if nargin==0
   help(mfilename)
   return
 end
+
+
+if nargin==7
+    % user wishes to change long/lat resolution
+    [long,lat]=InferLongLat(Data);
+    [newlong,newlat]=InferLongLat(ones(Nlong,Nlat));
+    NewData=interp2(lat,long,Data,newlat',newlong);
+    Data=NewData; 
+end
+
+
 
 ii=find(Data > 1e9 | Data < -1e9);
 if length(ii) > 1
@@ -48,7 +59,7 @@ if nargin<5
   BaseTransparency=0.5;
 end
 
-
+FullFileName=fixextension(FullFileName,'.png');
 
 if length(coloraxis)==1
       OSS=NiceSurfGeneral(Data,'coloraxis',[coloraxis],'plotflag','off')

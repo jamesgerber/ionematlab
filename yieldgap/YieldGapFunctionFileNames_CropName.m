@@ -20,7 +20,7 @@ function [FileName,DirName]=YieldGapFunctionFileNames_CropName(FS,OutputDirBase)
 %   FS.ClimateSpaceN=10;
 %   FS.WetFlag='prec';
 %   FS.PercentileForMaxYield=90;
-%   OutputDirBase=[iddstring '/YieldGap/'];
+%   OutputDirBase=[iddstring '/ClimateBinAnalysis/YieldGap/'];
 %   FileName=YieldGapFunctionFileNames_CropName(FS,OutputDirBase);
 %
 

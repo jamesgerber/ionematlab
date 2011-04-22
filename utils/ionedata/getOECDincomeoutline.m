@@ -1,10 +1,29 @@
 function Outline=getOECDincomeoutline(incomelevel);
 % getOECDincomeoutline - get outlines of OECD income levels
 %
-%     Outline=getOECDincomeoutline('high');
-%     Outline=getOECDincomeoutline('mid');
-%     Outline=getOECDincomeoutline('low');
+%   Syntax
+%     Outline=getOECDincomeoutline('high');  
 %
+%  These are the levels
+%   'High income: OECD'
+%   'High income: nonOECD';
+%   'Upper middle income'
+%   'Lower middle income'
+%   'Low income'
+%
+%     Outline=getOECDincomeoutline('high');  gives combination of first two
+%     Outline=getOECDincomeoutline('mid');   gives Upper and Lower middle 
+%     Outline=getOECDincomeoutline('low');   gives "Low income"
+%
+%     Outline=getOECDincomeoutline('ii1'); just 'High income: OECD'
+%     Outline=getOECDincomeoutline('ii2'); just 'High income: nonOECD'
+%     Outline=getOECDincomeoutline('um'); just 'Upper middle income'
+%     Outline=getOECDincomeoutline('lm'); just 'Lower middle income'
+%     Outline=getOECDincomeoutline('low');   just "Low income"
+
+
+
+%  
 path = [iddstring 'misc/wbiclass.csv'];
 WBI = ReadGenericCSV(path);
 
@@ -39,7 +58,7 @@ switch lower(incomelevel)
         ii=ii4'; 
     case {'high_non','ii2'}
         ii=ii2';
-    case {'ii1'}
+    case {'ii1','hioecd'}
         ii=ii1';
 end
 

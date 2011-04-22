@@ -122,7 +122,8 @@ meshmflag=1;
 
 if CanMap==0
     h=surface(RedLong,RedLat,double(RedData.')*0-1,double(RedData.'));
-    set(gca,'Position',[0.1800    0.1100    0.6750    0.8150],'EdgeColor','none');
+%    set(gca,'Position',[0.1800    0.1100    0.6750    0.8150],'EdgeColor','none');
+     set(gca,'Position',[0.1800    0.1100    0.6750    0.8150]);
     UserDataStructure.DataAxisHandle=gca;
     
     UserDataStructure.WestWorldEdge=-180;

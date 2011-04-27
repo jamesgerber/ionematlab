@@ -189,7 +189,7 @@ ListOfProperties={
     'units','titlestring','filename','cmap','longlatbox','plotarea', ...
     'logicalinclude','coloraxis','displaynotes','description',...
     'uppermap','lowermap','colorbarpercent','colorbarfinalplus',...
-    'colorbarminus','resolution',...
+    'colorbarminus','resolution','longlatlines',...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
     'eastcolorbar'};
@@ -494,14 +494,20 @@ fud.NiceSurfUpperCutoff=(cmax-minstep/2);
 set(gcf,'UserData',fud);
 
 if fud.MapToolboxFig==1
-    gridm
+    
+    
     if strcmp(longlatlines,'off')
         gridm('off');
+    else
+        gridm
+        gridcolor=callpersonalpreferences('latlongcolor');
+        gridm('GColor',gridcolor);
     end
-    gridcolor=callpersonalpreferences('latlongcolor');
-    gridm('GColor',gridcolor);
 else
     grid on
+    if strcmp(longlatlines,'off')
+        grid off
+    end
 end
 
 set(gcf,'position',[ 218   618   560   380]);

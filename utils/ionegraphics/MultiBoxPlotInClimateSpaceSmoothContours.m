@@ -1,5 +1,5 @@
 function MultiBoxPlotInClimateSpaceSmoothContours...
-    (ContourMask,CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,IsValidData)
+    (ContourMask,CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,xlimits,ylimits,IsValidData)
 % MultiBoxPlotInClimateSpace - generate a scatter plot, put boxes over it.
 %
 %   Syntax
@@ -13,7 +13,7 @@ if nargin<8
 end
 
 
-if nargin<9
+if nargin<11
     IsValidData=(CropMaskLogical & Heat < 1e15 & isfinite(Heat) & CultivatedArea>eps & isfinite(CultivatedArea));
 end
 
@@ -46,9 +46,18 @@ surface(double(xbins),double(ybins),double(jp).');
 shading flat
 xlabel('GDD');
 ylabel(WetFlag);
+
+if nargin>8
+    xlim(xlimits);
+end
+
+if nargin>9
+    ylim(ylimits);
+end
+
+
 %zeroylim(0,6);
 grid on
-ylims=get(gca,'YLim');
 title([' All cultivated areas. ' cropname ' ' WetFlag ' Rev' Rev]);
 % fattenplot
 finemap('autumn','','')
@@ -83,7 +92,7 @@ hold on
 %     xcont=CS.X;
 %     ycont=CS.Y;
     
-    line(xcont,ycont,'color','black');
+    line(xcont,ycont,zeros(length(ycont))+100,'color','black','linewidth',1);
     
 save('saved','CS','xbins','ybins','jp','CDS');
 

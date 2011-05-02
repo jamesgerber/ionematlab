@@ -33,14 +33,15 @@ end
 
 fid=fopen(FileName);
 
-for m=1:length(HeaderLines)
+for m=1:(HeaderLines-1)
+    fgetl(fid);
+end
     headerline=fgetl(fid);
     
     headerline=FixUpHeaderline(headerline);
 
     VC=GetStrings(headerline,Delimiter);  %function below.
     FieldNameStructure(m).Vector=VC;
-end
 
 % Now go through the structures and concatenate everything to get
 % field names

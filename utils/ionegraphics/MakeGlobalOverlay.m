@@ -76,7 +76,7 @@ Alpha(iiNaN)=0;
 
 imagearray=zeros([size(Data) 3]);
 
-cmap=finemap(colormap);
+cmap=finemap(colormap,'','');
 
 cmax=coloraxis(2);
 cmin=coloraxis(1);

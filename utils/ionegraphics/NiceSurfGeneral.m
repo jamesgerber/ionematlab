@@ -1,5 +1,5 @@
 function OS=NiceSurfGeneral(varargin);
-% NICESURFGENERAL
+% NICESURFGENERAL -uberplotting program
 %
 %
 % Syntax:
@@ -436,6 +436,8 @@ Data(isnan(Data))=NoDataLandVal;
 
 
 OS.ProcessedMapData=Data;
+OS.cmap_final=finemap(cmap,lowermap,uppermap);  %don't change unless change finemap call below.
+OS.caxis_final=[(cmin-minstep)  (cmax+minstep)];%don't change unless change caxis call below.
 
 if isequal(plotflag,'off')   %if nargout ~= 0, need to keep going so as to define NSS
     return
@@ -645,10 +647,12 @@ end
 MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
 
 
+OS.Data=single(OS.Data);
+OS.cmap=cmap;
+
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
-    OS.Data=single(OS.Data);
-    OS.cmap=cmap;
+
     FN=fixextension(ActualFileName,'.png')
     %save to disk
     save([strrep(FN,'.png','') '_SavedFigureData'],'OS','NSS')

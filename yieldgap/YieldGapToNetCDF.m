@@ -29,3 +29,4 @@ for j=1:length(a);
     WriteNetCDF(single(MissingYield),'YieldGap',[ShortFileBase '_YieldGap.nc'],DAS);
         
 end
+    !gzip -f *.nc

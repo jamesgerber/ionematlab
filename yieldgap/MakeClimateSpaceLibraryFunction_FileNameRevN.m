@@ -186,7 +186,7 @@ for N=Nspace;
                 %%
                 save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...
                     'PercentToDrop','WetFlag','HeatFlag','CultivatedArea',...
-                    'CDS','InsideContourLogical','GDDTempstr');
+                    'CDS','InsideContourLogical','GDDTempstr','ContourMask');
                 DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
                 WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
             end

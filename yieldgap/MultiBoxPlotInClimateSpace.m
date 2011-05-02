@@ -6,7 +6,7 @@ function MultiBoxPlotInClimateSpace...
 %     PatchPlotOfAreaInClimateSpace...
 %    (CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,IsValidData)
 %
-Nsurface=300;
+Nsurface=150;
 
 if nargin<7
     WetFlag='Moisture Index';
@@ -45,7 +45,7 @@ grid on
 ylims=get(gca,'YLim');
 title([' All cultivated areas. ' cropname ' ' WetFlag ' Rev' Rev]);
 fattenplot
-finemap('ecorangered')
+finemap('nmgrayorangered','','')
 
 hold on
 
@@ -87,7 +87,7 @@ for ibin=1:length(CDS)
     %     Prec > y(1) & Prec < y(3));
     % TotalArea=sum(CultivatedArea(ii))
     
-    line(x,y,0*x+1);
+    line(x,y,0*x+1,'LineWidth',0.2);
     % TotalAreaVect(ibin)=TotalArea;
 end
 
@@ -102,6 +102,10 @@ set(hy,'String',['Cultivated area (normalized)'])
 set(hy,'FontWeight','Bold')
 
 grid off
+
+zeroxlim(0, 12000)
+zeroylim(0, 6000)
+
 
 N=sqrt(length(CDS));
 nbyn=[num2str(N) 'x' num2str(N)]

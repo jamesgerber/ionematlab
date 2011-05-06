@@ -87,13 +87,13 @@ if LSQflag == 1
     minyields = unique(input.minyield(isfinite(input.minyield)));
     minyieldglobal = median(minyields);
     
-    % calculate bnut for ELM using minyield (note: "log" in matlab is
+    % calculate bnut for LM using minyield (note: "log" in matlab is
     % actually the natural log "ln") (also note: I may label bnut as
     % something else in the text of the paper)
     bnut = log((potyieldglobal ./ minyieldglobal) - 1);
     bnutglobal = bnut;
     
-    % calculate alpha for MB using minyield
+    % calculate alpha for MBM using minyield
     alpha = 1 - (minyieldglobal ./ potyieldglobal);
     alphaglobal = alpha;
     
@@ -121,7 +121,7 @@ if LSQflag == 1
             case 2
                 %%% MB
                 agmgmt = @(b,x) potyieldglobal .* ...
-                    (1 - alpha .* exp(-abs(b(1)) .* x(:,1)));
+                    (1 - (alpha .* exp(-abs(b(1)) .* x(:,1))));
         end
         
         yw = sqrt(w).*yield_bin;

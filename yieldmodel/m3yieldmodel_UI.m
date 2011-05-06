@@ -1,10 +1,10 @@
 function [modyield] = m3yieldmodel_UI(cropname, datamask, ...
     climatemask, nfert, pfert, kfert, avgpercirr, modelnumber, ...
-    errorflag, errormap)
+    errorflag, errormap, globalslopeflag)
 
 % [modyield] = m3yieldmodel_UI(cropname, datamask, ...
 %     climatemask, nfert, pfert, kfert, avgpercirr, modelnumber, ...
-%     errorflag, errormap)
+%     errorflag, errormap, globalslopeflag)
 %
 % m3yieldmodel_UI will return a modeled yield map based on crop and
 % management characteristics.
@@ -26,8 +26,17 @@ function [modyield] = m3yieldmodel_UI(cropname, datamask, ...
 %    out and minimize any yields at the 98th and 2nd percentiles,
 %    respectively. This will avoid the situation where you end up modeling
 %    a negative yield.
+%
+% globalslopeflag: options = 1 or 0 (can also use fewer arguments to
+%    automatically be set to 0. If the globalslopeflag = 1, the model will
+%    force a predictive response for all nutrients (NPK), even in bins
+%    where we have not calculated a bin-specific response for a particular
+%    nutrient. 
+%    
 
-
+if nargin < 11
+    globalslopeflag = 0;
+end
 
 % set model choice: VL ELM OR VL MB
 switch modelnumber
@@ -67,7 +76,7 @@ if errorflag == 1
         'YieldGap_' cropnamecaps '_MaxYieldPct_' minpercentstr ...
         '_ContourFilteredClimateSpace_' climspace '_prec.mat'];
     eval(['load ' ygpath ';']);
-    maxyield = OS.potentialyield;
+    minyield = OS.potentialyield;
 elseif errorflag == 0
     disp(['errorflag = 0, not using spatial residuals when ' ...
         'calculating yields'])
@@ -119,6 +128,16 @@ for bin = 1:100
             cb = ['00' cb];
         end
     end
+    % if globalslopeflag = 1, force cb = 1 for NPK
+    if globalslopeflag == 1
+        if str2num(cb(4)) == 1
+            cb = '1111';
+        elseif str2num(cb(4)) == 0
+            cb = '1110';
+        else
+            error('problem adjusting for globalslope parameters');
+        end
+    end
     
     % create "bFitw" - a list of the correct parameters for the model
     bFitw = [];
@@ -126,15 +145,24 @@ for bin = 1:100
     if ~isempty(tmp)
         tmp = str2num(tmp);
         bFitw = [bFitw tmp];
+    elseif globalslopeflag == 1 && isempty(tmp)
+        tmp = str2num(MS.c_N{101});
+        bFitw = [bFitw tmp];
     end
     tmp = MS.c_P2O5{bin};
     if ~isempty(tmp)
         tmp = str2num(tmp);
         bFitw = [bFitw tmp];
+    elseif globalslopeflag == 1 && isempty(tmp)
+        tmp = str2num(MS.c_P2O5{101});
+        bFitw = [bFitw tmp];
     end
     tmp = MS.c_K2O{bin};
     if ~isempty(tmp)
         tmp = str2num(tmp);
+        bFitw = [bFitw tmp];
+    elseif globalslopeflag == 1 && isempty(tmp)
+        tmp = str2num(MS.c_K2O{101});
         bFitw = [bFitw tmp];
     end
     tmp = MS.b_irr{bin};
@@ -410,5 +438,5 @@ if errorflag == 1
     modyield = modyield - errormap;
     % now make sure no place exceeds min or max yields
     modyield(modyield > maxyield) = maxyield(modyield > maxyield);
-    modyield(modyield > minyield) = maxyield(modyield > minyield);
+    modyield(modyield < minyield) = minyield(modyield < minyield);
 end

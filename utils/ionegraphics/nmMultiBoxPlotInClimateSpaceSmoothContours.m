@@ -1,10 +1,15 @@
-function MultiBoxPlotInClimateSpaceSmoothContours...
-    (ContourMask,CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,xlimits,ylimits,IsValidData)
-% MultiBoxPlotInClimateSpace - generate a scatter plot, put boxes over it.
+function nmMultiBoxPlotInClimateSpaceSmoothContours...
+    (ContourMask,CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,IsValidData)
+% nmMultiBoxPlotInClimateSpaceSmoothContours
+%
+%  Nathan modified Andrew's code to:
+%  generate a scatter plot, put boxes over it, and display smooth bin
+%  contours
 %
 %   Syntax
-%     PatchPlotOfAreaInClimateSpace...
-%    (CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,IsValidData)
+%     nmMultiBoxPlotInClimateSpaceSmoothContours(ContourMask,CDS,...
+%     CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,IsValidData)
+%     
 %
 Nsurface=300;
 
@@ -13,8 +18,15 @@ if nargin<8
 end
 
 
-if nargin<11
-    IsValidData=(CropMaskLogical & Heat < 1e15 & isfinite(Heat) & CultivatedArea>eps & isfinite(CultivatedArea));
+if nargin<9
+%     if strmatch(cropname,'maize')
+%         IsValidData=(CropMaskLogical & Heat < 1e15 & isfinite(Heat) & ...
+%             CultivatedArea>eps & isfinite(CultivatedArea) & Prec < 3000 & ...
+%             Heat < 8000);
+%     else
+        IsValidData=(CropMaskLogical & Heat < 1e15 & isfinite(Heat)...
+            & CultivatedArea>eps & isfinite(CultivatedArea));
+%     end
 end
 
 
@@ -41,35 +53,20 @@ TotalArea=sum(sum(jp));
 
 jp=jp/max(max(jp));
 
+
 figure
 surface(double(xbins),double(ybins),double(jp).');
 shading flat
 xlabel('GDD');
 ylabel(WetFlag);
-
-if nargin>8
-    xlim(xlimits);
-end
-
-if nargin>9
-    ylim(ylimits);
-end
-
-
 %zeroylim(0,6);
 grid on
+ylims=get(gca,'YLim');
 title([' All cultivated areas. ' cropname ' ' WetFlag ' Rev' Rev]);
 % fattenplot
-finemap('autumn','','')
+finemap('nmwhiteorangered_umn_leftskew2','','')
 
 hold on
-
-
-
-
-
-
-
 
 
 
@@ -92,7 +89,7 @@ hold on
 %     xcont=CS.X;
 %     ycont=CS.Y;
     
-    line(xcont,ycont,zeros(length(ycont))+100,'color','black','linewidth',1);
+    line(xcont,ycont,'color','black');
     
 save('saved','CS','xbins','ybins','jp','CDS');
 
@@ -222,6 +219,5 @@ set(hy,'String',['cultivated area (normalized)'])
 grid off
 
 N=sqrt(length(CDS));
-nbyn=[num2str(N) 'x' num2str(N)]
+% nbyn=[num2str(N) 'x' num2str(N)]
 OutputFig('Force')
-%OutputFig('Force')

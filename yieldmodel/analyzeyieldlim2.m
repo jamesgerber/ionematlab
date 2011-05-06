@@ -29,6 +29,11 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %        - code 5 = desired yield (desiredyield) > potential yield
 %                   (potentialyield) (note: this could include areas that
 %                   would otherwise be labeled as code 4)
+%        - note: code 0 can result when the desired yield with error
+%                   correction exceeds the asymptote yield limit for a bin.
+%                   These seem to all be for minor points, so they tend to
+%                   all drop off when we drop away the bottom 5% of area
+%                   for display purposes.
 %   - dNPKI = delta nutrients necessary to achieve the desiredyield. this
 %             can be negative when less nutrients are required to
 %             achieve a desired yield than what is use. also - you cannot
@@ -124,7 +129,6 @@ for bin = 1:100
         & isfinite(nfert) & isfinite(pfert) & isfinite(kfert));
     
     % make double & select bin area
-
     potentialyield_bin = double(potentialyield(ii));
     irr_bin = avgpercirr(ii);
     nfert_bin = nfert(ii);

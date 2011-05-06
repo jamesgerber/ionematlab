@@ -6,6 +6,8 @@ function S = getfertdata(cropname,nutrient)
 % 
 % nutrient should be N, P, or K: data returned will be in units of N, P2O5,
 % or K2O
+%
+% to get total consumption data, use cropname = 'totalcons'
 
 outputpath = [iddstring '/Fertilizer2000/'];
 switch nutrient
@@ -16,5 +18,9 @@ switch nutrient
     case 'K'
         nutlabel = 'K2O';
 end
-datastr = [outputpath cropname nutlabel 'apprate.nc'];
+if strmatch(cropname,'totalcons')
+    datastr =[outputpath nutlabel cropname '.nc'];
+else
+    datastr = [outputpath cropname nutlabel 'apprate.nc'];
+end
 S = OpenNetCDF(datastr);

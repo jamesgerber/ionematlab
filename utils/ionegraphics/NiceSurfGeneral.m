@@ -64,6 +64,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.categoryranges={};
 %   NSS.categoryvalues={};
 %   NSS.DataCutoff=9e9;
+%   NSS.MakePlotDataFile='off';
+%
 %  Example
 %
 %  S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
@@ -192,7 +194,7 @@ ListOfProperties={
     'colorbarminus','resolution','longlatlines',...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
-    'eastcolorbar'};
+    'eastcolorbar','MakePlotDataFile'};
 
 %% set defaults for these properties
 units='';
@@ -206,6 +208,7 @@ coloraxis=[];
 displaynotes='';
 description='';
 eastcolorbar='off';%
+makeplotdatafile='off';
 
 datacutoff=9e9;
 
@@ -655,8 +658,9 @@ if ~isempty(filename)
 
     FN=fixextension(ActualFileName,'.png')
     %save to disk
-    save([strrep(FN,'.png','') '_SavedFigureData'],'OS','NSS')
-    
+    if isequal(makeplotdatafile,'yes')
+        save([strrep(FN,'.png','') '_SavedFigureData'],'OS','NSS')
+    end
     if isequal(figfilesave,'on')
         hgsave(filename);
     end

@@ -1,5 +1,5 @@
 function MultiBoxPlotInClimateSpaceSmoothContours...
-    (ContourMask,CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,xlimits,ylimits,IsValidData)
+    (ContourMask,CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,xlimits,ylimits,xdatalim,ydatalim,IsValidData)
 % MultiBoxPlotInClimateSpace - generate a scatter plot, put boxes over it.
 %
 %   Syntax
@@ -13,14 +13,27 @@ if nargin<8
 end
 
 
-if nargin<11
-    IsValidData=(CropMaskLogical & Heat < 1e15 & isfinite(Heat) & CultivatedArea>eps & isfinite(CultivatedArea));
+ minval1=min(min(Heat))
+ minval2=min(min(Prec))
+% check to make sure that heat/prec are positvite
+ 
+ 
+if nargin>11
+    percentile(Heat,xdatalim)
+    percentile(Prec,ydatalim)
+ Heat(Heat>percentile(Heat,xdatalim))=minval1;
+ Prec(Prec>percentile(Prec,ydatalim))=minval2;
 end
 
 
+if nargin<13
+    IsValidData=(CropMaskLogical & Heat < 1e15 & isfinite(Heat) & CultivatedArea>eps & isfinite(CultivatedArea));
+end
 
-% check to make sure that heat/prec are positvite
  IsValidData=IsValidData & (Heat > -8e8 & Prec > -8e8); 
+
+
+ 
  
 
 W=CultivatedArea(IsValidData); %Weight is the area, but only for these points.
@@ -92,6 +105,10 @@ hold on
 %     xcont=CS.X;
 %     ycont=CS.Y;
     
+    if (nargin>9)
+        xcont=interp1(1:length(xcont),xcont,1:(length(xcont)-1)/100:length(xcont),'cubic');
+        ycont=interp1(1:length(ycont),ycont,1:(length(ycont)-1)/100:length(ycont),'cubic');
+    end
     line(xcont,ycont,zeros(length(ycont))+100,'color','black','linewidth',1);
     
 save('saved','CS','xbins','ybins','jp','CDS');

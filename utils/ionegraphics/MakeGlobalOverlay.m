@@ -10,7 +10,7 @@ function MakeGlobalOverlay(Data,colormap,coloraxis,FullFileName,BaseTransparency
 %  Example
 %
 % SystemGlobals
-%   S=OpenNetCDF([IoneDataDir '/Crops2000/crops/maize_5min.nc'])
+%   S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
 % 
 %   Area=S.Data(:,:,1);
 %   Yield=S.Data(:,:,2);
@@ -18,7 +18,7 @@ function MakeGlobalOverlay(Data,colormap,coloraxis,FullFileName,BaseTransparency
 %  Data=Yield;
 %  cmap=finemap(colormap);
 %  coloraxis=[0 12]
-%  MakeGlobalOverlay(Data,'revsummer',[0 12],'fig2.png',0.5)
+%  MakeGlobalOverlay(Data,cmap,[0 12],'fig2.png',0.5)
 
 
 if nargin==0

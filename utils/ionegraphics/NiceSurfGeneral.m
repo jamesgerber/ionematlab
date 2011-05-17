@@ -467,8 +467,8 @@ IonESurf(Data);
 
 %% Make graph
 
-finemap(cmap,lowermap,uppermap);
-caxis([(cmin-minstep)  (cmax+minstep)]);
+finemap(cmap,lowermap,uppermap); % see above
+caxis([(cmin-minstep)  (cmax+minstep)]); %don't change unless see above
 
 %% plotstates section
 

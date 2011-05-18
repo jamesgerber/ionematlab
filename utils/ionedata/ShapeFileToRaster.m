@@ -108,8 +108,11 @@ for j=1:length(S);
     end  % end of k loop over regions within each country
     % end of country loop
     jj=find(LogicalCountryMatrix);
-    
-    Matrix(jj)=getfield(S(j),FieldName);
+    if (FieldName~='d')
+        Matrix(jj)=getfield(S(j),FieldName);
+    else
+        Matrix(jj)=1;
+    end
 end % end of j loop over countries
 
 

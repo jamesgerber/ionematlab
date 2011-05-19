@@ -2,15 +2,22 @@ function [Long,Lat,Raster]=ShapeFileToRaster(S,FieldName,MatrixTemplate,plotflag
 % ShapefileToRaster - Turn a shapefile into a 5 minute matrix
 %
 %  Syntax:
-%      [Long,Lat,Raster]=ShapeFileToRaster(S,FIELD,MATRIXTEMPLATE,PLOTFLAG);
+%      [Long,Lat,RASTER]=ShapeFileToRaster(S,FIELD,MATRIXTEMPLATE,PLOTFLAG);
 %
 %      S is a vector of structures with the fields "X" "Y" and
-%      FIELD.  S probably comes from a SHAPEREAD command
-%      executed on a .shp file
+%      FIELD.  This function most useful when S comes from a SHAPEREAD command
+%      executed on a .shp file.  
+%      RASTER will be a matrix corresponding to the values of the field
+%      FIELD.  
 %
 %      if PLOTFLAG is 1, a plot will be made as things go alond
 %
-%      This function is based on the function inpolygon
+%      Possible problems:
+%      * Not all shaperead commands result in an X,Y that are in lat/long.
+%      Function would fail in this case
+%      * If polygons overlap, then results will be arbitrary 
+%      * Function can be very slow
+%      * This function is based on the function inpolygon
 %      I don't know how well this would behave if we tried to
 %      operate it on a shapefile which included a bunch of lakes.  
 

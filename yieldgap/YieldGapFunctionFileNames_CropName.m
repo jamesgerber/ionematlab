@@ -9,14 +9,14 @@ function [FileName,DirName]=YieldGapFunctionFileNames_CropName(FS,OutputDirBase)
 %   FS must contain fields
 %
 %   FS.ClimateSpaceRev
-%   FS.Crop
+%   FS.CropNames
 %   FS.ClimateSpaceN
 %   FS.WetFlag
 %   FS.PercentileForMaxYield;
 %
 %  example
 %   FS.ClimateSpaceRev='K';
-%   FS.Crop='maize';
+%   FS.CropNames='maize';
 %   FS.ClimateSpaceN=10;
 %   FS.WetFlag='prec';
 %   FS.PercentileForMaxYield=90;

@@ -530,7 +530,9 @@ if isequal(eastcolorbar,'off')
     if fud.MapToolboxFig==0
         set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02])
     else
-        set(fud.ColorbarHandle,'Position',[0.09+.05 0.10 (0.6758-.1+.18) 0.02568])
+        delx=(0.6758-.1+.18);
+        x0=.14; 1/2*(1-delx);
+        set(fud.ColorbarHandle,'Position',[x0 0.10 delx 0.02568])
     end
 else
     error('haven''t yet implemented eastcolorbar')

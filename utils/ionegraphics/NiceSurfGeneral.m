@@ -88,6 +88,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.uppermap='white';
 %   NSS.lowermap='emblue';
 %   NSS.colorbarpercent='off';
+%   NSS.projection='';
+%   NSS.projection='hatano';
 %
 %   NiceSurfGeneral(Yield,NSS)
 %
@@ -195,7 +197,7 @@ ListOfProperties={
     'colorbarminus','resolution','longlatlines',...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
-    'eastcolorbar','MakePlotDataFile','panoplytriangles'};
+    'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'};
 
 %% set defaults for these properties
 units='';
@@ -210,6 +212,7 @@ displaynotes='';
 description='';
 eastcolorbar='off';%
 makeplotdatafile='off';
+projection='';  %empty is default
 
 datacutoff=9e9;
 
@@ -466,6 +469,14 @@ end
 
 IonESurf(Data);
 
+%% Change projection
+
+if  ~isequal(projection,'') 
+    setm(gca,'mapproj',projection)
+end
+
+
+
 
 %% Make graph
 
@@ -666,7 +677,7 @@ if ~isempty(filename)
 
     FN=fixextension(ActualFileName,'.png')
     %save to disk
-    if isequal(makeplotdatafile,'yes')
+    if isequal(makeplotdatafile,'yes') | isequal(makeplotdatafile,'on')
         save([strrep(FN,'.png','') '_SavedFigureData'],'OS','NSS')
     end
     if isequal(figfilesave,'on')
@@ -805,7 +816,7 @@ for j=1:length(a)
             NSS=setfield(NSS,'colorbarminus',ThisValue);
            case {'triangles','froufrou'}
             NSS=rmfield(NSS,ThisProperty);
-            NSS=setfield(NSS,'panoplytriangles',ThisValue);         
+            NSS=setfield(NSS,'panoplytriangles',ThisValue); 
     end
 end
 

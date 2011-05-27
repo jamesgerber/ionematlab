@@ -51,6 +51,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.colorbarpercent='off';
 %   NSS.colorbarfinalplus='off';%
 %   NSS.colorbarminus='off';%
+%   NSS.panoplytriangles=[0 0]; % left/right logical turns on L/R triangle
 %   NSS.eastcolorbar='off';%
 %   NSS.resolution='-r600';%
 %   NSS.figfilesave='on';%
@@ -194,7 +195,7 @@ ListOfProperties={
     'colorbarminus','resolution','longlatlines',...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
-    'eastcolorbar','MakePlotDataFile'};
+    'eastcolorbar','MakePlotDataFile','panoplytriangles'};
 
 %% set defaults for these properties
 units='';
@@ -223,6 +224,7 @@ resolution=callpersonalpreferences('printingres');
 colorbarpercent='off';
 colorbarfinalplus='off';
 colorbarminus='off';
+panoplytriangles =[0 0];
 figfilesave='off';
 plotflag='on';
 fastplot='off';
@@ -530,8 +532,8 @@ if isequal(eastcolorbar,'off')
     if fud.MapToolboxFig==0
         set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02])
     else
-        delx=(0.6758-.1+.18);
-        x0=.14; 1/2*(1-delx);
+        delx= 0.7558;
+        x0= 1/2*(1-delx);
         set(fud.ColorbarHandle,'Position',[x0 0.10 delx 0.02568])
     end
 else
@@ -615,6 +617,10 @@ set(hcbtitle,'fontsize',12);
 set(hcbtitle,'fontweight','bold');
 %cblabel(Units)
 
+%% add panoply triangles
+if sum(panoplytriangles) > 0
+addpanoplytriangle(panoplytriangles)
+end
 
 
 
@@ -797,6 +803,9 @@ for j=1:length(a)
         case {'addcolorbarminus','colorbarfinalminus'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'colorbarminus',ThisValue);
+           case {'triangles','froufrou'}
+            NSS=rmfield(NSS,ThisProperty);
+            NSS=setfield(NSS,'panoplytriangles',ThisValue);         
     end
 end
 

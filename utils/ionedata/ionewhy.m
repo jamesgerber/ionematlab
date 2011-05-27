@@ -28,7 +28,7 @@ end
 %------------------
 
 function a = special_case
-switch fix(12*rand)
+switch fix(30*rand)
     case 0,   a = 'why not?';
     case 1,   a = 'don''t ask!';
     case 2,   a = 'it''s your karma.';
@@ -39,8 +39,8 @@ switch fix(12*rand)
     case 7,   a = 'the devil made me do it.';
     case 8,   a = 'the computer did it.';
     case 9,   a = 'the yield gap is your fault';
-    case 10,  a = 'where is your jump suit?';
-    otherwise,a = 'don''t you have something better to do?';
+    case 10,  a = 'don''t you have something better to do?';
+    otherwise,a = 'so Christine doesn''t crush you.';
 end
 
 function a = phrase

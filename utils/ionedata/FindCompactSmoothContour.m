@@ -1,4 +1,5 @@
-function [ContourMask,CutoffValue,NumContours,RecLevel]=FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont,ExcludeMask,RecLevel)
+function [ContourMask,CutoffValue,NumContours,RecLevel,CS,Areas]=...
+    FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont,ExcludeMask,RecLevel)
 %FindContour - find smooth contours containing a certain fraction of a distribution
 %
 %
@@ -118,12 +119,14 @@ DistSmooth_norm=DistSmooth/max(max(DistSmooth));
 level=fzero(@(level) testlevel(level,Dist,DistSmooth_norm,p,ExcludeMask),.1);
 
 ContourMask=(DistSmooth_norm>level);
-
-figure;
-subplot(2,2,1);surface(double(ExcludeMask));shading flat;title('exclude mask');
-subplot(2,2,2);surface(double(DistTemp));shading flat;title('DistTemp');
-subplot(2,2,3);surface(double(DistSmooth_norm));shading flat;title('DistSmooth_norm');
-subplot(2,2,4);surface(double(ContourMask));shading flat;title('ContourMask');
+debugplot=0;
+if debugplot
+    figure;
+    subplot(2,2,1);surface(double(ExcludeMask));shading flat;title('exclude mask');
+    subplot(2,2,2);surface(double(DistTemp));shading flat;title('DistTemp');
+    subplot(2,2,3);surface(double(DistSmooth_norm));shading flat;title('DistSmooth_norm');
+    subplot(2,2,4);surface(double(ContourMask));shading flat;title('ContourMask');
+end
 
 %if length(unique(ExcludeMask))==2
 %    %  jj=find(ExcludeMask);
@@ -139,12 +142,19 @@ C=contourc(double(ContourMask),[.5 .5]);
 CS=parse_contourc_output(C)
 NumContours=length(CS);
 if NumContours > MaxNumCont
+    
     % too many contours.  kill the smallest one and call self again
     % recursively.  We kill the smallest one by zeroing out jpmax.
     
     for j=1:length(CS)
         av(j)=polyarea(CS(j).X,CS(j).Y);
     end
+    
+    
+    
+    
+    
+    
     
     [dum,polygonlist]=sort(av);
     k=polygonlist(1);
@@ -164,7 +174,11 @@ if NumContours > MaxNumCont
     
     [nx,ny]=size(ContourMask);
     [X,Y]=meshgrid(1:ny,1:nx);
+    tic
     [ii]=inpolygon(X,Y,CS(k).X,CS(k).Y);
+    disp('time in inpolygon')
+    toc
+    
     
     OldExcludeMask=ExcludeMask;
     ExcludeMask= ExcludeMask | ii;
@@ -198,9 +212,15 @@ if NumContours > MaxNumCont
     
    % [ContourMask,CutoffValue]=FindContourGen(jp,jpmax,p,MaxNumContours,ExcludeMask);
    if RecLevel < 15
-    [ContourMask,CutoffValue,NumContours]=FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont,ExcludeMask,RecLevel+1);
+    [ContourMask,CutoffValue,NumContours,RecLevel_dummy,CS]=...
+        FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont,ExcludeMask,RecLevel+1);
    else
        disp(['Not going any deeper in recursion'])
+       
+       %% we are going home ... we have given up.  Now we should return the details.
+       
+       
+       
    end
     return
 end

@@ -483,6 +483,8 @@ end
 finemap(cmap,lowermap,uppermap); % see above
 caxis([(cmin-minstep)  (cmax+minstep)]); %don't change unless see above
 
+
+
 %% plotstates section
 
 %plotstates
@@ -628,6 +630,7 @@ set(hcbtitle,'fontsize',12);
 set(hcbtitle,'fontweight','bold');
 %cblabel(Units)
 
+
 %% add panoply triangles
 if sum(panoplytriangles) > 0
 addpanoplytriangle(panoplytriangles)
@@ -657,6 +660,7 @@ if strcmp(categorical,'on')
     hlegt=get(legh,'title');
     set(hlegt,'string',units);
     set(bb,'Visi','off')
+    set(legh,'position',[0.4362 0.1938 0.3188 0.1865])
 end
 
 %% did user want to print?

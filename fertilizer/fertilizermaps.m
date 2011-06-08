@@ -29,12 +29,12 @@
 
 
 %% record preferences
-verno = '2_50';
+verno = '2_25_2';
 untrustedcropscalingmax = 2;
 allcropsscalingmax = 2;
 trustedcroptofaoratiomax = .95;
-snscalarmax = 1.5;
-snscalarmin = 0.5;
+snscalarmax = 1.25;
+snscalarmin = 0.75;
 
 
 %% initialize diary and time record
@@ -1551,6 +1551,7 @@ for n = 1:3
         
         titlestr = [cropname '_' nutrient '_ver' verno ];
         appratemap = DataStoreGateway([titlestr '_rate_FAO_SNS']);
+        datatypemap = DataStoreGateway([titlestr '_datatype_FAO_SNS']);
         ii = find(datatypemap > 1);
         appratemap(ii) = appratemap(ii) .* scalingmap(ii);
         DataStoreGateway([titlestr '_rate_FAO_SNS_FINAL'], appratemap);

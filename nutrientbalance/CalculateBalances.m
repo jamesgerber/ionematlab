@@ -5,10 +5,11 @@ function [C,N,P]=CalculateBalances(crop)
 %     [C,N,P]=CalculateBalances(CROPNAME) will return structure C,N
 %
 %  Example
-%   crop='maize'
+%   crop='millet'
 %   [C,N,P]=CalculateBalances(crop)
 %   NSS.cmap='nathangreenscale2';
-%   NSS.coloraxis=[0 250];
+%   NSS.coloraxis=[0 .98];
+%    NSS.PanoplyTriangles=[0 1];
 %   NSS.TitleString =['applied nitrogen (' crop ')']
 %   NSS.FileName=['Applied Nitrogen ' crop '']
 %   NiceSurfGeneral(N.ExcessNitrogenPerHA,NSS);
@@ -16,7 +17,8 @@ function [C,N,P]=CalculateBalances(crop)
 %
 %   clear NSS
 %    NSS.ColorAxis=[-.99];
-%    NSS.cmap='sixteencolors';
+%    NSS.PanoplyTriangles=[1 1];
+%    NSS.cmap='dark_purple_blue_green';
 %    NSS.Units='kg N/ha';
 %    NSS.TitleString =['excess nitrogen (' crop ')']
 %    NSS.FileName=['Excess Nitrogen ' crop '']
@@ -28,7 +30,7 @@ FixMethod='linear';
 persistent D NDS Ndep
 
 if isempty(D)
-    D=ReadGenericCSV([adstring 'croptype_NPK.csv']);
+    D=ReadGenericCSV([adstring 'croptype_NPK.csv'],2);
     NDS=OpenGeneralNetCDF(['/Users/jsgerber/sandbox/jsg029_NitrogenBalance/NandCdatamethods/NOyTDEP_S1_5min.nc']);
     Ndep=NDS(1).Data;
     Ndep(Ndep<-9000)=0;

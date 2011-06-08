@@ -1,5 +1,5 @@
 function [XXXBinEdges,YYYBinEdgesCell,xbins,ybins,ContourMask,InsideContourLogical,CS,RecLevel]= ...
-    CalculateBins_Globally_RevN(YYY,XXX,Area,Nbin,Nsurface,...
+    CalculateBins_Globally_RevP(YYY,XXX,Area,Nbin,Nsurface,...
     PercentToDrop,cropname,WetFlag,HeatFlag);
 %   CalculateBins_EqualAreaSpace
 %
@@ -55,7 +55,7 @@ ky=ky*10;
 
 
 [ContourMask,CutoffValue,NumContours,RecLevel,CS]=...
-    FindCompactSmoothContourRevN(Dist,p,Lsmooth,kx,ky,MaxNumCont);
+    FindCompactSmoothContourRevP(Dist,p,Lsmooth,kx,ky,MaxNumCont);
 
 
 
@@ -74,7 +74,7 @@ if debugplots==1
     title([' All cultivated areas. ' cropname ' ' WetFlag ]);
     fattenplot
     finemap('area2','','')
-    OutputFig('Force',['Figures/AllCultivatedareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevN  '])
+    OutputFig('Force',['Figures/AllCultivatedareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevP  '])
     
     figure;surface(xbins,ybins,double(jp.*ContourMask).')
     xlabel(HeatFlag);
@@ -82,18 +82,18 @@ if debugplots==1
     zeroylim(ylims(1),ylims(2));
     grid on
     ylims=get(gca,'YLim');
-    title([' Contour-filtered areas. ' cropname ' ' WetFlag ' RevN']);
+    title([' Contour-filtered areas. ' cropname ' ' WetFlag ' RevP']);
     fattenplot
     shading flat
     finemap('area2','','')
-    OutputFig('Force',['Figures/Contour-filteredareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevN  '])
+    OutputFig('Force',['Figures/Contour-filteredareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevP  '])
 
  %   figure;surface(xbins,ybins,double(ContourMask).')
  %   xlabel(HeatFlag);
  %   ylabel(WetFlag);
  %   zeroylim(ylims(1),ylims(2));
  %   grid on
- %   title([' 95% Contour ' cropname ' ' WetFlag  'Nbins ' int2str(Nbin) ' RevN']);
+ %   title([' 95% Contour ' cropname ' ' WetFlag  'Nbins ' int2str(Nbin) ' RevP']);
   %  fattenplot
   %  shading flat
   %  finemap('area2','','')
@@ -151,11 +151,11 @@ if debugplots==1
     grid on
     ylims=get(gca,'YLim');
     title([' Scatter plot from contour-filtered data ' cropname ...
-         ' ' WetFlag ' RevN']);
+         ' ' WetFlag ' RevP']);
     fattenplot
     shading flat
     finemap('area2','','')
-    OutputFig('Force',['Figures/scatterplotfromContour-filteredareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevN  '])
+    OutputFig('Force',['Figures/scatterplotfromContour-filteredareas_' cropname '_' WetFlag 'Nbins' int2str(Nbin) 'RevP  '])
 end
 
 p=PercentToDrop/100;

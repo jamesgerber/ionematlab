@@ -29,7 +29,7 @@
 
 
 %% record preferences
-verno = '2_25_2';
+verno = '2_25_3';
 untrustedcropscalingmax = 2;
 allcropsscalingmax = 2;
 trustedcroptofaoratiomax = .95;
@@ -704,7 +704,6 @@ for n = 1:3
                 outline = CountryCodetoOutline(countrycode);
                 
                 ratetemp = appratemap .* outline;
-                ratetemp = ratetemp(CropMaskIndices);
                 ratetemp = ratetemp(~isnan(ratetemp));
                 uniquerates = unique(ratetemp);
                 tmp = find(uniquerates == 0);

@@ -164,7 +164,9 @@ for n = 1:length(proxylist);
     end
 end
 croplist = unique(tmp(:));
-
+if isempty(croplist{1})
+    croplisttest = croplist(2:length(croplist));
+end
 
 
 %% build total fertilized land map and initialize data files

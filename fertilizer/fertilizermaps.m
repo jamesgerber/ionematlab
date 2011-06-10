@@ -60,7 +60,7 @@ disp(['Maximum scaling for all crops to match FAO = ' ...
 %% read input files
 
 % load fertilizer data file
-inputfile = ReadGenericCSV('subnationalfert5.csv');
+inputfile = ReadGenericCSV('subnationalfert6.csv');
 save fertinput
 % load fertinput
 

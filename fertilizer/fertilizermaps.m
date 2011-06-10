@@ -21,7 +21,7 @@
 %    v1.7 Eliminated crop_2000 extrapolation; Apply "other crop" data to
 %    missing crops when possible before doing income extrapolation; Created
 %    a horticulture map in the beginning.
-% 
+%
 % Version 2.0 - 1.20.2011 - Final version of the fertilizer data for the m3
 % yield model paper. Added new procedures for scaling trusted and untrusted
 % crops.
@@ -40,7 +40,7 @@ snscalarmin = 0.75;
 %% initialize diary and time record
 
 ds = datestr(now);
-diaryfilename = ['fertrunoutput ' ds '.txt'];
+diaryfilename = ['fertrunoutput v' verno ' ' ds '.txt'];
 diary(diaryfilename);
 disp(diaryfilename);
 tic;
@@ -55,6 +55,9 @@ disp(['Maximum ratio of trusted crop consumption to FAO consumption = ' ...
     'to match FAO consumption)']);
 disp(['Maximum scaling for all crops to match FAO = ' ...
     num2str(untrustedcropscalingmax)]);
+disp(['Maximum subnational scalar = ' num2str(snscalarmax) ', minimum' ...
+    ' subnational scalar = ' num2str(snscalarmin)]);
+
 
 
 %% read input files
@@ -85,7 +88,6 @@ fao_ctries = unique(faoinput.ctry_codes);
 
 % load input netcdfs
 disp('Reading input netCDF files')
-SystemGlobals;
 path = [iddstring 'misc/area_ha_5min.nc'];
 [DS] = OpenNetCDF(path);
 gridcellareas = DS.Data;
@@ -923,15 +925,18 @@ for n = 1:3
     tcm_allcrops = tcm_utc + tcm_tc;
     
     % store these maps for reference
-    DataStoreGateway(['tcm_utc_' nutrient '_noscaling'], tcm_utc);
-    DataStoreGateway(['tcm_tc_' nutrient '_noscaling'], tcm_tc);
-    DataStoreGateway(['tcm_allcrops_' nutrient '_noscaling'],tcm_allcrops);
-
+    DataStoreGateway(['tcm_utc_' nutrient '_ver' verno ...
+        '_noscaling'], tcm_utc);
+    DataStoreGateway(['tcm_tc_' nutrient '_ver' verno ...
+        '_noscaling'], tcm_tc);
+    DataStoreGateway(['tcm_allcrops_' nutrient '_ver' verno ...
+        '_noscaling'],tcm_allcrops);
+    
     % create scaling maps: one for trusted crops (scalingmap_tc) and one
     % for "untrusted" (extrapolated) crops (scalingmap_utc)
     scalingmap_tc = ones(4320,2160);
     scalingmap_utc = ones(4320,2160);
-
+    
     % create a binary fao data map; 1 = yes, we have FAO data, 0 =
     % no FAO data. also create a "faoscalarmaxmap" to indicate which
     % countries will not match the FAO data b/c they will max out.
@@ -1001,24 +1006,24 @@ for n = 1:3
                             num2str(tmp)]);
                         scaleeverythingflag = 1;
                     end
-
+                    
                     % calculate a scalar using all crops if the flag is on
                     if scaleeverythingflag == 1
-                        disp(['Scaling all crop data to match FAO.']);
+                        disp('Scaling all crop data to match FAO.');
                         scalar = country_cons_fao ./ (country_cons_utc ...
                             + country_cons_tc);
                         % if the scalar exceeds the allcropsscalingmax,
                         % adjust it downward to the max allowable scalar
                         if scalar > allcropsscalingmax
                             disp(['Scalar for ' nutrient ' all crop ' ...
-                            'data in ' country ' (' num2str(scalar) ...
-                            ') exceeds max allowable, will be adjusted' ...
-                            ' to ' num2str(allcropsscalingmax)]);
+                                'data in ' country ' (' num2str(scalar) ...
+                                ') exceeds max allowable, will be adjusted' ...
+                                ' to ' num2str(allcropsscalingmax)]);
                             scalar = allcropsscalingmax;
                             faoscalarmaxmap(ii) = 1;
                         else
                             disp(['Scalar for ' nutrient ' all crop ' ...
-                            'data in ' country ' = ' num2str(scalar)]);
+                                'data in ' country ' = ' num2str(scalar)]);
                         end
                         scalingmap_tc(ii) = scalar;
                         scalingmap_utc(ii) = scalar;
@@ -1047,13 +1052,13 @@ for n = 1:3
         end
     end
     
-%     clear tcm_tc tcm_utc tcm_allcrops
+    %     clear tcm_tc tcm_utc tcm_allcrops
     
     % save the scaling maps
     
     DataStoreGateway(['scalingmap_tc_' nutrient '_FAO'], scalingmap_tc);
     DataStoreGateway(['scalingmap_utc_' nutrient '_FAO'], scalingmap_utc);
-
+    
     % Now loop through crops and apply the FAO scalars. While doing this,
     % also calculate tcm_sn (total consumption map: subnational application
     % rate data) and tcm_n ((total consumption map: national application
@@ -1062,7 +1067,7 @@ for n = 1:3
     
     tcm_sn = zeros(4320,2160);
     tcm_n = zeros(4320,2160);
-
+    
     for c = 1:length(croplist)
         cropname = croplist{c};
         
@@ -1109,7 +1114,7 @@ for n = 1:3
         ii = find(datatypemap == 1);
         tcm_sn(ii) = tcm_sn(ii) + crop_consmap(ii);
         ii = find(datatypemap > 1);
-        tcm_n(ii) = tcm_n(ii) + crop_consmap(ii);        
+        tcm_n(ii) = tcm_n(ii) + crop_consmap(ii);
     end
     
     clear scalingmap_tc scalingmap_utc
@@ -1178,18 +1183,22 @@ for n = 1:3
                     % all else)
                     scalar = (snu_cons_data - snu_cons_sn) ./ snu_cons_n;
                     
+                    % limit scalar to snscalingmin/max
+                    
                     if scalar > snscalarmax
                         scalar = snscalarmax;
                         disp(['Scalar for ' nutrient ' ' country...
-                            ': ' snuname1 ' ' snuname2 ...
-                            ' is > ' num2str(snscalarmax) ' (' num2str(scalar) ...
-                            ') - limiting scalar to ' num2str(snscalarmax)]);
+                            ': ' snuname1 ' ' snuname2 ' is > ' ...
+                            num2str(snscalarmax) ' (' num2str(scalar) ...
+                            ') - limiting scalar to ' ...
+                            num2str(snscalarmax)]);
                     elseif scalar < snscalarmin
                         scalar = snscalarmin;
                         disp(['Scalar for ' nutrient ' ' country...
-                            ': ' snuname1 ' ' snuname2 ...
-                            ' is < ' num2str(snscalarmin) ' (' num2str(scalar) ...
-                            ') - limiting scalar to ' num2str(snscalarmin)]);
+                            ': ' snuname1 ' ' snuname2 ' is < ' ...
+                            num2str(snscalarmin) ' (' num2str(scalar) ...
+                            ') - limiting scalar to ' ...
+                            num2str(snscalarmin)]);
                     end
                     
                     scalingmap(ii) = scalar;
@@ -1342,19 +1351,22 @@ for n = 1:3
                         scalar = 1;
                     end
                     
-                    % limit scalar to + or - 50%
-                    if scalar > 1.5
-                        scalar = 1.5;
+                    % limit scalar to snscalingmin/max
+                    
+                    if scalar > snscalarmax
+                        scalar = snscalarmax;
                         disp(['Scalar for ' nutrient ' ' country...
-                            ': ' snuname1 ' ' snuname2 ...
-                            ' is > 1.5 (' num2str(scalar) ...
-                            ') - limiting scalar to 1.5']);
-                    elseif scalar < 0.5
-                        scalar = 0.5;
+                            ': ' snuname1 ' ' snuname2 ' is > ' ...
+                            num2str(snscalarmax) ' (' num2str(scalar) ...
+                            ') - limiting scalar to ' ...
+                            num2str(snscalarmax)]);
+                    elseif scalar < snscalarmin
+                        scalar = snscalarmin;
                         disp(['Scalar for ' nutrient ' ' country...
-                            ': ' snuname1 ' ' snuname2 ...
-                            ' is < 0.5 (' num2str(scalar) ...
-                            ') - limiting scalar to 0.5']);
+                            ': ' snuname1 ' ' snuname2 ' is < ' ...
+                            num2str(snscalarmin) ' (' num2str(scalar) ...
+                            ') - limiting scalar to ' ...
+                            num2str(snscalarmin)]);
                     end
                     
                     scalingmap(ii) = scalar;
@@ -1394,7 +1406,7 @@ for n = 1:3
         
         % apply subnational consumption scalars only to national-level data
         ii = find(datatypemap > 1);
-        appratemap(ii) = appratemap(ii) .* scalingmap(ii);   
+        appratemap(ii) = appratemap(ii) .* scalingmap(ii);
         DataStoreGateway([titlestr '_rate_FAO_SNS'], ...
             appratemap);
         
@@ -1437,12 +1449,13 @@ for n = 1:3
     end
     
     % save the scaling map
-    DataStoreGateway(['scalingmap_' nutrient '_FAO_SNS'], scalingmap);
+    DataStoreGateway(['scalingmap_' nutrient '_ver' verno '_FAO_SNS'], ...
+        scalingmap);
     
     % save the SN scaled total consumption map;
-    DataStoreGateway(['tcm_allcrops_' nutrient '_FAO_SNS'], ...
+    DataStoreGateway(['tcm_allcrops_' nutrient '_ver' verno '_FAO_SNS'],...
         tcm_allcrops_sncscaled);
-    DataStoreGateway(['tcm_n_scaled_' nutrient '_FAO_SNS'], ...
+    DataStoreGateway(['tcm_n_scaled_' nutrient '_ver' verno '_FAO_SNS'],...
         tcm_n_sncscaled);
     clear tcm_n
     
@@ -1538,8 +1551,8 @@ for n = 1:3
     end
     
     % save the scaling map
-    DataStoreGateway(['scalingmap_' nutrient '_FAO_SNS_FINAL'], ...
-        scalingmap);
+    DataStoreGateway(['scalingmap_' nutrient '_ver' verno ...
+        '_FAO_SNS_FINAL'], scalingmap);
     
     % now loop through crops and apply the FAO scalars
     
@@ -1573,7 +1586,7 @@ for n = 1:3
     
     % save the total consumption map
     tcm_allcrops_final(faodatamap == 0) = NaN;
-    DataStoreGateway(['tcm_allcrops_' nutrient ...
+    DataStoreGateway(['tcm_allcrops_' nutrient '_ver' verno ...
         '_FAO_SNS_FINAL'], tcm_allcrops_final);
     
 end

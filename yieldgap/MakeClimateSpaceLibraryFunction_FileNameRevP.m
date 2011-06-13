@@ -100,8 +100,8 @@ for N=Nspace;
             NoBaseFileName=['/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                 'x' int2str(N) '_RevP'];
             
-            if exist([FileName '.nc'])==2
-                disp(['Already have ' FileName '.nc'])
+            if exist([FileName '.mat'])==2
+                disp(['Already have ' FileName '.mat'])
             else
                 [Long,Lat,Heat]=OpenNetCDF([GDDBaseDir ...
                     HeatFlag GDDTempstr '.nc']);

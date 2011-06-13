@@ -222,7 +222,7 @@ Production=CultivatedArea.*Yield;
 GDDTempstr=GDDBase;
 Nstr=int2str(N);
 switch Rev
-    case {'F','H','J','I','K','L','M','N'}
+    case {'F','H','J','I','K','L','M','N','P'}
 ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
     WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
 

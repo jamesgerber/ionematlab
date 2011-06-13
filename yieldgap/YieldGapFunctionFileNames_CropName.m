@@ -47,10 +47,14 @@ switch FS.ClimateSpaceRev
     case 'N'
         ClimateSpaceDescription='ContourFilteredClimateSpace';
         SubDir='ContourFiltered';
+    case 'P'
+        ClimateSpaceDescription='ContourFilteredClimateSpace';
+        SubDir='ContourFiltered';
     case 'M'
         ClimateSpaceDescription='ContourFilteredClimateSpaceWithSoil';
         SubDir='ContourFiltered_Soil';
     otherwise
+        warning(['using a default ClimateSpaceDescription in ' mfilename])
         ClimateSpaceDescription=['ClimateSpaceRev'  FS.ClimateSpaceRev];
         SubDir='AltRevision';
 end

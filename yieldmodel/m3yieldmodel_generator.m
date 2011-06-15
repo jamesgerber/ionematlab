@@ -71,8 +71,8 @@ if LSQflag == 1
         & isfinite(input.irr) ... % and irrigation data
         & isfinite(input.Nfert) & isfinite(input.Pfert) ...
         & isfinite(input.Kfert) ... % and fertilizer data
-        & (input.Ndatatype > 0) & (input.Pdatatype > 0) ...
-        & (input.Kdatatype > 0)); % discard problematic fert data (Brazil)
+        & (input.Ndatatype < 6) & (input.Pdatatype < 6) ...
+        & (input.Kdatatype < 6)); % discard problematic fert data (Brazil)
     
     area_bin = double(input.CultivatedArea(ii));
     irr_bin = double(input.irr(ii));

@@ -62,20 +62,18 @@ if errorflag == 1
     potpercentstr = '98';
     minpercentstr = '2';
     climspace = '10x10';
-    if strmatch(cropname,'oilpalm')
-        cropnamecaps = 'Oil_Palm';
-    else
-        cropnamecaps = regexprep(cropname, '(^.)', '${upper($1)}');
-    end
-    ygpath = [iddstring 'ClimateBinAnalysis/YieldGap/ContourFiltered/' ...
-        'YieldGap_' cropnamecaps '_MaxYieldPct_' potpercentstr ...
-        '_ContourFilteredClimateSpace_' climspace '_prec.mat'];
-    eval(['load ' ygpath ';']);
+    FNS.ClimateSpaceRev = 'P';
+    FNS.ClimateSpaceN=10;
+    FNS.WetFlag='prec';
+    OutputDirBase=[iddstring 'ClimateBinAnalysis/YieldGap'];
+    FNS.CropNames = cropname;
+    FNS.PercentileForMaxYield=potpercentstr;
+    FileName=YieldGapFunctionFileNames_CropName(FNS,OutputDirBase);
+    load(FileName);
     maxyield = OS.potentialyield;
-    ygpath = [iddstring 'ClimateBinAnalysis/YieldGap/ContourFiltered/' ...
-        'YieldGap_' cropnamecaps '_MaxYieldPct_' minpercentstr ...
-        '_ContourFilteredClimateSpace_' climspace '_prec.mat'];
-    eval(['load ' ygpath ';']);
+    FNS.PercentileForMaxYield=minpercentstr;
+    FileName=YieldGapFunctionFileNames_CropName(FNS,OutputDirBase);
+    load(FileName);
     minyield = OS.potentialyield;
 elseif errorflag == 0
     disp(['errorflag = 0, not using spatial residuals when ' ...

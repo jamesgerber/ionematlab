@@ -92,7 +92,7 @@ fclose(fid);
 %% OK.  Now have everything.  Assemble into DS (Output Structure).
 DS=[];
 for j=1:length(C)
-    
+   if ~isempty(FieldNameStructure.Vector{j})
     ThisName=MakeSafeString(FieldNameStructure.Vector{j});
     Contents=C{j};
     

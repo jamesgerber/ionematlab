@@ -1,22 +1,38 @@
-function output=processshapefile(S,field,seek,xres,yres)
-output=zeros(xres,yres);
-        for i=1:xres
-            X(xres,1:yres)=xres;
+function output=processshapefile(S,field,scale)
+short=round(8384*scale);
+long=round(9182*scale);
+output=zeros(short,long);
+X=zeros(short,long);
+Y=zeros(short,long);
+        for i=1:long
+            X(1:short,i)=i;
         end
-        for i=1:yres
-            Y(1:xres,yres)=yres;
+        for i=1:short
+            Y(i,1:long)=i;
         end
-h=waitbar(0,'Shh...');
+for seek=1:20
+h=waitbar(0,['This may take a while... task ' num2str(seek) '/9']);
+polyx=[];
+polyy=[];
 for i=1:length(S)
     if ((eval(['S(', num2str(i), ').', field]))==seek)
-        polyx=(S(i).X+9000000)*xres/18000000;
-        polyy=(S(i).Y+18000000)*yres/36000000;
-        output=output|inpolygon(X,Y,polyx,polyy);
         waitbar(i/length(S),h);
+        output=output+double((output==0)).*inpolygon(X,Y,((S(i).X+4463000)/(4463000+4639000))*long,((S(i).Y+4000000)/(4000000+4384000))*short)*seek;
+        polyx=[polyx S(i).X];
+        polyy=[polyy S(i).Y];
     end
 end
+try
+    close(f)
+end
+line(polyx,polyy)
+f=gcf;
+close(h)
+end
+%output=inpolygon(X,Y,((polyx+4463000)/(4463000+4639000))*9102,((polyy+4000000)/(4000000+4384000))*8384);
 
-save ihavedata polyx polyy;
+save ihavedata polyx polyy output;
+close(f)
 
 % 
 % function [xred,yred]=DownSample(x,y,minkmsq,thinninglength);

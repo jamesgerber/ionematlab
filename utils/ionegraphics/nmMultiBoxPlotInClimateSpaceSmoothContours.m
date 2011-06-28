@@ -64,7 +64,7 @@ grid on
 ylims=get(gca,'YLim');
 title([' All cultivated areas. ' cropname ' ' WetFlag ' Rev' Rev]);
 % fattenplot
-finemap('nmwhiteorangered_umn_leftskew2','','')
+finemap()
 
 hold on
 

@@ -16,13 +16,21 @@ end
  minval1=min(min(Heat))
  minval2=min(min(Prec))
 % check to make sure that heat/prec are positvite
- 
- 
+
+
 if nargin>11
-    percentile(Heat,xdatalim)
-    percentile(Prec,ydatalim)
- Heat(Heat>percentile(Heat,xdatalim))=minval1;
- Prec(Prec>percentile(Prec,ydatalim))=minval2;
+    if xdatalim > 1
+        minval1 = xdatalim;
+    else
+        percentile(Heat,xdatalim)
+        Heat(Heat>percentile(Heat,xdatalim))=minval1;
+    end
+    if ydatalim > 1
+        minval2 = ydatalim;
+    else
+        percentile(Prec,ydatalim)
+        Prec(Prec>percentile(Prec,ydatalim))=minval2;
+    end
 end
 
 
@@ -42,7 +50,7 @@ W=CultivatedArea(IsValidData); %Weight is the area, but only for these points.
 % need to create ContourMask
 
 
-ContourMask=jp>0;
+%ContourMask=jp>0;
 
  
 C=contourc(double(ContourMask),[.5 .5]);

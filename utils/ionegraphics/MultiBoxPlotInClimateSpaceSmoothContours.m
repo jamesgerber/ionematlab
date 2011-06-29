@@ -153,12 +153,37 @@ for ibin=1:length(CDS)
             y1(2)=yc(1);
         end
     else % there's not one intersection:
+        % if there are multiple intersections:
+        if (length(xc)>1)
+            endsx=x1;
+            endsy=y1;
+            x1=[];
+            y1=[];
+            check=inpolygon(endsx,endsy,xcont,ycont);
+            if (check(1)==1)
+                x1(1)=endsx(1);
+                y1(1)=endsy(1);
+            end
+            for i=1:length(xc)
+                x1(length(x1)+1)=xc(i);
+                y1(length(y1)+1)=yc(i);
+                if mod(length(x+1),2)==0
+                    x1(length(x1)+1)=NaN;
+                    y1(length(y1)+1)=NaN;
+                end
+            end
+            if (check(2)==1)
+                x1(length(x1)+1)=endsx(2);
+                y1(length(y1)+1)=endsy(2);
+            end      
+        end
+        % Assuming here that there are zero intersections. 
         % if both vertices of the side are outside of the contour, we don't
         % want to draw this side. Make it void.
         if (inpolygon(x1,y1,xcont,ycont)==[0 0])
             x1=[];
             y1=[];
-        end
+        end  
     end
     
     % Repeat for the other 3 sides.
@@ -178,10 +203,33 @@ for ibin=1:length(CDS)
             y2(2)=yc(1);
         end
     else
+        if (length(xc)>1)
+            endsx=x2;
+            endsy=y2;
+            x2=[];
+            y2=[];
+            check=inpolygon(endsx,endsy,xcont,ycont);
+            if (check(1)==1)
+                x2(1)=endsx(1);
+                y2(1)=endsy(1);
+            end
+            for i=1:length(xc)
+                x2(length(x2)+1)=xc(i);
+                y2(length(y2)+1)=yc(i);
+                if mod(length(x+1),2)==0
+                    x2(length(x2)+1)=NaN;
+                    y2(length(y2)+1)=NaN;
+                end
+            end
+            if (check(2)==1)
+                x2(length(x2)+1)=endsx(2);
+                y2(length(y2)+1)=endsy(2);
+            end      
+        end
         if (inpolygon(x2,y2,xcont,ycont)==[0 0])
             x2=[];
             y2=[];
-        end
+        end  
     end
     
     
@@ -201,10 +249,33 @@ for ibin=1:length(CDS)
             y3(2)=yc(1);
         end
     else
+        if (length(xc)>1)
+            endsx=x3;
+            endsy=y3;
+            x3=[];
+            y3=[];
+            check=inpolygon(endsx,endsy,xcont,ycont);
+            if (check(1)==1)
+                x3(1)=endsx(1);
+                y3(1)=endsy(1);
+            end
+            for i=1:length(xc)
+                x3(length(x3)+1)=xc(i);
+                y3(length(y3)+1)=yc(i);
+                if mod(length(x+1),2)==0
+                    x3(length(x3)+1)=NaN;
+                    y3(length(y3)+1)=NaN;
+                end
+            end
+            if (check(2)==1)
+                x3(length(x3)+1)=endsx(2);
+                y3(length(y3)+1)=endsy(2);
+            end      
+        end
         if (inpolygon(x3,y3,xcont,ycont)==[0 0])
             x3=[];
             y3=[];
-        end
+        end  
     end
     
     
@@ -224,10 +295,33 @@ for ibin=1:length(CDS)
             y4(2)=yc(1);
         end
     else
+        if (length(xc)>1)
+            endsx=x4;
+            endsy=y4;
+            x4=[];
+            y4=[];
+            check=inpolygon(endsx,endsy,xcont,ycont);
+            if (check(1)==1)
+                x4(1)=endsx(1);
+                y4(1)=endsy(1);
+            end
+            for i=1:length(xc)
+                x4(length(x4)+1)=xc(i);
+                y4(length(y4)+1)=yc(i);
+                if mod(length(x+1),2)==0
+                    x4(length(x4)+1)=NaN;
+                    y4(length(y4)+1)=NaN;
+                end
+            end
+            if (check(2)==1)
+                x4(length(x4)+1)=endsx(2);
+                y4(length(y4)+1)=endsy(2);
+            end      
+        end
         if (inpolygon(x4,y4,xcont,ycont)==[0 0])
             x4=[];
             y4=[];
-        end
+        end  
     end
     
 % draw the lines

@@ -106,6 +106,8 @@ disp(['Saving ' FileName]);
 
 print(SaveFileType,ResFlag,FileName);
 
+centerfigure(FileName);
+
 set(Hfig,'PaperPositionMode',ppm)
 
 if isequal(get(Hfig,'tag'),'IonEFigure')

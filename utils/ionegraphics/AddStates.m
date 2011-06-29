@@ -39,6 +39,9 @@ if nargin==2
     AllStates='bricnafta';
 end
 
+if nargin<4
+    latoff=0;
+    longoff=0;
 
 switch lower(AllStates)
     case {'bric','bricnafta'}

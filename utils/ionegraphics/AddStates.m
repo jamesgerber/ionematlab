@@ -1,4 +1,4 @@
-function AddStates(LineWidth,HFig,AllStates);
+function AddStates(LineWidth,HFig,AllStates,latoff,longoff);
 %  ADDSTATES - add country boundaries and some state boundaries
 %
 %  AddStates(0.1)  will add some very thin lines
@@ -87,14 +87,14 @@ end
 
 %if CanMap==0
 if ~ismap(gca)
-    hp=plot(States.long,States.lat);
+    hp=plot(States.long+longoff,States.lat+latoff);
     set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
-    hp=plot(Countries.long,Countries.lat,'k');
+    hp=plot(Countries.long+longoff,Countries.lat+longoff,'k');
     set(hp,'linewidth',LineWidth)
 else
-    hp=plotm(States.lat,States.long,'k');
+    hp=plotm(States.lat+latoff,States.long+longoff,'k');
     set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
-    hp=plotm(Countries.lat,Countries.long,'k');
+    hp=plotm(Countries.lat+latoff,Countries.long+longoff,'k');
     set(hp,'linewidth',LineWidth);
 end
 set(gcf,'renderer','zbuffer');

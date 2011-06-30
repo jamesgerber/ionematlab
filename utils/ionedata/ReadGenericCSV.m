@@ -92,58 +92,58 @@ fclose(fid);
 %% OK.  Now have everything.  Assemble into DS (Output Structure).
 DS=[];
 for j=1:length(C)
-   if ~isempty(FieldNameStructure.Vector{j})
-    ThisName=MakeSafeString(FieldNameStructure.Vector{j});
-    Contents=C{j};
-    
-    %let's see if we can turn these values into doubles
-    NumValue=str2double(Contents{1});
-    if ~isnan(NumValue)
-        % first element is a number.  Now try to get all of them:
-        NumVector=str2double(Contents);
-        if any(isnan(NumVector))
-            NumericFlag=0;
+    if ~isempty(FieldNameStructure.Vector{j})
+        ThisName=MakeSafeString(FieldNameStructure.Vector{j});
+        Contents=C{j};
+        
+        %let's see if we can turn these values into doubles
+        NumValue=str2double(Contents{1});
+        if ~isnan(NumValue)
+            % first element is a number.  Now try to get all of them:
+            NumVector=str2double(Contents);
+            if any(isnan(NumVector))
+                NumericFlag=0;
+            else
+                NumericFlag=1;
+            end
         else
-            NumericFlag=1;
+            NumericFlag=0;
         end
-    else
-        NumericFlag=0;
+        
+        if NumericFlag==1
+            DS=setfield(DS,ThisName,NumVector);
+        else
+            DS=setfield(DS,ThisName,Contents);
+        end
+        
+    end
+end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %        FixUpHeaderline     %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    function headerline=FixUpHeaderline(headerline);
+    headerline=strrep(headerline,'(','');
+    
+    headerline=strrep(headerline,')','');
+    
+    if isequal(headerline(1),'_')
+        headerline=FixUpHeaderline(headerline(2:end));
     end
     
-    if NumericFlag==1
-        DS=setfield(DS,ThisName,NumVector);
-    else
-        DS=setfield(DS,ThisName,Contents);
-    end
     
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%        FixUpHeaderline     %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function headerline=FixUpHeaderline(headerline);
-headerline=strrep(headerline,'(','');
-
-headerline=strrep(headerline,')','');
-
-if isequal(headerline(1),'_')
-    headerline=FixUpHeaderline(headerline(2:end));
-end
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%        GetStrings          %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function VC=GetStrings(xline,Delimiter)
-
-ii=find(xline==Delimiter);
-
-%stick a one on the beginning, and an N on the end.
-% cumbersome, but then we can loop into the part where we make a structure
-ii(2:length(ii)+1)=ii;
-ii(1)=0;
-ii(end+1)=length(xline)+1;
-
-for j=1:length(ii)-1;
-    VC{j}=xline(ii(j)+1 : ii(j+1)-1);
-end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %        GetStrings          %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function VC=GetStrings(xline,Delimiter)
+            
+            ii=find(xline==Delimiter);
+            
+            %stick a one on the beginning, and an N on the end.
+            % cumbersome, but then we can loop into the part where we make a structure
+            ii(2:length(ii)+1)=ii;
+            ii(1)=0;
+            ii(end+1)=length(xline)+1;
+            
+            for j=1:length(ii)-1;
+                VC{j}=xline(ii(j)+1 : ii(j+1)-1);
+            end

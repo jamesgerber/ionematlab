@@ -167,7 +167,7 @@ for ibin=1:length(CDS)
             for i=1:length(xc)
                 x1(length(x1)+1)=xc(i);
                 y1(length(y1)+1)=yc(i);
-                if mod(length(x+1),2)==0
+                if mod(length(x1+1),2)==0
                     x1(length(x1)+1)=NaN;
                     y1(length(y1)+1)=NaN;
                 end
@@ -216,7 +216,7 @@ for ibin=1:length(CDS)
             for i=1:length(xc)
                 x2(length(x2)+1)=xc(i);
                 y2(length(y2)+1)=yc(i);
-                if mod(length(x+1),2)==0
+                if mod(length(x2+1),2)==0
                     x2(length(x2)+1)=NaN;
                     y2(length(y2)+1)=NaN;
                 end
@@ -262,7 +262,7 @@ for ibin=1:length(CDS)
             for i=1:length(xc)
                 x3(length(x3)+1)=xc(i);
                 y3(length(y3)+1)=yc(i);
-                if mod(length(x+1),2)==0
+                if mod(length(x3+1),2)==0
                     x3(length(x3)+1)=NaN;
                     y3(length(y3)+1)=NaN;
                 end
@@ -308,7 +308,7 @@ for ibin=1:length(CDS)
             for i=1:length(xc)
                 x4(length(x4)+1)=xc(i);
                 y4(length(y4)+1)=yc(i);
-                if mod(length(x+1),2)==0
+                if mod(length(x4+1),2)==0
                     x4(length(x4)+1)=NaN;
                     y4(length(y4)+1)=NaN;
                 end

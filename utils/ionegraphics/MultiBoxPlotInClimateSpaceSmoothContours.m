@@ -132,8 +132,18 @@ for ibin=1:length(CDS)
 % We're creating 4 sets of 2 2-element vectors, each set representing a
 % single side of a box.
     
+x1=[];
+x2=[];
+x3=[];
+x4=[];
+y1=[];
+y2=[];
+y3=[];
+y4=[];
 
-% Start by setting the side to the dimensions of one side of the box, ignoring contour.
+
+% Start by setting the side to the dimensions of one side of the box,
+% ignoring contour.
     x1(1)=S.GDDmin;
     y1(1)=S.Precmin;
     x1(2)=S.GDDmin;
@@ -141,49 +151,26 @@ for ibin=1:length(CDS)
     
 % Find all intersections between the side and the contour.
     [xc,yc]=polyxpoly(x1,y1,xcont,ycont);
-    if (length(xc)==1) % if there's one intersection:
-        % check both vertices. Set the one that isn't within the contour to
-        % the position of the intersection.
+    if (inpolygon((x1(1)),(y1(1)),xcont,ycont)==(0))
+        x1=(x1(2));
+        y1=(y1(2));
         if (inpolygon((x1(1)),(y1(1)),xcont,ycont)==(0))
-            x1(1)=xc(1);
-            y1(1)=yc(1);
-        end
-        if (inpolygon((x1(2)),(y1(2)),xcont,ycont)==(0))
-            x1(2)=xc(1);
-            y1(2)=yc(1);
-        end
-    else % there's not one intersection:
-        % if there are multiple intersections:
-        if (length(xc)>1)
-            endsx=x1;
-            endsy=y1;
             x1=[];
             y1=[];
-            check=inpolygon(endsx,endsy,xcont,ycont);
-            if (check(1)==1)
-                x1(1)=endsx(1);
-                y1(1)=endsy(1);
-            end
-            for i=1:length(xc)
-                x1(length(x1)+1)=xc(i);
-                y1(length(y1)+1)=yc(i);
-                if mod(length(x1+1),2)==0
-                    x1(length(x1)+1)=NaN;
-                    y1(length(y1)+1)=NaN;
-                end
-            end
-            if (check(2)==1)
-                x1(length(x1)+1)=endsx(2);
-                y1(length(y1)+1)=endsy(2);
-            end      
         end
-        % Assuming here that there are zero intersections. 
-        % if both vertices of the side are outside of the contour, we don't
-        % want to draw this side. Make it void.
-        if (inpolygon(x1,y1,xcont,ycont)==[0 0])
-            x1=[];
-            y1=[];
-        end  
+    end
+    x1=sort([x1 rot90(xc)]);
+    y1=sort([y1 rot90(yc)]);
+    xtest=interp1(1:length(x1),x1,1.5:1:(length(x1)-.5));
+    ytest=interp1(1:length(y1),y1,1.5:1:(length(y1)-.5));
+    test=inpolygon(xtest,ytest,xcont,ycont);
+    for i=1:length(test)
+        if test(i)==0
+            x1((i+2):(length(x1)+1))=x1((i+1):length(x1));
+            x1(i+1)=NaN;
+            y1((i+2):(length(y1)+1))=y1((i+1):length(y1));
+            y1(i+1)=NaN;
+        end
     end
     
     % Repeat for the other 3 sides.
@@ -193,43 +180,33 @@ for ibin=1:length(CDS)
     y2(2)=S.Precmax;
     
     [xc,yc]=polyxpoly(x2,y2,xcont,ycont);
-    if (length(xc)==1)
+    if (inpolygon((x2(1)),(y2(1)),xcont,ycont)==(0))
+        x2=(x2(2));
+        y2=(y2(2));
         if (inpolygon((x2(1)),(y2(1)),xcont,ycont)==(0))
-            x2(1)=xc(1);
-            y2(1)=yc(1);
-        end
-        if (inpolygon((x2(2)),(y2(2)),xcont,ycont)==(0))
-            x2(2)=xc(1);
-            y2(2)=yc(1);
-        end
-    else
-        if (length(xc)>1)
-            endsx=x2;
-            endsy=y2;
             x2=[];
             y2=[];
-            check=inpolygon(endsx,endsy,xcont,ycont);
-            if (check(1)==1)
-                x2(1)=endsx(1);
-                y2(1)=endsy(1);
-            end
-            for i=1:length(xc)
-                x2(length(x2)+1)=xc(i);
-                y2(length(y2)+1)=yc(i);
-                if mod(length(x2+1),2)==0
-                    x2(length(x2)+1)=NaN;
-                    y2(length(y2)+1)=NaN;
-                end
-            end
-            if (check(2)==1)
-                x2(length(x2)+1)=endsx(2);
-                y2(length(y2)+1)=endsy(2);
-            end      
         end
-        if (inpolygon(x2,y2,xcont,ycont)==[0 0])
-            x2=[];
-            y2=[];
-        end  
+    end
+    try
+    x2=sort([x2 rot90(xc)]);
+    y2=sort([y2 rot90(yc)]);
+    catch
+        x2
+        y2
+        xc
+        yc
+    end
+    xtest=interp1(1:length(x2),x2,1.5:1:(length(x2)-.5));
+    ytest=interp1(1:length(y2),y2,1.5:1:(length(y2)-.5));
+    test=inpolygon(xtest,ytest,xcont,ycont);
+    for i=1:length(test)
+        if test(i)==0
+            x2((i+2):(length(x2)+1))=x2((i+1):length(x2));
+            x2(i+1)=NaN;
+            y2((i+2):(length(y2)+1))=y2((i+1):length(y2));
+            y2(i+1)=NaN;
+        end
     end
     
     
@@ -239,43 +216,26 @@ for ibin=1:length(CDS)
     y3(2)=S.Precmin; 
     
     [xc,yc]=polyxpoly(x3,y3,xcont,ycont);
-    if (length(xc)==1)
+    if (inpolygon((x3(1)),(y3(1)),xcont,ycont)==(0))
+        x3=(x3(2));
+        y3=(y3(2));
         if (inpolygon((x3(1)),(y3(1)),xcont,ycont)==(0))
-            x3(1)=xc(1);
-            y3(1)=yc(1);
-        end
-        if (inpolygon((x3(2)),(y3(2)),xcont,ycont)==(0))
-            x3(2)=xc(1);
-            y3(2)=yc(1);
-        end
-    else
-        if (length(xc)>1)
-            endsx=x3;
-            endsy=y3;
             x3=[];
             y3=[];
-            check=inpolygon(endsx,endsy,xcont,ycont);
-            if (check(1)==1)
-                x3(1)=endsx(1);
-                y3(1)=endsy(1);
-            end
-            for i=1:length(xc)
-                x3(length(x3)+1)=xc(i);
-                y3(length(y3)+1)=yc(i);
-                if mod(length(x3+1),2)==0
-                    x3(length(x3)+1)=NaN;
-                    y3(length(y3)+1)=NaN;
-                end
-            end
-            if (check(2)==1)
-                x3(length(x3)+1)=endsx(2);
-                y3(length(y3)+1)=endsy(2);
-            end      
         end
-        if (inpolygon(x3,y3,xcont,ycont)==[0 0])
-            x3=[];
-            y3=[];
-        end  
+    end
+    x3=sort([x3 rot90(xc)]);
+    y3=sort([y3 rot90(yc)]);
+    xtest=interp1(1:length(x3),x3,1.5:1:(length(x3)-.5));
+    ytest=interp1(1:length(y3),y3,1.5:1:(length(y3)-.5));
+    test=inpolygon(xtest,ytest,xcont,ycont);
+    for i=1:length(test)
+        if test(i)==0
+            x3((i+2):(length(x3)+1))=x3((i+1):length(x3));
+            x3(i+1)=NaN;
+            y3((i+2):(length(y3)+1))=y3((i+1):length(y3));
+            y3(i+1)=NaN;
+        end
     end
     
     
@@ -285,43 +245,33 @@ for ibin=1:length(CDS)
     y4(2)=S.Precmin;
    
     [xc,yc]=polyxpoly(x4,y4,xcont,ycont);
-    if (length(xc)==1)
+    if (inpolygon((x4(1)),(y4(1)),xcont,ycont)==(0))
+        x4=(x4(2));
+        y4=(y4(2));
         if (inpolygon((x4(1)),(y4(1)),xcont,ycont)==(0))
-            x4(1)=xc(1);
-            y4(1)=yc(1);
-        end
-        if (inpolygon((x4(2)),(y4(2)),xcont,ycont)==(0))
-            x4(2)=xc(1);
-            y4(2)=yc(1);
-        end
-    else
-        if (length(xc)>1)
-            endsx=x4;
-            endsy=y4;
             x4=[];
             y4=[];
-            check=inpolygon(endsx,endsy,xcont,ycont);
-            if (check(1)==1)
-                x4(1)=endsx(1);
-                y4(1)=endsy(1);
-            end
-            for i=1:length(xc)
-                x4(length(x4)+1)=xc(i);
-                y4(length(y4)+1)=yc(i);
-                if mod(length(x4+1),2)==0
-                    x4(length(x4)+1)=NaN;
-                    y4(length(y4)+1)=NaN;
-                end
-            end
-            if (check(2)==1)
-                x4(length(x4)+1)=endsx(2);
-                y4(length(y4)+1)=endsy(2);
-            end      
         end
-        if (inpolygon(x4,y4,xcont,ycont)==[0 0])
-            x4=[];
-            y4=[];
-        end  
+    end
+    try
+    x4=sort([x4 rot90(xc)]);
+    y4=sort([y4 rot90(yc)]);
+    catch
+        x4
+        y4
+        xc
+        yc
+    end
+    xtest=interp1(1:length(x4),x4,1.5:1:(length(x4)-.5));
+    ytest=interp1(1:length(y4),y4,1.5:1:(length(y4)-.5));
+    test=inpolygon(xtest,ytest,xcont,ycont);
+    for i=1:length(test)
+        if test(i)==0
+            x4((i+2):(length(x4)+1))=x4((i+1):length(x4));
+            x4(i+1)=NaN;
+            y4((i+2):(length(y4)+1))=y4((i+1):length(y4));
+            y4(i+1)=NaN;
+        end
     end
     
 % draw the lines

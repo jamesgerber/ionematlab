@@ -62,13 +62,14 @@ switch(InputFlag)
        alims=[-90 -30 -60 17];
       case 7 %Australia
        alims=[90 180 -50 20];
-             case 8 %Australia
+             case 8 %World
        alims=[-180 180 -90 90];
      end
      
 
 
      UD=get(gcbf,'UserData');
+     UD
      if CanMap==1
          setm(UD.DataAxisHandle,'maplonlimit',[alims(1) alims(2)]);
          setm(UD.DataAxisHandle,'maplatlimit',[alims(3) alims(4)])

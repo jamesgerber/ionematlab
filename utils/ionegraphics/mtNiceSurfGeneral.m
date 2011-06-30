@@ -184,6 +184,8 @@ for j=1:2:length(PropsList)
     NSS=setfield(NSS,PropsList{j},PropsList{j+1});
 end
 
+oldbox=[-180 180 -90 90];
+
 NSS=CorrectCallingSyntax(NSS)
 
 
@@ -442,7 +444,9 @@ Data(ii)=OceanVal;
 % no make no-data points above color map to get 'uppermap' (white)
 Data(isnan(Data))=NoDataLandVal;
 
-Data=matrixoffset(Data,-round((mean(longlatbox(1:2))/360)*size(Data,1)),round((mean(longlatbox(3:4))/180)*size(Data,2)));
+Data=matrixoffset(Data,-round(((mean(longlatbox(1:2))-mean(oldbox(1:2)))/360)*size(Data,1)),round(((mean(longlatbox(3:4))-mean(oldbox(3:4)))/180)*size(Data,2)));
+
+oldbox=longlatbox;
 
 OS.ProcessedMapData=Data;
 OS.cmap_final=finemap(cmap,lowermap,uppermap);  %don't change unless change finemap call below.

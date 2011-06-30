@@ -154,7 +154,7 @@ if NumContours > MaxNumCont
     %    jpmax=jpmax.*(~ii);
     
    % [ContourMask,CutoffValue]=FindContourGen(jp,jpmax,p,MaxNumContours,ExcludeMask);
-   if RecLevel < 15
+   if RecLevel < 25
        ExcludeMask =logical(zeros(size(Dist)));
 
     [ContourMask,CutoffValue,NumContours,RecLevel_dummy,CS]=...

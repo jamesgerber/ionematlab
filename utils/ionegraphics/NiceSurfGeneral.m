@@ -534,6 +534,7 @@ set(gcf,'position',[ 218   618   560   380]);
 set(fud.DataAxisHandle,'Visible','off');
 set(fud.DataAxisHandle,'Position',[0.00625 .2 0.9875 .7]);
 set(fud.ColorbarHandle,'Visible','on');
+set(fud.QuickVersion,1);
 if strcmp(categorical,'on')
     set(fud.ColorbarHandle,'Visible','off');
 end

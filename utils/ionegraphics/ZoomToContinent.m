@@ -1,6 +1,5 @@
 function ZoomToContinent(varargin);
 % ZOOMTOMAX - Zoom graph to maximum value.
-
 if nargin==0
     help(mfilename);
     return
@@ -70,11 +69,28 @@ switch(InputFlag)
 
      UD=get(gcbf,'UserData');
      UD
+     if (UD.QuickVersion==1)
+     oldbox=UD.LongLatBox;
+     UD.Data=matrixoffset(UD.Data,-round(((-mean(oldbox(1:2)))/360)*size(UD.Data,1)),-round(((-mean(oldbox(3:4)))/180)*size(UD.Data,2)));
+     UD.LongLatBox=[0 0 0 0];
+     if CanMap==1
+         NumPointsPerDegree=12*numel(UD.Lat)/2160;
+   %     NumPointsPerDegree=1/(RedLat(2)-RedLat(1));
+         R=[NumPointsPerDegree,90,-180];
+         meshm(double(fliplr(rot90(UD.Data,3))),R,[50 100],-1);
+         setm(UD.DataAxisHandle,'maplonlimit',[alims(1) alims(2)]);
+         setm(UD.DataAxisHandle,'maplatlimit',[alims(3) alims(4)])
+     else
+         axis(UD.DataAxisHandle,alims);
+     end
+     set(gcbf,'UserData',UD);
+     else
      if CanMap==1
          setm(UD.DataAxisHandle,'maplonlimit',[alims(1) alims(2)]);
          setm(UD.DataAxisHandle,'maplatlimit',[alims(3) alims(4)])
      else
          axis(UD.DataAxisHandle,alims);
+     end
      end
      
      

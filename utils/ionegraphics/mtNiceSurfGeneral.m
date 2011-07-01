@@ -446,7 +446,7 @@ Data(isnan(Data))=NoDataLandVal;
 
 Data=matrixoffset(Data,-round(((mean(longlatbox(1:2))-mean(oldbox(1:2)))/360)*size(Data,1)),round(((mean(longlatbox(3:4))-mean(oldbox(3:4)))/180)*size(Data,2)));
 
-oldbox=longlatbox;
+OS.longlatbox=longlatbox;
 
 OS.ProcessedMapData=Data;
 OS.cmap_final=finemap(cmap,lowermap,uppermap);  %don't change unless change finemap call below.
@@ -516,6 +516,8 @@ fud=get(gcf,'UserData');
 
 fud.NiceSurfLowerCutoff=(cmin+minstep/2);
 fud.NiceSurfUpperCutoff=(cmax-minstep/2);
+fud.LongLatBox=longlatbox;
+fud.QuickVersion=1;
 set(gcf,'UserData',fud);
 
 if fud.MapToolboxFig==1
@@ -682,7 +684,7 @@ MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
 
 OS.Data=single(OS.Data);
 OS.cmap=cmap;
-
+ActualFileName='nicesurfoutput.png';
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
 
@@ -698,18 +700,16 @@ if ~isempty(filename)
         close(gcf)
     end
 end
-
 if ~strcmp(ActualFileName(end-3:end),'.png');
     ActualFileName=[ActualFileName '.png'];
 end
 
 % now ... if there is a metadata request, open and then resave the file
 if ~isempty(description) & ~isequal(fastplot,'on')
+    centerfigure(ActualFileName);
     a=imread(ActualFileName);
     imwrite(a,ActualFileName,'Description',description);
 end
-centerfigure(ActualFileName);
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  ModifyLongLatBox     %

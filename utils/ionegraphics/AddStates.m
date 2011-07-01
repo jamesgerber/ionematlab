@@ -42,6 +42,7 @@ end
 if nargin<4
     latoff=0;
     longoff=0;
+end
 
 switch lower(AllStates)
     case {'bric','bricnafta'}
@@ -92,13 +93,13 @@ end
 if ~ismap(gca)
     hp=plot(States.long+longoff,States.lat+latoff);
     set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
-    hp=plot(Countries.long+longoff,Countries.lat+longoff,'k');
-    set(hp,'linewidth',LineWidth)
+    hq=plot(Countries.long+longoff,Countries.lat+longoff,'k');
+    set(hq,'linewidth',LineWidth)
 else
     hp=plotm(States.lat+latoff,States.long+longoff,'k');
     set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
-    hp=plotm(Countries.lat+latoff,Countries.long+longoff,'k');
-    set(hp,'linewidth',LineWidth);
+    hq=plotm(Countries.lat+latoff,Countries.long+longoff,'k');
+    set(hq,'linewidth',LineWidth);
 end
 set(gcf,'renderer','zbuffer');
 

@@ -1,4 +1,5 @@
 function OS=NiceSurfGeneral(varargin);
+varargin
 % NICESURFGENERAL -uberplotting program
 %
 %
@@ -130,7 +131,7 @@ if nargin==0
 end
 
 arglist=varargin;  %so we can hack this down as we remove arguments
-
+varargin
 if nargin==1
     % make sure at least two arguments, for less error checking below
     NSS.PlotArea='World';
@@ -518,6 +519,7 @@ fud.NiceSurfLowerCutoff=(cmin+minstep/2);
 fud.NiceSurfUpperCutoff=(cmax-minstep/2);
 fud.LongLatBox=longlatbox;
 fud.QuickVersion=1;
+fud.Inputs=varargin;
 set(gcf,'UserData',fud);
 
 if fud.MapToolboxFig==1
@@ -680,6 +682,23 @@ end
 
 
 MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
+
+
+switch(lower(plotstates))
+    
+    case {'off','none'}
+        % do nothing
+    case {'bric','bricnafta','nafta'}
+        AddStates(0.05,gcf,'bricnafta',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
+    case {'world','lev0'}
+        AddStates(0.05,gcf,'all',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
+    case {'gadm0'}
+        AddStates(0.05,gcf,'gadm0',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
+    case {'gadm1'}
+       AddStates(0.05,gcf,'gadm1',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
+     otherwise
+       error(['have not yet implemented this in AddStates'])
+end
 
 
 OS.Data=single(OS.Data);

@@ -21,10 +21,13 @@ switch(InputFlag)
             disp(['problem with Mapping Toolbox check in ' mfilename]);
             CanMap=0;
         end
-         
+        
+        if (length(varargin)==2)
+            Val=varargin{2};
+        else
         % make user choose continent, zoom in       
-        Val=get(gcbo,'Value');  %Val will be the number
-                                %corresponding to the string of the uicontrol
+            Val=get(gcbo,'Value');  %Val will be the number
+        end                    %corresponding to the string of the uicontrol
 %      switch Val
 %       
 %       case 1 %User chickened out
@@ -67,23 +70,25 @@ switch(InputFlag)
      
 
 
-     UD=get(gcbf,'UserData');
+     UD=get(gcf,'UserData');
      UD
      if (UD.QuickVersion==1)
-     oldbox=UD.LongLatBox;
-     UD.Data=matrixoffset(UD.Data,-round(((-mean(oldbox(1:2)))/360)*size(UD.Data,1)),-round(((-mean(oldbox(3:4)))/180)*size(UD.Data,2)));
-     UD.LongLatBox=[0 0 0 0];
-     if CanMap==1
-         NumPointsPerDegree=12*numel(UD.Lat)/2160;
-   %     NumPointsPerDegree=1/(RedLat(2)-RedLat(1));
-         R=[NumPointsPerDegree,90,-180];
-         meshm(double(fliplr(rot90(UD.Data,3))),R,[50 100],-1);
-         setm(UD.DataAxisHandle,'maplonlimit',[alims(1) alims(2)]);
-         setm(UD.DataAxisHandle,'maplatlimit',[alims(3) alims(4)])
-     else
-         axis(UD.DataAxisHandle,alims);
+     UD.QuickVersion=0;
+     varg=UD.Inputs;
+     tmp='NiceSurfGeneral(varg{1}';
+     for i=1:length(varg)
+        if strcmpi(varg{i},'plotarea')
+            varg{i+1}='';
+        end
+        if (i>1)
+            tmp=[tmp ',varg{' num2str(i) '}'];
+        end
      end
-     set(gcbf,'UserData',UD);
+     tmp=[tmp ');'];
+     close all;
+     eval(tmp);
+     zoomtocontinent('ZoomIn',Val);
+     return
      else
      if CanMap==1
          setm(UD.DataAxisHandle,'maplonlimit',[alims(1) alims(2)]);

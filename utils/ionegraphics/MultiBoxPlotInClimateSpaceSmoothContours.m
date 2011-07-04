@@ -6,7 +6,12 @@ function MultiBoxPlotInClimateSpaceSmoothContours...
 %     PatchPlotOfAreaInClimateSpace...
 %    (CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,IsValidData)
 %
+
+
 Nsurface=300;
+xbins = Nsurface; ybins = Nsurface +10;
+% xbins = xdatalim./10;
+% ybins = ydatalim./10;
 
 if nargin<8
     WetFlag='Moisture Index';
@@ -45,7 +50,7 @@ end
  
 
 W=CultivatedArea(IsValidData); %Weight is the area, but only for these points.
-[jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(Heat(IsValidData),Prec(IsValidData),Nsurface,Nsurface+10,W);
+[jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(Heat(IsValidData),Prec(IsValidData),xbins,ybins,W);
 
 % need to create ContourMask
 
@@ -85,7 +90,8 @@ end
 grid on
 title([' All cultivated areas. ' cropname ' ' WetFlag ' Rev' Rev]);
 % fattenplot
-finemap('autumn','','')
+finemap('nmwhiteorangered_umn_leftskew2','','')
+shading interp
 
 hold on
 
@@ -282,7 +288,7 @@ y4=[];
     % TotalAreaVect(ibin)=TotalArea;
 end
 
-ylabel(WetFlag)
+ylabel('annual mean precipitation (mm/yr)')
 xlabel('GDD')
 title(['distribution of ' cropname  ' area in climate space']);
 h=colorbar
@@ -296,5 +302,4 @@ grid off
 
 N=sqrt(length(CDS));
 nbyn=[num2str(N) 'x' num2str(N)]
-OutputFig('Force')
 %OutputFig('Force')

@@ -13,7 +13,7 @@ switch Rev
     case 'L'
         txt='with soils.  reject 95% via area filter, then inclusive bins.'
     case 'O'
-        txt='no soils.  select contour by gaussian smoothing.''
+        txt='no soils.  select contour by gaussian smoothing.'
 
     otherwise
         txt='haven''t programmed in'

@@ -171,7 +171,8 @@ for N=Nspace;
                 else
                     %% Get bins from somewhere else
                     disp(['Getting Bins from ' GetBinsElsewhere]);
-                    load([GetBinsElsewhere filesep NoBaseFileName],'CDS','InsideContourLogical');
+                    %load([GetBinsElsewhere filesep NoBaseFileName],'CDS','InsideContourLogical');
+                    load([GetBinsElsewhere filesep NoBaseFileName]);
                 end
                 
                 [BinMatrix,ClimateDefs]=...

@@ -1,5 +1,9 @@
 function T=GetGDDBaseTemp(crop)
-% return base GDD temperature
+% GetGDDBaseTemp return base GDD temperature as a string
+%
+%  example
+%
+%   GetGDDBaseTemp('maize')
 
 persistent C
 

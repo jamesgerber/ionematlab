@@ -634,7 +634,7 @@ set(hcbtitle,'fontweight','bold');
 
 %% add panoply triangles
 if sum(panoplytriangles) > 0
-addpanoplytriangle(panoplytriangles)
+addpanoplytriangle(panoplytriangles, cmap)
 end
 
 

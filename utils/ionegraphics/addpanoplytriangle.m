@@ -1,6 +1,8 @@
-function addpanoplytriangle(triangleflagvector)
+function addpanoplytriangle(triangleflagvector, map)
 
-map=colormap;
+if nargin < 2
+    map=colormap;
+end
 
 endcolor=map(end-1,:);
 

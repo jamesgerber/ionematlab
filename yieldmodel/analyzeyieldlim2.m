@@ -284,7 +284,8 @@ for bin = 1:100
     
     % place lim_bin into yieldlim map
     lim_bin(desiredyield_bin < yield_bin) = 4;
-    lim_bin(potentialyield_bin < yield_bin) = 5;
+    %     lim_bin(potentialyield_bin < yield_bin) = 5;
+    lim_bin(desiredyield_bin > potentialyield_bin) = 5;
     yieldlim(ii) = lim_bin;
     dN(ii) = dN_bin;
     dNquality(ii) = dNQ_bin;

@@ -146,8 +146,7 @@ for bin = 1:100
     dN_bin(jj) = NaN;
     dNQ_bin(jj) = 4;
     if bininfo == 1
-        jj = find(nfertplus_bin > nfert_bin);
-        lim_bin(jj) = 1;
+        lim_bin(nfertplus_bin > nfert_bin) = 1;
     end
     
     % examine for phosphorus limitation
@@ -173,8 +172,7 @@ for bin = 1:100
     dP_bin(jj) = NaN;
     dPQ_bin(jj) = 4;
     if bininfo == 1
-        jj = find(pfertplus_bin > pfert_bin);
-        lim_bin(jj) = 1;
+        lim_bin(pfertplus_bin > pfert_bin) = 1;
     end
     
     % examine for potash limitation
@@ -200,8 +198,7 @@ for bin = 1:100
     dK_bin(jj) = NaN;
     dKQ_bin(jj) = 4;
     if bininfo == 1
-        jj = find(kfertplus_bin > kfert_bin);
-        lim_bin(jj) = 1;
+        lim_bin(kfertplus_bin > kfert_bin) = 1;
     end
     
     % examine for water limitation
@@ -235,12 +232,13 @@ for bin = 1:100
     
     % place lim_bin into yieldlim map
     if errorflag == 1
-        jj = find((desiredyield_bin - error_bin) > potentialyield_bin);
-        lim_bin(jj) = 4;
+        lim_bin(desiredyield_bin < (yield_bin - error_bin)) = 4;
+        lim_bin(desiredyield_bin > potentialyield_bin) = 5;
+        % note: no error-correction for the "5" scenario right now
+        % lim_bin((desiredyield_bin - error_bin) > potentialyield_bin) = 5;
     elseif errorflag == 0
-        jj = find(desiredyield_bin > potentialyield_bin | yield_bin ...
-            > desiredyield_bin);
-        lim_bin(jj) = 4;
+        lim_bin(desiredyield_bin < yield_bin) = 4;
+        lim_bin(desiredyield_bin > potentialyield_bin) = 5;
     end
     yieldlim(ii) = lim_bin;
     dN(ii) = dN_bin;
@@ -252,3 +250,14 @@ for bin = 1:100
     dI(ii) = dI_bin;
     dIquality(ii) = dIQ_bin;
 end
+
+
+% old code:
+%     if errorflag == 1
+%         jj = find((desiredyield_bin - error_bin) > potentialyield_bin);
+%         lim_bin(jj) = 4;
+%     elseif errorflag == 0
+%         jj = find(desiredyield_bin > potentialyield_bin | yield_bin ...
+%             > desiredyield_bin);
+%         lim_bin(jj) = 4;
+%     end

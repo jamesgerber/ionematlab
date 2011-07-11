@@ -1,5 +1,4 @@
 function OS=NiceSurfGeneral(varargin);
-varargin
 % NICESURFGENERAL -uberplotting program
 %
 %

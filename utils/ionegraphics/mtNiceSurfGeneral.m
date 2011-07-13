@@ -235,7 +235,7 @@ figfilesave='off';
 plotflag='on';
 fastplot='off';
 plotstates='bricnafta';
-longlatlines='on';
+longlatlines='off';
 categorical='off';
 categoryranges={};
 categoryvalues={};
@@ -683,22 +683,22 @@ end
 
 MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
 
-
-switch(lower(plotstates))
-    
-    case {'off','none'}
-        % do nothing
-    case {'bric','bricnafta','nafta'}
-        AddStates(0.05,gcf,'bricnafta',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
-    case {'world','lev0'}
-        AddStates(0.05,gcf,'all',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
-    case {'gadm0'}
-        AddStates(0.05,gcf,'gadm0',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
-    case {'gadm1'}
-       AddStates(0.05,gcf,'gadm1',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
-     otherwise
-       error(['have not yet implemented this in AddStates'])
-end
+% 
+% switch(lower(plotstates))
+%     
+%     case {'off','none'}
+%         % do nothing
+%     case {'bric','bricnafta','nafta'}
+%         AddStates(0.05,gcf,'bricnafta',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
+%     case {'world','lev0'}
+%         AddStates(0.05,gcf,'all',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
+%     case {'gadm0'}
+%         AddStates(0.05,gcf,'gadm0',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
+%     case {'gadm1'}
+%        AddStates(0.05,gcf,'gadm1',-mean(longlatbox(3:4)),-mean(longlatbox(1:2)));
+%      otherwise
+%        error(['have not yet implemented this in AddStates'])
+% end
 
 
 OS.Data=single(OS.Data);

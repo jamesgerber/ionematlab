@@ -106,10 +106,10 @@ disp(['Saving ' FileName]);
 
 print(SaveFileType,ResFlag,FileName);
 
-set(Hfig,'PaperPositionMode',ppm)
+set(Hfig,'PaperPositionMode',ppm);
 
 if isequal(get(Hfig,'tag'),'IonEFigure')
-    set(fud.DataAxisHandle,'position',storepos)
+    set(fud.DataAxisHandle,'position',storepos);
 end
 
 showui;

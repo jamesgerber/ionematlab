@@ -1,4 +1,4 @@
-function I=hashmarks(im,mask,space,width,dir,filename)
+function I=hashmarks(im,mask,color,space,width,dir,filename)
 % Both must be either normal 1-D arrays or images. Can't do one of each.
 % Must be same size.
 if size(im,3)==1
@@ -22,12 +22,15 @@ else
 end
 close all;
 if (nargin<3)
-    space=size(im,2)/200;
+    color=[0.0,0.0,0.0];
 end
 if (nargin<4)
-    width=space/10;
+    space=size(im,2)/200;
 end
 if (nargin<5)
+    width=space/10;
+end
+if (nargin<6)
     dir=.5;
 end
 tol=maxval(mask)/32;
@@ -35,9 +38,9 @@ for i=1:size(im,1)
     for j=1:size(im,2)
         if (closeto(mask(i,j,1),c1,tol)&&closeto(mask(i,j,2),c2,tol)&&closeto(mask(i,j,3),c3,tol))
             if closeto(0,mod(i*sin(dir*pi/2)+j*cos(dir*pi/2),space),width)
-                im(i,j,1)=0.0;
-                im(i,j,2)=0.0;
-                im(i,j,3)=0.0;
+                im(i,j,1)=color(1);
+                im(i,j,2)=color(2);
+                im(i,j,3)=color(3);
             end
         end
     end

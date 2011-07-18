@@ -1,6 +1,7 @@
-function OS=NiceSurfGeneral(varargin);
+function OS=mtnicesurfgeneral(varargin);
 varargin
-% NICESURFGENERAL -uberplotting program
+% MTNICESURFGENERAL - uberplotting program. Much faster than nsg but no
+% borders. Not all the UI tools work.
 %
 %
 % Syntax:
@@ -68,55 +69,13 @@ varargin
 %   NSS.DataCutoff=9e9;
 %   NSS.MakePlotDataFile='off';
 %
-%  Example
-%
-%  S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
-%
-%  Area=S.Data(:,:,1);
-%  Yield=S.Data(:,:,2);
-%   NSS.Units='tons/ha';
-%   NSS.TitleString='Yield Maize';
-%   NSS.FileName='YieldTestPlot4';
-%   NSS.cmap='orange_white_purple_deep';
-%   NSS.caxis=[.98];
-%   NiceSurfGeneral(Yield,NSS)
-%
-%   NSS.LongLatBox=[-120 -80 10 35]; %PlotArea takes precedence
-%   NSS.PlotArea='World';
-%   NSS.coloraxis=[];
-%   NSS.Description='';
-%   NSS.DisplayNotes='';
-%   NSS.uppermap='white';
-%   NSS.lowermap='emblue';
-%   NSS.colorbarpercent='off';
-%   NSS.projection='';
-%   NSS.projection='hatano';
-%
-%   NiceSurfGeneral(Yield,NSS)
-%
 %
 %   Example:
 %
-%  S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
-%
-%  Area=S.Data(:,:,1);
-%  Yield=S.Data(:,:,2);
-%   NSS.Units='tons/ha';
-%   NSS.categorical='on';
-%   NSS.categoryranges={[0 4],[4 6],[6 8],[8 20]}
-%   NSS.cmap={'lime',[0 .3 .8],'b','magenta'};
-%   NiceSurfGeneral(Yield,NSS);
-%  %or%
-%   NSS.categoryvalues={'[0 4]','[4 6]','[6 8]','[8 20]'}  
-%   NSS.cmap='revsummer'
-%   NiceSurfGeneral(Yield,NSS);
-%
-%   Syntax for getting coloraxis.
-%   OSS=NiceSurfGeneral(DATA,'coloraxis',[.99],'plotflag','off')
-%   OSS will contain field coloraxis, and no plot will be made.
+%  mtnicesurfgeneral(easyinterp2(magic(15),4320,2160));
 %
 %
-%   See Also:  IoneSurf ShowUi HideUi FastSurf
+%   See Also:  NiceSurfGeneral IoneSurf ShowUi HideUi FastSurf
 
 % desired changes
 %  - fix cvector warning in underlying IonESurf code

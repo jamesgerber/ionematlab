@@ -1,20 +1,49 @@
 function I=hashmarks(im,mask,color,space,width,dir,filename)
-% Both must be either normal 1-D arrays or images. Can't do one of each.
-% Must be same size.
+% HASHMARKS - creates image of a map with hashmarks over a designated area
+% 
+% SYNTAX
+% hashmarks(im,mask) where both im and mask are either 2-D global data
+% arrays or map images, and where all but the designated areas to mark are
+% a solid color or 0 in mask, will put black, diagonal hashmarks on the map
+% on the indices designated by mask, and return an image of the map.
+%
+% hashmarks(im,mask,color,space,width,dir,filename) will give the hashmarks
+% the color "color", put them "space" pixels apart, width of "width"
+% pixels, direction "dir" (where 0 is vertical, 1 is horizontal, .5 is
+% diagonal up, 1.5 or -.5 is diagonal down, etc), and save at "filename" in
+% addition to returning the image.
+%
+% NOTES
+% Slow and likely to freeze MATLAB. No anti-aliasing. Can't do more than
+% one type of hashmark without user nesting functions. Doesn't correct user
+% entered colors if they don't match the image type. Assumes format matches
+% NSG defaults. Width argument can be challenging.
+%
+% EXAMPLES
+% S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc']);
+% cropgrid=S.Data(:,:,4);
+% I=hashmarks(hashmarks(cropgrid,(cropgrid>.5&cropgrid<=1.0)),(cropgrid>.9&cropgrid<=1.0),[0 0 255],8,2,0,'myhashmarks.png');
+%
+% See Also
+
+
 if size(im,3)==1
     nsg(im);
     outputfig('force','tmpim.png');
     centerfigure('tmpim.png');
+    im=imread('tmpim.png');
+    delete('tmpim.png');
+end
+if size(mask,3)==1
     mtnicesurfgeneral(mask);
     outputfig('force','tmpmask.png');
     centerfigure('tmpmask.png');
-    im=imread('tmpim.png');
     mask=imread('tmpmask.png');
-    c1=0.0*maxval(im);
-    c2=0.243*maxval(im);
-    c3=0.153*maxval(im);
-    delete('tmpim.png');
     delete('tmpmask.png');
+    % Default max color for NSG
+    c1=0.0*256;
+    c2=0.243*256;
+    c3=0.153*256;
 else
     c1=mask(1,1,1);
     c2=mask(1,1,2);
@@ -46,6 +75,6 @@ for i=1:size(im,1)
     end
 end
 I=im; 
-if (nargin==6)
+if (nargin==7)
     imwrite(I,filename);
 end

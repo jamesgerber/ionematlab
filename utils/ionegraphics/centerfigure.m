@@ -4,8 +4,18 @@ function O=centerfigure(I)
 % SYNTAX
 % centerfigure('filename') will load and center image 'filename' and resave
 % it while returning the centered image
-% centerfigure(image) will return the centered image
-
+% centerfigure(image) will return 'image' centered
+%
+% NOTES
+% Only works with NiceSurf and similar figures that aren't too far from the
+% default output.
+%
+% EXAMPLES
+% nsg(magic(15));
+% outputfig('force','example.png');
+% centerfigure('example.png');
+%
+% See Also
 saveto=[];
 
 % If given a string, assume it's an image file name; load the image,

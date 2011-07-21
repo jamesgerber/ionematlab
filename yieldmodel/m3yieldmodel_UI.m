@@ -38,6 +38,11 @@ if nargin < 11
     globalslopeflag = 0;
 end
 
+if nargin < 9
+    errorflag = 0;
+    errormap = 0;
+end
+   
 % set model choice: VL ELM OR VL MB
 switch modelnumber
     case 1

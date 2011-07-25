@@ -28,7 +28,7 @@ end
 % When determining the extent of the map itself (the part that needs to be
 % centered) a certain amount of tolerance is used to account for imperfect
 % image quality
-tol=max(max(max(I)))/32;
+tol=max(max(max(I)))/1000;
 
 % Find the background color of the image
 c1=I(1,1,1);
@@ -71,8 +71,16 @@ O=I;
 O(top:bottom,:,1)=c1;
 O(top:bottom,:,2)=c2;
 O(top:bottom,:,3)=c3;
-O(top:bottom,(left-offset):(right-offset),:)=I(top:bottom,left:right,:);
-
+size(O)
+size(I)
+offset
+if (offset>0)
+    O(top:bottom,1:(size(O,2)-offset),:)=I(top:bottom,1+offset:size(I,2),:);
+else if (offset<=0)
+    O(top:bottom,1-offset:size(O,2),:)=I(top:bottom,1:(size(I,2)+offset),:);
+    end
+end
+        
 % If initially given a file name, resave the image to that file
 if ~isempty(saveto)
     imwrite(O,saveto);

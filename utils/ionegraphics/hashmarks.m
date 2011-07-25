@@ -30,15 +30,17 @@ function I=hashmarks(im,mask,color,space,width,dir,filename)
 if size(im,3)==1
     nsg(im);
     outputfig('force','tmpim.png');
-    centerfigure('tmpim.png');
+    %centerfigure('tmpim.png');
     im=imread('tmpim.png');
+    %image(im);
     delete('tmpim.png');
 end
 if size(mask,3)==1
     mtnicesurfgeneral(mask);
     outputfig('force','tmpmask.png');
-    centerfigure('tmpmask.png');
+    %centerfigure('tmpmask.png');
     mask=imread('tmpmask.png');
+    %image(mask);
     delete('tmpmask.png');
     % Default max color for NSG
     c1=0.0*256;

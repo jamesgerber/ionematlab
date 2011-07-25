@@ -10,6 +10,8 @@ function A=mergedata(background,blon,blat,data,dlon,dlat,method)
 % same lat-long values as background.
 % mergedata(background,blon,blat,data,dlon,dlat,method) will use 2D
 % interpolation method 'method'
+% mergedata(background,data) will do it without lats and longs if the grids
+% are the same size
 %
 % NOTES
 % The extent of data must be within the extent of background. NaNs will be
@@ -25,7 +27,13 @@ function A=mergedata(background,blon,blat,data,dlon,dlat,method)
 % cropgrid,S.Long,S.Lat,'linear');
 %
 % See Also
-
+if nargin==2
+    tmp=background;
+    background=blon;
+    background(isnan(background))=tmp(isnan(background));
+    A=background;
+    return
+end
 if (nargin<7)
     method='nearest';
 end

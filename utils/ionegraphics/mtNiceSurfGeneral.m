@@ -563,18 +563,22 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         
     end
     ylim=(t2-t1)/100;
+    if ~isempty(titlestring)
     ht=text(0, ylim,titlestring);
     
     UserInterpPreference=callpersonalpreferences('texinterpreter');
     
     set(ht,'interp',UserInterpPreference);
+    end
 else
+    if ~isempty(titlestring)
     ht=text(0,pi/2,titlestring);
     if length(titlestring)>1
         set(ht,'Position',[0 1.635 0]);
     UserInterpPreference=callpersonalpreferences('texinterpreter');
     
     set(ht,'interp',UserInterpPreference);
+    end
     end
     
     
@@ -587,12 +591,12 @@ end
 
 set(fud.DataAxisHandle,'Visible','off');%again to make it current
 %
-
+if ~isempty(titlestring)
 set(ht,'HorizontalAlignment','center');
 set(ht,'FontSize',14)
 set(ht,'FontWeight','Bold')
 set(ht,'tag','NSGTitleTag')
-
+end
 
 hcbtitle=get(fud.ColorbarHandle,'Title');
 set(hcbtitle,'string',[' ' units ' '])

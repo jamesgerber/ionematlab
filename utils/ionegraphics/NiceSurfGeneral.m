@@ -197,11 +197,12 @@ ListOfProperties={
     'colorbarminus','resolution','longlatlines',...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
-    'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'};
+    'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
+    'cbarvisible'};
 
 %% set defaults for these properties
 units='';
-titlestring='';
+titlestring=' ';
 filename='';
 cmap='dark_greens_deep';
 longlatbox=[-180 180 -90 90];
@@ -212,6 +213,7 @@ displaynotes='';
 description='';
 eastcolorbar='off';%
 makeplotdatafile='off';
+cbarvisible='on';
 projection='';  %empty is default
 
 datacutoff=9e9;
@@ -534,7 +536,7 @@ end
 set(gcf,'position',[ 218   618   560   380]);
 set(fud.DataAxisHandle,'Visible','off');
 set(fud.DataAxisHandle,'Position',[0.00625 .2 0.9875 .7]);
-set(fud.ColorbarHandle,'Visible','on');
+set(fud.ColorbarHandle,'Visible',cbarvisible);
 if strcmp(categorical,'on')
     set(fud.ColorbarHandle,'Visible','off');
 end
@@ -594,7 +596,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         
     end
     ylim=(t2-t1)/100;
-    ht=text(0, ylim,titlestring);
+    ht=text(0,ylim,titlestring);
     
     UserInterpPreference=callpersonalpreferences('texinterpreter');
     

@@ -439,6 +439,9 @@ NoDataLandVal=coloraxis(2)+minstep;
 %Any points off of the land mask must be set to ocean color.
 land=LandMaskLogical(Data);
 ii=(land==0);
+size(ii)
+size(Data)
+ii=easyinterp2(ii,size(Data,1),size(Data,2),'nearest');
 Data(ii)=OceanVal;
 
 % no make no-data points above color map to get 'uppermap' (white)

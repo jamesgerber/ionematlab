@@ -1,4 +1,4 @@
-function newmap=StretchColorMap(cmap,cmin,cmax);
+function newmap=StretchColorMap(cmap,cmin,cmax,center);
 %  StretchColorMap - stretch out a colormap 
 %
 %     Use this if data goes from negative to positive but isn't
@@ -21,7 +21,10 @@ function newmap=StretchColorMap(cmap,cmin,cmax);
 %   NiceSurfGeneral(DelYield,NSS)
 %
 
-if cmin*cmax > 0
+if nargin<4
+    center=0;
+end
+if (cmin-center)*(cmax-center) > 0
   error([' cmin cmax the same sign.']);
 end
 
@@ -32,12 +35,12 @@ end
 
 %cmap=finemap(cmap,'','')
 
-[N,dum]=size(cmap);
+[N,~]=size(cmap);
 
 mid=round(N/2);
 
-neg= -cmin/(cmax-cmin);
-pos= cmax/(cmax-cmin);
+neg= -(cmin-center)/(cmax-cmin);
+pos= (cmax-center)/(cmax-cmin);
 
 cmapneg=cmap(1:mid,1:3);
 cmappos=cmap(mid:end,1:3);
@@ -55,4 +58,4 @@ else
  ii=floor(linspace(1,mid,mid*(neg/pos)));
   tmp=cmap(ii,1:3);
   newmap=[tmp; cmappos];
-  end
+end

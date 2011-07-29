@@ -28,6 +28,7 @@ GDDBaseDir='GDDLibrary/';
 TMILocation='./TMI.mat';
 AnnualMeanPrec='./AnnualMeanPrec.mat';
 SaveFileNameBaseDir='./ClimateLibrary';
+DataYear=2000;
 GetBinsElsewhere='';
 if nargin==1
     expandstructure(FlagStructure)  %Cheating with matlab.  step through with
@@ -58,11 +59,11 @@ for N=Nspace;
             
             
             
-            disp(['Working on ' cropname]);
+            disp(['Working on ' cropname ' for ' int2str(DataYear)]);
             
             
             %% read in crop netCDF file, extract area fraction.
-            CropData=getdata(cropname);
+            CropData=getcropdata(cropname,DataYear);
             
             
             AreaFraction=CropData.Data(:,:,1);
@@ -94,11 +95,21 @@ for N=Nspace;
                     HeatFlag='GSL'
             end
             
-            FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
-                'x' int2str(N) '_RevP'];
+            if DataYear==2000
+                FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                    'x' int2str(N) '_RevP'];
+                
+                NoBaseFileName=['/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                    'x' int2str(N) '_RevP'];
+            else
+                FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' int2str(DataYear) '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                    'x' int2str(N) '_RevP'];
+                
+                NoBaseFileName=['/ClimateMask_' cropname '_' int2str(DataYear) '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                    'x' int2str(N) '_RevP'];
+            end
             
-            NoBaseFileName=['/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
-                'x' int2str(N) '_RevP'];
+            
             
             if exist([FileName '.mat'])==2
                 disp(['Already have ' FileName '.mat'])

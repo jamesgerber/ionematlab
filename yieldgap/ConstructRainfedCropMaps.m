@@ -1,8 +1,11 @@
 function ConstructRainfedCropMaps
 %  CONSTRUCTRAINFEDCROPMAPS
+
+
+
 for IP=[10];
     
-    for jCrop=[16 ];
+    for jCrop=[1:16 ];
         jCrop
         switch jCrop
             case 1
@@ -67,7 +70,7 @@ for IP=[10];
 %         
         
         
-        
+        DataYear=2005;
         
         ncid = netcdf.open([iddstring '/MIRCA2000_processed/mirca2000_crop' ...
             int2str(jCrop) '.nc'], 'NC_NOWRITE');
@@ -78,8 +81,8 @@ for IP=[10];
         disp(['Number of rainfed points / cutoff=' num2str(IP) ])
         length(find(iirainfed))
         
-        S=OpenNetCDF([iddstring '/Crops2000/crops/' name '_5min.nc']);
-        
+    %    S=OpenNetCDF([iddstring '/Crops2000/crops/' name '_5min.nc']);
+        S=getcropdata(name,2005);
         %% Rainfed crops
         a=S.Data(:,:,1);
         y=S.Data(:,:,2);
@@ -102,8 +105,8 @@ for IP=[10];
         DAS=rmfield(DAS,'Long');
         DAS=rmfield(DAS,'Lat');
         DAS.Title=['Rainfed ' name '(Irrigation < ' num2str(IP) ];
-        
-        writenetcdf(S.Long,S.Lat,S.Data,[name 'rainfed' num2str(IP) ],[ name 'RF' num2str(IP) '_5min.nc'],DAS)
+        DAS.Description1=' 2005 Data but 2000 MIRCA irrigation data ';
+        writenetcdf(S.Long,S.Lat,S.Data,[name 'rainfed' num2str(IP) ],[ name 'RF' num2str(IP) '_' int2str(DataYear) '_5min.nc'],DAS)
         %%  Irrigated crops
         S=OpenNetCDF([iddstring '/Crops2000/crops/' name '_5min.nc']);
         a=S.Data(:,:,1);
@@ -128,7 +131,7 @@ for IP=[10];
         DAS=rmfield(DAS,'Lat');
         DAS.Title=['Irrigated ' name '(Irrigation > ' num2str(IP) ];
         
-        writenetcdf(S.Long,S.Lat,S.Data,[name 'irrigated' num2str(IP) ],[ name 'IRR' num2str(IP) '_5min.nc'],DAS)
+        writenetcdf(S.Long,S.Lat,S.Data,[name 'irrigated' num2str(IP) ],[ name 'IRR' num2str(IP) '_' int2str(DataYear) '_5min.nc'],DAS)
     end
 end
 

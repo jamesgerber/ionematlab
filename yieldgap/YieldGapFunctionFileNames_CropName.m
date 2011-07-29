@@ -14,12 +14,16 @@ function [FileName,DirName]=YieldGapFunctionFileNames_CropName(FS,OutputDirBase)
 %   FS.WetFlag
 %   FS.PercentileForMaxYield;
 %
+%   Optional Field
+%   FS.DataYear
+%
 %  example
 %   FS.ClimateSpaceRev='K';
 %   FS.CropNames='maize';
 %   FS.ClimateSpaceN=10;
 %   FS.WetFlag='prec';
 %   FS.PercentileForMaxYield=90;
+%   FS.DataYear=2000;
 %   OutputDirBase=[iddstring '/ClimateBinAnalysis/YieldGap/'];
 %   FileName=YieldGapFunctionFileNames_CropName(FS,OutputDirBase);
 %
@@ -32,6 +36,8 @@ end
 cropname=makesafestring(char(crop));
 
 GDDBase=GetGDDBaseTemp(cropname);
+
+
 
 % Revision
 switch FS.ClimateSpaceRev
@@ -70,11 +76,21 @@ try
                 '_soilrev' FS.csqirev ...
                 '_' num2str(FS.ClimateSpaceN)  '_' FS.WetFlag '.mat'];
         otherwise  %{
-              FileName=[OutputDirBase '/' SubDir '/YieldGap_' cropname '_' ...
-                  'BaseGDD_' GDDBase '_' ...
-                'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
-                '_'  ClimateSpaceDescription ...
-                '_' num2str(FS.ClimateSpaceN) 'x' num2str(FS.ClimateSpaceN) '_' FS.WetFlag '.mat'];
+            if isfield(FS,'DataYear')
+                FileName=[OutputDirBase '/' SubDir '/YieldGap_' cropname '_' ...
+                    int2str(FS.DataYear) '_' ...
+                    'BaseGDD_' GDDBase '_' ...
+                    'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
+                    '_'  ClimateSpaceDescription ...
+                    '_' num2str(FS.ClimateSpaceN) 'x' num2str(FS.ClimateSpaceN) '_' FS.WetFlag '.mat'];
+            else
+                FileName=[OutputDirBase '/' SubDir '/YieldGap_' cropname '_' ...
+                    'BaseGDD_' GDDBase '_' ...
+                    'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
+                    '_'  ClimateSpaceDescription ...
+                    '_' num2str(FS.ClimateSpaceN) 'x' num2str(FS.ClimateSpaceN) '_' FS.WetFlag '.mat'];
+            end
+            
     end
     
     DirName=[OutputDirBase '/' SubDir '/'];

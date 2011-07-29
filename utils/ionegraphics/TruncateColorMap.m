@@ -56,6 +56,10 @@ else
 % ii=floor(linspace(1,mid,mid*(neg/pos)));
   ii=floor(mid*(1-neg/pos):mid);
 
+  if ii(1)==0
+      ii=ii(2:end);
+  end
+  
   tmp=cmap(ii,1:3);
 
   newmap=[tmp; cmappos];

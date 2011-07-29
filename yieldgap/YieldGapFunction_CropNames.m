@@ -24,6 +24,7 @@ function OutputStructure=YieldGapFunction_CropNames(FlagStructure)
 %  FS.AlternateCropCsv=[];
 %  FS.CropBasePath=[];
 %  FS.ForceRedo=0;
+%  FS.DataYear=2000;
 %  OutputStructure=YieldGapFunction(FS);
 %
 %  FS.csqirev='Ar1';
@@ -205,7 +206,7 @@ if QuietFlag==0
 end
 
 %% read in crop netCDF file, extract area fraction.
-CropData=getdata(cropname);
+CropData=getcropdata(cropname,DataYear);
 AreaFraction=CropData.Data(:,:,1);
 AreaFraction(AreaFraction>1e10)=NaN;
 

@@ -4,6 +4,11 @@ if nargin < 2
     map=colormap;
 end
 
+if ischar(map)
+    map=finemap(map,'','');
+end
+
+
 endcolor=map(end-1,:);
 
 startcolor=map(2,:);

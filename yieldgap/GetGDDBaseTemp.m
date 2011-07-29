@@ -13,10 +13,40 @@ end
 
 iirow=strmatch(crop,C.CROPNAME,'exact');
 
-if numel(iirow)~=1
-   T='0';
-   warning(['found multiple (or zero) matches for cropname ' crop ' in ' mfilename]);
-   return
+if numel(iirow)==0
+    % is this 'hi-income' or 'lo-income?'
+    s=findstr(lower(crop),'loincome');
+    if numel(s)==1
+        redcrop=strrep(lower(crop),'loincome','');
+        T=GetGDDBaseTemp(redcrop);
+        return
+    end
+    
+    s=findstr(lower(crop),'hiincome');
+    if numel(s)==1
+        redcrop=strrep(lower(crop),'hiincome','');
+        T=GetGDDBaseTemp(redcrop);
+        return
+    end
+    
+    s=findstr(crop,'RF');
+    if numel(s)==1
+        redcrop=crop(1:end-4);
+        T=GetGDDBaseTemp(redcrop);
+        return
+    end
+    
+    s=findstr(crop,'IRR');
+    if numel(s)==1
+        redcrop=crop(1:end-5);
+        T=GetGDDBaseTemp(redcrop);
+        return
+    end
+    
+    T='0';
+    warning(['found multiple (or zero) matches for cropname ' crop ' in ' mfilename]);
+    return
+    
 end
 
 

@@ -1,53 +1,57 @@
-function ClimateBinPlot(BinMatrix)
+function ClimateBinPlot(BinMatrix,NSS)
 %load ClimateMask_Maize_GDD8_prec_5x5_RevH
 
 
 a=BinMatrix;
 a(a==0)=NaN;
 
-NSS.cmap='sixteencolors';
-NSS.TitleString='Climate Zones. Maize.';
-NSS.units='dry/cold to warm/wet';
+
+if nargin==1
+    
+    NSS.TitleString='Climate Zones.';
+end
 %NiceSurfGeneral(BinMatrix,NSS)
 
 
 
+N=sqrt(length(unique(BinMatrix))-1)
 
 
-r=[1 0 0]
-n=[1 .5 0]
-p=[1 0 1];
-g=[0 1 0];
-c=[1 0 1];
-b=[0 0 1];
 
-vect{1}=g;
-vect{2}=b;
-vect{3}=p;
-vect{4}=n;
-vect{5}=r;
+%% in this section, need to construct a 10x10 set of colors
+%% first a linear colormap
 
-s=linspace(1,.25,5);
+newmap=[];
+linearcmap=finemap('red_yellow_blue_deep','','');
+linearcmap=finemap('revkbbluered','','');
+linearcmap=finemap('jet','','');
 
-bb=ones(20,3);%building block
-bc=ones(20,1);%building column
+s=round(linspace(1,length(linearcmap),N))
 
-cmap=[];
-% % for j=1:5
-% %   cv=vect{j};
-% % 
-% %   NewBlock=[cv(1)*bc cv(2)*bc cv(3)*bc];
-% %   for k=1:5
-% %   cmap=[cmap ; NewBlock*s(k)];
-% %   end
-% % end
-[cmap,shortmap]=mapbyhand;
 
-newmap=finemap(cmap);%,'emblue','white');
 
-NSS.coloraxis=[1 25];
+
+for j=1:N
+
+    for k=1:N
+
+    basecolor=linearcmap(s(j),1:3);
+        modified_color=ColorFadeFunction(basecolor,k,N);
+        shortmap( (j-1)*N+k,1:3) = modified_color;
+        for m=1:16
+            newmap(end+1,1:3)=modified_color;
+        end       
+    end
+end
+
+
+newmap=finemap(newmap,'','');
+
+
+
+NSS.coloraxis=[1 N^2];
 NSS.cmap=newmap;
-NSS.TitleString='Climate Zones. Maize.';
+
 NSS.uppermap='white';
 %NSS.units='dry/cold to warm/wet';
 a=double(BinMatrix);
@@ -62,21 +66,13 @@ set(fud.ColorbarHandle,'visible','off')
 
 
 
-
-z=[1:5;6:10;11:15;16:20;21:25];
-a=[1 1 1 1 1];
-y=[a;2*a;3*a;4*a;5*a;]
-x=y'
-
-
-
 hax=axes('position',[.025 .2 .3 .3],'tag','tmpaxis');%,
 
-x=1:5;
-y=1:5;
-for j=1:5
-  for k=1:5
-      m=(j-1)*5+k;
+x=1:N;
+y=1:N;
+for j=1:N
+  for k=1:N
+      m=(j-1)*N+k;
    % cv=vect{j};
    % color=cv*s(k);
     xvect=[x(j)-.5 ,x(j)+.5, x(j)+.5, x(j)-.5, x(j)-.5];
@@ -86,15 +82,14 @@ for j=1:5
   end
 end
 
-zeroxlim(0,6);
-zeroylim(0,6);
+zeroxlim(0,N+1);
+zeroylim(0,N+1);
 
 set(gca,'visib','off')
-hx=text(3,0.1,'  GDD  ');
-set(hx,'FontSize',12,'HorizontalAlignment','Center','fontweight','bold');
-hy=text(0.125,3,'  precipitation  ');
-set(hy,'FontSize',12,'HorizontalAlignment','Center','Rotation',90,'fontweight','bold');
-
+hx=text(N/2+1,0.06125,'  GDD  ');
+set(hx,'FontSize',30,'HorizontalAlignment','Center');
+hy=text(0.06125,N/2+1,'  precipitation  ');
+set(hy,'FontSize',30,'HorizontalAlignment','Center','Rotation',90);
 
 set(gca,'PlotBoxAspectRatioMode','manual')
 
@@ -102,11 +97,11 @@ set(gca,'PlotBoxAspectRatioMode','manual')
 
 figure
 
-x=1:5;
-y=1:5;
-for j=1:5
-  for k=1:5
-      m=(j-1)*5+k;
+x=1:N;
+y=1:N;
+for j=1:N
+  for k=1:N
+      m=(j-1)*N+k;
    % cv=vect{j};
    % color=cv*s(k);
     xvect=[x(j)-.5 ,x(j)+.5, x(j)+.5, x(j)-.5, x(j)-.5];
@@ -116,75 +111,28 @@ for j=1:5
   end
 end
 
+zeroxlim(0,N+1);
+zeroylim(0,N+1);
 
 set(gca,'visib','off')
-hx=text(3,0.125,'  GDD  ');
+hx=text(N/2+1,0.06125,'  GDD  ');
 set(hx,'FontSize',30,'HorizontalAlignment','Center');
-hy=text(0.125,3,'  precipitation  ');
+hy=text(0.06125,N/2+1,'  precipitation  ');
 set(hy,'FontSize',30,'HorizontalAlignment','Center','Rotation',90);
 
+function newcolor= ColorFadeFunction(basecolor,k,N); 
+% have color fade.  when k=1 newcolor=basecolor;
+kslide=linspace(1,.5,N)
+newcolor=basecolor*kslide(k);
 
-%OutputFig('Force','ClimateBinLegend_5x5','-r75')
+%% fade to white
 
-function [cmap,shortmap]=mapbyhand;
+newcolor=basecolor.^(1/k);
 
-% these colors taken from colorbrewer2
-% blue
-blue=[
-    158 202 225
-    107 174 214
-    66 146 198
-    33 113 181
-    8 69 148];
+alpha=(N+1-k)/N;  % starts at 1, goes to 1.N
 
-green=[
-    161 217 155
-    116 196 118
-    65 171 93
-    35 139 69
-    0 90 50];
+alpha=sqrt(alpha)
 
-purple=[
-    188 189 220
-    158 154 200
-    128 125 186
-    106 81 163
-    74 20 134];
-
-orange=[
-    253 174 107
-    253 141 60
-    241 105 19
-    217 72 1
-    140 45 4];
-
-red=[
-    252 146 114
-    251 106 74
-    239 59 44
-    203 24 29
-    153 0 13];
-
-map=[purple;blue;green;orange;red]/255;
-    
-
-
-newmap=[];
-
-for j=1:length(map)
-    for k=1:16
-        newmap(end+1,1:3)=map(j,1:3);
-        %   newmap(end+1:end+16,2)=map(j,2);
-        %   newmap(end+1:end+16,3)=map(j,3);
-    end
-end
-shortmap=map;
-cmap=newmap;
-
-
-    
-
-
-
+newcolor=basecolor*(alpha)+ [1 1 1]*(1-alpha);
 
 

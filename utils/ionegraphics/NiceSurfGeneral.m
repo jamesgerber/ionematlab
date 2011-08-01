@@ -826,7 +826,7 @@ for j=1:length(a)
         case {'addcolorbarminus','colorbarfinalminus'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'colorbarminus',ThisValue);
-           case {'triangles','froufrou'}
+        case {'triangles','froufrou','panoply','pan'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'panoplytriangles',ThisValue); 
     end

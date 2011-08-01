@@ -15,7 +15,9 @@ end
 switch username
     case {'muell512','cass0131','oconn568'   }
         IoneDataDir=['~/Library/IonE/data/'];
-    case 'jsgerber'
+    case 'kbrauman'
+        IoneDataDir=['/Library/IonEdata/'];
+   case 'jsgerber'
         IoneDataDir=['/Library/IonE/data/'];
     case 'mattj'
         IoneDataDir=['C:\Users\mattj\Documents\UMN\ionedata\'];

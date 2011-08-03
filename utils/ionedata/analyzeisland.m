@@ -1,6 +1,17 @@
 function [rv,cv,area,edge]=analyzeisland(r,c,A)
-% recursion is technically avoided thanks to use of actual strings to store
-% a list of what would otherwise be recursive commands
+% [rv,cv,area,edge]=analyzeisland(r,c,A) - find the row and col indices,
+% area, and perimeter of the contiguous region surrounding a point in an
+% array
+%
+% SYNTAX
+% [rv,cv,area,edge]=analyzeisland(r,c,A) returns rv and cv as row and col
+% indices vectors, area as the number of points in the contiguous region,
+% and edge as the length of the perimeter.
+%
+% recursion is technically avoided thanks to use of integer vectors to save
+% a list of what would otherwise be recursive commands; this means that it
+% can run on any size array when otherwise MATLAB would have a recursion
+% depth limit error
 
 core=A(r,c);
 check=zeros(size(A));

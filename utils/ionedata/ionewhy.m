@@ -76,7 +76,7 @@ switch fix(4*rand)
 end
 
 function a = proper_noun
-switch fix(11*rand) 
+switch fix(13*rand) 
     case 0,    a = 'Jon';
     case 1,    a = 'Jamie';
     case 2,    a = 'Nathan';
@@ -88,6 +88,8 @@ switch fix(11*rand)
     case 8,    a = 'Emily';
     case 9,    a = 'Kate';
     case 10,   a = 'Ashley';
+    case 11,   a = 'Andrew';
+    case 12,   a = 'Peder';
     end
 
 function a = noun_phrase

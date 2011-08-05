@@ -1,4 +1,15 @@
 function OS=smartsurf(data,S)
+% SMARTSURF - NiceSurfGeneral wrapper with intelligent zoom
+%
+% SYNTAX
+% smartsurf(data) will zoom to the not-NaNs in data
+%
+% smartsurf(data,S) passes structure S to nsg along with data
+%
+% EXAMPLE
+% smartsurf(easyinterp2(zeros(20)/magic(20)==5,4320,2160))
+%
+
 vert=max(data,[],1);
 horiz=max(data,[],2);
 vert=find(~isnan(vert));

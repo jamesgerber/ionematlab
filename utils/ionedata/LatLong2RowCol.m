@@ -10,8 +10,8 @@ function [row,col]=LatLong2RowCol(latpos,longpos,Lat,Long)
 %     length(Lat)/length(Long).
 %
 if nargin==3
-    Long=max(size(Lat));
-    Lat=min(size(Lat));
+    Long=size(Lat,1);
+    Lat=size(Lat,2);
 end
 if ~isscalar(Long)
     Long=length(Long);

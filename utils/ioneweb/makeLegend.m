@@ -1,4 +1,6 @@
 function makeLegend(cmap,crop,yield,cmin,cmax,tmin,tmax)
+% MAKELEGEND - make a legend for a KML doc
+%
 format long g;
 tmps=strrep(strrep(crop,'nes', ' (other)'),'for',' (for silage)');
 fig=figure('units','pixels','position',[500 500 300 300])

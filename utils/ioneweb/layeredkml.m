@@ -3,7 +3,8 @@ function layeredkml(image,name)
 %
 %  Syntax
 %
-%    finemap(colormap,lowercolor,uppercolor);
+%  layeredkml(image,name) where image is an rgb image and name
+%  serves as a title and a directory name, makes a .kmz of image
 
 mkdir(name);
 mkdir(name,'file');

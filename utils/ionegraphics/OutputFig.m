@@ -1,9 +1,9 @@
-function FileName=OutputFig(Hfig,FileName,ResFlag)
+function FileName=OutputFig(Hfig,FileName,ResFlag,transparent)
 % OutputFig - output a figure as a .png
 %
 % SYNTAX
 % OutputFig('Force') will force priting w/o querying user.
-% 
+% OutputFig(gcf,'FileName','-r300',1) will make background transparent
 % OutputFig('Force','FileName')
 % OutputFig('Force','FileName','-r150')
 % OutputFig(gcf,'FileName')
@@ -54,6 +54,20 @@ if nargin<3
         ResFlag=ResFlagcheck;
     end
 end
+
+if (nargin>=4&&transparent)
+    repeat=1;
+    while repeat
+    bgc=[rand rand rand];
+    colors=colormap;
+    tmp(:,1)=closeto(bgc(1),colors(:,1),.05);
+    tmp(:,2)=closeto(bgc(2),colors(:,2),.05);
+    tmp(:,3)=closeto(bgc(3),colors(:,3),.05);
+    repeat=max(sum(tmp,2)==3);
+    end
+    set(gcf,'InvertHardcopy','off')
+end
+    
 
 % Is this figure made by IonESurf?  If so, expand the data axis
 fud=get(Hfig,'UserData');
@@ -112,4 +126,10 @@ if isequal(get(Hfig,'tag'),'IonEFigure')
     set(fud.DataAxisHandle,'position',storepos);
 end
 
+if (nargin>=4&&transparent)
+    im=imread(FileName);
+    transparent=im(:,:,1)==im(1,1,1)&im(:,:,2)==im(1,1,2)&im(:,:,3)==im(1,1,3);
+    imwrite(im,FileName,'Alpha',double(~transparent));
+end
+    
 showui;

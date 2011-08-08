@@ -783,6 +783,18 @@ switch lower(plotarea)
     case {'medit2north'}
         longlatbox=[0 96 35 72];
         filename=[filename 'medit2north'];
+    case {'eurocentralasia'}
+        longlatbox=[-10 96 35 60];
+        filename=[filename 'eurocentralasia'];
+        %            ylim=;
+    case {'eurasia'}
+        longlatbox=[-10 125 -13 60];
+        filename=[filename 'eurasia'];
+        %            ylim=;
+    case {'medit2north'}
+        longlatbox=[0 96 35 72];
+        filename=[filename 'medit2north'];
+        %            ylim=;
     otherwise
         error(['Don''t recognize plotarea ' plotarea]);
         

@@ -21,6 +21,8 @@ switch username
         IoneDataDir=['/Library/IonE/data/'];
     case 'mattj'
         IoneDataDir=['C:\Users\mattj\Documents\UMN\ionedata\'];
+    case 'pcwest'
+       IoneDataDir= '~/Data/';
     otherwise
         IoneDataDir=['/Library/IonE/data/'];
 end

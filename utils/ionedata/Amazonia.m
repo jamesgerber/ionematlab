@@ -4,9 +4,13 @@ function output=Amazonia;
 %  Syntax
 %
 %      LogicalMatrix=Amazonia - returns
+%  
+%  Example
 %
-
-persistent LogicalMatrix
+%     x=Amazonia;
+%     whos x
+%     fastsurf(x);
+%
 
 load([iddstring '/misc/watersheds/globe1.mat'])
 

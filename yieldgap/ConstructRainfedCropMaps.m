@@ -5,7 +5,7 @@ function ConstructRainfedCropMaps
 
 for IP=[10];
     
-    for jCrop=[1:16 ];
+    for jCrop=[1];
         jCrop
         switch jCrop
             case 1

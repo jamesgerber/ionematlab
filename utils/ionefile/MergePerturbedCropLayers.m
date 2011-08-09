@@ -38,7 +38,7 @@ end
 
 thiscrop='wheat'
 areafile=OpenNetCDF('Global_Wheat_2005_area_withperturb_Jan2011.nc');
-yieldfile=OpenNetCDF('Global_Wheat_2005_yield_withperturb_Jan2011.nc');
+yieldfile=OpenNetCDF('Global_Wheat_2005_yield_withperturb_Jan2011_updated.nc');
 DAS.areaversion=areafile.version;
 DAS.yieldversion=yieldfile.version;
 MergePerturbedCropLayers(thiscrop,areafile.Data,yieldfile.Data,2005);

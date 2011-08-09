@@ -10,7 +10,10 @@ function output=Amazonia;
 %     x=Amazonia;
 %     whos x
 %     fastsurf(x);
-%
+%     
+%   Example 2 To create logical after ^^
+%     
+%     y = logical(x);
 
 load([iddstring '/misc/watersheds/globe1.mat'])
 

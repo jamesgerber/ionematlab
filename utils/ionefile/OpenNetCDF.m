@@ -29,7 +29,7 @@ if nargin==0
     CallUIGetfile=1;
 else
     
-    FileName=FixExtension(FileName,'.nc');
+    FileName=fixextension(FileName,'.nc');
     
     % see if we can figure out the matlab path file
     [pathstr,name,ext]=fileparts(FileName);

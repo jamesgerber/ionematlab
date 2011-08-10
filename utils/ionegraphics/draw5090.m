@@ -1,7 +1,7 @@
 function draw5090(Data)
 % DRAW5090 draw a figure highlighting data at the 50th and 90th percentiles
 %
-%   fill5090(Data) plots Data on a Robinson projection and fills in all
+%   draw5090(Data) plots Data on a Robinson projection and fills in all
 %   cells at the 50th and 90th percentiles of the nonzero points with
 %   solid color.
 %

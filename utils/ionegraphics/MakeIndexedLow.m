@@ -1,6 +1,15 @@
 function [IM CMAP]=MakeIndexedLow(Image,q)
-%Image is a normal double rgb image, outputs an indexed image and its
-%associated colormap. Slow, but can produce nicely-compressed results.
+% MAKEINDEXEDLOW - using simple compression, outputs an indexed image w/
+% associated colormap. Slow, but can produce nicely-compressed results.
+%
+% SYNTAX
+% [IM CMAP]=MakeIndexed(Image,q) returns array IM and colormap CMAP
+% representing rgb image Image, compressed to degree q (where q is
+% the maximum color range to which a value may be assigned - between
+% 0 and 1, with 0.001 very low compression and 0.5 very high.
+% 
+% If memory is not an issue or time is, use MakeIndexed.
+
 Image=ScaleToDouble(Image);
 IM=zeros(size(Image,1),size(Image,2),'double');
 CNext=1;

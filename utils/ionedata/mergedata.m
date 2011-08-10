@@ -26,7 +26,7 @@ function A=mergedata(background,blon,blat,data,dlon,dlat,method)
 % result=mergedata(countries.Data,countries.Long,countries.Lat, ...
 % cropgrid,S.Long,S.Lat,'linear');
 %
-% See Also
+
 if nargin==2
     tmp=background;
     background=blon;

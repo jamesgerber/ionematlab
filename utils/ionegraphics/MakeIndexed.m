@@ -1,6 +1,13 @@
 function [IM CMAP]=MakeIndexed(Image)
-%Image is a normal rgb image, outputs an indexed image and its associated
-%colormap. Inefficient, but some functions can only use indexed images.
+% MAKEINDEXED - create an indexed version of a given rgb image
+% with no loss of quality.
+%
+% SYNTAX
+% [IM CMAP]=MakeIndexed(Image) returns array IM and colormap CMAP
+% representing rgb image Image.
+%
+% Use makeindexedlow if the image quality may be reduced and mem
+% is an issue.
 CMAP=zeros(size(Image,1)*size(Image,2),3);
 IM=zeros(size(Image,1),size(Image,2));
 CNext=1;

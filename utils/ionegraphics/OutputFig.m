@@ -21,7 +21,7 @@ if nargin>0
                 Hfig=gcf;
             case 'Initialize'
                 uicontrol('String','OutputFig','Callback', ...
-                    'OutputFig;','position',NextButtonCoords);  
+                    'OutputFig(gcf,'''',''-r300'',-1);','position',NextButtonCoords);  
                 Hfig=gcf;
                 ForcePlots=0;
                 return
@@ -65,7 +65,7 @@ if (nargin>=4&&transparent)
     tmp(:,3)=closeto(bgc(3),colors(:,3),.05);
     repeat=max(sum(tmp,2)==3);
     end
-    set(gcf,'InvertHardcopy','off')
+    set(gcf,'InvertHardcopy','off');
 end
     
 
@@ -126,10 +126,18 @@ if isequal(get(Hfig,'tag'),'IonEFigure')
     set(fud.DataAxisHandle,'position',storepos);
 end
 
-if (nargin>=4&&transparent)
+if (nargin>=4&&transparent==1)
     im=imread(FileName);
     transparent=im(:,:,1)==im(1,1,1)&im(:,:,2)==im(1,1,2)&im(:,:,3)==im(1,1,3);
     imwrite(im,FileName,'Alpha',double(~transparent));
+end
+if (nargin>=4&&transparent==-1)
+    t=get(gcbf,'UserData');
+    if t.transparent
+        im=imread(FileName);
+        transparent=im(:,:,1)==im(1,1,1)&im(:,:,2)==im(1,1,2)&im(:,:,3)==im(1,1,3);
+        imwrite(im,FileName,'Alpha',double(~transparent));
+    end
 end
     
 showui;

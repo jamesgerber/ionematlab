@@ -198,7 +198,7 @@ ListOfProperties={
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
     'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
-    'cbarvisible'};
+    'cbarvisible','transparent','textcolor'};
 
 %% set defaults for these properties
 units='';
@@ -238,6 +238,8 @@ longlatlines='on';
 categorical='off';
 categoryranges={};
 categoryvalues={};
+transparent=0;
+textcolor=[0 0 0];
 %%now pull property values out of structure
 
 
@@ -517,6 +519,7 @@ fud=get(gcf,'UserData');
 fud.NiceSurfLowerCutoff=(cmin+minstep/2);
 fud.NiceSurfUpperCutoff=(cmax-minstep/2);
 fud.QuickVersion=0;
+fud.transparent=transparent;
 set(gcf,'UserData',fud);
 
 if fud.MapToolboxFig==1
@@ -549,11 +552,14 @@ drawnow
 
 if isequal(eastcolorbar,'off')
     if fud.MapToolboxFig==0
-        set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02])
+        set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02]);
     else
         delx= 0.7558;
         x0= 1/2*(1-delx);
-        set(fud.ColorbarHandle,'Position',[x0 0.10 delx 0.02568])
+        set(fud.ColorbarHandle,'Position',[x0 0.10 delx 0.02568],'XColor',textcolor,'YColor',textcolor)
+        secondbar= colorbar('Location','South','XTickLabel',...
+            {''});
+        set(secondbar,'Position',[x0 0.10 delx 0.02568],'YColor',[0 0 0])
     end
 else
     error('haven''t yet implemented eastcolorbar')
@@ -628,12 +634,13 @@ set(ht,'HorizontalAlignment','center');
 set(ht,'FontSize',14)
 set(ht,'FontWeight','Bold')
 set(ht,'tag','NSGTitleTag')
-
+set(ht,'Color',textcolor)
 
 hcbtitle=get(fud.ColorbarHandle,'Title');
 set(hcbtitle,'string',[' ' units ' '])
 set(hcbtitle,'fontsize',12);
 set(hcbtitle,'fontweight','bold');
+set(hcbtitle,'Color',textcolor);
 %cblabel(Units)
 
 
@@ -681,6 +688,7 @@ MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
 
 OS.Data=single(OS.Data);
 OS.cmap=cmap;
+
 
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
@@ -783,18 +791,6 @@ switch lower(plotarea)
     case {'medit2north'}
         longlatbox=[0 96 35 72];
         filename=[filename 'medit2north'];
-    case {'eurocentralasia'}
-        longlatbox=[-10 96 35 60];
-        filename=[filename 'eurocentralasia'];
-        %            ylim=;
-    case {'eurasia'}
-        longlatbox=[-10 125 -13 60];
-        filename=[filename 'eurasia'];
-        %            ylim=;
-    case {'medit2north'}
-        longlatbox=[0 96 35 72];
-        filename=[filename 'medit2north'];
-        %            ylim=;
     otherwise
         error(['Don''t recognize plotarea ' plotarea]);
         

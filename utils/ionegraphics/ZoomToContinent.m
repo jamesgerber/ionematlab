@@ -92,7 +92,7 @@ switch(InputFlag)
      else
      if CanMap==1
          setm(UD.DataAxisHandle,'maplonlimit',[alims(1) alims(2)]);
-         setm(UD.DataAxisHandle,'maplatlimit',[alims(3) alims(4)])
+         setm(UD.DataAxisHandle,'maplatlimit',[alims(3) alims(4)]);
      else
          axis(UD.DataAxisHandle,alims);
      end

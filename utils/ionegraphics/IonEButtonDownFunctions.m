@@ -38,113 +38,72 @@ switch(InputFlag)
             otherwise
                 error(['syntax error in ' mfilename])
         end
-        
-    case 'Import';
-        ThisFig =varargin{2};
-        x=varargin{3};
-        y=varargin{4};
-        UDS=get(ThisFig,'UserData');
-        if (UDS.MapToolboxFig==1)
-            [b1 a1]=getRowCol(UDS.Lat,UDS.Long,y,x);
-            z=UDS.Data(a1,b1);
-            Scale=1;
-        else
-            [a1 b1]=getRowCol(UDS.Lat,UDS.Long,y,x);
-            z=UDS.Data(b1,a1);
-            Scale=UDS.ScaleToDegrees;
-        end
-        [CountryNumbers,CountryNames]=...
-            GetCountry5min(x*Scale,y*Scale);
-        CountryName=CountryNames{1};
-%         ii=find(CountryName==',');
-%         if ~isempty(ii)
-%             CountryName=CountryName(1:(ii(1)-1));
-%         end
-     
-        
-        ht=outputtoionefigureconsole(UDS,CountryName,z,x,y);
-
-        
-        
-%         %%% now set text in the console
-%         % first delete old text
-%         h=findobj('Tag','IonEConsoleText');
-%         
-%         %now new text
-%         hc=UDS.ConsoleAxisHandle;
-%         axes(hc)
-%         set(hc,'xlim',[0 1]);
-%         set(hc,'ylim',[0 1]);
-%         ht=text(0.25,.5,['Country=' CountryName]);
-%         set(ht,'Tag','IonEConsoleText');
-%         ht=text(0.5,.5,['Value = ' num2str(z)]);
-%         set(ht,'Tag','IonEConsoleText');
-%         ht=text(0.75,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
-%         set(ht,'Tag','IonEConsoleText');
-%         axes(UDS.DataAxisHandle);  %make data axis handle current
-%          
 end
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PointSummaryButtonDownCallback   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function PointSummaryButtonDownCallback(src,event) 
+function PointSummaryButtonDownCallback(src,event)
+
 if strcmp(get(src,'SelectionType'),'normal')
-    UDS=get(gcbf,'UserData');
-    if (UDS.MapToolboxFig==1)
-        pt=gcpmap;
-        y=pt(1,1);
-        x=pt(1,2);
-        [b1 a1]=getRowCol(UDS.Lat,UDS.Long,y,x);
-        z=UDS.Data(a1,b1);
-        Scale=1;
-    else
-        cp=get(UDS.DataAxisHandle,'CurrentPoint');
-        x=cp(1,1);
-        y=cp(1,2);
-        [a1 b1]=getRowCol(UDS.Lat,UDS.Long,y,x);
-        z=UDS.Data(b1,a1);
-        Scale=UDS.ScaleToDegrees;
-    end
-%    [CountryNumbers,CountryNames]=...
-%        GetCountry_halfdegree(x*Scale,y*Scale);
-    [CountryNumbers,CountryNames]=...
-        GetCountry5min(x*Scale,y*Scale);
-
-    CountryName=CountryNames{1};
- %   ii=find(CountryName==',');
- %   if ~isempty(ii)
- %       CountryName=CountryName(1:(ii(1)-1));
- %   end
     
+    UDS=get(gcbf,'UserData');
+    cp=gcpmap;
+    x=cp(1,1);
+    y=cp(1,2);
+    [CountryNumbers,CountryNames]=...
+        GetCountry_halfdegree(y,x);
+    CountryName=CountryNames{1};
+    ii=find(CountryName==',');
+    if ~isempty(ii)
+        CountryName=CountryName(1:(ii(1)-1));
+    end
 
+     [xx,yy,z]=GetSurfaceDataFromAxes;
      
-      ht=outputtoionefigureconsole(UDS,CountryName,z,x,y);
-
-     
-         
-     assignin('base','Country',CountryName);
-     assignin('base','Value',z);
-     assignin('base','Lat',y);
-     assignin('base','Long',x);
-     SystemGlobals
-     ncid=netcdf.open(ADMINBOUNDARYMAP_5min,'NOWRITE');
-     netcdf.inqVar(ncid,0);
-     longC=netcdf.getVar(ncid,0);
-     latC=netcdf.getVar(ncid,1);
-     [r,c]=latlong2rowcol(y,x,latC,longC);
-     ctry=netcdf.getVar(ncid,4);
-     ctry=double(ctry);
-     assignin('base','Province',ctry(r,c));
-     
-     hall=allchild(0); % all handles
-     for j=1:length(hall)
-         if isequal(get(hall(j),'Tag'),'IonEFigure');
-             % we have an "IonEFigure". Resize.
-             ionebuttondownfunctions('Import',hall(j),x,y);
-         end
+     %% section to find this value.  tricky if xx,yy are mappings.  use
+     %% some ugly code...
+     if ~isvector(xx)
+         xxvect=xx(1:numel(xx));
+         yyvect=yy(1:numel(xx));
+         zvect=z(1:numel(z));
+         [dum,ii]=min( (xxvect-x).^2+(yyvect-y).^2);
+         zvalue=z(ii);
+     else
+         [dum,ix]=min((xx-x).^2);
+         [dum,iy]=min((yy-y).^2);
+         zvalue=z(iy,ix);
      end
-         
+     %%% now set text in the console
+     % first delete old text
+     h=findobj('Tag','IonEConsoleText');
+     delete(h);
+     
+     %now new text
+     hc=UDS.ConsoleAxisHandle;
+     axes(hc)
+     set(hc,'xlim',[0 1]);
+     set(hc,'ylim',[0 1]);
+     ht=text(0.02,.2,['Country=' CountryName]);
+     set(ht,'Tag','IonEConsoleText');
+     ht=text(0.02,.4,['Value = ' num2str(zvalue)]);
+     set(ht,'Tag','IonEConsoleText');
+     ht=text(0.02,.6,['Lat = ' num2str(y)]);
+     set(ht,'Tag','IonEConsoleText');
+     ht=text(0.02,.8,['Lon = ' num2str(x)]);
+     set(ht,'Tag','IonEConsoleText'); 
+     axes(UDS.DataAxisHandle);  %make data axis handle current
+     try   
+         evalin('base','pointdata;');
+     catch
+         assignin('base','pointdata',cell(0,4));
+     end
+     pdataold=evalin('base','pointdata;');
+     pdatanew=cell(size(pdataold,1)+1,4);
+     pdatanew(2:size(pdatanew,1),:)=pdataold;
+     pdatanew(1,:)={zvalue, CountryName, y, x};
+     assignin('base','pointdata',pdatanew);
 end
 
 
@@ -154,73 +113,87 @@ end
 function ZoomToPointButtonDownCallback(src,event)
 
 if strcmp(get(src,'SelectionType'),'normal')
+    
     UDS=get(gcbf,'UserData');
-    set(UDS.DataAxisHandle,'EdgeColor','r');
-    cp=get(UDS.DataAxisHandle,'CurrentPoint');
-    x1=cp(1,1);
-    y1=cp(1,2);
-    if (UDS.MapToolboxFig==1)
-        DeltaLong=.05;
-        DeltaLat=.025;
-        pt=gcpmap;
-        y=pt(1,1);
-        x=pt(1,2);
-        [a1 b1]=getRowCol(UDS.Lat,UDS.Long,y,x);
-        z=UDS.Data(b1,a1);
-        Scale=1;
-    else
-        DeltaLong=3.0;
-        DeltaLat=1.5;
-        x=x1;
-        y=y1;
-        [a1 b1]=getRowCol(UDS.Lat,UDS.Long,y,x);
-        z=UDS.Data(b1,a1);
-        Scale=UDS.ScaleToDegrees;
-    end
+    cp1=get(UDS.DataAxisHandle,'CurrentPoint');
+    x1=cp1(1,1);
+    y1=cp1(1,2);
+    cp=gcpmap;
+    x=cp(1,1);
+    y=cp(1,2);
     [CountryNumbers,CountryNames]=...
-        GetCountry5min(x*Scale,y*Scale);
+        GetCountry_halfdegree(y,x);
     CountryName=CountryNames{1};
-  %  ii=find(CountryName==',');
-  %  if ~isempty(ii)
-  %      CountryName=CountryName(1:(ii(1)-1));
-  %  end
+    ii=find(CountryName==',');
+    if ~isempty(ii)
+        CountryName=CountryName(1:(ii(1)-1));
+    end
+
+     [xx,yy,z]=GetSurfaceDataFromAxes;
+     
+     %% section to find this value.  tricky if xx,yy are mappings.  use
+     %% some ugly code...
+     if ~isvector(xx)
+         xxvect=xx(1:numel(xx));
+         yyvect=yy(1:numel(xx));
+         zvect=z(1:numel(z));
+         [dum,ii]=min( (xxvect-x).^2+(yyvect-y).^2);
+         zvalue=z(ii);
+     else
+         [dum,ix]=min((xx-x).^2);
+         [dum,iy]=min((yy-y).^2);
+         zvalue=z(iy,ix);
+     end
      %%% now set text in the console
      % first delete old text
      h=findobj('Tag','IonEConsoleText');
      delete(h);
      
      %now new text
-     set(UDS.DataAxisHandle,'EdgeColor','r');
      hc=UDS.ConsoleAxisHandle;
      axes(hc)
-     set(hc,'xlim',[0 1]);
-     set(hc,'ylim',[0 1]);
-     ht=text(0.25,.5,['Country=' CountryName]);
+     ht=text(0.02,.2,['Country=' CountryName]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.5,.5,['Value = ' num2str(z)]);
+     ht=text(0.02,.4,['Value = ' num2str(zvalue)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.75,0.5,{['Lat = ' num2str(y)],['Lon = ' num2str(x)]});
+     ht=text(0.02,.6,['Lat = ' num2str(y)]);
      set(ht,'Tag','IonEConsoleText');
+     ht=text(0.02,.8,['Lon = ' num2str(x)]);
+     set(ht,'Tag','IonEConsoleText');  
+     
+     try   
+         evalin('base','pointdata;');
+     catch
+         assignin('base','pointdata',cell(0,4));
+     end
+     pdataold=evalin('base','pointdata;');
+     pdatanew=cell(size(pdataold,1)+1,4);
+     pdatanew(2:size(pdatanew,1),:)=pdataold;
+     pdatanew(1,:)={zvalue, CountryName, y, x};
+     assignin('base','pointdata',pdatanew);
      
      LongVal=x1;
      LatVal=y1;
      % now want to zoom axes ...
+     try
+         DeltaLong=UDS.ZoomLongDelta;
+         DeltaLat=UDS.ZoomLatDelta;
+     catch
+         DeltaLong=2.5;
+         DeltaLat=2.5;
+     end
      
      axis(UDS.DataAxisHandle,[LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
 
-     % now rescale caxis
-     
-    % if isvector(xx)
-     %else
+%      % now rescale caxis
+%      
+%     % if isvector(xx)
+%          ix=find(xx>LongVal-DeltaLong & xx< LongVal+DeltaLong);
+%          iy=find(yy>LatVal-DeltaLat & yy <LatVal+DeltaLat);
+%      
+%          lowerval=min(min(z(iy,ix)));
+%          upperval=max(max(z(iy,ix)));
+%      %else
+%       caxis([UDS.DataAxisHandle],[lowerval upperval]);
       axes(UDS.DataAxisHandle); %make data axis handle current
-end
-
-function [a b]=getRowCol(LT,LN,lat,lon)
-a=1;
-while ((LT(a,1)<lat)&&(a<2160))
-    a=a+1;
-end
-b=1;
-while ((LN(b,1)<lon)&&(b<4320))
-    b=b+1;
 end

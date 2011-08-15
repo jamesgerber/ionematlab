@@ -134,6 +134,8 @@ if CanMap==0
     UserDataStructure.ZoomLatDelta=(2.5);
     UserDataStructure.ScaleToDegrees=1;
     UserDataStructure.MapToolboxFig=0;
+    
+    UserDataStructure.QuickVersion=0;
 else
     hm=axesm('robinson','Frame','On')
     
@@ -162,6 +164,7 @@ else
     UserDataStructure.ZoomLatDelta=(2.5*pi/180);
     UserDataStructure.ScaleToDegrees=180/pi;
     UserDataStructure.MapToolboxFig=1;
+    UserDataStructure.QuickVersion=0;
 end
 
 UserDataStructure.Lat=RedLat;

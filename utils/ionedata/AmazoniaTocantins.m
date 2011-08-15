@@ -15,7 +15,7 @@ function output=Amazonia;
 %     
 %     y = logical(x);
 
-load([iddstring '/misc/watersheds/globe1.mat'])
+load([iddstring 'misc/watersheds/globe1.mat'])
 
 LogicalMatrix = zeros(4320,2160);
 

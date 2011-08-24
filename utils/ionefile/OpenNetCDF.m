@@ -1,4 +1,4 @@
-function varargout=OpenNetCDF(FileName);
+function varargout=OpenNetCDF(FileName,force);
 % OPENNETCDF - Open a long/lat/data netcdf file
 %
 %  Syntax
@@ -22,7 +22,9 @@ if nargout==0
     return
 end
 
-
+if nargin<2
+    force=0;
+end
 
 if nargin==0
     InitialGuess='*.nc';
@@ -59,6 +61,20 @@ else
 end
 
 if CallUIGetfile==1
+    if force
+        DS.Data=zeros(4320, 2160);
+        [DS.Lat DS.Long]=getlatlon(data);
+        switch nargout
+            case 1
+             varargout{1}=DS;
+            case 3
+             varargout{1}=DS.Long;
+             varargout{2}=DS.Lat;
+             varargout{3}=DS.Data;
+            otherwise
+             error
+        end
+    end
     %we are going to have to call
     [filename,pathname]=uigetfile('*.nc','Pick a NetCDF file',InitialGuess);
     FileName=[pathname filesep filename];

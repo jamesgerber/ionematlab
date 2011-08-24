@@ -9,7 +9,19 @@ function [IM CMAP]=MakeIndexedLow(Image,q)
 % 0 and 1, with 0.001 very low compression and 0.5 very high.
 % 
 % If memory is not an issue or time is, use MakeIndexed.
-
+%
+% EXAMPLE
+% image=imread('peppers.png');
+% [im cmap]=MakeIndexedLow(image,.2);
+% surface(zeros(size(im)),flipud(im),...
+%   'FaceColor','texturemap',...
+%   'EdgeColor','none',...
+%   'CDataMapping','direct')
+% colormap(cmap);
+%
+% See Also
+% MakeIndexed
+														
 Image=ScaleToDouble(Image);
 IM=zeros(size(Image,1),size(Image,2),'double');
 CNext=1;
@@ -36,4 +48,5 @@ for i=1:size(Image,1)
         end
     end
 end
+CMAP(CMAP<0)=0;
 close(h);

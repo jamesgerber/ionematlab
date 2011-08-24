@@ -9,6 +9,9 @@ function [latpos,longpos]=RowCol2LatLong(row,col,Lat,Long)
 %     associated with row/col in a map of size Lat/Long or of size
 %     length(Lat)/length(Long).
 %
+% EXAMPLE
+% [latpos,longpos]=RowCol2LatLong(5,4,10,20);
+%
 if nargin==3
     Long=max(size(Lat));
     Lat=min(size(Lat));

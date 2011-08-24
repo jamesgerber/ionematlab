@@ -29,7 +29,7 @@ persistent D NDS Ndep
 
 if isempty(D)
     D=ReadGenericCSV([adstring 'croptype_NPK.csv']);
-    NDS=OpenGeneralNetCDF(['/Users/jsgerber/sandbox/jsg029_NitrogenBalance/NandCdatamethods/NOyTDEP_S1_5min.nc']);
+    NDS=OpenGeneralNetCDF(['NOyTDEP_S1_5min.nc']);
     Ndep=NDS(1).Data;
     Ndep(Ndep<-9000)=0;
 end
@@ -46,6 +46,9 @@ end
 %Pfrac=str2num(D.P_Perc_Dry_Harv(ii))/100;
 Nfrac=(D.N_Perc_Dry_Harv(ii))/100;
 Pfrac=(D.P_Perc_Dry_Harv(ii))/100;
+
+Nfixer=D.Nfix_High{ii};
+Nfixer
 
 
 CS=OpenNetCDF([iddstring '/crops2000/crops/' crop ...
@@ -165,6 +168,19 @@ N.crop=crop;
 N.Nfrac=Nfrac;
 N.DryFraction=DryFraction;
 
+if ~isempty(Nfixer)
+    N.Nfixer=1;
+    '!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    '!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    '!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    '!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    '!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    '!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    '!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    '!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+else
+    N.Nfixer=0;
+end
 
 
 %% Phosphate (P)

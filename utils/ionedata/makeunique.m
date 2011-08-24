@@ -1,5 +1,13 @@
 function A=makeunique(data)
-% set each "data island" in data to a unique identifier
+% MAKEUNIQUE - set each "data island" in data to a unique identifier
+%
+% SYNTAX
+% A=makeunique(data) returns array A of size data with each unique contiguous region set to a unique value
+%
+% EXAMPLE
+% A=makeunique(floor(rand(A)*3));
+%
+
 A=zeros(size(data));
 A(isnan(data))=nan;
 i=1;

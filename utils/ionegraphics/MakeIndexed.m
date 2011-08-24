@@ -8,6 +8,19 @@ function [IM CMAP]=MakeIndexed(Image)
 %
 % Use makeindexedlow if the image quality may be reduced and mem
 % is an issue.
+%
+% EXAMPLE
+% image=imread('peppers.png');
+% [im cmap]=MakeIndexed(image);
+% surface(zeros(size(im)),flipud(im),...
+%   'FaceColor','texturemap',...
+%   'EdgeColor','none',...
+%   'CDataMapping','direct')
+% colormap(cmap);
+%
+% See also
+% MakeIndexedLow
+
 CMAP=zeros(size(Image,1)*size(Image,2),3);
 IM=zeros(size(Image,1),size(Image,2));
 CNext=1;

@@ -12,6 +12,11 @@ function [rv,cv,area,edge]=analyzeisland(r,c,A)
 % a list of what would otherwise be recursive commands; this means that it
 % can run on any size array when otherwise MATLAB would have a recursion
 % depth limit error
+%
+% EXAMPLE
+% A=rand(9,9);
+% A=floor(A*3);
+% [rv,cv,area,edge]=analyzeisland(5,5,A);
 
 core=A(r,c);
 check=zeros(size(A));

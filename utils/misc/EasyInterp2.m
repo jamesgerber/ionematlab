@@ -20,6 +20,10 @@ function B=EasyInterp2(A,rows,cols,method)
 %     rows x cols. Without this function, imresize is the easiest way to do
 %     this.
 %
+% EXAMPLE
+% B=EasyInterp2(magic(5,5),4320,2160,'linear');
+%
+
 if nargin<4
     method='nearest';
 end

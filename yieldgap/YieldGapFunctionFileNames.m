@@ -31,7 +31,7 @@ function [FileName,DirName]=YieldGapFunctionFileNames(FS,OutputDirBase);
 % cropname
 j=FS.CropNo;
 cropname=NS.col1{j};
-cropname=makesafestring(cropname);
+cropname=MakeSafeString(cropname);
 
 % Revision
 switch FS.ClimateSpaceRev

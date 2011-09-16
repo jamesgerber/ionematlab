@@ -87,7 +87,7 @@ switch fix(13*rand)
     case 7,    a = 'Deepak';
     case 8,    a = 'Emily';
     case 9,    a = 'Kate';
-    case 10,   a = 'Ashley';
+    case 10,   a = 'Peder';
     case 11,   a = 'Andrew';
     case 12,   a = 'Peder';
     end

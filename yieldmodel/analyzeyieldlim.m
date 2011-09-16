@@ -1,12 +1,12 @@
 function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
     dI, dIquality] = analyzeyieldlim(cropname, modelnumber, ...
     desiredyield, potentialyield, yieldmap, datamask, climatemask, ...
-    nfert, pfert, kfert, avgpercirr, errorflag, errormap)
+    nfert, pfert, kfert, avgpercirr, errorflag, errormap, adjCflag)
 
 % [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %     dI, dIquality] = analyzeyieldlim(cropname, modelnumber, ...
 %     desiredyield, potentialyield, yieldmap, datamask, climatemask, ...
-%     nfert, pfert, kfert, avgpercirr, errorflag, errormap)
+%     nfert, pfert, kfert, avgpercirr, errorflag, errormap, adjCflag)
 %
 % NOTES ON VARIABLES:
 %
@@ -21,6 +21,55 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %
 % 
 
+% check input variables
+switch modelnumber
+    case 1
+        modelname = 'VL_LM';
+    case 2
+        modelname = 'VL_MBM';
+end
+if nargin < 12
+errorflag = 0;
+    adjCflag = 0;
+elseif nargin < 14
+    adjCflag = 0;
+end
+if errorflag == 0
+    warning('no error correction enabled');
+elseif errorflag == 1
+    disp(['using spatially-explicit errors to correct definition of ' ...
+        'areas achieving the desired yield']);
+end
+if adjCflag == 1
+    disp(['using regression-adj "c" coefficients for bins' ...
+        'lacking bin-specific coefficients for particular inputs']);
+    filestr = [iddstring 'ClimateBinAnalysis/YieldModel/cvsYmax_' ...
+        modelname '.csv'];
+    CS = ReadGenericCSV(filestr);
+    ii = strmatch(cropname,CS.cropname);
+    N_creg_slope = CS.N_slope(ii);
+    N_creg_yint = CS.N_y_int(ii);
+    N_creg_r2 = CS.N_r2(ii);
+    N_creg_p = CS.N_p(ii);
+    disp(['the N regression between Ymax and Cs has an r2 of ' ...
+        num2str(N_creg_r2) ' and a p-value of ' num2str(N_creg_p)]);
+    P_creg_slope = CS.P_slope(ii);
+    P_creg_yint = CS.P_y_int(ii);
+    P_creg_r2 = CS.P_r2(ii);
+    P_creg_p = CS.P_p(ii);
+    disp(['the P2O5 regression between Ymax and Cs has an r2 of ' ...
+        num2str(P_creg_r2) ' and a p-value of ' num2str(P_creg_p)]);
+    K_creg_slope = CS.K_slope{ii};
+    K_creg_yint = CS.K_y_int{ii};
+    K_creg_r2 = CS.K_r2{ii};
+    K_creg_p = CS.K_p{ii};
+    disp(['the K regression between Ymax and Cs has an r2 of ' ...
+        num2str(K_creg_r2) ' and a p-value of ' num2str(K_creg_p)]);
+    clear CS
+else
+    disp(['using global average response "c" coefficient for bins ' ...
+        'lacking bin-specific coefficients for particular inputs']);
+end
 
 % create desired yield map if necessary
 if length(desiredyield) == 1
@@ -34,13 +83,7 @@ else
         cropname ' yield specified by the "desiredyield" matrix'])
 end
 
-% set model choice and load (VL LM OR VL MBM)
-switch modelnumber
-    case 1
-        modelname = 'VL_LM';
-    case 2
-        modelname = 'VL_MBM';
-end
+% load model info (VL LM OR VL MBM)
 filestr = [iddstring 'ClimateBinAnalysis/YieldModel/' ...
     cropname '_m3yieldmodeldata_' modelname '.csv'];
 MS = ReadGenericCSV(filestr);
@@ -128,6 +171,9 @@ for bin = 1:100
         bFitw = str2num(MS.c_N{bin});
         bininfo = 1;
         dNQ_bin = ones(length(dNQ_bin),1);
+    elseif adjCflag == 1
+        bFitw = (N_creg_slope.*potyieldbin) + N_creg_yint;
+        bininfo = 0;
     else
         bFitw = str2num(MS.c_N{101});
         bininfo = 0;
@@ -154,6 +200,8 @@ for bin = 1:100
         bFitw = str2num(MS.c_P2O5{bin});
         bininfo = 1;
         dPQ_bin = ones(length(dPQ_bin),1);
+    elseif adjCflag == 1
+        bFitw = (P_creg_slope.*potyieldbin) + P_creg_yint;
     else
         bFitw = str2num(MS.c_P2O5{101});
         bininfo = 0;
@@ -180,6 +228,8 @@ for bin = 1:100
         bFitw = str2num(MS.c_K2O{bin});
         bininfo = 1;
         dKQ_bin = ones(length(dKQ_bin),1);
+    elseif adjCflag == 1
+        bFitw = (P_creg_slope.*potyieldbin) + P_creg_yint;
     else
         bFitw = str2num(MS.c_K2O{101});
         bininfo = 0;

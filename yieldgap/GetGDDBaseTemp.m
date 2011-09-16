@@ -8,7 +8,7 @@ function T=GetGDDBaseTemp(crop)
 persistent C
 
 if isempty(C)
-    C=readgenericcsv('croptype_NPK.csv',2);
+    C=ReadGenericCSV('croptype_NPK.csv',2);
 end
 
 iirow=strmatch(crop,C.CROPNAME,'exact');

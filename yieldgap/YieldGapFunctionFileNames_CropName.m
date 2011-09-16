@@ -33,7 +33,7 @@ try
 catch
     crop=FS.cropnames;
 end
-cropname=makesafestring(char(crop));
+cropname=MakeSafeString(char(crop));
 
 GDDBase=GetGDDBaseTemp(cropname);
 

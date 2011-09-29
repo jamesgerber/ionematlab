@@ -14,7 +14,7 @@ function varargout=OpenNetCDF(FileName,force);
 %  for j=1:length(a); S=OpenNetCDF(a(j).name); end
 %  !gzip *.nc
 %
-%   See also OPENGENERALNETCDF, WRITENETCDF
+%   See also OPENGENERALNETCDF, WRITENETCDF,  ConvertNetCDFs2mat
 %
 %
 if nargout==0

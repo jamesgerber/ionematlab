@@ -126,12 +126,12 @@ if isequal(get(Hfig,'tag'),'IonEFigure')
     set(fud.DataAxisHandle,'position',storepos);
 end
 
-if (nargin>=4&&transparent==1)
+if (nargin>=4&transparent==1)
     im=imread(FileName);
     transparent=im(:,:,1)==im(1,1,1)&im(:,:,2)==im(1,1,2)&im(:,:,3)==im(1,1,3);
     imwrite(im,FileName,'Alpha',double(~transparent));
 end
-if (nargin>=4&&transparent==-1)
+if (nargin>=4&transparent==-1)
     t=get(gcbf,'UserData');
     if t.transparent
         im=imread(FileName);

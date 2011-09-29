@@ -64,7 +64,15 @@ if strcmp(get(src,'SelectionType'),'normal')
      
      %% section to find this value.  tricky if xx,yy are mappings.  use
      %% some ugly code...
-     if ~isvector(xx)
+     if size(z,1)==2160 & size(z,2)==4320
+         [yy,xx]=inferlonglat(z);
+         [dum,ix]=min((xx-x).^2);
+         [dum,iy]=min((yy-y).^2);
+         zvalue=z(iy,ix);
+         disp(['ix=' int2str(ix)])
+         disp(['iy=' int2str(iy)])
+         disp(['vectorindex=' int2str(sub2ind(size(z),iy,ix))]);
+     elseif ~isvector(xx)
          xxvect=xx(1:numel(xx));
          yyvect=yy(1:numel(xx));
          zvect=z(1:numel(z));

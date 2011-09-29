@@ -26,7 +26,7 @@ CropNames={'maize','wheat'};
 Nspace=[5 10];
 GDDBaseDir='GDDLibrary/';
 TMILocation='./TMI.mat';
-AnnualMeanPrec='./AnnualMeanPrec.mat';
+%AnnualMeanPrec='./AnnualMeanPrec.mat';
 SaveFileNameBaseDir='./ClimateLibrary';
 DataYear=2000;
 GetBinsElsewhere='';
@@ -183,7 +183,9 @@ for N=Nspace;
                     %% Get bins from somewhere else
                     disp(['Getting Bins from ' GetBinsElsewhere]);
                     %load([GetBinsElsewhere filesep NoBaseFileName],'CDS','InsideContourLogical');
-                    load([GetBinsElsewhere filesep NoBaseFileName]);
+                    load([GetBinsElsewhere filesep NoBaseFileName],'CDS',...
+                        'InsideContourLogical','ContourMask','xbins','ybins',...
+                        'ContourStructure');
                 end
                 
                 [BinMatrix,ClimateDefs]=...
@@ -202,6 +204,8 @@ for N=Nspace;
                     'ContourStructure');
                 DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
                 WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
+                S=OpenNetCDF([FileName '.nc']);
+                dos(['gzip  ' FileName '.nc']);
             end
             close all
         end

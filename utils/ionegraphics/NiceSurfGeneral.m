@@ -560,6 +560,7 @@ if isequal(eastcolorbar,'off')
         secondbar= colorbar('Location','South','XTickLabel',...
             {''});
         set(secondbar,'Position',[x0 0.10 delx 0.02568],'YColor',[0 0 0])
+        set(secondbar,'Visible','off') 
     end
 else
     error('haven''t yet implemented eastcolorbar')
@@ -771,7 +772,7 @@ switch lower(plotarea)
         filename=[filename '_india'];
         %            ylim=.35%.32;
     case {'indonesia'}
-        longlatbox=[90 145 -15 10];
+        longlatbox=[80 155 -25 15];
         filename=[filename '_indonesia'];
         %            ylim=.27;%.32;
     case {'chinatropical'}

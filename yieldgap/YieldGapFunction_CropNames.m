@@ -636,7 +636,7 @@ RevData.ProcessingDate=datestr(now);
 OutputStructure.RevData=RevData;
 FS=FlagStructure;
 OS=OutputStructure;
-FileName=FileName(65:length(FileName));
+%FileName=FileName(65:length(FileName));
 save(FileName,'FS','OS');
 
 

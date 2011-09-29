@@ -52,7 +52,7 @@ newmap=finemap(newmap,'','');
 NSS.coloraxis=[1 N^2];
 NSS.cmap=newmap;
 
-NSS.uppermap='white';
+%NSS.uppermap='white';
 %NSS.units='dry/cold to warm/wet';
 a=double(BinMatrix);
 
@@ -122,7 +122,7 @@ set(hy,'FontSize',30,'HorizontalAlignment','Center','Rotation',90);
 
 function newcolor= ColorFadeFunction(basecolor,k,N); 
 % have color fade.  when k=1 newcolor=basecolor;
-kslide=linspace(1,.5,N);
+kslide=linspace(1,.7,N);
 newcolor=basecolor*kslide(k);
 
 %% fade to white

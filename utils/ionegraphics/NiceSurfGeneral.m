@@ -115,7 +115,7 @@ function OS=NiceSurfGeneral(varargin);
 %   OSS will contain field coloraxis, and no plot will be made.
 %
 %
-%   See Also:  IoneSurf ShowUi HideUi FastSurf
+%   See Also:  IoneSurf ShowUi HideUI FastSurf
 
 % desired changes
 %  - fix cvector warning in underlying IonESurf code
@@ -244,7 +244,7 @@ textcolor=[0 0 0];
 
 
 if strcmp(categorical,'on')
-    cmap=easyinterp2(cmap,3,length(categoryvalues));
+    cmap=EasyInterp2(cmap,3,length(categoryvalues));
 end
 
 a=fieldnames(NSS);
@@ -443,7 +443,7 @@ land=LandMaskLogical(Data);
 ii=(land==0);
 size(ii)
 size(Data)
-ii=easyinterp2(ii,size(Data,1),size(Data,2),'nearest');
+ii=EasyInterp2(ii,size(Data,1),size(Data,2),'nearest');
 Data(ii)=OceanVal;
 
 % no make no-data points above color map to get 'uppermap' (white)
@@ -663,7 +663,7 @@ if ~isempty(displaynotes)
     set(ht,'interp',UserInterpPreference);
 end
 
-hideui
+HideUI
 
 
 

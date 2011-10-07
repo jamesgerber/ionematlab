@@ -82,7 +82,7 @@ for j=1:length(ii)
     if isempty(FAO{1})
         disp(['ignoring ' NAME_ISO(ii(j))]);
     else
-        S3=standardcountrynames(FAO,'NAME_FAO','sage3');
+        S3=StandardCountryNames(FAO,'NAME_FAO','sage3');
         if isempty(S3{1})
             disp(['ignoring ' FAO])
         else

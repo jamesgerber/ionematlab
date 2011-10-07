@@ -110,7 +110,7 @@ else
 end
     
     
-hideui;
+HideUI;
 ppm=get(gcf,'PaperPositionMode');
 set(gcf,'PaperPositionMode','auto');
 
@@ -140,4 +140,4 @@ if (nargin>=4&transparent==-1)
     end
 end
     
-showui;
+ShowUI;

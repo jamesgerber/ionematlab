@@ -8,18 +8,70 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %     desiredyield, potentialyield, yieldmap, datamask, climatemask, ...
 %     nfert, pfert, kfert, avgpercirr, errorflag, errormap, adjCflag)
 %
-% NOTES ON VARIABLES:
+%                      %%%%%%%%%%%%%%%%%%%%%%
+%                      % NOTES ON VARIABLES %
+%                      %%%%%%%%%%%%%%%%%%%%%%
 %
-% desiredyield can come in two forms:
-%  1) It can be the percent change in yield to analyze (e.g. 10, 20, 50).
-%     In other words, do you want to look at what limits yield increasing
-%     10%, 20%, etc?
-%  2) It can be a map of the yield you would like to obtain.
+% OUTPUTS
 %
-% potentialyield is a map defining what areas are "yield ceiling limited" -
-%     we usually define this as 90th percentile yields within a climate bin
+%   - yieldlim is a categorical map of yield-limiting factors.
+%        - code 1 = nutrient limited
+%        - code 2 = nutrient + water (irrigation) limited
+%        - code 3 = water (irrigation) limited
+%        - code 4 = desired yield (desiredyield) < observed yield
+%                   (yieldmap)
+%        - code 5 = desired yield (desiredyield) > potential yield
+%                   (potentialyield) (note: this could include areas that
+%                   would otherwise be labeled as code 4)
+%   - dNPKI = delta inputs necessary to achieve the desiredyield. this
+%             can be negative when less nutrients are required to
+%             achieve a desired yield than what is use. NOTE: you cannot
+%             estimate a dNPKI for a yield value above the asymptote (98th
+%             percentile yields).
+%   - dNPKIquality = the quality of the delta nutrient projection
+%        - code 1 = projected change is from a bin-specific coefficient for
+%                   that particular input
+%        - code 2 = projected change is from a global  or a Ymax-normalized 
+%                   coefficient (if adjCflag = 1) for that particular input
+%                   (note: we only revert to global slopes for nutrients,
+%                   for irrigation we just don't estimate a response if
+%                   there is no coefficient - this is code 3)
+%        - code 3 = no estimated irrigation response for this bin
 %
-% 
+% INPUTS
+%
+%   - cropname: can be any one of the 17 crops modeled (this should be a
+%         lowercase string with no spaces), however yield models perform
+%         much better for some crops than others. please check r2s and
+%         errors before running.
+%   - modelnumber: von Liebig logistic model (VL_LM) = 1, von Liebig
+%         Mitscherlich-Baule model (VL_MBM) = 2 NOTE: the
+%         Mitscherlich-Baule model generally performs slightly better ...
+%         if you are unsure which model to use - use this one!
+%   - desiredyield = the yield you would like to achieve - this can come in
+%         two forms: 1) it can be the percent change in yield you would
+%         like to analyze (e.g. 10, 20, 50 = a 10%, 20%, 50% increase over
+%         current yields) or 2) it can be a map of the yield you would like
+%         to obtain (i.e. a map of 75th percentile yields)
+%   - potentialyield: a map defining potential yields (such as 95th
+%         percentile yields in each climate bin) - this defines code 5 in 
+%         the yieldlim map
+%   - datamask: a logical mask defining "good areas" - probably just the
+%         intersection of good data for yields, inputs, and climate (this
+%         is mostly a sanity check ... being careful)
+%   - climatemask: the crop-specific climate bin map
+%   - nfert, pfert, kfert: fertilizer application rates from the M3
+%         fertilizer dataset (in kg/ha) - try the function "getfertdata" to
+%         quickly load these maps for a given crop
+%   - avgpercirr: average percent irrigated area over the growing season
+%         from the MIRCA2000 dataset
+%   - errorflag: if this flag is turned on, only grid cells where the
+%         observed (Monfreda) yield > desiredyield are categorized as code
+%         4 in the yieldlim map (the alternative is that places where
+%         modeledyield > desired yield get set as number 4)
+%   - errormap: the difference between modeled and observed yields (modeled
+%         minus observed)
+%
 
 % check input variables
 switch modelnumber
@@ -41,16 +93,18 @@ elseif errorflag == 1
         'areas achieving the desired yield']);
 end
 if adjCflag == 1
+    % if adjCflag = 1, normalize the response coefficients for "missing
+    % bins" using the Ymax within a bin
     disp(['using regression-adj "c" coefficients for bins' ...
         'lacking bin-specific coefficients for particular inputs']);
     filestr = [iddstring 'ClimateBinAnalysis/YieldModel/cvsYmax_' ...
         modelname '.csv'];
     CS = ReadGenericCSV(filestr);
     ii = strmatch(cropname,CS.cropname);
-    N_creg_slope = CS.N_slope(ii);
-    N_creg_yint = CS.N_y_int(ii);
-    N_creg_r2 = CS.N_r2(ii);
-    N_creg_p = CS.N_p(ii);
+    N_creg_slope = str2num(CS.N_slope{ii});
+    N_creg_yint = str2num(CS.N_y_int{ii});
+    N_creg_r2 = str2num(CS.N_r2{ii});
+    N_creg_p = str2num(CS.N_p{ii});
     disp(['the N regression between Ymax and Cs has an r2 of ' ...
         num2str(N_creg_r2) ' and a p-value of ' num2str(N_creg_p)]);
     P_creg_slope = CS.P_slope(ii);
@@ -59,10 +113,10 @@ if adjCflag == 1
     P_creg_p = CS.P_p(ii);
     disp(['the P2O5 regression between Ymax and Cs has an r2 of ' ...
         num2str(P_creg_r2) ' and a p-value of ' num2str(P_creg_p)]);
-    K_creg_slope = CS.K_slope{ii};
-    K_creg_yint = CS.K_y_int{ii};
-    K_creg_r2 = CS.K_r2{ii};
-    K_creg_p = CS.K_p{ii};
+    K_creg_slope = str2num(CS.K_slope{ii});
+    K_creg_yint = str2num(CS.K_y_int{ii});
+    K_creg_r2 = str2num(CS.K_r2{ii});
+    K_creg_p = str2num(CS.K_p{ii});
     disp(['the K regression between Ymax and Cs has an r2 of ' ...
         num2str(K_creg_r2) ' and a p-value of ' num2str(K_creg_p)]);
     clear CS
@@ -180,10 +234,10 @@ for bin = 1:100
         dNQ_bin = ones(length(dNQ_bin),1)+1;
     end
     switch modelnumber
-        case 1 % VL ELM
+        case 1 % VL LM
             nfertplus_bin = (log((potyieldbin ./ ...
                 desiredyield_bin) - 1) - bnut) ./ - bFitw;
-        case 2 % VL MB
+        case 2 % VL MBM
             nfertplus_bin = log((1 - (desiredyield_bin ./ ...
                 potyieldbin)) ./ bnut) ./ -bFitw;
     end
@@ -208,10 +262,10 @@ for bin = 1:100
         dPQ_bin = ones(length(dPQ_bin),1)+1;
     end
     switch modelnumber
-        case 1 % VL ELM
+        case 1 % VL LM
             pfertplus_bin = (log((potyieldbin ./ ...
                 desiredyield_bin) - 1) - bnut) ./ - bFitw;
-        case 2 % VL MB
+        case 2 % VL MBM
             pfertplus_bin = log((1 - (desiredyield_bin ./ ...
                 potyieldbin)) ./ bnut) ./ -bFitw;
     end
@@ -229,17 +283,17 @@ for bin = 1:100
         bininfo = 1;
         dKQ_bin = ones(length(dKQ_bin),1);
     elseif adjCflag == 1
-        bFitw = (P_creg_slope.*potyieldbin) + P_creg_yint;
+        bFitw = (K_creg_slope.*potyieldbin) + K_creg_yint;
     else
         bFitw = str2num(MS.c_K2O{101});
         bininfo = 0;
         dKQ_bin = ones(length(dKQ_bin),1)+1;
     end
     switch modelnumber
-        case 1 % VL ELM
+        case 1 % VL LM
             kfertplus_bin = (log((potyieldbin ./ ...
                 desiredyield_bin) - 1) - bnut) ./ - bFitw;
-        case 2 % VL MB
+        case 2 % VL MBM
             kfertplus_bin = log((1 - (desiredyield_bin ./ ...
                 potyieldbin)) ./ bnut) ./ -bFitw;
     end
@@ -251,18 +305,24 @@ for bin = 1:100
         lim_bin(kfertplus_bin > kfert_bin) = 1;
     end
     
-    % examine for water limitation
+    % examine for water limitation: this is now the same linear plateau
+    % model regardless of whether you are using MBM or LM for nutrient
+    % responses
     if str2num(cb(4)) == 1
         bFitw(1) = str2num(MS.b_irr{bin});
         bFitw(2) = str2num(MS.c_irr{bin});
-        switch modelnumber
-            case 1 % VL ELM
-                irrplus_bin = (log((potyieldbin ./ ...
-                    desiredyield_bin) - 1) - bFitw(1)) ./ - bFitw(2);
-            case 2 % VL MB
-                irrplus_bin = log((1 - (desiredyield_bin ./ ...
-                    potyieldbin)) ./ bFitw(1)) ./ -bFitw(2);
-        end
+        %         switch modelnumber
+        %             case 1 % VL ELM
+        %                 irrplus_bin = (log((potyieldbin ./ ...
+        %                     desiredyield_bin) - 1) - bFitw(1)) ./ - bFitw(2);
+        %             case 2 % VL MB
+        %                 irrplus_bin = log((1 - (desiredyield_bin ./ ...
+        %                     potyieldbin)) ./ bFitw(1)) ./ -bFitw(2);
+        %         end
+        % use the linear plateau model to calculate irr_plus
+        % (Y - abs(b_irr - c_irr)) / c_irr = x
+        irrplus_bin = (desiredyield_bin - abs(bFitw(1) - bFitw(2))) ./ ...
+            bFitw(2);
         % record water and nutrient limited areas
         jj = find((irrplus_bin > irr_bin) & (lim_bin == 1));
         lim_bin(jj) = 2;

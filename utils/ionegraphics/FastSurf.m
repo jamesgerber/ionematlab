@@ -80,7 +80,7 @@ else
     RedData=Data(1:4:end,1:4:end);
 end
 
-h=IoneSurf(RedLong,RedLat,RedData,Units,TitleStr);
+h=IonESurf(RedLong,RedLat,RedData,Units,TitleStr);
 
 if nargout==1
     varargout{1}=h;

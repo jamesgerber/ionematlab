@@ -35,6 +35,7 @@ end
 SumDryProduction=DataBlank;
 SumProduction=DataBlank;
 SumArea=DataBlank;
+SumNonHarvestedDryProduction=DataBlank;
 
 fma=GetFiveMinGridCellAreas;
 
@@ -42,6 +43,7 @@ for j=1:length(cl)
     %
     cl{j}
     DryFraction=C.Dry_Fraction(j);
+    HarvestIndex=C.Harvest_Index(j);
     S=OpenNetCDF([iddstring '/Crops2000/crops/' cl{j} '_5min.nc']);
     Area=S.Data(:,:,1);
     Yield=S.Data(:,:,2);
@@ -52,23 +54,37 @@ for j=1:length(cl)
         Area(DataMask).*Yield(DataMask).*fma(DataMask);
     SumDryProduction(DataMask)=SumDryProduction(DataMask)+...
         Area(DataMask).*Yield(DataMask).*fma(DataMask)*DryFraction;
+    SumNonHarvestedDryProduction(DataMask)=SumNonHarvestedDryProduction(DataMask)+...
+        Area(DataMask).*Yield(DataMask).*fma(DataMask).*(1/HarvestIndex-1)*0.2;
+    
+    
+    
     SumArea(DataMask)=SumArea(DataMask)+Area(DataMask);
     
     ProductionVector(j)=sum(Area(DataMask).*Yield(DataMask).*fma(DataMask));
     DryProductionVector(j)=sum(Area(DataMask).*Yield(DataMask).*fma(DataMask)*DryFraction);
+    NonHarvestedDryProductionVector=sum(...
+        Area(DataMask).*Yield(DataMask).*fma(DataMask).*(1/HarvestIndex-1)*0.2);
+    
+    
+    
     NameVector{j}=cl{j};
 end
 
 OS.SumProduction=SumProduction;
 OS.SumDryProduction=SumDryProduction;
 OS.SumArea=SumArea;
-
+OS.SumNonHarvestedDryProduction=SumNonHarvestedDryProduction;
 
 
 OS.ProductionVector=ProductionVector;
 OS.DryProductionVector=DryProductionVector;
-
+OS.NonHarvestedDryProductionVector=NonHarvestedDryProductionVector;
 % only save if nargin==0
+
+OS.TotalNPPVector=(NonHarvestedDryProductionVector+DryProductionVector);
+OS.SumTotalNPP=(SumDryProduction+SumNonHarvestedDryProduction)*0.45;
+
 
 if nargin==0
     

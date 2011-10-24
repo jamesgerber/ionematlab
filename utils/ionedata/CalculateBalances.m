@@ -29,7 +29,7 @@ persistent D NDS Ndep
 
 if isempty(D)
     D=ReadGenericCSV([adstring 'croptype_NPK.csv'],2);
-    NDS=OpenGeneralNetCDF(['NOyTDEP_S1_5min.nc']);
+    NDS=OpenGeneralNetCDF([iddstring '/misc/NitrogenDeposition/NOyTDEP_S1_5min.nc']);
     Ndep=NDS(1).Data;
     Ndep(Ndep<-9000)=0;
 end

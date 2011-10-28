@@ -36,8 +36,11 @@ function varargout=StandardCountryNames(Input,NameForm,OutputForm);
 %      StandardCountryNames('Bulgaria')
 %      StandardCountryNames({'Bulgaria','France'})
 %
+%      NameStructure=StandardCountryNames;  Will return a structure with
+%      vectors of all country names and codes, suitable for looping.
+%
 
-if nargin==0
+if nargin==0 & nargout==0
     help(mfilename)
     return
 end
@@ -62,6 +65,19 @@ GADM_ISO=C{7};
 GADM_NAME_ISO=C{8};
 GADM_NAME_FAO=C{9};
 
+if nargin==0 & nargout==1
+    NS.SageCountry=SageCountry;
+    NS.SageRegion=SageRegion;
+    NS.SageContinent=SageContinent;
+    NS.SageCountryNoComma=SageCountryNoComma;
+    NS.Sage3=Sage3;
+    NS.GADM_NAME_ENGLISH=GADM_NAME_ENGLISH;
+    NS.GADM_ISO=GADM_ISO;
+    NS.GADM_NAME_ISO=GADM_NAME_ISO;
+    NS.GADM_NAME_FAO=GADM_NAME_FAO;
+    varargout{1}=NS;
+    return
+end
 
 if nargin<2
     MatchType='sagecountry';

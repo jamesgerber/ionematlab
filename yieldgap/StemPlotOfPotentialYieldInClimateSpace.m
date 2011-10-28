@@ -3,7 +3,7 @@
     FS.CropNames='maize';
     FS.ClimateSpaceN=10;
     FS.WetFlag='prec';
-    FS.PercentileForMaxYield=95;
+    FS.PercentileForMaxYield=50;
     FS.DataYear=2000;
     OutputDirBase=[iddstring '/ClimateBinAnalysis/YieldGap/'];
     FileName=YieldGapFunctionFileNames_CropName(FS,OutputDirBase);
@@ -43,9 +43,3 @@ end
  stem3(x,y,OS.VectorOfPotentialYields)
  xlabel('GDD');
  ylabel('Precipitation')
-% title(['Distribution of cultivated area in climate space.' ...
-%        cropname  '. ' Nstr 'x' Nstr '.' WetFlag ',' HeatFlag ])
-% untex
-% OutputFig('Force',['Distribution of cultivated area in climate space.' ...
-%        cropname  '. ' Nstr 'x' Nstr '.' WetFlag ',' HeatFlag '_StemPlot'])
-

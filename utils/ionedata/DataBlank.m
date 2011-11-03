@@ -17,8 +17,12 @@ if nargin<2
 end
 
 switch Res
-  case '5min'
-   tmp=ones(4320,2160);
+    case '30min'
+        tmp=ones(720,360);
+    case '5min'
+        tmp=ones(4320,2160);
+    case '1min'
+        tmp=ones(21600,10800)
  otherwise
   error
 end

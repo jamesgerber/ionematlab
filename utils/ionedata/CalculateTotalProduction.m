@@ -1,33 +1,36 @@
 function OS=CalculateTotalProduction(croplist);
-% CalculateTotalProduction 
+% CalculateTotalProduction
 %
 %    OS=CalculateTotalProduction will calculate production for all crops
 %
 %    OS=CalculateTotalProduction(croplist) will calculate production only
-%    for crops in croplist.  
+%    for crops in croplist.
 
 C=ReadGenericCSV([iddstring '/misc/cropdata.csv']);
 a=dir([iddstring '/misc/cropdata.csv']);
 
 if nargin==0
-try
-    %
-    load([iddstring '/misc/TotalCropProductionData.mat'],'OS');
-    
-    if a.datenum > OS.cropdata_datenum
-        disp(['cropdata.csv more recent than saved file.  rerunning'])
-    else
-       return 
-    end  
-catch
-    disp(['unable to read ' iddstring '/misc/TotalCropProductionData.mat']);
-    disp(['or it is out of date.  going to calculate it again.']);
-end
+    try
+        %
+        load([iddstring '/misc/TotalCropProductionData.mat'],'OS');
+        
+        if a.datenum > OS.cropdata_datenum
+            disp(['cropdata.csv more recent than saved file.  rerunning'])
+        else
+            return
+        end
+    catch
+        disp(['unable to read ' iddstring '/misc/TotalCropProductionData.mat']);
+        disp(['or it is out of date.  going to calculate it again.']);
+    end
 end
 
 if nargin==0
     cl=C.CROPNAME;
 else
+    error([' i think there is a bug here ... need to add code to ' ...
+        ' correctly match crop characteristics with crop.  ' ...
+        'see, perhaps, CalculateTotalPotentialProduction '])
     cl=croplist;
 end
 
@@ -47,7 +50,7 @@ for j=1:length(cl)
     S=OpenNetCDF([iddstring '/Crops2000/crops/' cl{j} '_5min.nc']);
     Area=S.Data(:,:,1);
     Yield=S.Data(:,:,2);
-      
+    
     DataMask=(Area > 0 & isfinite(Area.*Yield) & Area < 9e19 & Yield < 9e19);
     
     SumProduction(DataMask)=SumProduction(DataMask)+...
@@ -65,9 +68,6 @@ for j=1:length(cl)
     DryProductionVector(j)=sum(Area(DataMask).*Yield(DataMask).*fma(DataMask)*DryFraction);
     NonHarvestedDryProductionVector=sum(...
         Area(DataMask).*Yield(DataMask).*fma(DataMask).*(1/HarvestIndex-1)*0.2);
-    
-    
-    
     NameVector{j}=cl{j};
 end
 
@@ -91,8 +91,7 @@ if nargin==0
     OS.cropdata_datestamp=a.date;
     OS.cropdata_datenum=a.datenum;
     OS.NameVector=NameVector;
-
+    
     save savingPlotTotalProductionWorkspace
     save([iddstring '/misc/TotalCropProductionData.mat'],'OS');
 end
-   

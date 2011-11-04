@@ -1,8 +1,8 @@
-function SurfacePlotOfAreaInClimateSpace(cropname,potpercentstr,...
-    wetflag)
+function SurfacePlotOfPotentialYieldInClimateSpace(cropname,potpercentstr,...
+    wetflag, climspaceN)
 
-% function StemPlotOfAreaInClimateSpace(cropname,potpercentstr,...
-%     wetflag)
+% function SurfacePlotOfPotentialYieldInClimateSpace(cropname,potpercentstr,...
+%     wetflag, climspaceN)
 %
 % cropname = lowercase crop name (e.g. maize')
 %
@@ -11,13 +11,14 @@ function SurfacePlotOfAreaInClimateSpace(cropname,potpercentstr,...
 %
 % wetflag = 'TMI' or 'prec'
 %
-%%%%% WARNING: NATHAN CHANGED THIS TO POTENTIAL YIELD - CHANGE TO AREA
+% climspaceN = 10 or 5
 
-climspace = '10x10';
+
+climspace = [num2str(climspaceN) 'x' num2str(climspaceN)];
 disp(['loading ' cropname ' ' climspace ' ' potpercentstr ...
     'th percentile potential yields and climate mask']);
 FNS.ClimateSpaceRev = 'P';
-FNS.ClimateSpaceN=10;
+FNS.ClimateSpaceN=climspaceN;
 FNS.WetFlag=wetflag;
 OutputDirBase=[iddstring 'ClimateBinAnalysis/YieldGap'];
 FNS.CropNames = cropname;
@@ -27,7 +28,7 @@ load(FileName);
 
 
 HeatFlag = 'GDD';
-N = 10;
+N = climspaceN;
 TotalArea=NaN*ones(N,N);
 
 c=1;
@@ -59,9 +60,10 @@ figure('position',[107   654   560   420])
 %surface(GDDBinCenters,PrecBinCenters,TotalAreaNorm.');
 TAN=TotalArea;
 TAN(end+1,end+1)=0;
-surf(x,y,OS.VectorOfPotentialYields);
-surf(double(reshape(x,10,10)),double(reshape(y,10,10)),...
-    double(reshape(OS.VectorOfPotentialYields,10,10)));
+% surf(x,y,OS.VectorOfPotentialYields);
+surf(double(reshape(x,climspaceN,climspaceN)),...
+    double(reshape(y,climspaceN,climspaceN)),...
+    double(reshape(OS.VectorOfPotentialYields,climspaceN,climspaceN)));
 % surface(double(reshape(x,10,10)),double(reshape(y,10,10)),...
 %     double(reshape(OS.VectorOfPotentialYields,10,10)));
 xlabel(HeatFlag);

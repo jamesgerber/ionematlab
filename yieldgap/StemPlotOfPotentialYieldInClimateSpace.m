@@ -1,17 +1,31 @@
+function StemPlotOfPotentialYieldInClimateSpace(cropname,potpercentstr,...
+    wetflag)
 
- FS.ClimateSpaceRev='P';
-    FS.CropNames='maize';
-    FS.ClimateSpaceN=10;
-    FS.WetFlag='prec';
-    FS.PercentileForMaxYield=50;
-    FS.DataYear=2000;
-    OutputDirBase=[iddstring '/ClimateBinAnalysis/YieldGap/'];
-    FileName=YieldGapFunctionFileNames_CropName(FS,OutputDirBase);
+% function StemPlotOfPotentialYieldInClimateSpace(cropname,potpercentstr,...
+%     wetflag)
+%
+% cropname = lowercase crop name (e.g. maize')
+%
+% potpercentstr = e.g. '95' or '50' ... indicates yield percentile to look
+% up from yield gap output
+%
+% wetflag = 'TMI' or 'prec'
+%
 
-    load(FileName)
-    
-    N=FS.ClimateSpaceN;
-    
+
+climspace = '10x10';
+disp(['loading ' cropname ' ' climspace ' ' potpercentstr ...
+    'th percentile potential yields and climate mask']);
+FNS.ClimateSpaceRev = 'P';
+FNS.ClimateSpaceN=10;
+FNS.WetFlag=wetflag;
+OutputDirBase=[iddstring 'ClimateBinAnalysis/YieldGap'];
+FNS.CropNames = cropname;
+FNS.PercentileForMaxYield=potpercentstr;
+FileName=YieldGapFunctionFileNames_CropName(FNS,OutputDirBase);
+load(FileName);
+
+N=FS.ClimateSpaceN;
 
 TotalArea=NaN*ones(N,N);
 
@@ -20,26 +34,25 @@ CultivatedArea=OS.Area;
 clear x y z
 
 for iG=1:N;
-  for iP=1:N;
-      ibin=(iG-1)*N+iP;
-      
-      GDDBinCenters(iG)= (OS.CDS(ibin).GDDmin+OS.CDS(ibin).GDDmax)/2;
-      PrecBinCenters(iP)=(OS.CDS(ibin).Precmin+OS.CDS(ibin).Precmax)/2;
-      
-      
-      x(c)=GDDBinCenters(iG);
-      y(c)=PrecBinCenters(iP);
-      
-      ii=find(OS.ClimateMask==ibin & CropMaskLogical);
-      
-      TotalArea(iG,iP)=sum(CultivatedArea(ii));
-      z(c)=sum(CultivatedArea(ii));
-      c=c+1;
-  end
+    for iP=1:N;
+        ibin=(iG-1)*N+iP;
+        
+        GDDBinCenters(iG)= (OS.CDS(ibin).GDDmin+OS.CDS(ibin).GDDmax)/2;
+        PrecBinCenters(iP)=(OS.CDS(ibin).Precmin+OS.CDS(ibin).Precmax)/2;
+        
+        
+        x(c)=GDDBinCenters(iG);
+        y(c)=PrecBinCenters(iP);
+        
+        ii=find(OS.ClimateMask==ibin & CropMaskLogical);
+        
+        TotalArea(iG,iP)=sum(CultivatedArea(ii));
+        z(c)=sum(CultivatedArea(ii));
+        c=c+1;
+    end
 end
 
-
- figure
- stem3(x,y,OS.VectorOfPotentialYields)
- xlabel('GDD');
- ylabel('Precipitation')
+figure
+stem3(x,y,OS.VectorOfPotentialYields)
+xlabel('GDD');
+ylabel('Precipitation')

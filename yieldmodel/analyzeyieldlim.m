@@ -101,10 +101,10 @@ if adjCflag == 1
         modelname '.csv'];
     CS = ReadGenericCSV(filestr);
     ii = strmatch(cropname,CS.cropname);
-    N_creg_slope = str2num(CS.N_slope{ii});
-    N_creg_yint = str2num(CS.N_y_int{ii});
-    N_creg_r2 = str2num(CS.N_r2{ii});
-    N_creg_p = str2num(CS.N_p{ii});
+    N_creg_slope = CS.N_slope(ii);
+    N_creg_yint = CS.N_y_int(ii);
+    N_creg_r2 = CS.N_r2(ii);
+    N_creg_p = CS.N_p(ii);
     disp(['the N regression between Ymax and Cs has an r2 of ' ...
         num2str(N_creg_r2) ' and a p-value of ' num2str(N_creg_p)]);
     P_creg_slope = CS.P_slope(ii);

@@ -32,9 +32,8 @@ function [cropOS] = m3yieldmodel_generator(input, modelnumber, ...
 %                    Kfert: [4320x2160 double]
 %                Kdatatype: [4320x2160 double]
 
-slopemultvect = [.75 1 1.15 1.25];
-slopemultvectirr = [.5 1 2 3];
-b0irr = 3;
+
+slopemultvect = 1;
 
 binrwlist = [];
 binyieldlist = [];
@@ -55,7 +54,7 @@ cropOS.minyieldlist = [];
 switch modelnumber
     case 1
         modelname = 'VL_LM';
-        modelnamelong = 'von Liebig logistic model';
+        modelnamelong = 'von Liebig logistic model'; 
     case 2
         modelname = 'VL_MBM';
         modelnamelong = 'von Liebig Mitscherlich-Baule model';
@@ -142,11 +141,11 @@ if LSQflag == 1
                 [bFitw,rw,Jw,Sigmaw,msew] = ...
                     nlinfit(x,yw,agmgmtw,beta0);
             end
-            blist{length(blist)+1} = abs(bFitw);
+            blist{length(blist)+1} = bFitw;
             rlist{length(rlist)+1} = rw;
             mlist(length(mlist)+1) = msew;
         end
-        [tmp,yy] = min(mlist);
+        yy = find(min(mlist));
         if length(yy)>1
             yy = yy(1);
         end
@@ -232,11 +231,6 @@ for bin = 1:max(max(input.ClimateMask))
         w = w(:);
         y = yield_bin(:);
         
-        % calculated weighted average mean yield for the bin for r2
-        % calculations
-        tmp = yield_bin .* w;
-        wavg_yield_bin = mean(tmp) ./ mean(w);
-        
         % initialize variables
         stepflag = 0;
         xlist = {};
@@ -294,10 +288,8 @@ for bin = 1:max(max(input.ClimateMask))
                 if i == 1
                     x = [x xtot(:,4)];
                     slopeUBvector = [slopeUBvector 100 100];
-                    slopeLBvector = [slopeLBvector potyieldbin -100]; %%%% CHANGED
+                    slopeLBvector = [slopeLBvector -100 -100];
                 end
-                slopeUBvector = double(slopeUBvector);
-                slopeLBvector = double(slopeLBvector);
                 
                 % record x variables of interest; add 0 or 1 at the end to
                 % indicate irrigation or no irrigation.
@@ -308,6 +300,7 @@ for bin = 1:max(max(input.ClimateMask))
                 end
                 counter = counter + 1;
                 xlist{counter} = cb;
+                
                 
                 % create and run the appropriate model
                 switch numnutvars
@@ -330,22 +323,18 @@ for bin = 1:max(max(input.ClimateMask))
                                 
                                 case 1 % VL ELM: 0 nutrients + irr
                                     
-                                    %                                     agmgmt = @(b,x) potyieldbin ...
-                                    %                                         ./ (1 + exp(b(1) - abs(b(2)) ...
-                                    %                                         .* x(:,1)));
-                                    agmgmt = @(b,x) (min(potyieldbin, ...
-                                        (abs(b(1) - b(2)) + x(:,1) ...
-                                        .* b(2))));
+                                    agmgmt = @(b,x) potyieldbin ...
+                                        ./ (1 + exp(b(1) - abs(b(2)) ...
+                                        .* x(:,1)));
                                     yw = sqrt(w).*yield_bin;
                                     agmgmtw = @(b,x) double(sqrt(w).*...
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                   for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
-                                        ism = b0irr.*slopemultvectirr(m);
-                                        beta0 = [potyieldbin ism];   %%%% CHANGED
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
+                                        beta0 = [bnut sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
                                                 lsqcurvefit(agmgmtw, ...
@@ -359,13 +348,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
-                                        
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -375,22 +359,18 @@ for bin = 1:max(max(input.ClimateMask))
                                     
                                 case 2 % VL MB: 0 nutrients + irr
                                     
-                                    %                                     agmgmt = @(b,x) potyieldbin ...
-                                    %                                         .* (1 - (abs(b(1)) .* ...
-                                    %                                         exp(-abs(b(2)) .* x(:,1))));
-                                    agmgmt = @(b,x) (min(potyieldbin, ...
-                                        (abs(b(1) - b(2)) + x(:,1) ...
-                                        .* b(2))));
+                                    agmgmt = @(b,x) potyieldbin ...
+                                        .* (1 - (abs(b(1)) .* ...
+                                        exp(-abs(b(2)) .* x(:,1))));
                                     yw = sqrt(w).*yield_bin;
                                     agmgmtw = @(b,x) double(sqrt(w).*...
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
-                                        ism = b0irr.*slopemultvectirr(m);
-                                        beta0 = [potyieldbin ism];
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
+                                        beta0 = [alpha sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
                                                 lsqcurvefit(agmgmtw, ...
@@ -404,12 +384,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -436,9 +412,9 @@ for bin = 1:max(max(input.ClimateMask))
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
                                         beta0 = sm;
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
@@ -453,12 +429,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -476,9 +448,9 @@ for bin = 1:max(max(input.ClimateMask))
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
                                         beta0 = sm;
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
@@ -493,12 +465,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -515,22 +483,18 @@ for bin = 1:max(max(input.ClimateMask))
                                     agmgmt = @(b,x)  min([(potyieldbin ...
                                         ./(1 + exp(bnut - abs(b(1)) ...
                                         .* x(:,1)))), ...
-                                        (min(potyieldbin, ...
-                                        (abs(b(2) - b(3)) + x(:,2) ...
-                                        .* b(3))))],[],2);
-                                    %                                         (potyieldbin ...
-                                    %                                         ./(1 + exp(b(2) - abs(b(3)) ...
-                                    %                                         .* x(:,2))))],[],2);
+                                        (potyieldbin ...
+                                        ./(1 + exp(b(2) - abs(b(3)) ...
+                                        .* x(:,2))))],[],2);
                                     yw = sqrt(w).*yield_bin;
                                     agmgmtw = @(b,x) double(sqrt(w).*...
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
-                                        ism = b0irr.*slopemultvectirr(m);
-                                        beta0 = [sm potyieldbin ism];
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
+                                        beta0 = [sm bnut sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
                                                 lsqcurvefit(agmgmtw, ...
@@ -544,12 +508,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -562,22 +522,18 @@ for bin = 1:max(max(input.ClimateMask))
                                     agmgmt = @(b,x) min([(potyieldbin ...
                                         .* (1 - (alpha .* ...
                                         exp(-abs(b(1)) .* x(:,1))))), ...
-                                        (min(potyieldbin, ...
-                                        (abs(b(2) - b(3)) + x(:,2) ...
-                                        .* b(3))))],[],2);
-                                    %                                         (potyieldbin ...
-                                    %                                         .* (1 - (abs(b(2)) .* ...
-                                    %                                         exp(-abs(b(3)) .*x(:,2)))))],[],2);
+                                        (potyieldbin ...
+                                        .* (1 - (abs(b(2)) .* ...
+                                        exp(-abs(b(3)) .*x(:,2)))))],[],2);
                                     yw = sqrt(w).*yield_bin;
                                     agmgmtw = @(b,x) double(sqrt(w).*...
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
-                                        ism = b0irr.*slopemultvectirr(m);
-                                        beta0 = [sm potyieldbin ism];
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
+                                        beta0 = [sm alpha sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
                                                 lsqcurvefit(agmgmtw, ...
@@ -591,12 +547,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -625,9 +577,9 @@ for bin = 1:max(max(input.ClimateMask))
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
                                         beta0 = [sm sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
@@ -642,12 +594,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -668,9 +616,9 @@ for bin = 1:max(max(input.ClimateMask))
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
                                         beta0 = [sm sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
@@ -685,12 +633,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -711,22 +655,18 @@ for bin = 1:max(max(input.ClimateMask))
                                         (potyieldbin ...
                                         ./(1 + exp(bnut - abs(b(2)) ...
                                         .* x(:,2)))), ...
-                                        (min(potyieldbin, ...
-                                        (abs(b(3) - b(4)) + x(:,3) ...
-                                        .* b(4))))],[],2);
-                                    %                                         (potyieldbin ...
-                                    %                                         ./(1 + exp(b(3) - abs(b(4)) ...
-                                    %                                         .* x(:,3))))],[],2);
+                                        (potyieldbin ...
+                                        ./(1 + exp(b(3) - abs(b(4)) ...
+                                        .* x(:,3))))],[],2);
                                     yw = sqrt(w).*yield_bin;
                                     agmgmtw = @(b,x) double(sqrt(w).*...
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
-                                        ism = b0irr.*slopemultvectirr(m);
-                                        beta0 = [sm sm potyieldbin ism];
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
+                                        beta0 = [sm sm bnut sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
                                                 lsqcurvefit(agmgmtw, ...
@@ -740,12 +680,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -761,22 +697,18 @@ for bin = 1:max(max(input.ClimateMask))
                                         (potyieldbin ...
                                         .* (1 - (alpha .* ...
                                         exp(-abs(b(2)) .*x(:,2))))), ...
-                                        (min(potyieldbin, ...
-                                        (abs(b(3) - b(4)) + x(:,3) ...
-                                        .* b(4))))],[],2);
-                                    %                                         (potyieldbin ...
-                                    %                                         .* (1 - (abs(b(3) .* ...
-                                    %                                         exp(-abs(b(4)).*x(:,3))))))],[],2);
+                                        (potyieldbin ...
+                                        .* (1 - (abs(b(3) .* ...
+                                        exp(-abs(b(4)).*x(:,3))))))],[],2);
                                     yw = sqrt(w).*yield_bin;
                                     agmgmtw = @(b,x) double(sqrt(w).*...
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
-                                        ism = b0irr.*slopemultvectirr(m);
-                                        beta0 = [sm sm potyieldbin ism];
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
+                                        beta0 = [sm sm alpha sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
                                                 lsqcurvefit(agmgmtw, ...
@@ -790,12 +722,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -827,7 +755,7 @@ for bin = 1:max(max(input.ClimateMask))
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
+                                    blist={};rlist={};mlist=[];
                                     for m = slopemultvect
                                         sm = slope0.*m;
                                         beta0 = [sm sm sm];
@@ -844,12 +772,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -873,9 +797,9 @@ for bin = 1:max(max(input.ClimateMask))
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
                                         beta0 = [sm sm sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
@@ -890,12 +814,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -919,22 +839,18 @@ for bin = 1:max(max(input.ClimateMask))
                                         (potyieldbin ...
                                         ./(1 + exp(bnut - abs(b(3)) ...
                                         .* x(:,3)))), ...
-                                        (min(potyieldbin, ...
-                                        (abs(b(4) - b(5)) + x(:,4) ...
-                                        .* b(5))))],[],2);
-                                    %                                         (potyieldbin ...
-                                    %                                         ./(1 + exp(b(4) - abs(b(5)) ...
-                                    %                                         .* x(:,4))))],[],2);
+                                        (potyieldbin ...
+                                        ./(1 + exp(b(4) - abs(b(5)) ...
+                                        .* x(:,4))))],[],2);
                                     yw = sqrt(w).*yield_bin;
                                     agmgmtw = @(b,x) double(sqrt(w).*...
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
-                                        ism = b0irr.*slopemultvectirr(m);
-                                        beta0 = [sm sm sm potyieldbin ism];
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
+                                        beta0 = [sm sm sm bnut sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
                                                 lsqcurvefit(agmgmtw, ...
@@ -948,12 +864,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -961,7 +873,7 @@ for bin = 1:max(max(input.ClimateMask))
                                     rw = rlist{yy};
                                     bFitw = blist{yy};
                                     
-                                case 2 % VL MB: 3 nutrients + irr
+                                case 2 % VL MB: 2 nutrients + irr
                                     
                                     agmgmt = @(b,x) min([(potyieldbin ...
                                         .* (1 - (alpha .* ...
@@ -972,22 +884,18 @@ for bin = 1:max(max(input.ClimateMask))
                                         (potyieldbin ...
                                         .* (1 - (alpha .* ...
                                         exp(-abs(b(3)) .*x(:,3))))), ...
-                                        (min(potyieldbin, ...
-                                        (abs(b(4) - b(5)) + x(:,4) ...
-                                        .* b(5))))],[],2);
-                                    %                                         (potyieldbin ...
-                                    %                                         .* (1 - (abs(b(4) .* ...
-                                    %                                         exp(-abs(b(5)).*x(:,4))))))],[],2);
+                                        (potyieldbin ...
+                                        .* (1 - (abs(b(4) .* ...
+                                        exp(-abs(b(5)).*x(:,4))))))],[],2);
                                     yw = sqrt(w).*yield_bin;
                                     agmgmtw = @(b,x) double(sqrt(w).*...
                                         agmgmt(b,x));
                                     
                                     % set beta0 and run regression
-                                    blist={};rlist={};mlist=[];r2list=[];
-                                    for m = 1:length(slopemultvect)
-                                        sm = slope0.*slopemultvect(m);
-                                        ism = b0irr.*slopemultvectirr(m);
-                                        beta0 = [sm sm sm potyieldbin ism];
+                                    blist={};rlist={};mlist=[];
+                                    for m = slopemultvect
+                                        sm = slope0.*m;
+                                        beta0 = [sm sm sm alpha sm];
                                         if LSQflag == 1
                                             [bFitw,resnorm,rw] = ...
                                                 lsqcurvefit(agmgmtw, ...
@@ -1001,12 +909,8 @@ for bin = 1:max(max(input.ClimateMask))
                                         blist{length(blist)+1} = bFitw;
                                         rlist{length(rlist)+1} = rw;
                                         mlist(length(mlist)+1) = msew;
-                                        r2list(length(r2list)+1) = ...
-                                            1-sum(rw.^2)./sum((( ...
-                                            yield_bin-wavg_yield_bin) ...
-                                            .*sqrt(w)).^2);
                                     end
-                                    [~,yy] = min(mlist); 
+                                    yy = find(min(mlist));
                                     if length(yy)>1
                                         yy = yy(1);
                                     end
@@ -1026,7 +930,7 @@ for bin = 1:max(max(input.ClimateMask))
         end
         
         % find model with smallest error
-        [~,jj] = min(rmselist);
+        jj = find(rmselist == min(rmselist));
         bFitw = bFitwlist{jj};
         rw = rwlist{jj};
         rmse = rmselist(jj);
@@ -1087,18 +991,16 @@ for bin = 1:max(max(input.ClimateMask))
                         
                         case 1 % VL ELM: 0 nutrients + irr
                             
-                            modY = min(potyieldbin, (abs(bFitw(1) - ...
-                                bFitw(2)) + x(:,1) .* bFitw(2)));
-                            %                             min(potyieldbin, (abs(bFitw(1) - ...
-                            %                                 bFitw(2)) + x(:,1) .* bFitw(2)));
+                            modY = potyieldbin ...
+                                ./ (1 + exp(bFitw(1) - abs(bFitw(2)) ...
+                                .* x(:,1)));
                             cropOS.modyieldmap(ii) = modY;
                             
                         case 2 % VL MB: 0 nutrients + irr
                             
-                            modY = min(potyieldbin, (abs(bFitw(1) - ...
-                                bFitw(2)) + x(:,1) .* bFitw(2)));
-                            %                             min(potyieldbin, (abs(bFitw(1) - ...
-                            %                                 bFitw(2)) + x(:,1) .* bFitw(2)));
+                            modY = potyieldbin ...
+                                .* (1 - (abs(bFitw(1)) .* ...
+                                exp(-abs(bFitw(2)) .* x(:,1))));
                             cropOS.modyieldmap(ii) = modY;
                             
                     end
@@ -1135,11 +1037,9 @@ for bin = 1:max(max(input.ClimateMask))
                             modY = min([(potyieldbin ...
                                 ./(1 + exp(bnut - abs(bFitw(1)) ...
                                 .* x(:,1)))), ...
-                                min(potyieldbin, (abs(bFitw(2) - ...
-                                bFitw(3)) + x(:,2) .* bFitw(3)))],[],2);
-                            %                                 (potyieldbin ...
-                            %                                 ./(1 + exp(bFitw(2) - abs(bFitw(3)) ...
-                            %                                 .* x(:,2))))],[],2);
+                                (potyieldbin ...
+                                ./(1 + exp(bFitw(2) - abs(bFitw(3)) ...
+                                .* x(:,2))))],[],2);
                             cropOS.modyieldmap(ii) = modY;
                             
                         case 2 % VL MB: 1 nutrient + irr
@@ -1147,11 +1047,9 @@ for bin = 1:max(max(input.ClimateMask))
                             modY = min([(potyieldbin ...
                                 .* (1 - (alpha .* ...
                                 exp(-abs(bFitw(1)) .* x(:,1))))), ...
-                                min(potyieldbin, (abs(bFitw(2) - ...
-                                bFitw(3)) + x(:,2) .* bFitw(3)))],[],2);
-                            %                                 (potyieldbin ...
-                            %                                 .* (1 - (abs(bFitw(2)) .* ...
-                            %                                 exp(-abs(bFitw(3)) .*x(:,2)))))],[],2);
+                                (potyieldbin ...
+                                .* (1 - (abs(bFitw(2)) .* ...
+                                exp(-abs(bFitw(3)) .*x(:,2)))))],[],2);
                             cropOS.modyieldmap(ii) = modY;
                             
                     end
@@ -1197,11 +1095,9 @@ for bin = 1:max(max(input.ClimateMask))
                                 (potyieldbin ...
                                 ./(1 + exp(bnut - abs(bFitw(2)) ...
                                 .* x(:,2)))), ...
-                                min(potyieldbin, (abs(bFitw(3) - ...
-                                bFitw(4)) + x(:,3) .* bFitw(4)))],[],2);
-                            %                                 (potyieldbin ...
-                            %                                 ./(1 + exp(bFitw(3) - abs(bFitw(4)) ...
-                            %                                 .* x(:,3))))],[],2);
+                                (potyieldbin ...
+                                ./(1 + exp(bFitw(3) - abs(bFitw(4)) ...
+                                .* x(:,3))))],[],2);
                             cropOS.modyieldmap(ii) = modY;
                             
                         case 2 % VL MB: 2 nutrients + irr
@@ -1212,11 +1108,9 @@ for bin = 1:max(max(input.ClimateMask))
                                 (potyieldbin ...
                                 .* (1 - (alpha .* ...
                                 exp(-abs(bFitw(2)) .*x(:,2))))), ...
-                                min(potyieldbin, (abs(bFitw(3) - ...
-                                bFitw(4)) + x(:,3) .* bFitw(4)))],[],2);
-                            %                                 (potyieldbin ...
-                            %                                 .* (1 - (abs(bFitw(3) .* ...
-                            %                                 exp(-abs(bFitw(4)).*x(:,3))))))],[],2);
+                                (potyieldbin ...
+                                .* (1 - (abs(bFitw(3) .* ...
+                                exp(-abs(bFitw(4)).*x(:,3))))))],[],2);
                             cropOS.modyieldmap(ii) = modY;
                             
                     end
@@ -1271,11 +1165,9 @@ for bin = 1:max(max(input.ClimateMask))
                                 (potyieldbin ...
                                 ./(1 + exp(bnut - abs(bFitw(3)) ...
                                 .* x(:,3)))), ...
-                                min(potyieldbin, (abs(bFitw(4) - ...
-                                bFitw(5)) + x(:,4) .* bFitw(5)))],[],2);
-                            %                                 (potyieldbin ...
-                            %                                 ./(1 + exp(bFitw(4) - abs(bFitw(5)) ...
-                            %                                 .* x(:,4))))],[],2);
+                                (potyieldbin ...
+                                ./(1 + exp(bFitw(4) - abs(bFitw(5)) ...
+                                .* x(:,4))))],[],2);
                             cropOS.modyieldmap(ii) = modY;
                             
                         case 2 % VL MB: 2 nutrients + irr
@@ -1289,11 +1181,9 @@ for bin = 1:max(max(input.ClimateMask))
                                 (potyieldbin ...
                                 .* (1 - (alpha .* ...
                                 exp(-abs(bFitw(3)) .*x(:,3))))), ...
-                                min(potyieldbin, (abs(bFitw(4) - ...
-                                bFitw(5)) + x(:,4) .* bFitw(5)))],[],2);
-                            %                                 (potyieldbin ...
-                            %                                 .* (1 - (abs(bFitw(4) .* ...
-                            %                                 exp(-abs(bFitw(5)).*x(:,4))))))],[],2);
+                                (potyieldbin ...
+                                .* (1 - (abs(bFitw(4) .* ...
+                                exp(-abs(bFitw(5)).*x(:,4))))))],[],2);
                             cropOS.modyieldmap(ii) = modY;
                             
                     end

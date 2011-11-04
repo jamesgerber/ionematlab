@@ -40,7 +40,7 @@ if percentage > 1
 end
 
 if mean(area)<1
-    warndlg('area very small ... that''s probably fractional grid area, not area in ha')
+    warning('area very small ... that''s probably fractional grid area, not area in ha')
 end
 
 if goodthingperha==1

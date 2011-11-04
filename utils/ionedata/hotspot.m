@@ -1,33 +1,38 @@
-function [Hotspot,Tradeoff]=hotspot(area,goodthingperha,badthingperha,percentage);
-% HotSpot - determine hotspots in a dataset
+function [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,percentage,flags);
+% Hotspot - determine Hotspots in a dataset
 %
-%   HOTSPOT determines which points are most associated with some undesired
-%   characteristic.   It works in two ways:  it determines hotspots, which
+%   Hotspot determines which points are most associated with some undesired
+%   characteristic.   It works in two ways:  it determines Hotspots, which
 %   speak to the locations with the greatest 'bad thing' and it determines
-%   tradeoffs, which speak to the locations which provide 'good thing' at
+%   Tradeoffs, which speak to the locations which provide 'good thing' at
 %   the biggest cost in 'bad thing'
 %
 %
 %   Syntax
 %
-%       [Hotspot,Tradeoff]=hotspot(area,goodthingperha,badthingperha,N)
+%       [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,N)
 %
-%       TradeOff is a structure which contains fields
+%       Tradeoff is a structure which contains fields
 %         .RB   % relative badness, in other words, 100*N% of goodthing
 %               % results in 100*RB% of badthing 
 %         .ii   % indices of the set points which produce N% of goodthing          
 %               % at the maximum cost (RB%) of badthing
 %         .iigoodDQ  %indices of input vectors that passed data quality
 %         checks (i.e. not NAN, or 9E9, or 0 area)
-%       To do a hotspot calculation to analyze badthing per area, use '1'
+%       To do a Hotspot calculation to analyze badthing per area, use '1'
 %       for goodthingperha
 %
 %      Three likely uses for this code in terms of desired outputs
-%         "25% of land contains 40% of excess N"    (tradeoff)
-%         "25% of yield is associated with 36% of excess N"  (tradeoff)
-%         "25% of excess N is found on 17% of land"  (hotspot)
+%         "25% of land contains 40% of excess N"    (Tradeoff)
+%         "25% of yield is associated with 36% of excess N"  (Tradeoff)
+%         "25% of excess N is found on 17% of land"  (Hotspot)
 %
 %
+%       [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,N,flags)
+%
+%     where flags is a structure which may contain the fields
+%     removenegativevalues
+%     allownegativevalues
 %  Example
 %
 %       S=OpenNetCDF([iddstring '/Fertilizer2000/maizeNapprate']);
@@ -36,23 +41,23 @@ function [Hotspot,Tradeoff]=hotspot(area,goodthingperha,badthingperha,percentage
 %       area=S.Data(:,:,1);
 %       yield=S.Data(:,:,2);
 %       ii=CountryCodetoOutline('USA');
-%       [RB]=hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
+%       [RB]=Hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
 %       disp([ int2str(RB*100) '% of N goes on 20% of maize crop area in US']);
-%       [RB]=hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
+%       [RB]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
 %       disp([ int2str(RB*100) '% of N goes on 20% of maize produced in US']);
 %
 %       ii=LandMaskLogical;
-%       [RB]=hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
+%       [RB]=Hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
 %       disp([ int2str(RB*100) '% of N goes on 20% of maize crop area in world']);
-%       [RB]=hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
+%       [RB]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
 %       disp([ int2str(RB*100) '% of N goes on 20% of maize produced in world']);
 %       
 %
-%    See Also:  justhotspot  justtradeoff
+%    See Also:  justHotspot  justTradeoff
 
 %    Here is the code I used to corroborate this against nature paper
 %    results ...
-%    [RB,areacutoff]=hotspot(croparea(ii).*fma(ii),ones(size(find(ii))),ExcessNitrogenPerHA_avg(ii),10)
+%    [RB,areacutoff]=Hotspot(croparea(ii).*fma(ii),ones(size(find(ii))),ExcessNitrogenPerHA_avg(ii),10)
 %
 %
 %
@@ -68,37 +73,56 @@ if goodthingperha==1
     goodthingperha=ones(size(area));
 end
 
-%% data quality check
+% flag section
+removenegativevalues='off';
+allownegativevalues='';
 
-%iigood=(badthingperha > 0 ) & (~isnan(goodthingperha.*badthingperha.*area)) & ...
-%    area > 0 & area < 9e5;
-
-iigood= (~isnan(goodthingperha.*badthingperha.*area)) & ...
-    area > 0 & area < 9e5;
-
-if any(badthingperha(iigood)<0)
-    warndlg([' Some of the bad thing is negative.  Sums will cancel out,' ...
-        ' possibly leading to an overestimate of intensity of hotspots '])
+if nargin==5
+    expandstructure(flags);
 end
 
+%% data quality check
+
+switch lower(removenegativevalues)
+    case {'off','no'}
+        iigood= (~isnan(goodthingperha.*badthingperha.*area)) & ...
+            area > 0 & area < 9e5;
+    case {'on','yes'}
+        iigood=(badthingperha > 0 ) & (~isnan(goodthingperha.*badthingperha.*area)) & ...
+            area > 0 & area < 9e5;      
+    otherwise
+        error
+end
+
+
+
+switch allownegativevalues
+    case {'on','yes'}
+        % do nothing
+    otherwise
+        if any(badthingperha(iigood)<0)
+            warndlg([' Some of the bad thing is negative.  Sums will cancel out,' ...
+                ' possibly leading to an overestimate of intensity of Hotspots '])
+        end
+end
 area=area(iigood);
 goodthingperha=goodthingperha(iigood);
 badthingperha=badthingperha(iigood);
 
 if isempty(find(iigood))
     RelativeBadness=-1;
-    TradeOff.RB=RelativeBadness;
-    TradeOff.ii=[];
-    TradeOff.iigood=iigood;    
+    Tradeoff.RB=RelativeBadness;
+    Tradeoff.ii=[];
+    Tradeoff.iigood=iigood;    
     
     RelativeGoodness=-1;
-    HotSpot.RG=RelativeGoodness;
-    HotSpot.ii=[];
-    HotSpot.iigoodDQ=iigood;
+    Hotspot.RG=RelativeGoodness;
+    Hotspot.ii=[];
+    Hotspot.iigoodDQ=iigood;
     return
 end
 
-%% TradeOff - how much bad to get the amount of good?
+%% Tradeoff - how much bad to get the amount of good?
 
 % we sort by 'bad thing' rates
 [dum,ii]=sort(badthingperha,'descend');
@@ -122,12 +146,12 @@ PartialBadness=sum(badsort(1:jj));
 
 RelativeBadness=PartialBadness/TotalBadness;
 
-TradeOff.RB=RelativeBadness;
-TradeOff.ii=iigood(ii(1:jj));  
-TradeOff.iigoodDQ=iigood;
+Tradeoff.RB=RelativeBadness;
+Tradeoff.ii=iigood(ii(1:jj));  
+Tradeoff.iigoodDQ=iigood;
 
 
-%% HotSpot - how much good is associated with this amount of bad?
+%% Hotspot - how much good is associated with this amount of bad?
 
 cumbad=cumsum(badsort);
 cumbad=cumbad/max(cumbad);
@@ -135,14 +159,15 @@ cumbad=cumbad/max(cumbad);
 [dum,kk]=min( (cumbad-percentage).^2);
 
 Cutoff=badquantity(kk);
-TotalGoodness=sum(badsort);
-PartialGoodness=sum(badsort(1:kk));
+TotalGoodness=sum(goodsort);
+PartialGoodness=sum(goodsort(1:kk));
 
 RelativeGoodness=PartialGoodness/TotalGoodness;
 
-HotSpot.RG=RelativeGoodness;
-HotSpot.ii=iigood(ii(1:kk));  
-HotSpot.iigoodDQ=iigood;
+Hotspot.RG=RelativeGoodness;
+Hotspot.ii=iigood(ii(1:kk));  
+Hotspot.iigoodDQ=iigood;
+
 
 
 

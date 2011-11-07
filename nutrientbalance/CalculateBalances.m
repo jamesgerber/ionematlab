@@ -158,6 +158,14 @@ N.HarvestedNitrogenPerHA=HarvestedNitrogenPerHA;
 N.ExcessNitrogenPerHA=ExcessNitrogenPerHA;
 N.Nfix=Nfix;
 
+if isequal(D.CROPNAME{ii},'rice')
+    N2O=AppliedNitrogenPerHA*0.0031;
+    
+else
+    N2O=AppliedNitrogenPerHA*0.01;
+end
+
+
 ii=find(Area==0 | Area > 9e9);
 Area(ii)=0;
 N.ExcessNitrogenPerHA_x_Area=ExcessNitrogenPerHA.*Area;
@@ -167,6 +175,7 @@ N.AppliedNitrogenPerHA=AppliedNitrogenPerHA;
 N.crop=crop;
 N.Nfrac=Nfrac;
 N.DryFraction=DryFraction;
+N.N2O=N2O;
 
 if ~isempty(Nfixer)
     N.Nfixer=1;

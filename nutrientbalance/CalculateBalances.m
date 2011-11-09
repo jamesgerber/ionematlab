@@ -129,6 +129,11 @@ end
 
 HarvestedNitrogenPerHA=Yield.*DryFraction*Nfrac*1000;
 
+%set max Nfix to harvested N
+if Nfix > HarvestedNitrogenPerHA
+    Nfix = HarvestedNitrogenPerHA
+end
+
 
 %    if ~isequal(crop,'soybean')
 try

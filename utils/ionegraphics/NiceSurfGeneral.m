@@ -167,25 +167,37 @@ else
 end
 
 
-if isstruct(arglist{2})
-    NSS=arglist{2};
-    if length(arglist)==2
-        PropsList=[];
-    else
-        PropsList=arglist(3:end);
-    end
+%%% the following logic is awful ... but my joint if conditional statement
+%%% was crashing so i put in this monstrosity.
+if length(arglist)==1
+    
+    NSS.PlotArea='World';
+    PropsList=arglist(2:end);
+    
 else
     
-    NSS=[];
-    PropsList=arglist(2:end);
+    if isstruct(arglist{2})
+        NSS=arglist{2};
+        if length(arglist)==2
+            PropsList=[];
+        else
+            PropsList=arglist(3:end);
+        end
+    else
+        
+    NSS.PlotArea='World';
+        PropsList=arglist(2:end);
+    end
 end
+
 
 for j=1:2:length(PropsList)
     NSS=setfield(NSS,PropsList{j},PropsList{j+1});
 end
 
-NSS=CorrectCallingSyntax(NSS)
-
+if ~isempty(NSS)
+    NSS=CorrectCallingSyntax(NSS);
+end
 
 %% sort through everything passed in ...
 

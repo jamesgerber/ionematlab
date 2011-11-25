@@ -34,7 +34,7 @@ iscrop=0;
 SystemGlobals
 switch lower(DataString)
     case {'croparea','cropdata'}
-        S=OpenNetCDF([IoneDataDir 'Crops2000/' ...
+        S=OpenNetCDF([iddstring 'Crops2000/' ...
             'Cropland2000_5min.nc']);
         
     case 'tmi'

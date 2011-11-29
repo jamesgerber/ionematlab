@@ -3,7 +3,7 @@ function out=DataBlank(Val,Res)
 %
 % Syntax
 %
-%    out=DataBlank(VAL,RES)
+%    out=DataBlank(VAL,RES)    RES can be '30min' or '5min' (default)
 %
 %  EXAMPLE
 %

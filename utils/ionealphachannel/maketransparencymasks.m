@@ -1,2 +1,39 @@
-function maketransparencymasks
+function maketransparencymasks(res)
 % maketransparencymasks - make masks of figure areas to make transparent
+
+res='r300'
+ii=datablank;
+
+NSS.cmap=0*ones(size(colormap));%[1 1 1; 1 1 1];
+
+switch res
+    case 'r150';        
+        NSS.Resolution='-r150';
+        FileName=[iddstring '/misc/mask/OutputMask_colorbar_r150.png'];
+    case 'r300';        
+        NSS.Resolution='-r300';
+        FileName=[iddstring '/misc/mask/OutputMask_colorbar_r300.png'];
+        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r300.png'];
+    case 'r600';        
+        NSS.Resolution='-r600';
+        FileName=[iddstring '/misc/mask/OutputMask_colorbar_r600.png'];
+
+end
+
+MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
+
+if length(allchild(0)) > MaxNumFigs
+    error('too many figures currently open.')
+end
+    
+% Figure that is white everywhere
+NSS.cmap=0*ones(size(colormap));
+
+
+nsg(ii,NSS)
+fud=get(gcf,'userdata')
+set(fud.ColorbarHandle,'XTick',[]);
+OutputFig('Force',FileName,NSS.Resolution);
+
+set(fud.ColorbarHandle,'Visible','off')
+OutputFig('Force',FileNameNCB,NSS.Resolution);

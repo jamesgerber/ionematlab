@@ -1,7 +1,12 @@
 function maketransparencymasks(res)
 % maketransparencymasks - make masks of figure areas to make transparent
 
-res='r300'
+if nargin==0
+   maketransparencymasks('r150');
+   maketransparencymasks('r300');
+   maketransparencymasks('r600');
+   return
+end
 ii=datablank;
 
 NSS.cmap=0*ones(size(colormap));%[1 1 1; 1 1 1];
@@ -10,6 +15,7 @@ switch res
     case 'r150';        
         NSS.Resolution='-r150';
         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r150.png'];
+        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r150.png'];
     case 'r300';        
         NSS.Resolution='-r300';
         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r300.png'];
@@ -17,6 +23,7 @@ switch res
     case 'r600';        
         NSS.Resolution='-r600';
         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r600.png'];
+        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r600.png'];
 
 end
 

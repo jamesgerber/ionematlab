@@ -7,6 +7,9 @@ function maketransparentbackground(OldFileName,NewFileName,TextColor);
 %
 %        maketransparentbackground(OLDFILENAME,NEWFILENAME,TEXTCOLOR);
 %
+%        maketransparentbackground(OLDFILENAME,TEXTCOLOR);
+%    TEXTCOLOR is a three element vector
+%
 %
 %   Example
 %
@@ -22,11 +25,26 @@ OldFileName=fixextension(OldFileName,'.png');
 
 plotimage=imread(OldFileName);
 
+KeepText=0;
+if ~ischar(NewFileName)
+    TextColor=NewFileName;
+    NewFileName=strrep(OldFileName,'.png','_alpha.png');
+    NewFileName=[makesafestring(NewFileName(1:end-4)) '.png']
+    NewFileName=fixextension(NewFileName,'.png');
+    KeepText=1;
+end
 
 if nargin==1
     NewFileName=strrep(OldFileName,'.png','_alpha.png');
+    NewFileName=[makesafestring(NewFileName(1:end-3)) '.png']
 else
     NewFileName=fixextension(NewFileName,'.png');
+end
+
+
+
+if nargin>=3
+    KeepText=1;
 end
 
     
@@ -64,7 +82,7 @@ ii_text= ((a(:,:,1) ~=b(:,:,1)) | (a(:,:,2) ~=b(:,:,2)) | (a(:,:,3) ~=b(:,:,3)))
 
 
 
-if nargin<3
+if KeepText==0;
     Alpha=~ii_background | ~ii_colorbar;
     imwrite(plotimage,NewFileName,'png','Alpha',uint8(Alpha*255));
 else

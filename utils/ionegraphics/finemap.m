@@ -197,7 +197,19 @@ try
     
 catch
     try
-    cmap=colormap(str);
+        % now it is probably something like 'jet'
+        % need to get the colormap without having matlab change it around.
+        % so, get the current one, open a figure, let that get screwed up,
+        % erase the figure, reset the current colormap 
+       
+       
+        tempmap=colormap;
+    
+        tempfig=figure;
+        cmap=colormap(str);
+        delete(tempfig);
+        colormap(tempmap);
+        
     catch
     
 

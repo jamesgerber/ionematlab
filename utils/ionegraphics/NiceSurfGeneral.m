@@ -228,7 +228,7 @@ eastcolorbar='off';%
 makeplotdatafile='off';
 cbarvisible='on';
 projection='';  %empty is default
-newplotareamethod=0;
+newplotareamethod=1;
 
 datacutoff=9e9;
 

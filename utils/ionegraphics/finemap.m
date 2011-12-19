@@ -202,13 +202,25 @@ catch
         % so, get the current one, open a figure, let that get screwed up,
         % erase the figure, reset the current colormap 
        
-       
-        tempmap=colormap;
+        numfigs=length(allchild(0));
+        
+        if numfigs==0
+            % no figures exist.  so need to make a figure to 
+            tempfig=figure;
+            cmap=colormap(str);
+            delete(tempfig);
     
-        tempfig=figure;
-        cmap=colormap(str);
-        delete(tempfig);
-        colormap(tempmap);
+        
+        
+        else
+            tempmap=colormap;
+            tempfig=figure;
+            cmap=colormap(str);
+            delete(tempfig);
+            colormap(tempmap);
+
+        end
+        
         
     catch
     

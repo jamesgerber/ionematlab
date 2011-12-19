@@ -66,6 +66,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.categoryvalues={};
 %   NSS.DataCutoff=9e9;
 %   NSS.MakePlotDataFile='off';
+%   NSS.NewPlotAreaMethod='0'
 %
 %  Example
 %
@@ -210,7 +211,7 @@ ListOfProperties={
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
     'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
-    'cbarvisible','transparent','textcolor'};
+    'cbarvisible','transparent','textcolor','newplotareamethod'};
 
 %% set defaults for these properties
 units='';
@@ -227,6 +228,7 @@ eastcolorbar='off';%
 makeplotdatafile='off';
 cbarvisible='on';
 projection='';  %empty is default
+newplotareamethod=0;
 
 datacutoff=9e9;
 
@@ -532,7 +534,6 @@ fud.NiceSurfLowerCutoff=(cmin+minstep/2);
 fud.NiceSurfUpperCutoff=(cmax-minstep/2);
 fud.QuickVersion=0;
 fud.transparent=transparent;
-set(gcf,'UserData',fud);
 
 if fud.MapToolboxFig==1
     
@@ -587,6 +588,10 @@ end
 if isequal(colorbarminus,'on')
     AddColorbarMinus;
 end
+
+fud.titlestring=titlestring;
+fud.units=units;
+set(gcf,'UserData',fud);
 if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     
     g1=longlatbox(1);
@@ -596,19 +601,26 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     
     if fud.MapToolboxFig==1
         
-        trustmatlab=1
-        
-        if trustmatlab==1
-            
-            setm(fud.DataAxisHandle,'Origin',...
-                [(t1+t2)/2 (g1+g2)/2 0])
-            setm(fud.DataAxisHandle,'FLonLimit',[g1 g2]-mean([g1 g2]))
-            setm(fud.DataAxisHandle,'FLatLimit',[t1 t2]-mean([t1 t2]))
+        trustmatlab=1;
+        if newplotareamethod==0
+            if trustmatlab==1
+                
+                setm(fud.DataAxisHandle,'Origin',...
+                    [(t1+t2)/2 (g1+g2)/2 0])
+                setm(fud.DataAxisHandle,'FLonLimit',[g1 g2]-mean([g1 g2]))
+                setm(fud.DataAxisHandle,'FLatLimit',[t1 t2]-mean([t1 t2]))
+            else
+                setm(fud.DataAxisHandle,'Origin',...
+                    [0 0 0])
+                setm(fud.DataAxisHandle,'FLonLimit',[g1 g2])
+                setm(fud.DataAxisHandle,'FLatLimit',[t1 t2])
+            end
         else
-            setm(fud.DataAxisHandle,'Origin',...
-                [0 0 0])
-            setm(fud.DataAxisHandle,'FLonLimit',[g1 g2])
-            setm(fud.DataAxisHandle,'FLatLimit',[t1 t2])
+            %setm(fud.DataAxisHandle,'Origin',...
+            %    [(t1+t2)/2 (g1+g2)/2 0])
+            PropagateLimits('Import',gcf, [g1 g2]*pi/180, [t1 t2]*pi/180)
+            
+            
         end
         
     else
@@ -631,14 +643,11 @@ else
     
     set(ht,'interp',UserInterpPreference);
     end
-    
-    
-    
-    
-    
-    
 end
 
+
+fud.titlehandle=ht;
+set(gcf,'UserData',fud);
 
 set(fud.DataAxisHandle,'Visible','off');%again to make it current
 %
@@ -743,7 +752,7 @@ switch lower(plotarea)
         longlatbox=[-15 65 30 80];
         filename=[filename '_europe'];
         %            ylim=.51;
-            case 'westeurope'
+    case 'westeurope'
         longlatbox=[-10 20 30 50];
         filename=[filename '_westeurope'];
     case {'usmexico','usmex'}
@@ -779,7 +788,7 @@ switch lower(plotarea)
         filename=[filename 'argentina'];
         %            ylim=.45;
     case {'china'}
-        longlatbox=[75 140 15 60];
+        longlatbox=[75 120 15 60];
         filename=[filename '_china'];
         %            ylim=.42;%.37;%.32;%52
     case {'india'}

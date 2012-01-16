@@ -3,9 +3,9 @@ function selectCategory(InputFlag)
 switch(InputFlag)
     case 'Initialize'
         uicontrol('String','Clear','Callback', ...
-            'selectCategory(''clear'');','position',NextButtonCoords);  
+            'selectCategory(''clear'');','position',NextButtonCoords);
         uicontrol('String','Select Climate','Callback', ...
-            'selectCategory(''select'')','position',NextButtonCoords);     
+            'selectCategory(''select'')','position',NextButtonCoords);
     case 'select'
         zoom(gcbf,'off');
         UDS=get(gcbf,'UserData');
@@ -24,19 +24,19 @@ switch(InputFlag)
         colormap(UDS.CMap);
         caxis([1 max2d(UDS.Data)+1])
         max2d(UDS.Data)
-    return;
+        return;
 end
 end
 
 function SelectClickCallback(src,event)
 UDS=get(gcbf,'UserData');
-    cp=gcpmap(UDS.DataAxisHandle)
-    [a b]=getRowCol(UDS.Lat,UDS.Long,cp(1,1),cp(1,2));
-    z=UDS.Data(b,a);
-    R=[UDS.CellSize,90,-180];
-    [q w e]=CMapAppend(UDS.BMap*.66,(1+UDS.CMap*5)/6,1,UDS.BMax+1,1,max2d(UDS.Data)+1);
-    h1=meshm(double(IonEOverlay(UDS.Data*w+e,UDS.Data==z,UDS.Back)).',R);
-    shading flat;
+cp=gcpmap(UDS.DataAxisHandle)
+[a b]=getRowCol(UDS.Lat,UDS.Long,cp(1,1),cp(1,2));
+z=UDS.Data(b,a);
+R=[UDS.CellSize,90,-180];
+[q w e]=CMapAppend(UDS.BMap*.66,(1+UDS.CMap*5)/6,1,UDS.BMax+1,1,max2d(UDS.Data)+1);
+h1=meshm(double(IonEOverlay(UDS.Data*w+e,UDS.Data==z,UDS.Back)).',R);
+shading flat;
 %    colormap(q);
 %    caxis(UDS.DataAxisHandle,[min2d(UDS.Back)-1,(max2d(UDS.Data)+1)*w+e]);
 end

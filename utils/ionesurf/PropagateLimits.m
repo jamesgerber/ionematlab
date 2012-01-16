@@ -16,8 +16,8 @@ switch(InputFlag)
  case 'Export'
   %%% get the limits of this axis  
   hax=get(gcbf,'CurrentAxes');
-  Xlim=get(hax,'XLim');
-  Ylim=get(hax,'YLim');
+  Xlim=get(hax,'XLim')
+  Ylim=get(hax,'YLim')
   
   
   hall=allchild(0); % all handles

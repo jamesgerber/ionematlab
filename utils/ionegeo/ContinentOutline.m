@@ -47,7 +47,9 @@ if nargin==0
         help(mfilename)
         return
 end
-
+if ischar(ContinentList)
+    ContinentList={ContinentList};
+end
 if length(ContinentList)==1
     ContinentName=ContinentList;
     if iscell(ContinentName)
@@ -105,3 +107,46 @@ for j=1:248;
 end
 
 save ContinentOutlineData NAME_FAO NAME_ISO UNREGION1 UNREGION2
+
+%% here is some code from Nathan to modify the outputs 
+% construct regional outline maps
+
+ 
+
+outline_oceaniaseasia = ContinentOutline({'Polynesia', ...
+    'Australia and New Zealand','Melanesia','Micronesia','South-Eastern Asia'});
+
+outline_latinamericacarib = ContinentOutline({'South America','Caribbean', ...
+    'Central America'});
+
+outline_UScanada = ContinentOutline({'Northern America'});
+outline_southasia = ContinentOutline({'Southern Asia'});
+
+outline_mideastnorthafrica = ContinentOutline({'Northern Africa', ...
+    'Western Asia'});% note: includes Turkey and Sudan
+
+outline_ssafrica = ContinentOutline({'Southern Africa', ...
+    'Western Africa','Middle Africa','Eastern Africa'});
+
+outline_westerneurope = ContinentOutline({'Western Europe', ...
+    'Northern Europe','Southern Europe'});
+
+outline_easterneuropeFSU = ContinentOutline({'Eastern Europe',...
+    'Central Asia'});
+
+outline_eastasia = ContinentOutline({'Eastern Asia'})
+ 
+
+% make some modifications:
+
+% transfer Sudan to Sub-Saharan Africa
+
+outline = CountryCodetoOutline('SDN');
+outline_mideastnorthafrica(outline == 1) = 0;
+outline_ssafrica(outline == 1) = 1;
+% transfer Estonia, Latvia, and Lithuania to Eastern Europe from Western
+
+% Europe
+outline = CountryCodetoOutline({'LTU','EST','LVA'});
+outline_westerneurope(outline == 1) = 0;
+outline_easterneuropeFSU(outline == 1) = 1; 

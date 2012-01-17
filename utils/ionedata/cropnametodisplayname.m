@@ -1,20 +1,36 @@
 function displayname=cropnametodisplayname(cropname)
-% CROPNAMETODISPLAYNAME
-
-
+% CROPNAMETODISPLAYNAME make an image-friendly name  
+%
+%  This code is kind of silly - need to write something like
+%  FAONamesToSageNames
+%
+% first special cases
 switch lower(cropname)
-    case 'greenbeans'
-        displayname='Green Bean';
+    case 'pumpkinetc'
+        cropname='Pumpkin, squash and gourds';
     case 'greenpeas'
-        displayname='Green Pea';
+        cropname='Green Pea';
     case 'bean'
-        displayname='Bean (black)';
+        cropname='Bean (black)';
     case 'oats'
-        displayname= 'oat';
+        cropname= 'oat';
     case 'oilpalm'
-        displayname= 'oil palm';
+        cropname= 'oil palm';
     case 'sugarcane'
-        displayname= 'sugar cane';
+        cropname= 'sugar cane';
     otherwise
-        displayname=cropname;
+        cropname=cropname;
 end
+
+cropname=char(cropname);
+
+cropname=strrep(cropname,'nes',' not otherwise included');
+    
+cropname=strrep(cropname,'for',' forage ');
+
+cropname=strrep(cropname,'etc',' etc.');
+
+
+
+
+cropname

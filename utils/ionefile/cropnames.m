@@ -1,9 +1,9 @@
-function names=cropnames
+function names=cropnames(j)
 % Get Monfreda cropnames
 
 fid=fopen([iddstring 'misc/Reconcile_Monfreda_FAO_cropnames.txt'],'r');
 C = textscan(fid,'%s%s%s%s','Delimiter',tab,'HeaderLines',1);
-fclose(fid)
+fclose(fid);
 
 nums_unsort=C{1};
 mnames=C{2};
@@ -18,3 +18,7 @@ ii=strmatch('popcorn',mnames);
 mnames=mnames([1:ii-1   ii+1:length(mnames)]);
 
 names=mnames;
+
+if nargin==1
+    names=names(j);
+end

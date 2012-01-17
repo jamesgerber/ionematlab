@@ -16,14 +16,19 @@ switch res
         NSS.Resolution='-r150';
         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r150.png'];
         FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r150.png'];
+        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r150.png'];
+
     case 'r300';        
         NSS.Resolution='-r300';
         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r300.png'];
         FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r300.png'];
+        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r300.png'];
     case 'r600';        
         NSS.Resolution='-r600';
         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r600.png'];
         FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r600.png'];
+        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r600.png'];
+
 
 end
 
@@ -44,3 +49,14 @@ OutputFig('Force',FileName,NSS.Resolution);
 
 set(fud.ColorbarHandle,'Visible','off')
 OutputFig('Force',FileNameNCB,NSS.Resolution);
+
+% now the only oceans colormap
+NSS.cmap=ones(size(colormap));
+fud=get(gcf,'userdata')
+set(fud.ColorbarHandle,'Visible','off')
+set(fud.ColorbarHandle,'XTick',[]);
+close
+
+nsg(1-ii,NSS,'lowercolor','black')
+OutputFig('Force',FileNameOceans,NSS.Resolution);
+close

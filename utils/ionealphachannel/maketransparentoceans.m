@@ -1,13 +1,13 @@
-function maketransparentbackground(OldFileName,NewFileName,TextColor);
-% maketransparentbackground - add a transparent channel around a figure
+function maketransparentoceans(OldFileName,NewFileName,TextColor);
+% maketransparentoceans - add a transparent channel around landmass
 %
 %  Example
 %   Syntax
-%        maketransparentbackground(OLDFILENAME,NEWFILENAME);
+%        maketransparentoceans(OLDFILENAME,NEWFILENAME);
 %
-%        maketransparentbackground(OLDFILENAME,NEWFILENAME,TEXTCOLOR);
+%        maketransparentoceans(OLDFILENAME,NEWFILENAME,TEXTCOLOR);
 %
-%        maketransparentbackground(OLDFILENAME,TEXTCOLOR);
+%        maketransparentoceans(OLDFILENAME,TEXTCOLOR);
 %    TEXTCOLOR is a three element vector
 %
 %
@@ -18,11 +18,11 @@ function maketransparentbackground(OldFileName,NewFileName,TextColor);
 %     nsg(y,'filename','test_mtb.png','title','maize yield','caxis',.98,...
 %     'cmap','summer','units','tons/ha')
 %
-%     maketransparentbackground('test_mtb','test_mtb_alpha',[.4 .4 .5])
+%     maketransparentoceans('test_mtb','test_mto_alpha',[.4 .4 .5])
 %
-%     maketransparentbackground('test_mtb','test_mtb_alpha',umnmaroon)
+%     maketransparentoceans('test_mtb','test_mto_alpha',umnmaroon)
 %
-%    see also maketransparencymasks
+%    see also maketransparencymasks maketransparentbackground maketransparentoceans
 
 OldFileName=fixextension(OldFileName,'.png');
 
@@ -60,6 +60,7 @@ try
         case 1266
             a=imread([iddstring '/misc/mask/OutputMask_colorbar_r300.png']);
             ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r300.png']);
+            aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r300.png']);
         case 2534
             a=imread([iddstring '/misc/mask/OutputMask_colorbar_r600.png']);
             ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r600.png']);
@@ -80,16 +81,19 @@ ii_colorbar= ~((a(:,:,1) ~=ancb(:,:,1)) | (a(:,:,2) ~=ancb(:,:,2)) | (a(:,:,3) ~
 ii_text= ((a(:,:,1) ~=b(:,:,1)) | (a(:,:,2) ~=b(:,:,2)) | (a(:,:,3) ~=b(:,:,3)))  ...
     & ~ii_foreground & ii_colorbar;
 
+ii_ocean=(aocean(:,:,1)==255 & aocean(:,:,2) ==255 & aocean(:,:,3)==255);
+
 
 % what should we keep?
 
 
 
 if KeepText==0;
-    Alpha=~ii_background | ~ii_colorbar;
+    Alpha=(~ii_background | ~ii_colorbar )& ii_ocean ;
+    
     imwrite(plotimage,NewFileName,'png','Alpha',uint8(Alpha*255));
 else
-    Alpha=(~ii_background | ~ii_colorbar ) ;
+    Alpha=(~ii_background | ~ii_colorbar )& ii_ocean ; ;
     Alpha(ii_text)=1;
     x=plotimage(:,:,1); x(ii_text)=TextColor(1)*255; plotimage(:,:,1)=x;
     x=plotimage(:,:,2); x(ii_text)=TextColor(2)*255; plotimage(:,:,2)=x;

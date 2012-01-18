@@ -1,6 +1,15 @@
-function YieldGapToNetCDF(filename)
+function YieldGapToNetCDF(filename,extrainfo)
 % YieldGapToNetCDF - turn yield gap codes into a bunch of netcdfs
+%
+% Syntax
+%
+%   YieldGapToNetCDF(filename,'extrainfo')  will put string extrainfo into
+%   filename
 
+
+if nargin<2
+    extrainfo='';
+end
 
 
 load(filename,'OS');
@@ -11,7 +20,10 @@ DAS.CodeRevision=[ num2str(OS.RevData.CodeRevisionNo)];
 DAS.ProcessingDate=[ OS.RevData.ProcessingDate];
 DAS.FullFileNameKey=filename;
 
-ShortFileBase=makesafestring(['YieldGap_' OS.cropname]);
+%ShortFileBase=makesafestring(['YieldGap_' OS.cropname]);
+[a,b]=fileparts(filename);
+ShortFileBase=[makesafestring(b) extrainfo];
+
 
 DAS.Description='Climate Bins';
 WriteNetCDF(single(OS.ClimateMask),'BinMatrix',[ShortFileBase '_BinMatrix.nc'],DAS);

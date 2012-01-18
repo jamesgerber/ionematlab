@@ -50,7 +50,7 @@ if nargin>=3
     KeepText=1;
 end
 
-    
+
 
 try
     switch(size(plotimage,1))
@@ -64,7 +64,23 @@ try
             a=imread([iddstring '/misc/mask/OutputMask_colorbar_r600.png']);
             ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r600.png']);
         otherwise
-            error(['don''t know this resolution.   need to modify or run maketransparencymasks'])
+            warndlg(['don''t know this resolution.   attempting to run maketransparencymasks'])
+            x=personalpreferences('printingres');
+            res=x(2:end)
+            try
+                maketransparencymasks(res)
+             a=imread([iddstring '/misc/mask/OutputMask_colorbar_' res '.png']);
+                ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png']);
+         
+                
+                
+                
+            catch
+                warning(['maketransparencymasks didn''t work. possible reasons '...
+                    'include too many figures currently open.  also, best' ...
+                    'to set resolution via personalpreferences'])
+                error(['maketransparencymasks didn''t work.'])
+            end
     end
 catch
     error(['prob need to run maketransparencymasks'])
@@ -95,5 +111,5 @@ else
     x=plotimage(:,:,2); x(ii_text)=TextColor(2)*255; plotimage(:,:,2)=x;
     x=plotimage(:,:,3); x(ii_text)=TextColor(3)*255; plotimage(:,:,3)=x;
     imwrite(plotimage,NewFileName,'png','Alpha',uint8(Alpha*255));
-end    
-    
+end
+

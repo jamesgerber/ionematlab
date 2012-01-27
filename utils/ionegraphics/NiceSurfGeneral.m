@@ -675,6 +675,7 @@ end
 
 %% Was there text for an archival statement on the plot?
 if ~isempty(displaynotes)
+    mainaxes=gca;
     hx=axes('position',[.01 .01 .98 .02]);
     ht=text(0,0.5,displaynotes)
     set(hx,'visible','off')
@@ -682,6 +683,7 @@ if ~isempty(displaynotes)
         UserInterpPreference=callpersonalpreferences('texinterpreter');
     
     set(ht,'interp',UserInterpPreference);
+    axes(mainaxes);
 end
 
 HideUI

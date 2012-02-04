@@ -41,17 +41,21 @@ function [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,percentage
 %       area=S.Data(:,:,1);
 %       yield=S.Data(:,:,2);
 %       ii=CountryCodetoOutline('USA');
-%       [RB]=Hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
-%       disp([ int2str(RB*100) '% of N goes on 20% of maize crop area in US']);
-%       [RB]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
-%       disp([ int2str(RB*100) '% of N goes on 20% of maize produced in US']);
+%       [HS,TO]=Hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
+%       disp([ int2str(TO.RB*100) '% of N goes on 20% of maize crop area in US']);
+%       [HS,TO]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
+%       disp([ int2str(TO.RB*100) '% of N goes on 20% of maize produced in US']);
+%       [HS,TO]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
+%       disp([ int2str(HS.RG*100) '% of maize produced with 20% of applied N/ha in US']);
 %
 %       ii=LandMaskLogical;
-%       [RB]=Hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
-%       disp([ int2str(RB*100) '% of N goes on 20% of maize crop area in world']);
-%       [RB]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
-%       disp([ int2str(RB*100) '% of N goes on 20% of maize produced in world']);
-%       
+%       [HS,TO]=Hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
+%       disp([ int2str(TO.RB*100) '% of N goes on 20% of maize crop area in world']);
+%       [HS,TO]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
+%       disp([ int2str(TO.RB*100) '% of N goes on 20% of maize produced in world']);
+%       [HS,TO]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
+%       disp([ int2str(HS.RG*100) '% of maize produced with 20% of applied N/ha in world']);
+       
 %
 %    See Also:  justHotspot  justTradeoff
 
@@ -149,7 +153,8 @@ RelativeBadness=PartialBadness/TotalBadness;
 Tradeoff.RB=RelativeBadness;
 Tradeoff.ii=iigood(ii(1:jj));  
 Tradeoff.iigoodDQ=iigood;
-
+Tradeoff.badquantitysorted=cumsum(badsort);
+Tradeoff.goodquantitysorted=cumsum(goodsort);
 
 %% Hotspot - how much good is associated with this amount of bad?
 
@@ -167,6 +172,8 @@ RelativeGoodness=PartialGoodness/TotalGoodness;
 Hotspot.RG=RelativeGoodness;
 Hotspot.ii=iigood(ii(1:kk));  
 Hotspot.iigoodDQ=iigood;
+Hotspot.badquantitysorted=cumsum(badsort);
+Hotspot.goodquantitysorted=cumsum(goodsort);
 
 
 

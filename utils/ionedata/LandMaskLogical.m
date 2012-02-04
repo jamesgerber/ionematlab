@@ -41,7 +41,13 @@ switch numel(DataTemplate)
         LogicalVector=LogicalVector10min;
     case 720*360  %30min / .5 degree
         SystemGlobals
-        [Long,Lat,Data]=OpenNetCDF(LANDMASK_30MIN);
+        try
+            [Long,Lat,Data]=aOpenNetCDF(LANDMASK_30MIN);
+        catch
+            warning([' didn''t find LANDMASK_30MIN.  downsampling 5min landmask. '])
+            lml=LandMaskLogical;
+            Data=lml(1:6:end,1:6:end);
+        end
         LogicalVector=(Data>0);
     otherwise
         error(['don''t have a landmask at this size'])

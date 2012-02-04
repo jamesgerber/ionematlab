@@ -153,8 +153,8 @@ RelativeBadness=PartialBadness/TotalBadness;
 Tradeoff.RB=RelativeBadness;
 Tradeoff.ii=iigood(ii(1:jj));  
 Tradeoff.iigoodDQ=iigood;
-Tradeoff.badquantitysorted=cumsum(badsort);
-Tradeoff.goodquantitysorted=cumsum(goodsort);
+Tradeoff.badquantitysorted=cumsum(badsort)/max(cumsum(badsort));
+Tradeoff.goodquantitysorted=cumsum(goodsort)/max(cumsum(goodsort));
 
 %% Hotspot - how much good is associated with this amount of bad?
 
@@ -172,8 +172,8 @@ RelativeGoodness=PartialGoodness/TotalGoodness;
 Hotspot.RG=RelativeGoodness;
 Hotspot.ii=iigood(ii(1:kk));  
 Hotspot.iigoodDQ=iigood;
-Hotspot.badquantitysorted=cumsum(badsort);
-Hotspot.goodquantitysorted=cumsum(goodsort);
+Hotspot.badquantitysorted=cumsum(badsort)/max(cumsum(badsort));
+Hotspot.goodquantitysorted=cumsum(goodsort)/max(cumsum(goodsort));
 
 
 

@@ -137,7 +137,7 @@ if CanMap==0
     
     UserDataStructure.QuickVersion=0;
 else
-    hm=axesm('robinson','Frame','On')
+    hm=axesm('robinson','Frame','Off')
     
     
     if meshmflag==0
@@ -229,4 +229,7 @@ set(gcf,'Renderer','zbuffer')
 if nargout==1
     varargout{1}=hfig;
 end
+
+
+
 end

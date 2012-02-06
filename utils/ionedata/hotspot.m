@@ -129,7 +129,8 @@ end
 %% Tradeoff - how much bad to get the amount of good?
 
 % we sort by 'bad thing' rates
-[dum,ii]=sort(badthingperha,'descend');
+%[dum,ii]=sort(badthingperha,'descend');  whoops!  this is wrong!!!
+[dum,ii]=sort(badthingperha./goodthingperha,'descend');
 
 % after sorting by rates, though, we don't want rates, we want rates*area
 badquantity=badthingperha.*area;

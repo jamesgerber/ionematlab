@@ -1,4 +1,4 @@
-function varargout=tradeoffplot(TO,PlotStruct);
+function varargout=tradeoffplot(HS,PlotStruct);
 % tradeoffplot - make a tradeoff plot
 %
 %   tradeoffplot(TO) where TO is output from hotspot.m
@@ -22,7 +22,7 @@ if nargin==2
 end
 
 %h=plot(100*TO.goodquantitysorted/max(TO.goodquantitysorted),100*TO.badquantitysorted/max(TO.badquantitysorted),100*[0 1],100*[0 1]);
-h=plot(100*HS.badquantitysorted/max(HS.badquantitysorted),100*HS.goodquantitysorted/max(HS.goodquantitysorted));
+h=plot(100*HS.badquantitysorted/max(HS.badquantitysorted),100*HS.goodquantitysorted/max(HS.goodquantitysorted),plotstyle);
 xlabel(xstr);
 ylabel(ystr);
 title(titlestr);

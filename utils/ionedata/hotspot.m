@@ -1,4 +1,4 @@
-function [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,percentage,flags);
+function [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,percentage,flags);
 % Hotspot - determine Hotspots in a dataset
 %
 %   Hotspot determines which points are most associated with some undesired
@@ -10,7 +10,7 @@ function [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,percentage
 %
 %   Syntax
 %
-%       [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,N)
+%       [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,N)
 %
 %       Tradeoff is a structure which contains fields
 %         .RB   % relative badness, in other words, 100*N% of goodthing
@@ -21,6 +21,7 @@ function [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,percentage
 %         checks (i.e. not NAN, or 9E9, or 0 area)
 %       To do a Hotspot calculation to analyze badthing per area, use '1'
 %       for goodthingperha
+%       GI is the Gini Index
 %
 %      Three likely uses for this code in terms of desired outputs
 %         "25% of land contains 40% of excess N"    (Tradeoff)
@@ -28,7 +29,7 @@ function [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,percentage
 %         "25% of excess N is found on 17% of land"  (Hotspot)
 %
 %
-%       [Hotspot,Tradeoff]=Hotspot(area,goodthingperha,badthingperha,N,flags)
+%       [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,N,flags)
 %
 %     where flags is a structure which may contain the fields
 %     removenegativevalues
@@ -123,6 +124,7 @@ if isempty(find(iigood))
     Hotspot.RG=RelativeGoodness;
     Hotspot.ii=[];
     Hotspot.iigoodDQ=iigood;
+    GI=[];
     return
 end
 
@@ -176,6 +178,19 @@ Hotspot.iigoodDQ=iigood;
 Hotspot.badquantitysorted=cumsum(badsort)/max(cumsum(badsort));
 Hotspot.goodquantitysorted=cumsum(goodsort)/max(cumsum(goodsort));
 
+% now calculate gini index
+N=1000;
+xnew=Hotspot.badquantitysorted;
+ynew=Hotspot.goodquantitysorted;
+[dum,ii]=unique(xnew);
+xnew=xnew(ii);
+ynew=ynew(ii);
 
+xreg=linspace(xnew(1),xnew(end),N);
+
+yreg=interp1(xnew,ynew,xreg);
+
+L=(sum(yreg)/(length(yreg)));
+GI=1-2*L;
 
 

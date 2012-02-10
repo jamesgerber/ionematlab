@@ -1,6 +1,11 @@
 function maketransparencymasks(res)
 % maketransparencymasks - make masks of figure areas to make transparent
-
+%
+%   This function makes some necessary masks to allow us to make
+%   transparent backgrounds using maketransparentoceans.
+%
+%  This can be called automatically by maketransparentoceans, or you can
+%  call it from the commandline without arguments
 if nargin==0
    maketransparencymasks('r150');
    maketransparencymasks('r300');
@@ -10,6 +15,15 @@ end
 ii=datablank;
 
 NSS.cmap=0*ones(size(colormap));%[1 1 1; 1 1 1];
+
+
+% lines of code to make sure there is a directory for the masks.
+
+
+if exist([iddstring '/misc/mask']) ~=7
+    warndlg(['creating directory '  iddstring '/misc/mask'])
+    mkdir([iddstring '/misc/mask'])
+end
 
 switch res
     case 'r150';        

@@ -65,7 +65,7 @@ if strcmp(get(src,'SelectionType'),'normal')
      %% section to find this value.  tricky if xx,yy are mappings.  use
      %% some ugly code...
      if size(z,1)==2160 & size(z,2)==4320
-         [yy,xx]=inferlonglat(z);
+         [yy,xx]=InferLongLat(z);
          [dum,ix]=min((xx-x).^2);
          [dum,iy]=min((yy-y).^2);
          zvalue=z(iy,ix);

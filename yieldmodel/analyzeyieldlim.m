@@ -1,9 +1,10 @@
 function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
-    dI, dIquality] = analyzeyieldlim(cropname, modelnumber, ...
-    desiredyield, potentialyield, yieldmap, datamask, climatemask, ...
-    nfert, pfert, kfert, avgpercirr, errorflag, errormap, adjCflag)
+    dI, dIquality] = analyzeyieldlim(cropname, ...
+    modelnumber, desiredyield, potentialyield, yieldmap, datamask, ...
+    climatemask, nfert, pfert, kfert, avgpercirr, errorflag, errormap, ...
+    adjCflag, scenario)
 
-% [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
+% [yieldliam, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %     dI, dIquality] = analyzeyieldlim(cropname, modelnumber, ...
 %     desiredyield, potentialyield, yieldmap, datamask, climatemask, ...
 %     nfert, pfert, kfert, avgpercirr, errorflag, errormap, adjCflag)
@@ -31,7 +32,7 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %   - dNPKIquality = the quality of the delta nutrient projection
 %        - code 1 = projected change is from a bin-specific coefficient for
 %                   that particular input
-%        - code 2 = projected change is from a global  or a Ymax-normalized 
+%        - code 2 = projected change is from a global  or a Ymax-normalized
 %                   coefficient (if adjCflag = 1) for that particular input
 %                   (note: we only revert to global slopes for nutrients,
 %                   for irrigation we just don't estimate a response if
@@ -54,7 +55,7 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %         current yields) or 2) it can be a map of the yield you would like
 %         to obtain (i.e. a map of 75th percentile yields)
 %   - potentialyield: a map defining potential yields (such as 95th
-%         percentile yields in each climate bin) - this defines code 5 in 
+%         percentile yields in each climate bin) - this defines code 5 in
 %         the yieldlim map
 %   - datamask: a logical mask defining "good areas" - probably just the
 %         intersection of good data for yields, inputs, and climate (this
@@ -71,6 +72,17 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %         modeledyield > desired yield get set as number 4)
 %   - errormap: the difference between modeled and observed yields (modeled
 %         minus observed)
+%   - scenario: decide how to close yield gaps ... options are ...
+%         (1) 'fixednutrients' - hold nutrients constant and see if yield
+%              gaps can be closed
+%         (2) 'fixedirrigation' - hold irrigation constant and see if yield
+%              gaps can be closed
+%         (3) 'minimumdistance' - use the minimum distance in input vs.
+%              irrigation space to estimate changes in inputs to close
+%              yield gaps
+%         (4 or 5?) 'minimumirrigation' OR 'minimumnutrients'??? Nathan has
+%              the logic developed for these scenarios but they would not
+%              be necessary for the intensification paper
 %
 
 % check input variables
@@ -81,7 +93,7 @@ switch modelnumber
         modelname = 'VL_MBM';
 end
 if nargin < 12
-errorflag = 0;
+    errorflag = 0;
     adjCflag = 0;
 elseif nargin < 14
     adjCflag = 0;
@@ -153,6 +165,13 @@ dKquality = nan(4320,2160);
 dI = nan(4320,2160);
 dIquality = nan(4320,2160);
 
+% if we are running the mindistance scenario, we need to get the
+% normalization constant for nitrogen
+switch scenario
+    case 'minimumdistance'
+        Nmax95 = getcropfertrate(cropname, 'N', .95, datamask);
+end
+
 % cycle through the bins and calculate modeled yields
 for bin = 1:100
     
@@ -170,7 +189,7 @@ for bin = 1:100
         & isfinite(nfert) & isfinite(pfert) & isfinite(kfert));
     
     % make double & select bin area
-
+    
     yield_bin = double(yieldmap(ii));
     potentialyield_bin = double(potentialyield(ii));
     irr_bin = double(avgpercirr(ii));
@@ -181,8 +200,11 @@ for bin = 1:100
     error_bin = double(errormap(ii));
     
     % identify potential and min yields in the bin
-    potyieldbin = MS.potential_yield(bin);
-    minyieldbin = MS.minimum_yield(bin);
+    potyieldbin = MS.yield_ceiling(bin);
+    minyieldbin = MS.yield_floor(bin);
+    
+    % get rainfed potential yield
+    yc_rf_bin = str2num(MS.yc_rf{bin});
     
     % initialize the lim_bin codes and nutrient plus vectors
     lim_bin = zeros(length(yield_bin),1);
@@ -218,126 +240,523 @@ for bin = 1:100
         end
     end
     
-    %%% cycle through cb, look at each individual functional form
-    
-    % examine for nitrogen limitation
-    if str2num(cb(1)) == 1
-        bFitw = str2num(MS.c_N{bin});
-        bininfo = 1;
-        dNQ_bin = ones(length(dNQ_bin),1);
-    elseif adjCflag == 1
-        bFitw = (N_creg_slope.*potyieldbin) + N_creg_yint;
-        bininfo = 0;
-    else
-        bFitw = str2num(MS.c_N{101});
-        bininfo = 0;
-        dNQ_bin = ones(length(dNQ_bin),1)+1;
-    end
-    switch modelnumber
-        case 1 % VL LM
-            nfertplus_bin = (log((potyieldbin ./ ...
-                desiredyield_bin) - 1) - bnut) ./ - bFitw;
-        case 2 % VL MBM
-            nfertplus_bin = log((1 - (desiredyield_bin ./ ...
-                potyieldbin)) ./ bnut) ./ -bFitw;
-    end
-    dN_bin = nfertplus_bin - nfert_bin;
-    jj = find(imag(dN_bin)~=0);
-    dN_bin(jj) = NaN;
-    dNQ_bin(jj) = 4;
-    if bininfo == 1
-        lim_bin(nfertplus_bin > nfert_bin) = 1;
+    if bin == 71
+        disp('check')
     end
     
-    % examine for phosphorus limitation
-    if str2num(cb(2)) == 1
-        bFitw = str2num(MS.c_P2O5{bin});
-        bininfo = 1;
-        dPQ_bin = ones(length(dPQ_bin),1);
-    elseif adjCflag == 1
-        bFitw = (P_creg_slope.*potyieldbin) + P_creg_yint;
-    else
-        bFitw = str2num(MS.c_P2O5{101});
-        bininfo = 0;
-        dPQ_bin = ones(length(dPQ_bin),1)+1;
-    end
-    switch modelnumber
-        case 1 % VL LM
-            pfertplus_bin = (log((potyieldbin ./ ...
-                desiredyield_bin) - 1) - bnut) ./ - bFitw;
-        case 2 % VL MBM
-            pfertplus_bin = log((1 - (desiredyield_bin ./ ...
-                potyieldbin)) ./ bnut) ./ -bFitw;
-    end
-    dP_bin = pfertplus_bin - pfert_bin;
-    jj = find(imag(dP_bin)~=0);
-    dP_bin(jj) = NaN;
-    dPQ_bin(jj) = 4;
-    if bininfo == 1
-        lim_bin(pfertplus_bin > pfert_bin) = 1;
-    end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% SWITCH ANALYSIS BASED ON THE SCENARIO %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % examine for potash limitation
-    if str2num(cb(3)) == 1
-        bFitw = str2num(MS.c_K2O{bin});
-        bininfo = 1;
-        dKQ_bin = ones(length(dKQ_bin),1);
-    elseif adjCflag == 1
-        bFitw = (K_creg_slope.*potyieldbin) + K_creg_yint;
-    else
-        bFitw = str2num(MS.c_K2O{101});
-        bininfo = 0;
-        dKQ_bin = ones(length(dKQ_bin),1)+1;
-    end
-    switch modelnumber
-        case 1 % VL LM
-            kfertplus_bin = (log((potyieldbin ./ ...
-                desiredyield_bin) - 1) - bnut) ./ - bFitw;
-        case 2 % VL MBM
-            kfertplus_bin = log((1 - (desiredyield_bin ./ ...
-                potyieldbin)) ./ bnut) ./ -bFitw;
-    end
-    dK_bin = kfertplus_bin - kfert_bin;
-    jj = find(imag(dK_bin)~=0);
-    dK_bin(jj) = NaN;
-    dKQ_bin(jj) = 4;
-    if bininfo == 1
-        lim_bin(kfertplus_bin > kfert_bin) = 1;
-    end
-    
-    % examine for water limitation: this is now the same linear plateau
-    % model regardless of whether you are using MBM or LM for nutrient
-    % responses
-    if str2num(cb(4)) == 1
-        bFitw(1) = str2num(MS.b_irr{bin});
-        bFitw(2) = str2num(MS.c_irr{bin});
-        %         switch modelnumber
-        %             case 1 % VL ELM
-        %                 irrplus_bin = (log((potyieldbin ./ ...
-        %                     desiredyield_bin) - 1) - bFitw(1)) ./ - bFitw(2);
-        %             case 2 % VL MB
-        %                 irrplus_bin = log((1 - (desiredyield_bin ./ ...
-        %                     potyieldbin)) ./ bFitw(1)) ./ -bFitw(2);
-        %         end
-        % use the linear plateau model to calculate irr_plus
-        % (Y - abs(b_irr - c_irr)) / c_irr = x
-        irrplus_bin = (desiredyield_bin - abs(bFitw(1) - bFitw(2))) ./ ...
-            bFitw(2);
-        % record water and nutrient limited areas
-        jj = find((irrplus_bin > irr_bin) & (lim_bin == 1));
-        lim_bin(jj) = 2;
-        % record just water limited areas
-        jj = find((irrplus_bin > irr_bin) & (lim_bin == 0));
-        lim_bin(jj) = 3;
-        % record change in % irrigated areas
-        dI_bin = irrplus_bin - irr_bin;
-        jj = find(imag(dI_bin)~=0);
-        dI_bin(jj) = NaN;
-        dIQ_bin = ones(1,length(dIQ_bin));
-        dIQ_bin(jj) = 4;
-    else
-        dI_bin = zeros(length(dI_bin),1);
-        dIQ_bin = ones(length(dIQ_bin),1)+2;
+    switch scenario
+        
+        case 'fixedirrigation' % CLOSING YIELD GAPS WITH NUTRIENTS ONLY
+            
+            % for fixed irrigation, we calculate the desired_ymodnutbin
+            % given the desired yield and constant irrigation.
+            
+            % create desired ymodnutbin for backcalculting nutrient
+            % requirements before adjusting downward for irrigation
+            % limitation
+            desired_ymodnutbin = desiredyield_bin;
+            if str2num(cb(4)) == 1
+                kk = desiredyield_bin > yc_rf_bin;
+                desired_ymodnutbin(kk) = ((desiredyield_bin(kk) - ...
+                    yc_rf_bin) ./ irr_bin(kk)) + yc_rf_bin;
+            end
+            
+            %%% cycle through cb, look at each individual functional form
+            
+            % examine for nitrogen limitation
+            if str2num(cb(1)) == 1
+                bFitw = str2num(MS.c_N{bin});
+                bininfo = 1;
+                dNQ_bin = ones(length(dNQ_bin),1);
+            elseif adjCflag == 1
+                bFitw = (N_creg_slope.*potyieldbin) + N_creg_yint;
+                bininfo = 0;
+            else
+                bFitw = str2num(MS.c_N{101});
+                bininfo = 0;
+                dNQ_bin = ones(length(dNQ_bin),1)+1;
+            end
+            switch modelnumber
+                case 1 % VL LM
+                    nfertplus_bin = (log((potyieldbin ./ ...
+                        desired_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                case 2 % VL MBM
+                    nfertplus_bin = log((1 - (desired_ymodnutbin ./ ...
+                        potyieldbin)) ./ bnut) ./ -bFitw;
+            end
+            dN_bin = nfertplus_bin - nfert_bin;
+            jj = find(imag(dN_bin)~=0);
+            dN_bin(jj) = NaN;
+            dNQ_bin(jj) = 4;
+            if bininfo == 1
+                lim_bin(nfertplus_bin > nfert_bin) = 1;
+            end
+            
+            % examine for phosphorus limitation
+            if str2num(cb(2)) == 1
+                bFitw = str2num(MS.c_P2O5{bin});
+                bininfo = 1;
+                dPQ_bin = ones(length(dPQ_bin),1);
+            elseif adjCflag == 1
+                bFitw = (P_creg_slope.*potyieldbin) + P_creg_yint;
+            else
+                bFitw = str2num(MS.c_P2O5{101});
+                bininfo = 0;
+                dPQ_bin = ones(length(dPQ_bin),1)+1;
+            end
+            switch modelnumber
+                case 1 % VL LM
+                    pfertplus_bin = (log((potyieldbin ./ ...
+                        desired_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                case 2 % VL MBM
+                    pfertplus_bin = log((1 - (desired_ymodnutbin ./ ...
+                        potyieldbin)) ./ bnut) ./ -bFitw;
+            end
+            dP_bin = pfertplus_bin - pfert_bin;
+            jj = find(imag(dP_bin)~=0);
+            dP_bin(jj) = NaN;
+            dPQ_bin(jj) = 4;
+            if bininfo == 1
+                lim_bin(pfertplus_bin > pfert_bin) = 1;
+            end
+            
+            % examine for potash limitation
+            if str2num(cb(3)) == 1
+                bFitw = str2num(MS.c_K2O{bin});
+                bininfo = 1;
+                dKQ_bin = ones(length(dKQ_bin),1);
+            elseif adjCflag == 1
+                bFitw = (K_creg_slope.*potyieldbin) + K_creg_yint;
+            else
+                bFitw = str2num(MS.c_K2O{101});
+                bininfo = 0;
+                dKQ_bin = ones(length(dKQ_bin),1)+1;
+            end
+            switch modelnumber
+                case 1 % VL LM
+                    kfertplus_bin = (log((potyieldbin ./ ...
+                        desired_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                case 2 % VL MBM
+                    kfertplus_bin = log((1 - (desired_ymodnutbin ./ ...
+                        potyieldbin)) ./ bnut) ./ -bFitw;
+            end
+            dK_bin = kfertplus_bin - kfert_bin;
+            jj = find(imag(dK_bin)~=0);
+            dK_bin(jj) = NaN;
+            dKQ_bin(jj) = 4;
+            if bininfo == 1
+                lim_bin(kfertplus_bin > kfert_bin) = 1;
+            end
+            
+            % examine for irrigation limitation
+            
+            if str2num(cb(4)) == 1
+                
+                % by definition, there is no change in irrigation ...
+                irrplus_bin = irr_bin;
+                % ... except in places where the desired yield is under the
+                % rainfed yield ceiling
+                irrplus_bin(desiredyield_bin < yc_rf_bin) = 0;
+                
+                % record water and nutrient limited areas
+                jj = find((desiredyield_bin > yc_rf_bin) & (lim_bin == 1));
+                %                 jj = find((irrplus_bin > irr_bin) & (lim_bin == 1));
+                lim_bin(jj) = 2;
+                
+                dI_bin = irrplus_bin - irr_bin;
+                jj = find(imag(dI_bin)~=0);
+                dI_bin(jj) = NaN;
+                dIQ_bin = ones(1,length(dIQ_bin));
+                dIQ_bin(jj) = 4;
+            else
+                dI_bin = zeros(length(dI_bin),1);
+                dIQ_bin = ones(length(dIQ_bin),1)+2;
+            end
+            
+        case 'fixednutrients' % CLOSING YIELD GAPS WITH IRRIGATION ONLY
+            
+            % for fixed nutrients, we calculate the current yields on
+            % irrigated lands (current_ymodnutbin), then determine the
+            % change in %IRR to achieve the desired yield. you can only
+            % close yield gaps with %IRR only when current_ymodnutbin >=
+            % the desiredyield.
+            
+            % places without irrigation responses parameterized cannot
+            % close yield gaps through irrigation only
+            
+            % nutrients are fixed to the amount needed to attain
+            % current_ymodnutbin
+            
+            % calculate current_ymodnutbin
+            current_ymodnutbin = yield_bin;
+            if str2num(cb(4)) == 1
+                kk = yield_bin > yc_rf_bin;
+                current_ymodnutbin(kk) = ((yield_bin(kk) - ...
+                    yc_rf_bin) ./ irr_bin(kk)) + yc_rf_bin;
+            end
+            
+            %%% cycle through cb, look at each individual functional form
+            
+            % examine for nitrogen limitation
+            if str2num(cb(1)) == 1
+                bFitw = str2num(MS.c_N{bin});
+                bininfo = 1;
+                dNQ_bin = ones(length(dNQ_bin),1);
+            elseif adjCflag == 1
+                bFitw = (N_creg_slope.*potyieldbin) + N_creg_yint;
+                bininfo = 0;
+            else
+                bFitw = str2num(MS.c_N{101});
+                bininfo = 0;
+                dNQ_bin = ones(length(dNQ_bin),1)+1;
+            end
+            switch modelnumber
+                case 1 % VL LM
+                    nfertplus_bin = (log((potyieldbin ./ ...
+                        current_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                case 2 % VL MBM
+                    nfertplus_bin = log((1 - (current_ymodnutbin ./ ...
+                        potyieldbin)) ./ bnut) ./ -bFitw;
+            end
+            dN_bin = nfertplus_bin - nfert_bin;
+            jj = find(imag(dN_bin)~=0);
+            dN_bin(jj) = NaN;
+            dNQ_bin(jj) = 4;
+            if bininfo == 1
+                lim_bin(nfertplus_bin > nfert_bin) = 1;
+            end
+            
+            % examine for phosphorus limitation
+            if str2num(cb(2)) == 1
+                bFitw = str2num(MS.c_P2O5{bin});
+                bininfo = 1;
+                dPQ_bin = ones(length(dPQ_bin),1);
+            elseif adjCflag == 1
+                bFitw = (P_creg_slope.*potyieldbin) + P_creg_yint;
+            else
+                bFitw = str2num(MS.c_P2O5{101});
+                bininfo = 0;
+                dPQ_bin = ones(length(dPQ_bin),1)+1;
+            end
+            switch modelnumber
+                case 1 % VL LM
+                    pfertplus_bin = (log((potyieldbin ./ ...
+                        current_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                case 2 % VL MBM
+                    pfertplus_bin = log((1 - (current_ymodnutbin ./ ...
+                        potyieldbin)) ./ bnut) ./ -bFitw;
+            end
+            dP_bin = pfertplus_bin - pfert_bin;
+            jj = find(imag(dP_bin)~=0);
+            dP_bin(jj) = NaN;
+            dPQ_bin(jj) = 4;
+            if bininfo == 1
+                lim_bin(pfertplus_bin > pfert_bin) = 1;
+            end
+            
+            % examine for potash limitation
+            if str2num(cb(3)) == 1
+                bFitw = str2num(MS.c_K2O{bin});
+                bininfo = 1;
+                dKQ_bin = ones(length(dKQ_bin),1);
+            elseif adjCflag == 1
+                bFitw = (K_creg_slope.*potyieldbin) + K_creg_yint;
+            else
+                bFitw = str2num(MS.c_K2O{101});
+                bininfo = 0;
+                dKQ_bin = ones(length(dKQ_bin),1)+1;
+            end
+            switch modelnumber
+                case 1 % VL LM
+                    kfertplus_bin = (log((potyieldbin ./ ...
+                        current_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                case 2 % VL MBM
+                    kfertplus_bin = log((1 - (current_ymodnutbin ./ ...
+                        potyieldbin)) ./ bnut) ./ -bFitw;
+            end
+            dK_bin = kfertplus_bin - kfert_bin;
+            jj = find(imag(dK_bin)~=0);
+            dK_bin(jj) = NaN;
+            dKQ_bin(jj) = 4;
+            if bininfo == 1
+                lim_bin(kfertplus_bin > kfert_bin) = 1;
+            end
+            
+            % examine for irrigation limitation
+            if str2num(cb(4)) == 1
+                
+                % calculate irrplus_bin to achieve desired yields
+                irrplus_bin = (desiredyield_bin - yc_rf_bin) ./ ...
+                    (current_ymodnutbin - yc_rf_bin);
+                
+                % in places where the desired yield is under rainfed yield
+                % ceiling we don't predict any irrigation needed
+                irrplus_bin(desiredyield_bin <= yc_rf_bin) = 0;
+                
+                % in places where the modyieldmap (yield_bin) is < the
+                % rainfed yield ceiling and is < the desired yield, we
+                % can't reach the desired yield by changing irrigation. in
+                % these cases just make dI NaNs.
+                irrplus_bin((yield_bin < yc_rf_bin) & ...
+                    (yield_bin < desiredyield_bin)) = NaN;
+                
+                % record water and nutrient limited areas
+                jj = find((desiredyield_bin > yc_rf_bin) & (lim_bin == 1));
+                %  jj = find((irrplus_bin > irr_bin) & (lim_bin == 1));
+                lim_bin(jj) = 2;
+                
+                dI_bin = irrplus_bin - irr_bin;
+                jj = find(imag(dI_bin)~=0);
+                dI_bin(jj) = NaN;
+                dIQ_bin = ones(1,length(dIQ_bin));
+                dIQ_bin(jj) = 4;
+            else
+                dI_bin = nan(length(dI_bin),1);
+                dIQ_bin = ones(length(dIQ_bin),1)+2;
+            end
+            
+        case 'minimumdistance' % CLOSING YIELD GAPS USING THE MIN DISTANCE
+            % IN NORMALIZED NUTRIENT VS IRRIGATION SPACE
+            
+            % for minimum distance, we'll find the constant desired yield
+            % contour in nutrient x irrigation space, then look at the
+            % minimum distance to get from our current input combination to
+            % the desired yield contour. (note: we normalize the nutrient
+            % axis to accomplish this)
+            
+            % only build the contour if we have an irrigation response for
+            % this bin
+            
+            if str2num(cb(4)) == 1
+                
+                % calculate current_ymodnutbin - need this to determine
+                % "effective" amount of current nutrients needed to sustain
+                % current yields
+                current_ymodnutbin = yield_bin;
+                kk = (yield_bin > yc_rf_bin) & (irr_bin > 0); %%%% ADD HERE THAT IRR_BIN MUST BE > 0?
+                current_ymodnutbin(kk) = ((yield_bin(kk) - ...
+                    yc_rf_bin) ./ irr_bin(kk)) + yc_rf_bin;
+                
+                % get current effective N rate (since it will only exactly
+                % equal the input amount where N is the limiting nutrient)
+                if str2num(cb(1)) == 1
+                    bFitw = str2num(MS.c_N{bin});
+                    bininfo = 1;
+                    dNQ_bin = ones(length(dNQ_bin),1);
+                elseif adjCflag == 1
+                    bFitw = (N_creg_slope.*potyieldbin) + N_creg_yint;
+                    bininfo = 0;
+                else
+                    bFitw = str2num(MS.c_N{101});
+                    bininfo = 0;
+                    dNQ_bin = ones(length(dNQ_bin),1)+1;
+                end
+                switch modelnumber
+                    case 1 % VL LM
+                        eff_nfert_current = (log((potyieldbin ./ ...
+                            current_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                    case 2 % VL MBM
+                        eff_nfert_current = log((1 - ...
+                            (current_ymodnutbin ./ potyieldbin)) ./ ...
+                            bnut) ./ -bFitw;
+                end
+                
+                % normalize the effective nitrogen application rate vector
+                eff_nfert_current_norm = eff_nfert_current./Nmax95;
+                
+                % build NxIRR space in order to get contour
+                b = [bFitw, yc_rf_bin];
+                bnut = MS.b_nut(bin);
+                assign.binyieldceiling = potyieldbin;
+                % assign fixed parameters
+                switch modelnumber
+                    case 1 % VL LM
+                        assign.bnut = bnut;
+                        [~]=agmgmt_elm_irrintmodel_nutoneirron(0,0,assign);
+                    case 2 % VL MBM - note: I am sloppy w/ bnut/alpha
+                        assign.alpha = bnut;
+                        [~]=agmgmt_mbm_irrintmodel_nutoneirron(0,0,assign);
+                end
+                        
+                % run for N/I values
+                ymod = nan(101,101);
+                nlist = 0:2:800;
+                ilist = 0:.01:1;
+                for n = 1:length(nlist)
+                    for i = 1:length(ilist)
+                        x(1) = nlist(n);
+                        x(2) = ilist(i);
+                        tmp = agmgmt_mbm_irrintmodel_nutoneirron(b,x);
+                        ymod(n,i) = tmp;
+                    end
+                end
+                
+                % draw surface plot of response
+                % mesh(ilist,nlist,ymod)
+                % xlabel('proportion of grid cell area irrigated');
+                % ylabel('nitrogen application rate (kg/ha)');
+                % zlabel([cropname ' yield (t/ha)']);
+                % zlim([0 floor(max(max(ymod))+2)])
+                
+                % add constant yield value line
+                % hold on
+                udyb = unique(desiredyield_bin);
+                [contmatrix, conthandle] = contour3(ilist,nlist, ...
+                    ymod,[udyb,udyb]);
+                contmatrix = contmatrix(:,2:length(contmatrix(1,:)));
+                
+                % calculate minimum distance to the desired yield at that
+                % grid cell
+                eff_nfert_desired = nan(length(eff_nfert_current),1);
+                irrplus_bin = nan(length(eff_nfert_current),1);
+                for q = 1:length(eff_nfert_current)
+                   
+%                     disp(num2str(q))
+%                     dy = desiredyield_bin(q);
+%                     [contmatrix, conthandle] = contour3(ilist,nlist, ...
+%                         ymod,[dy,dy]);
+%                     contmatrix = contmatrix(:,2:length(contmatrix(1,:)));
+                     
+                    Ncurrent = eff_nfert_current(q);
+                    Icurrent = irr_bin(q);
+                    Nnormconstant = Nmax95;
+                    
+                    Idistances = contmatrix(1,:);
+                    Ndistances = contmatrix(2,:);
+                    Ndist_norm = Ndistances ./ Nnormconstant;
+                    Ncurr_norm = Ncurrent ./ Nnormconstant;
+                    distancevector = sqrt((Ndist_norm - Ncurr_norm).^2 + ...
+                        (Idistances - Icurrent).^2);
+                    [tmp,mm] = min(distancevector);
+                    minvals = contmatrix(:,mm);
+                   
+                    irrplus_bin(q) = minvals(1);
+                    eff_nfert_desired(q) = minvals(2);
+                end
+                close all
+            end
+            
+            % create desired ymodnutbin for backcalculting nutrient
+            % requirements before adjusting downward for irrigation
+            % limitation. this is the same code as for fixed irrigation,
+            % but here we are utilizing our new irrplus_bin values
+            desired_ymodnutbin = desiredyield_bin;
+            if str2num(cb(4)) == 1
+                kk = desiredyield_bin > yc_rf_bin;
+                desired_ymodnutbin(kk) = ((desiredyield_bin(kk) - ...
+                    yc_rf_bin) ./ irrplus_bin(kk)) + yc_rf_bin;
+            end
+            
+            %%% cycle through cb, look at each individual functional form
+            
+            % examine for nitrogen limitation
+            if str2num(cb(1)) == 1
+                bFitw = str2num(MS.c_N{bin});
+                bininfo = 1;
+                dNQ_bin = ones(length(dNQ_bin),1);
+            elseif adjCflag == 1
+                bFitw = (N_creg_slope.*potyieldbin) + N_creg_yint;
+                bininfo = 0;
+            else
+                bFitw = str2num(MS.c_N{101});
+                bininfo = 0;
+                dNQ_bin = ones(length(dNQ_bin),1)+1;
+            end
+            switch modelnumber
+                case 1 % VL LM
+                    nfertplus_bin = (log((potyieldbin ./ ...
+                        desired_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                case 2 % VL MBM
+                    nfertplus_bin = log((1 - (desired_ymodnutbin ./ ...
+                        potyieldbin)) ./ bnut) ./ -bFitw;
+            end
+            dN_bin = nfertplus_bin - nfert_bin;
+            jj = find(imag(dN_bin)~=0);
+            dN_bin(jj) = NaN;
+            dNQ_bin(jj) = 4;
+            if bininfo == 1
+                lim_bin(nfertplus_bin > nfert_bin) = 1;
+            end
+            
+            % examine for phosphorus limitation
+            if str2num(cb(2)) == 1
+                bFitw = str2num(MS.c_P2O5{bin});
+                bininfo = 1;
+                dPQ_bin = ones(length(dPQ_bin),1);
+            elseif adjCflag == 1
+                bFitw = (P_creg_slope.*potyieldbin) + P_creg_yint;
+            else
+                bFitw = str2num(MS.c_P2O5{101});
+                bininfo = 0;
+                dPQ_bin = ones(length(dPQ_bin),1)+1;
+            end
+            switch modelnumber
+                case 1 % VL LM
+                    pfertplus_bin = (log((potyieldbin ./ ...
+                        desired_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                case 2 % VL MBM
+                    pfertplus_bin = log((1 - (desired_ymodnutbin ./ ...
+                        potyieldbin)) ./ bnut) ./ -bFitw;
+            end
+            dP_bin = pfertplus_bin - pfert_bin;
+            jj = find(imag(dP_bin)~=0);
+            dP_bin(jj) = NaN;
+            dPQ_bin(jj) = 4;
+            if bininfo == 1
+                lim_bin(pfertplus_bin > pfert_bin) = 1;
+            end
+            
+            % examine for potash limitation
+            if str2num(cb(3)) == 1
+                bFitw = str2num(MS.c_K2O{bin});
+                bininfo = 1;
+                dKQ_bin = ones(length(dKQ_bin),1);
+            elseif adjCflag == 1
+                bFitw = (K_creg_slope.*potyieldbin) + K_creg_yint;
+            else
+                bFitw = str2num(MS.c_K2O{101});
+                bininfo = 0;
+                dKQ_bin = ones(length(dKQ_bin),1)+1;
+            end
+            switch modelnumber
+                case 1 % VL LM
+                    kfertplus_bin = (log((potyieldbin ./ ...
+                        desired_ymodnutbin) - 1) - bnut) ./ - bFitw;
+                case 2 % VL MBM
+                    kfertplus_bin = log((1 - (desired_ymodnutbin ./ ...
+                        potyieldbin)) ./ bnut) ./ -bFitw;
+            end
+            dK_bin = kfertplus_bin - kfert_bin;
+            jj = find(imag(dK_bin)~=0);
+            dK_bin(jj) = NaN;
+            dKQ_bin(jj) = 4;
+            if bininfo == 1
+                lim_bin(kfertplus_bin > kfert_bin) = 1;
+            end
+            
+            % examine for irrigation limitation
+            
+            if str2num(cb(4)) == 1
+              
+                % record water and nutrient limited areas
+                % jj=find((desiredyield_bin > yc_rf_bin) & (lim_bin == 1));
+                jj = find((irrplus_bin > irr_bin) & (lim_bin == 1));
+                lim_bin(jj) = 2;
+                
+                dI_bin = irrplus_bin - irr_bin;
+                jj = find(imag(dI_bin)~=0);
+                dI_bin(jj) = NaN;
+                dIQ_bin = ones(1,length(dIQ_bin));
+                dIQ_bin(jj) = 4;
+            else
+                dI_bin = zeros(length(dI_bin),1);
+                dIQ_bin = ones(length(dIQ_bin),1)+2;
+            end
+          
     end
     
     % place lim_bin into yieldlim map

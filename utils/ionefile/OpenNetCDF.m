@@ -156,9 +156,9 @@ else
     
     
     ncid=netcdf.open(FileName,'NOWRITE');
-    Long=netcdf.GetVar(ncid,0);
-    Lat=netcdf.GetVar(ncid,1);
-    Data=netcdf.GetVar(ncid,4);
+    Long=netcdf.getVar(ncid,0);
+    Lat=netcdf.getVar(ncid,1);
+    Data=netcdf.getVar(ncid,4);
     
     
     DS.Data=Data;

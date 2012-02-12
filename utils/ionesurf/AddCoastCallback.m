@@ -1,4 +1,4 @@
-function AddCoastCallBack(varargin);
+function AddCoastCallback(varargin);
 % AddCoastCallBack - Zoom graph to maximum value.
 
 if nargin==0
@@ -12,7 +12,7 @@ switch(InputFlag)
     case 'Initialize'
        
         uicontrol('String','Add Coastline','Callback', ...
-            'AddCoastCallBack(''AddCoast'')','position',NextButtonCoords);
+            'AddCoastCallback(''AddCoast'')','position',NextButtonCoords);
         
     case 'AddCoast'
         % find maximum, zoom in       

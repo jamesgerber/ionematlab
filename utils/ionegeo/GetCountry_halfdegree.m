@@ -24,7 +24,7 @@ if nargin==0
   help(mfilename);return;
 end
 
-systemglobals
+SystemGlobals
 ncid=netcdf.open([IoneDataDir '/AdminBoundary2005/Raster_NetCDF/1_Countries_0.5deg/ctry_0.5.nc'],'NOWRITE');
 
 long=netcdf.getVar(ncid,0);

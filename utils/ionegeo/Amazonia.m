@@ -24,6 +24,6 @@ LogicalMatrix(Q == 2160) = 1;
 LogicalMatrix(Q == 2320) = 1;
 
 
-output = LogicalMatrix;
+output = logical(LogicalMatrix);
 
 end

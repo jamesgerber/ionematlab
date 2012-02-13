@@ -5,8 +5,8 @@ c=1;
 
 while ~done
     Npairs=C(2,1);
-    S.X=C(1,2:Npairs);
-    S.Y=C(2,2:Npairs);
+    S.X=C(1,2:(1+Npairs));
+    S.Y=C(2,2:(1+Npairs));
     S.Level=C(1,1);
     CS(c)=S;
     

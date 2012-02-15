@@ -179,6 +179,7 @@ Hotspot.badquantitysorted=cumsum(badsort)/max(cumsum(badsort));
 Hotspot.goodquantitysorted=cumsum(goodsort)/max(cumsum(goodsort));
 
 % now calculate gini index
+if nargout==3
 N=1000;
 xnew=Hotspot.badquantitysorted;
 ynew=Hotspot.goodquantitysorted;
@@ -192,5 +193,5 @@ yreg=interp1(xnew,ynew,xreg);
 
 L=(sum(yreg)/(length(yreg)));
 GI=1-2*L;
-
+end
 

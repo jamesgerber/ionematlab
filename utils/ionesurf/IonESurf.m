@@ -182,7 +182,7 @@ set(hy,'String',Units);
 set(hy,'FontWeight','Bold')
 UserDataStructure.ColorbarStringHandle=hy;
 UserDataStructure.ColorbarHandle=hcb;
-
+UserDataStructure.titlestring=TitleStr;
 
 
 % now make graphics

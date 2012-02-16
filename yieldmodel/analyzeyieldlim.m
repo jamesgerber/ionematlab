@@ -761,12 +761,13 @@ for bin = 1:100
     
     % place lim_bin into yieldlim map
     if errorflag == 1
-        lim_bin(desiredyield_bin < (yield_bin - error_bin)) = 4;
+        lim_bin(desiredyield_bin <= (yield_bin - error_bin)) = 4;
+        lim_bin(desiredyield_bin <= yield_bin) = 4;
         lim_bin(desiredyield_bin > potentialyield_bin) = 5;
         % note: no error-correction for the "5" scenario right now
         % lim_bin((desiredyield_bin - error_bin) > potentialyield_bin) = 5;
     elseif errorflag == 0
-        lim_bin(desiredyield_bin < yield_bin) = 4;
+        lim_bin(desiredyield_bin <= yield_bin) = 4;
         lim_bin(desiredyield_bin > potentialyield_bin) = 5;
     end
     yieldlim(ii) = lim_bin;

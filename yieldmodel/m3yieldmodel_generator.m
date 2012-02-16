@@ -1,4 +1,4 @@
-function [cropOS] = m3yieldmodel_generator_irrintmodel(input, ...
+function [cropOS] = m3yieldmodel_generator(input, ...
     modelnumber, LSQflag)
 
 % [cropOS] = reg_m3yieldmodel_generator_irrintmodel(input, ...
@@ -33,8 +33,9 @@ function [cropOS] = m3yieldmodel_generator_irrintmodel(input, ...
 %                    Kfert: [4320x2160 double]
 %                Kdatatype: [4320x2160 double]
 
-slopemultvect = [.5 .75 1 1.5 2];
-slopemultvectirr = [.33 .66 1 1.33 1.66];
+
+slopemultvect = [.75 1 1.5]; %[.5 .75 1 1.5 2];
+slopemultvectirr = [.75 1 1.5];%[.33 .66 1 1.33 1.66];
 
 binrwlist = [];
 binyieldlist = [];
@@ -174,7 +175,8 @@ if LSQflag == 1
         end
     end
     clear slopeUB slopeLB
-    slope0 = mean([slopeGN slopeGP slopeGK]);
+        slope0 = mean([slopeGN slopeGP slopeGK]);
+    slopeglobalall = [slopeGN slopeGP slopeGK];
     slopeUBall = [slopeUBN slopeUBP slopeUBK];
     slopeLBall = [slopeLBN slopeLBP slopeLBK];
 end
@@ -289,11 +291,13 @@ for bin = 1:max(max(input.ClimateMask))
                 x = [];
                 slopeUBvector = [];
                 slopeLBvector = [];
+                beta0vector = [];
                 for m = 1:3
                     if str2num(cb(m)) == 1
                         x = [x xtot(:,m)];
                         slopeUBvector = [slopeUBvector slopeUBall(m)];
                         slopeLBvector = [slopeLBvector slopeLBall(m)];
+                        beta0vector = [beta0vector slopeglobalall(m)];
                     end
                 end
                 
@@ -310,6 +314,7 @@ for bin = 1:max(max(input.ClimateMask))
                     x = [x xtot(:,4)];
                     slopeUBvector = [slopeUBvector binyieldceiling];
                     slopeLBvector = [slopeLBvector 0];
+                    beta0vector = [beta0vector b0irr];
                 end
                 slopeUBvector = double(slopeUBvector);
                 slopeLBvector = double(slopeLBvector);

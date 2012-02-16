@@ -23,12 +23,15 @@ switch nutrient
 end
 if strmatch(cropname,'totalcons')
     datastr =[outputpath nutlabel cropname '.nc'];
+    datastr_ncmat =[outputpath '/ncmat/' nutlabel cropname '.mat' ];
 else
     datastr = [outputpath cropname nutlabel 'apprate.nc'];
+    datastr_ncmat = [outputpath '/ncmat/' cropname nutlabel 'apprate.mat'];
 end
 
 % check if the file exists - if so, open it
-tmp = exist(datastr) + exist([datastr '.gz']);
+%tmp = exist(datastr) + exist([datastr '.gz']);
+tmp = exist(datastr) + exist([datastr '.gz']) + exist(datastr_ncmat);
 if tmp > 1
     S = OpenNetCDF(datastr);
     existflag = 1;

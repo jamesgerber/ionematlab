@@ -137,9 +137,19 @@ if CanMap==0
     
     UserDataStructure.QuickVersion=0;
 else
-    hm=axesm('robinson','Frame','Off')
-    
-    
+%    hm=axesm('robinson','Frame','Off')
+
+% changes here are intended to make the Patch FaceVertexCData length
+% warning go away.  Need to have the patch, but by default it is empty,
+% leading to warning.  So, we put in a bunch of ones.  that seems to make
+% the error go away, and doesn't seem to change the output.
+
+    hm=axesm('robinson','Frame','On');
+
+    hpatch=findobj(allchild(hm),'type','patch')
+    sz=get(hpatch,'Vertices');
+%    set(hpatch,'FaceVertexCData',repmat([1 1 1],400,1))
+    set(hpatch,'FaceVertexCData',ones(size(sz)));
     if meshmflag==0
         [lat2D,lon2D]=meshgrat(RedLat,RedLong);
         h=surfm(lat2D,lon2D,double(RedData.'));

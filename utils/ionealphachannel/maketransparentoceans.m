@@ -80,12 +80,6 @@ try
             ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r600.png']);
             aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r600.png']);
             aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_r600.png']);
- 
-        case 2534
-            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r600.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r600.png']);
-            aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r600.png']);
-            aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_r600.png']);
 
         case 5066
             a=imread([iddstring '/misc/mask/OutputMask_colorbar_r1200.png']);
@@ -95,24 +89,25 @@ try
 
             
         otherwise
-            warndlg(['don''t know this resolution.   attempting to run maketransparencymasks'])
-            x=personalpreferences('printingres');
-            res=x(2:end)
-            
-            try
-                maketransparencymasks(res)
-                a=imread([iddstring '/misc/mask/OutputMask_colorbar_' res '.png']);
-                ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png']);
-                aocean=imread([iddstring '/misc/mask/OutputMask_oceans_' res '.png']);
-                aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_' res '.png']);
-
-            catch
-                warning(['maketransparencymasks didn''t work. possible reasons '...
-                    'include too many figures currently open.  also, best' ...
-                    'to set resolution via personalpreferences'])
-                error(['maketransparencymasks didn''t work.'])
-            end
-            
+            apparentres=ceil( size(plotimage,1) * 1200/5066);
+            warndlg(['don''t have masks for this resolution.  try maketransparencymasks(''r' int2str(apparentres) ''')  '])
+        %    x=personalpreferences('printingres');
+        %    res=x(2:end)
+%             
+%             try
+%                 maketransparencymasks(res)
+%                 a=imread([iddstring '/misc/mask/OutputMask_colorbar_' res '.png']);
+%                 ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png']);
+%                 aocean=imread([iddstring '/misc/mask/OutputMask_oceans_' res '.png']);
+%                 aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_' res '.png']);
+% 
+%             catch
+%                 warning(['maketransparencymasks didn''t work. possible reasons '...
+%                     'include too many figures currently open.  also, best' ...
+%                     'to set resolution via personalpreferences'])
+%                 error(['maketransparencymasks didn''t work.'])
+%             end
+%             
             
             
     end

@@ -80,6 +80,19 @@ try
             ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r600.png']);
             aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r600.png']);
             aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_r600.png']);
+ 
+        case 2534
+            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r600.png']);
+            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r600.png']);
+            aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r600.png']);
+            aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_r600.png']);
+
+        case 5066
+            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r1200.png']);
+            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r1200.png']);
+            aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r1200.png']);
+            aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_r1200.png']);
+
             
         otherwise
             warndlg(['don''t know this resolution.   attempting to run maketransparencymasks'])

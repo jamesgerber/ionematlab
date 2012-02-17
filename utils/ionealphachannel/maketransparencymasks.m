@@ -10,6 +10,7 @@ if nargin==0
    maketransparencymasks('r150');
    maketransparencymasks('r300');
    maketransparencymasks('r600');
+   maketransparencymasks('r1200');
    return
 end
 ii=datablank;
@@ -45,6 +46,12 @@ switch res
         FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r600.png'];
         FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r600.png'];
         FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r600.png'];
+   case 'r1200';        
+        NSS.Resolution='-r1200';
+        FileName=[iddstring '/misc/mask/OutputMask_colorbar_r1200.png'];
+        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r1200.png'];
+        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r1200.png'];
+        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r1200.png'];
 
     otherwise
         disp('warning ... using a new resolution ... making masks')

@@ -76,7 +76,7 @@ switch fix(4*rand)
 end
 
 function a = proper_noun
-switch fix(13*rand) 
+switch fix(17*rand) 
     case 0,    a = 'Jon';
     case 1,    a = 'Jamie';
     case 2,    a = 'Nathan';
@@ -89,7 +89,11 @@ switch fix(13*rand)
     case 9,    a = 'Kate';
     case 10,   a = 'Peder';
     case 11,   a = 'Andrew';
-    case 12,   a = 'Peder';
+    case 12,   a = 'Peter';
+    case 13,   a = 'Kim';
+    case 14,   a = 'The other Emily';
+    case 15,   a = 'Graham';
+    case 16,   a = 'Mary';
     end
 
 function a = noun_phrase
@@ -105,7 +109,7 @@ switch fix(6*rand)
     case 1,    a = 'tree hugger';
     case 2,    a = 'global landscaper';
     case 3,    a = 'meat eater';
-    case 4,    a = 'corn grower';
+    case 4,    a = 'slacker';
     case 5,    a = 'biofuels proponent';
 end
 

@@ -21,8 +21,9 @@ if nargin==2
     expandstructure(PlotStruct);
 end
 
-%h=plot(100*TO.goodquantitysorted/max(TO.goodquantitysorted),100*TO.badquantitysorted/max(TO.badquantitysorted),100*[0 1],100*[0 1]);
-h=plot(100*TO.goodquantitysorted/max(TO.goodquantitysorted),100*TO.badquantitysorted/max(TO.badquantitysorted),plotstyle);
+h=plot(100*TO.goodquantitysorted/max(TO.goodquantitysorted),100*TO.badquantitysorted/max(TO.badquantitysorted),100*[0 1],100*[0 1]);
+h=plot(100*TO.goodquantitysorted,100*TO.badquantitysorted,100*[0 1],100*[0 1]);
+%h=plot(100*TO.goodquantitysorted/max(TO.goodquantitysorted),100*TO.badquantitysorted/max(TO.badquantitysorted),plotstyle);
 xlabel(xstr);
 ylabel(ystr);
 title(titlestr);
@@ -31,7 +32,7 @@ title(titlestr);
 grid on
 
 zeroxlim(0,100);
-zeroylim(0,100);
+%zeroylim(0,100);
 
 if nargout==1
     varargout{1}=h;

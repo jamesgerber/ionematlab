@@ -58,7 +58,7 @@ function [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,percent
 %       disp([ int2str(HS.RG*100) '% of maize produced with 20% of applied N/ha in world']);
        
 %
-%    See Also:  justHotspot  justTradeoff
+%    See Also:  justHotspot  justTradeoff hotspotplot
 
 %    Here is the code I used to corroborate this against nature paper
 %    results ...
@@ -75,7 +75,7 @@ if mean(area)<1
 end
 
 if goodthingperha==1
-    goodthingperha=ones(size(area));
+    goodthingperha=ones(size(area));  % effectively a dummy dataset for yield so that the calculation focues on area
 end
 
 % flag section
@@ -146,7 +146,7 @@ cumgood=cumgood/max(cumgood);
 
 [dum,jj]=min( (cumgood-percentage).^2);
 
-Cutoff=badquantity(jj);
+%
 
 TotalBadness=sum(badsort);
 PartialBadness=sum(badsort(1:jj));
@@ -156,8 +156,15 @@ RelativeBadness=PartialBadness/TotalBadness;
 Tradeoff.RB=RelativeBadness;
 Tradeoff.ii=iigood(ii(1:jj));  
 Tradeoff.iigoodDQ=iigood;
-Tradeoff.badquantitysorted=cumsum(badsort)/max(cumsum(badsort));
-Tradeoff.goodquantitysorted=cumsum(goodsort)/max(cumsum(goodsort));
+
+tmp=cumsum(badsort);
+FinalBadSortValueSummed=tmp(end);
+
+tmp=cumsum(goodsort);
+FinalGoodSortValueSummed=tmp(end);
+
+Tradeoff.badquantitysorted=cumsum(badsort)/FinalBadSortValueSummed;
+Tradeoff.goodquantitysorted=cumsum(goodsort)/FinalGoodSortValueSummed;
 
 %% Hotspot - how much good is associated with this amount of bad?
 
@@ -166,7 +173,7 @@ cumbad=cumbad/max(cumbad);
 
 [dum,kk]=min( (cumbad-percentage).^2);
 
-Cutoff=badquantity(kk);
+
 TotalGoodness=sum(goodsort);
 PartialGoodness=sum(goodsort(1:kk));
 
@@ -175,8 +182,8 @@ RelativeGoodness=PartialGoodness/TotalGoodness;
 Hotspot.RG=RelativeGoodness;
 Hotspot.ii=iigood(ii(1:kk));  
 Hotspot.iigoodDQ=iigood;
-Hotspot.badquantitysorted=cumsum(badsort)/max(cumsum(badsort));
-Hotspot.goodquantitysorted=cumsum(goodsort)/max(cumsum(goodsort));
+Hotspot.badquantitysorted=cumsum(badsort)/FinalBadSortValueSummed;
+Hotspot.goodquantitysorted=cumsum(goodsort)/FinalGoodSortValueSummed;
 
 % now calculate gini index
 if nargout==3

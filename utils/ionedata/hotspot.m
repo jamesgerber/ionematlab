@@ -13,12 +13,20 @@ function [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,percent
 %       [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,N)
 %
 %       Tradeoff is a structure which contains fields
-%         .RB   % relative badness, in other words, 100*N% of goodthing
-%               % results in 100*RB% of badthing 
-%         .ii   % indices of the set points which produce N% of goodthing          
-%               % at the maximum cost (RB%) of badthing
-%         .iigoodDQ  %indices of input vectors that passed data quality
-%         checks (i.e. not NAN, or 9E9, or 0 area)
+%           .RB   % relative badness, in other words, 100*N% of goodthing
+%                 % results in 100*RB% of badthing
+%           .ii   % indices of the set points which produce N% of goodthing
+%                 % at the maximum cost (RB%) of badthing
+%     .iigoodDQ   % indices of input vectors that passed data quality
+%                 % checks (i.e. not NAN, or 9E9, or 0 area)
+%   .sortsum_bad  % cumulative "bad" quantity sorted by worst rate
+%  .softsum_good  % cumulative "good" quantity sorted by worst rate
+%
+%    Note that quantity is rate*area. This is why inputs include rates and
+%    areas.
+%
+%     Hotspot structure is similar, except has RG instead of RB
+%
 %       To do a Hotspot calculation to analyze badthing per area, use '1'
 %       for goodthingperha
 %       GI is the Gini Index
@@ -27,7 +35,6 @@ function [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,percent
 %         "25% of land contains 40% of excess N"    (Tradeoff)
 %         "25% of yield is associated with 36% of excess N"  (Tradeoff)
 %         "25% of excess N is found on 17% of land"  (Hotspot)
-%
 %
 %       [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,N,flags)
 %
@@ -56,7 +63,6 @@ function [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,percent
 %       disp([ int2str(TO.RB*100) '% of N goes on 20% of maize produced in world']);
 %       [HS,TO]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
 %       disp([ int2str(HS.RG*100) '% of maize produced with 20% of applied N/ha in world']);
-       
 %
 %    See Also:  justHotspot  justTradeoff hotspotplot
 
@@ -94,7 +100,7 @@ switch lower(removenegativevalues)
             area > 0 & area < 9e5;
     case {'on','yes'}
         iigood=(badthingperha > 0 ) & (~isnan(goodthingperha.*badthingperha.*area)) & ...
-            area > 0 & area < 9e5;      
+            area > 0 & area < 9e5;
     otherwise
         error
 end
@@ -118,7 +124,7 @@ if isempty(find(iigood))
     RelativeBadness=-1;
     Tradeoff.RB=RelativeBadness;
     Tradeoff.ii=[];
-    Tradeoff.iigood=iigood;    
+    Tradeoff.iigood=iigood;
     
     RelativeGoodness=-1;
     Hotspot.RG=RelativeGoodness;
@@ -131,7 +137,6 @@ end
 %% Tradeoff - how much bad to get the amount of good?
 
 % we sort by 'bad thing' rates
-%[dum,ii]=sort(badthingperha,'descend');  whoops!  this is wrong!!!
 [dum,ii]=sort(badthingperha./goodthingperha,'descend');
 
 % after sorting by rates, though, we don't want rates, we want rates*area
@@ -154,7 +159,7 @@ PartialBadness=sum(badsort(1:jj));
 RelativeBadness=PartialBadness/TotalBadness;
 
 Tradeoff.RB=RelativeBadness;
-Tradeoff.ii=iigood(ii(1:jj));  
+Tradeoff.ii=iigood(ii(1:jj));
 Tradeoff.iigoodDQ=iigood;
 
 tmp=cumsum(badsort);
@@ -180,25 +185,25 @@ PartialGoodness=sum(goodsort(1:kk));
 RelativeGoodness=PartialGoodness/TotalGoodness;
 
 Hotspot.RG=RelativeGoodness;
-Hotspot.ii=iigood(ii(1:kk));  
+Hotspot.ii=iigood(ii(1:kk));
 Hotspot.iigoodDQ=iigood;
 Hotspot.badquantitysorted=cumsum(badsort)/FinalBadSortValueSummed;
 Hotspot.goodquantitysorted=cumsum(goodsort)/FinalGoodSortValueSummed;
 
 % now calculate gini index
 if nargout==3
-N=1000;
-xnew=Hotspot.badquantitysorted;
-ynew=Hotspot.goodquantitysorted;
-[dum,ii]=unique(xnew);
-xnew=xnew(ii);
-ynew=ynew(ii);
-
-xreg=linspace(xnew(1),xnew(end),N);
-
-yreg=interp1(xnew,ynew,xreg);
-
-L=(sum(yreg)/(length(yreg)));
-GI=1-2*L;
+    N=1000;
+    xnew=Hotspot.badquantitysorted;
+    ynew=Hotspot.goodquantitysorted;
+    [dum,ii]=unique(xnew);
+    xnew=xnew(ii);
+    ynew=ynew(ii);
+    
+    xreg=linspace(xnew(1),xnew(end),N);
+    
+    yreg=interp1(xnew,ynew,xreg);
+    
+    L=(sum(yreg)/(length(yreg)));
+    GI=1-2*L;
 end
 

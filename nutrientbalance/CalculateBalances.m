@@ -182,6 +182,7 @@ N.Nfrac=Nfrac;
 N.DryFraction=DryFraction;
 N.N2O=N2O;
 
+
 if ~isempty(Nfixer)
     N.Nfixer=1;
     '!!!!!!!!!!!!!!!!!!!!!!!!!!!'

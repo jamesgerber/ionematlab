@@ -20,14 +20,30 @@ function [Long,Lat,Raster]=ShapeFileToRaster(S,FieldName,MatrixTemplate,plotflag
 %      * This function is based on the function inpolygon
 %      I don't know how well this would behave if we tried to
 %      operate it on a shapefile which included a bunch of lakes.  
-
+%
+%    Example
+%   S=shaperead([iddstring ...
+%   'AdminBoundary2005/Vector_ArcGISShapefile/gladmin_m3lcover'])
+%
+%   %make a smaller shapefile just for demonstrating this code
+%  
+%   
+%    NS=S(1:800);
+%   
+%   for j=1:800
+%    NS(j).NumericalField=j;
+%   end
+%
+%   template=datablank(0,'30min');
+%
+%   [Long,Lat,Raster]=ShapeFileToRaster(NS,'NumericalField',template,0);
 
 switch nargin
     case 0
         help(mfilename)
         return
     case 1
-        %debugging only.
+        %debugging only.   % commented out debuggin lines below
         FieldName='d';
         plotflag=0;
         MatrixTemplate=ones(4320,2160);
@@ -52,7 +68,7 @@ end
 
 
 for j=1:length(S);
-    j
+    j;
     %for j=120;
     xx=S(j).X;
     yy=S(j).Y;
@@ -115,11 +131,11 @@ for j=1:length(S);
     end  % end of k loop over regions within each country
     % end of country loop
     jj=find(LogicalCountryMatrix);
-    if (FieldName~='d')
+  %  if (FieldName~='d')
         Matrix(jj)=getfield(S(j),FieldName);
-    else
-        Matrix(jj)=1;
-    end
+   % else
+   %     Matrix(jj)=1;
+   % end
 end % end of j loop over countries
 
 

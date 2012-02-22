@@ -16,8 +16,6 @@ function [xkeep,ykeep]=ShapeFileToXY(S,minkmsq,thinninglength)
 %
 %   Example
 %
-%
-
 
 if nargin==1
     minkmsq=200;

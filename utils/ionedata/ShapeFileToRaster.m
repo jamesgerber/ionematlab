@@ -66,9 +66,12 @@ if plotflag==1
     hold on
 end
 
-
+hh=waitbar(0,'working ... ')
 for j=1:length(S);
-    j;
+    j
+   % if int(j/length(
+        waitbar(j/length(S),hh);
+    %end
     %for j=120;
     xx=S(j).X;
     yy=S(j).Y;

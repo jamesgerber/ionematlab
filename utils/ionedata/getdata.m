@@ -36,6 +36,9 @@ switch lower(DataString)
     case {'croparea','cropdata'}
         S=OpenNetCDF([iddstring 'Crops2000/' ...
             'Cropland2000_5min.nc']);
+   case {'pastarea','pasture'}
+        S=OpenNetCDF([iddstring 'Crops2000/' ...
+            'Pasture2000_5min.nc']);
         
     case 'tmi'
         S=OpenNetCDF([IoneDataDir 'Climate/' ...

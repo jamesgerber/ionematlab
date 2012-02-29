@@ -78,11 +78,11 @@ clear PastArea
 ca(ca>9e9)=0;
 pa(pa>9e9)=0;
         
-tma=aggregatequantity(fma,6);
+tma=aggregate_quantity(fma,6);
 
-ca30min=aggregatequantity(ca,6);
-capa30min=aggregatequantity(ca+pa,6);
-totalharvarea_30min=aggregatequantity(TotalHarvestedArea,6);
+ca30min=aggregate_quantity(ca,6);
+capa30min=aggregate_quantity(ca+pa,6);
+totalharvarea_30min=aggregate_quantity(TotalHarvestedArea,6);
 
 % now we can allocate manure
  for j=1:length(mnames);
@@ -99,7 +99,7 @@ totalharvarea_30min=aggregatequantity(TotalHarvestedArea,6);
       ii_include=areafilter(croparea,croparea,.9);
       croparea(~ii_include)=0;
 
-        thiscroparea_30min=aggregaterate(croparea,6);
+        thiscroparea_30min=aggregate_rate(croparea,6);
         
         Transfer30min=ca30min./capa30min.*thiscroparea_30min./totalharvarea_30min;
         
@@ -122,20 +122,22 @@ totalharvarea_30min=aggregatequantity(TotalHarvestedArea,6);
         
         svnRevNo=getsvninfo;
 
+        
+        DAS.DataVersion='1.0';
         DAS.Units='kg/ha';
         DAS.Description =['Applied Nitrogen Per harvested HA (' ThisCrop ')'];
         DAS.CropName=ThisCrop;
         DAS.ProcessingDate=datestr(now);
         DAS.CodeRevNo=svnRevNo;
         WriteNetCDF(single(AppliedNitrogenManure),'AppliedNitrogenManure',['./OutputData/' MakeSafeString(ThisCrop) 'NapprateFromManure' ],DAS );
-        S=OpenNetCDF(['./OutputData/NitrogenFromManure' MakeSafeString(ThisCrop)] );
+        S=OpenNetCDF(['./OutputData/' MakeSafeString(ThisCrop) 'NapprateFromManure' ] );
         
         DAS.Units='kg/ha';
         DAS.Description =['Applied Phosphorus Per harvested HA (' ThisCrop ')'];
         DAS.CropName=ThisCrop;
         DAS.ProcessingDate=datestr(now);
         WriteNetCDF(single(AppliedPhosphorusManure),'AppliedPhosphorusManure',['./OutputData/'  MakeSafeString(ThisCrop) 'PapprateFromManure'],DAS );
-        S=OpenNetCDF(['./OutputData/PhosphorusFromManure' MakeSafeString(ThisCrop)] );
+        S=OpenNetCDF(['./OutputData/'  MakeSafeString(ThisCrop) 'PapprateFromManure'] );
         
         !gzip ./OutputData/*.nc
         

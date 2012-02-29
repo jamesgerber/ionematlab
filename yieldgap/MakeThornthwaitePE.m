@@ -64,11 +64,11 @@ for Month=1:12
     dmonth=NumDaysInMonth(Month)/30;  %correction factor.
     J=sum(NumDaysInMonth(1:Month))-15;  %CumulativeNumDays;
     dhours=single(CBMDaylight(J,LatVector)/12);
-    dhoursmatrix=repmat(dhours(:).',4320,1);     
+    dhoursmatrix=repmat(dhours(:).',2*length(dhours),1);     
 
     ThisMonth=16*dmonth*dhoursmatrix.*(10*monthlymeantemp./I).^a;
-  %  PEmonthly(:,:,Month)=ThisMonth;
-  TE=TE+ThisMonth;
+    PEmonthly(:,:,Month)=ThisMonth;
+    TE=TE+ThisMonth;
 end
 
 %TE=sum(PEmonthly(:,:,:),3);

@@ -126,12 +126,9 @@ C.YieldToCarbonFactor=YieldToCarbonFactor;
 
 %% Nitrogen
 
-% fixed nitrogen
+% nitrogen fixation by legumes
 if isequal(D.Legume{ii},'legume')
-    
-    
-    
-    switch FixMethod
+   switch FixMethod
         case 'linear'
             a=Yield(iigood);
             minyield=min(a);
@@ -157,19 +154,12 @@ if isequal(D.Legume{ii},'legume')
             Nfix(Yield > Y60  & iigood)=str2num(D.Nfix_High(ii));
             
         otherwise 'error'
-            
-            
-            
     end
-    
-    
-    
 else
     Nfix=datablank;
 end
 
-
-
+% harvested nitrogen
 HarvestedNitrogenPerHA=Yield.*DryFraction*Nfrac*1000;
 
 %set max Nfix to harvested N
@@ -177,7 +167,7 @@ if Nfix > HarvestedNitrogenPerHA
     Nfix = HarvestedNitrogenPerHA
 end
 
-
+% applied nitrogen
 %    if ~isequal(crop,'soybean')
 if newNmapflag == 0
     disp(['Loading observed ' crop ' N application rate map.'])

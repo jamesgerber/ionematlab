@@ -1,8 +1,16 @@
-function [C,N,P]=CalculateBalances(crop)
+function [C,N,P]=CalculateBalancesWithManure(crop,varargin)
 % CalculateBalances -
 %
 % SYNTAX
-%     [C,N,P]=CalculateBalances(CROPNAME) will return structure C,N
+%     [C,N,P]=CalculateBalancesWithManure(CROPNAME, optionalargs) will
+%     return structure C,N,P
+%
+%     optional arguments include:
+%       - 'Nappratemap' (this should be followed by a 5min map of N
+%          application rates)
+%       - 'Pappratemap' (this should be followed by a 5min map of P2O5
+%          application rates)
+%       - 'yieldmap' (this should be followed by a 5min map of t/ha yields)
 %
 %  Example
 %   crop='maize'
@@ -22,10 +30,34 @@ function [C,N,P]=CalculateBalances(crop)
 %    NSS.FileName=['Excess Nitrogen ' crop '']
 %    NiceSurfGeneral(N.ExcessNitrogenPerHA,NSS);
 
-FixMethod='linear';
-
-
 persistent D NDS Ndep
+
+FixMethod='linear';
+P2O5toPconv = 0.4366; %(31/(31+2.5*16)), 31=atomic mass P, 16 atomic mass O
+
+% check inputs
+newNmapflag = 0;
+newPmapflag = 0;
+newyieldmapflag = 0;
+for n = 1:length(varargin)
+    thisvar = varargin{n};
+    if ischar(thisvar)
+        if strmatch(thisvar,'Nappratemap')
+            disp(['Using new ' crop ' N application rate map.'])
+            newNmapflag = 1;
+            AppliedNitrogenPerHA = varargin{n+1};
+        elseif strmatch(thisvar,'P2O5appratemap')
+            disp(['Using new ' crop ' P2O5 application rate map.'])
+            newpmapflag = 1;
+            AppliedPhosphorusPerHA = varargin{n+1};
+        elseif strmatch(thisvar,'yieldmap')
+            disp(['Using new ' crop ' yield map.'])
+            newyieldmapflag = 1;
+            Yield = varargin{n+1};
+        end
+    end
+end
+   
 
 if isempty(D)
     D=ReadGenericCSV([adstring 'croptype_NPK.csv'],2);
@@ -60,13 +92,14 @@ Pfrac=(D.P_Perc_Dry_Harv(ii))/100;
 Nfixer=D.Nfix_High{ii};
 Nfixer
 
-
+% open crop data
 CS=OpenNetCDF([iddstring '/crops2000/crops/' crop ...
     '_5min.nc']);
-
-
 Area=CS.Data(:,:,1);
-Yield=CS.Data(:,:,2);
+if newyieldmapflag == 0
+    Yield=CS.Data(:,:,2);
+    disp(['Loading observed ' crop ' yield map.'])
+end
 
 iigood=(CropMaskLogical & Area > 0 & Yield < 9e9);
 Production=Area.*Yield.*GetFiveMinGridCellAreas;
@@ -132,7 +165,7 @@ if isequal(D.Legume{ii},'legume')
     
     
 else
-    Nfix=DataBlank;
+    Nfix=datablank;
 end
 
 
@@ -146,17 +179,19 @@ end
 
 
 %    if ~isequal(crop,'soybean')
-try
-    x=load([iddstring '/Fertilizer2000/ncmat/' crop 'Napprate.mat']);
-catch
-    disp(['problem with ' crop 'Napprate.mat']);
-    C=-1;
-    N.ExcessNitrogenPerHA_x_Area=NaN;
-    P.ExcessPhosphorusPerHA_x_Area=NaN;
-    return
+if newNmapflag == 0
+    disp(['Loading observed ' crop ' N application rate map.'])
+    try
+        x=load([iddstring '/Fertilizer2000/ncmat/' crop 'Napprate.mat']);
+    catch
+        disp(['problem with ' crop 'Napprate.mat']);
+        C=-1;
+        N.ExcessNitrogenPerHA_x_Area=NaN;
+        P.ExcessPhosphorusPerHA_x_Area=NaN;
+        return
+    end
+    AppliedNitrogenPerHA=x.DS.Data(:,:,1);
 end
-
-AppliedNitrogenPerHA=x.DS.Data(:,:,1);   
 
 AppliedNitrogenPerHA(isnan(AppliedNitrogenPerHA))=0;
 
@@ -217,14 +252,17 @@ end
 
 
 %% Phosphate (P)
-x=load([iddstring '/Fertilizer2000/ncmat/' crop 'P2O5apprate.mat']);
-AppliedPhosphorusPerHA=x.DS.Data(:,:,1)*0.4366; %(31/(31+2.5*16)), 31=atomic mass P, 16 atomic mass O
+if newPmapflag == 0
+    disp(['Loading observed ' crop ' P2O5 application rate map.'])
+    x=load([iddstring '/Fertilizer2000/ncmat/' crop 'P2O5apprate.mat']);
+    AppliedPhosphorusPerHA=x.DS.Data(:,:,1).*P2O5toPconv;
+end
 %AppliedPhosphorusPerHA=datastore([...
 %    'fert_app_ver7/'   crop '_P_ver2_25_rate_FAO_SNS_FINAL.mat']);
 AppliedPhosphorusPerHA(isnan(AppliedPhosphorusPerHA))=0;
 
-
 P.PfertPerHA=AppliedPhosphorusPerHA;
+
 
 %% now add manure Phosphorus
 %load(['./CropSpecificManureAdditions/ncmat/PhosphorusFromManure' crop '.mat']);

@@ -22,6 +22,12 @@ if nargin > 1 % a call to set variables
     
 else % call by fzero
     
+    if IRR>1
+        IRR = 1;
+    elseif IRR <0
+        IRR = 0;
+    end
+    
     NreqRF = log((1 - (YmaxRF ./ Ymaxbin)) ./ bnut) ./ -c;
     
     Nappirr = (NappGC - (NreqRF.*(1 - IRR))) ...
@@ -34,5 +40,9 @@ else % call by fzero
         (IRR .* ymodirr);
     
     F = ymodweightavg_rfandirr - desiredyield;
+    
+    if ~isfinite(F)
+        keyboard
+    end
     
 end

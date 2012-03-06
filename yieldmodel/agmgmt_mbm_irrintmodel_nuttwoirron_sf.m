@@ -2,11 +2,15 @@ function [ymod] = agmgmt_mbm_irrintmodel_nuttwoirron_sf(b,x,assign)
 
 persistent binyieldceiling
 persistent alpha
+persistent kfloatflag
+persistent cb
 
 if nargin > 2 % a call to set parameters
     
     binyieldceiling = assign.binyieldceiling;
     alpha = assign.alpha;
+    kfloatflag = assign.kfloatflag;
+    cb = assign.cb;
     ymod = [];
     
 elseif nargin == 2 % a call to run model (can be called by lsqcurvefit)
@@ -18,8 +22,12 @@ elseif nargin == 2 % a call to run model (can be called by lsqcurvefit)
     
     % get nutrient requirements to achieve rainfed potential yield
     nutonereqRFYC = max(log((1-(b(3)./binyieldceiling))./alpha)./-b(1),0);
-    nuttworeqRFYC = max(log((1-(b(3)./binyieldceiling))./alpha)./-b(2),0);
-
+    if (kfloatflag == 1) &&  (str2num(cb(3)) == 1)
+        nuttworeqRFYC = max(log((1-(b(3)./binyieldceiling))./b(4))./-b(2),0);
+    else
+        nuttworeqRFYC = max(log((1-(b(3)./binyieldceiling))./alpha)./-b(2),0);
+    end
+   
     % get grid cells where we have nutrients in excess of nutreqRF and have
     % irrigated area
     ii = (nutonevec > nutonereqRFYC) & (nuttwovec > nuttworeqRFYC) ...
@@ -37,8 +45,13 @@ elseif nargin == 2 % a call to run model (can be called by lsqcurvefit)
         
         ymodnutoneirr_ii = binyieldceiling .* (1 - (alpha .* ...
             exp(-abs(b(1)) .* nutoneirrvec_ii)));
-        ymodnuttwoirr_ii = binyieldceiling .* (1 - (alpha .* ...
-            exp(-abs(b(2)) .* nuttwoirrvec_ii)));
+        if (kfloatflag == 1) &&  (str2num(cb(3)) == 1)
+            ymodnuttwoirr_ii = binyieldceiling .* (1 - (b(4) .* ...
+                exp(-abs(b(2)) .* nuttwoirrvec_ii)));
+        else
+            ymodnuttwoirr_ii = binyieldceiling .* (1 - (alpha .* ...
+                exp(-abs(b(2)) .* nuttwoirrvec_ii)));
+        end
         
         ymodirr_ii = min([ymodnutoneirr_ii, ymodnuttwoirr_ii],[],2);
         
@@ -51,8 +64,13 @@ elseif nargin == 2 % a call to run model (can be called by lsqcurvefit)
     if sum(rr)>0
         ymodnutonerf_rr = binyieldceiling .* (1 - (alpha .* ...
             exp(-abs(b(1)) .* nutonevec(rr))));
-        ymodnuttworf_rr = binyieldceiling .* (1 - (alpha .* ...
-            exp(-abs(b(2)) .* nuttwovec(rr))));
+        if (kfloatflag == 1) &&  (str2num(cb(3)) == 1)
+            ymodnuttworf_rr = binyieldceiling .* (1 - (b(4) .* ...
+                exp(-abs(b(2)) .* nuttwovec(rr))));
+        else
+            ymodnuttworf_rr = binyieldceiling .* (1 - (alpha .* ...
+                exp(-abs(b(2)) .* nuttwovec(rr))));
+        end
         
         yc_rf_bin_col_rr = b(3).*ones(length(ymodnutonerf_rr),1);
         ymodrf_rr = min([yc_rf_bin_col_rr, ymodnutonerf_rr, ...

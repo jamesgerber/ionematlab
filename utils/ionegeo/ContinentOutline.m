@@ -56,7 +56,7 @@ if length(ContinentList)==1
         ContinentName=ContinentName{1};
     end
 else
-    ii=DataBlank;
+    ii=datablank;
     TempOutline=ContinentOutline(ContinentList(1));
     Outline=TempOutline | ContinentOutline(ContinentList(2:end));
     return
@@ -76,7 +76,7 @@ if isempty(ii)
     end
 end
 
-Outline=DataBlank;
+Outline=datablank;
 
 for j=1:length(ii)
     

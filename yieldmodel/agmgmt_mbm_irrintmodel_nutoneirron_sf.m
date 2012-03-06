@@ -2,11 +2,15 @@ function [ymod] = agmgmt_mbm_irrintmodel_nutoneirron_sf(b,x,assign)
 
 persistent binyieldceiling
 persistent alpha
+persistent kfloatflag
+persistent cb
 
 if nargin > 2 % a call to set parameters
     
     binyieldceiling = assign.binyieldceiling;
     alpha = assign.alpha;
+    kfloatflag = assign.kfloatflag;
+    cb = assign.cb;
     ymod = [];
     
 elseif nargin == 2 % a call to run model (can be called by lsqcurvefit)

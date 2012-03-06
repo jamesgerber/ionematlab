@@ -2,11 +2,15 @@ function [ymod] = agmgmt_mbm_irrintmodel_nutthreeirron_sf(b,x,assign)
 
 persistent binyieldceiling
 persistent alpha
+persistent kfloatflag
+persistent cb
 
 if nargin > 2 % a call to set parameters
     
     binyieldceiling = assign.binyieldceiling;
     alpha = assign.alpha;
+    kfloatflag = assign.kfloatflag;
+    cb = assign.cb;
     ymod = [];
     
 elseif nargin == 2 % a call to run model (can be called by lsqcurvefit)
@@ -20,8 +24,13 @@ elseif nargin == 2 % a call to run model (can be called by lsqcurvefit)
     % get nutrient requirements to achieve rainfed potential yield
     nutonereqRFYC = max(log((1-(b(4)./binyieldceiling))./alpha)./-b(1),0);
     nuttworeqRFYC = max(log((1-(b(4)./binyieldceiling))./alpha)./-b(2),0);
-    nutthreereqRFYC = max(log((1-(b(4)./binyieldceiling))./alpha)./...
-        -b(3),0);
+    if (kfloatflag == 1) &&  (str2num(cb(3)) == 1)
+        nutthreereqRFYC = max(log((1-(b(4)./binyieldceiling))./b(5))./...
+            -b(3),0);
+    else
+        nutthreereqRFYC = max(log((1-(b(4)./binyieldceiling))./alpha)./...
+            -b(3),0);
+    end
 
     % get grid cells where we have nutrients in excess of nutreqRF and have
     % irrigated area
@@ -44,8 +53,13 @@ elseif nargin == 2 % a call to run model (can be called by lsqcurvefit)
             exp(-abs(b(1)) .* nutoneirrvec_ii)));
         ymodnuttwoirr_ii = binyieldceiling .* (1 - (alpha .* ...
             exp(-abs(b(2)) .* nuttwoirrvec_ii)));
-        ymodnutthreeirr_ii = binyieldceiling .* (1 - (alpha .* ...
-            exp(-abs(b(2)) .* nutthreeirrvec_ii)));
+        if (kfloatflag == 1) &&  (str2num(cb(3)) == 1)
+            ymodnutthreeirr_ii = binyieldceiling .* (1 - (b(5) .* ...
+                exp(-abs(b(3)) .* nutthreeirrvec_ii)));
+        else
+            ymodnutthreeirr_ii = binyieldceiling .* (1 - (alpha .* ...
+                exp(-abs(b(3)) .* nutthreeirrvec_ii)));
+        end
         
         ymodirr_ii = min([ymodnutoneirr_ii, ymodnuttwoirr_ii, ...
             ymodnutthreeirr_ii],[],2);
@@ -61,8 +75,13 @@ elseif nargin == 2 % a call to run model (can be called by lsqcurvefit)
             exp(-abs(b(1)) .* nutonevec(rr))));
         ymodnuttworf_rr = binyieldceiling .* (1 - (alpha .* ...
             exp(-abs(b(2)) .* nuttwovec(rr))));
-        ymodnutthreerf_rr = binyieldceiling .* (1 - (alpha .* ...
-            exp(-abs(b(3)) .* nutthreevec(rr))));
+        if (kfloatflag == 1) &&  (str2num(cb(3)) == 1)
+            ymodnutthreerf_rr = binyieldceiling .* (1 - (b(5) .* ...
+                exp(-abs(b(3)) .* nutthreevec(rr))));
+        else
+            ymodnutthreerf_rr = binyieldceiling .* (1 - (alpha .* ...
+                exp(-abs(b(3)) .* nutthreevec(rr))));
+        end
         
         yc_rf_bin_col_rr = b(4).*ones(length(ymodnutonerf_rr),1);
         ymodrf_rr = min([yc_rf_bin_col_rr, ymodnutonerf_rr, ...

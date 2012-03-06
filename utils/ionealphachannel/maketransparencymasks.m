@@ -77,7 +77,7 @@ end
 NSS.cmap=0*ones(size(colormap));
 
 
-nsg(ii,NSS)
+NSG(ii,NSS)
 fud=get(gcf,'userdata')
 set(fud.ColorbarHandle,'XTick',[]);
 OutputFig('Force',FileName,NSS.Resolution);
@@ -92,7 +92,7 @@ set(fud.ColorbarHandle,'Visible','off')
 set(fud.ColorbarHandle,'XTick',[]);
 close
 
-nsg(1-ii,NSS,'lowercolor','black')
+NSG(1-ii,NSS,'lowercolor','black')
 OutputFig('Force',FileNameOceans,NSS.Resolution);
 close
 % now the agri-mask colormap
@@ -103,7 +103,7 @@ kk=(jj & ~ii);
 k=double(kk);
 k(k==1)=NaN;
 
-nsg(k,NSS,'lowercolor','black','uppercolor','black')
+NSG(k,NSS,'lowercolor','black','uppercolor','black')
 fud=get(gcf,'userdata')
 
 set(fud.ColorbarHandle,'Visible','off')

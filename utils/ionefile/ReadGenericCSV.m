@@ -173,6 +173,23 @@ else
 end
 
     
+
+%% is final field the same length as the others?
+ThisName=MakeSafeString(FieldNameStructure.Vector{j});
+PrevName=MakeSafeString(FieldNameStructure.Vector{j-1});
+
+if ~isequal(length(getfield(DS,ThisName)),length(getfield(DS,PrevName)))
+
+warndlg(['Last vector not the right size.  this usually happens when the very last element of the file is a ' ...
+    'comma because the last column/row of the .csv was blank.  easiest way' ...
+    'to fix is to put an extra comma at the end.  see notes in this file' ...
+    'for some unix tricks on dealing with this.  Or, add a dummy value to the' ...
+    ' .csv']);
+%!echo "," > comma.tmp
+%!cat testdataset.csv comma.tmp > trythis.csv
+
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %        FixUpHeaderline     %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

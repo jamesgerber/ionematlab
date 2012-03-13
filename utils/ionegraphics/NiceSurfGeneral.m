@@ -629,8 +629,11 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         axis([g1 g2 t1 t2])
         
     end
-    ylim=(t2-t1)/100;
-    ht=text(0,ylim,titlestring);
+    %    ylim=(t2-t1)/100;
+    %    ht=text(0,ylim,titlestring);
+    ht=text(mean([g1 g2]*pi/180),t2*pi/180 + mean([t1 t2]/75)*pi/180,titlestring);
+ set(ht,'HorizontalAlignment','center');
+    
     
     UserInterpPreference=callpersonalpreferences('texinterpreter');
     

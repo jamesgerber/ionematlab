@@ -68,7 +68,7 @@ end
 
 hh=waitbar(0,'working ... ')
 for j=1:length(S);
-    j
+    
    % if int(j/length(
         waitbar(j/length(S),hh);
     %end

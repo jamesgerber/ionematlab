@@ -1,4 +1,4 @@
-function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter);
+function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
 % ReadGenericCSV - Read in a CSV file - whatever is in the columns
 %
 %  Syntax
@@ -8,13 +8,28 @@ function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter);
 %
 %     DS=ReadGenericCSV(FileName,HeaderLines);
 %
+%     DS=ReadGenericCSV(FileName,HeaderLines,Delimiter); 
+%
+%     DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
+%
 %   ReadGenericCSV will read in a CSV file, and make a structure,
 %   where each field of the structure corresponds to one of the columns.
+%
+%   Delimiter is comma by default, but can become tab which is useful if
+%   datasets contain commas
+%
+%   AttemptNums default is 0.  if set to 1, then any column which appears
+%   to contain numbers will be read in that way.  This fails if any of
+%   those columns then turn out to contain text.  However, if the columns
+%   contain empty values, they are turned into NaN.
 %
 %   The number of columns will be determined by the number of
 %   commas after the header (as determined by HeaderLines)   This
 %   way, if there are extra commas in the header, the data field
 %   names may be messed up, but the data will be extracted.
+%
+%   This function is very sensitive to files that have unexpected cells
+%   somewhere below the first two lines.  
 %
 
 % first get headers, then figure out what the individual columns look like
@@ -29,6 +44,9 @@ if nargin==1
 end
 if nargin<3
     Delimiter=',';
+end
+if nargin<4
+    AttemptNums=0;
 end
 
 fid=fopen(FileName);
@@ -77,7 +95,11 @@ for j=1:length(dvals);
         formatstring=[formatstring '%s'];
     else
         %it's a number
-        formatstring=[formatstring '%s'];
+        if AttemptNums==1
+            formatstring=[formatstring '%f'];
+        else
+            formatstring=[formatstring '%s'];
+        end
     end
     
 end
@@ -91,59 +113,92 @@ fclose(fid);
 
 %% OK.  Now have everything.  Assemble into DS (Output Structure).
 DS=[];
-for j=1:length(C)
-    if ~isempty(FieldNameStructure.Vector{j})
-        ThisName=MakeSafeString(FieldNameStructure.Vector{j});
-        Contents=C{j};
-        
-        %let's see if we can turn these values into doubles
-        NumValue=str2double(Contents{1});
-        if ~isnan(NumValue)
-            % first element is a number.  Now try to get all of them:
-            NumVector=str2double(Contents);
-            if any(isnan(NumVector))
-                NumericFlag=0;
+if AttemptNums==0
+    
+    for j=1:length(C)
+        if ~isempty(FieldNameStructure.Vector{j})
+            ThisName=MakeSafeString(FieldNameStructure.Vector{j});
+            Contents=C{j};
+            
+            %let's see if we can turn these values into doubles
+            NumValue=str2double(Contents{1});
+            if ~isnan(NumValue)
+                % first element is a number.  Now try to get all of them:
+                NumVector=str2double(Contents);
+                if any(isnan(NumVector))
+                    NumericFlag=0;
+                else
+                    NumericFlag=1;
+                end
             else
-                NumericFlag=1;
+                NumericFlag=0;
             end
-        else
-            NumericFlag=0;
+            
+            if NumericFlag==1
+                DS=setfield(DS,ThisName,NumVector);
+            else
+                DS=setfield(DS,ThisName,Contents);
+            end
+            
         end
-        
-        if NumericFlag==1
-            DS=setfield(DS,ThisName,NumVector);
-        else
-            DS=setfield(DS,ThisName,Contents);
+    end
+else
+    for j=1:length(C)
+        if ~isempty(FieldNameStructure.Vector{j})
+            ThisName=MakeSafeString(FieldNameStructure.Vector{j});
+            Contents=C{j};
+            
+%             %let's see if we can turn these values into doubles
+%             NumValue=str2double(Contents{1});
+%             if ~isnan(NumValue)
+%                 % first element is a number.  Now try to get all of them:
+%                 NumVector=str2double(Contents);
+%                 if any(isnan(NumVector))
+%                     NumericFlag=0;
+%                 else
+%                     NumericFlag=1;
+%                 end
+%             else
+%                 NumericFlag=0;
+%             end
+%             
+%             if NumericFlag==1
+%                 DS=setfield(DS,ThisName,NumVector);
+%             else
+                DS=setfield(DS,ThisName,Contents);
+%             end
+            
         end
-        
     end
 end
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %        FixUpHeaderline     %
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    function headerline=FixUpHeaderline(headerline);
-    headerline=strrep(headerline,'(','');
+
     
-    headerline=strrep(headerline,')','');
-    
-    if isequal(headerline(1),'_')
-        headerline=FixUpHeaderline(headerline(2:end));
-    end
-    
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %        GetStrings          %
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function VC=GetStrings(xline,Delimiter)
-            
-            ii=find(xline==Delimiter);
-            
-            %stick a one on the beginning, and an N on the end.
-            % cumbersome, but then we can loop into the part where we make a structure
-            ii(2:length(ii)+1)=ii;
-            ii(1)=0;
-            ii(end+1)=length(xline)+1;
-            
-            for j=1:length(ii)-1;
-                VC{j}=xline(ii(j)+1 : ii(j+1)-1);
-            end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        FixUpHeaderline     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function headerline=FixUpHeaderline(headerline);
+headerline=strrep(headerline,'(','');
+
+headerline=strrep(headerline,')','');
+
+if isequal(headerline(1),'_')
+    headerline=FixUpHeaderline(headerline(2:end));
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        GetStrings          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function VC=GetStrings(xline,Delimiter)
+
+ii=find(xline==Delimiter);
+
+%stick a one on the beginning, and an N on the end.
+% cumbersome, but then we can loop into the part where we make a structure
+ii(2:length(ii)+1)=ii;
+ii(1)=0;
+ii(end+1)=length(xline)+1;
+
+for j=1:length(ii)-1;
+    VC{j}=xline(ii(j)+1 : ii(j+1)-1);
+end

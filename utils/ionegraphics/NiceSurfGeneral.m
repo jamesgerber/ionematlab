@@ -42,7 +42,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.LongLatBox
 %   NSS.DisplayNotes  - this will be placed on the lower left of graph
 %   NSS.Description - this will be saved as metadata within the file
-%   NSS.PlotArea='World';
+%   NSS.PlotArea='World';  % can be a country name, or ISO code(e.g. USA)
 %   NSS.coloraxis=[];
 %   NSS.Description='';
 %   NSS.DisplayNotes='';

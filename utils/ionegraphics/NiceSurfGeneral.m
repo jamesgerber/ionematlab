@@ -618,7 +618,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         else
             %setm(fud.DataAxisHandle,'Origin',...
             %    [(t1+t2)/2 (g1+g2)/2 0])
-            PropagateLimits('Import',gcf, [g1 g2]*pi/180, [t1 t2]*pi/180)
+           ht= PropagateLimits('Import',gcf, [g1 g2]*pi/180, [t1 t2]*pi/180)
             
             
         end
@@ -631,13 +631,13 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     end
     %    ylim=(t2-t1)/100;
     %    ht=text(0,ylim,titlestring);
-    ht=text(mean([g1 g2]*pi/180),t2*pi/180 + mean([t1 t2]/75)*pi/180,titlestring);
- set(ht,'HorizontalAlignment','center');
+ %   ht=text(mean([g1 g2]*pi/180),t2*pi/180 + mean([t1 t2]/75)*pi/180,titlestring);
+ %set(ht,'HorizontalAlignment','center');
     
     
-    UserInterpPreference=callpersonalpreferences('texinterpreter');
+ %   UserInterpPreference=callpersonalpreferences('texinterpreter');
     
-    set(ht,'interp',UserInterpPreference);
+ %   set(ht,'interp',UserInterpPreference);
 else
     ht=text(0,pi/2,titlestring);
     if length(titlestring)>1
@@ -811,7 +811,6 @@ switch lower(plotarea)
     case {'mexico'}
         longlatbox=[-125 -80 10 35];
         filename=[filename '_mexico'];
-        %            ylim=.27;%.32;
     case {'southafrica'}
         longlatbox=[15 40 -40 -20];
         filename=[filename '_southafrica'];
@@ -822,9 +821,42 @@ switch lower(plotarea)
         longlatbox=[0 96 35 72];
         filename=[filename 'medit2north'];
     otherwise
-        error(['Don''t recognize plotarea ' plotarea]);
+        load /ionedata/misc/gadm1_lev0
+        for j=1:length(S)
+            names{j}=lower(S(j).NAME_ENGLI);
+            namesISO{j}=S(j).ISO;
+        end
+        ii=strmatch(lower(plotarea),names,'exact');
+        jj=strmatch(lower(plotarea),lower(namesISO),'exact');
+        
+        if length(jj)==1
+            kk=jj;
+        elseif length(ii)==1
+            kk=ii;
+        else
+            error(['Don''t recognize plotarea ' plotarea]);
+        end
+        
+        filename=[filename S(kk).NAME_ENGLI];
+        bb=S(kk).BoundingBox;
+        longlatbox=[bb(1) bb(2) bb(3) bb(4)];
+        
+        %% attempt to fix
+      
+        
+        m=mean([bb(1) bb(2)])
+        del=bb(2)-bb(1);
+        x1= (m-del*1.0)*cosd(m/4);
+        x2=(m+del*1.0)*cosd(m/4);
+        m=mean([bb(3) bb(4)])
+        del=bb(4)-bb(3);
+        y1= (m-del*1.0);
+        y2=(m+del*1.0);
+        
+        longlatbox=[x1 x2 y1 y2];
         
 end
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CorrectCallingSyntax     %

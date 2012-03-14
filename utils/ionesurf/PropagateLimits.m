@@ -1,6 +1,7 @@
-function PropagateLimits(varargin);
+function varargout=PropagateLimits(varargin);
 % PROPAGATELIMITS - propagate limits from this figure to all "IonEFigures"
-
+%
+%  if 'Import' syntax is used, will return handle to the title.
 if nargin==0
     help(mfilename);
     return
@@ -44,17 +45,19 @@ switch(InputFlag)
         if isfield(fud,'titlehandle')
             delete(fud.titlehandle);
         end
-        ht=text(x0,y0+0.05,fud.titlestring);
+        ht=text(x0,y0+dely*0.05,fud.titlestring);
         set(ht,'FontSize',14)
         set(ht,'HorizontalAlignment','center');
-
+        
         set(ht,'FontWeight','Bold');
         set(ht,'tag','NSGTitleTag');
         fud.titlehandle=ht;
         set(ThisFig,'userdata',fud);
-         UserInterpPreference=callpersonalpreferences('texinterpreter');
-            
-            set(ht,'interp',UserInterpPreference);
+        UserInterpPreference=callpersonalpreferences('texinterpreter');
+        
+        set(ht,'interp',UserInterpPreference);
+        
+        varargout{1}=ht;
     otherwise
         error('syntax error in PropagateLimits.m');
         

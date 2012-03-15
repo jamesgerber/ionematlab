@@ -12,10 +12,10 @@ function [S]=getirrigationvolume(crop)
 %       S.cropnumber
 %       S.IrrYield
 %       S.IrrHarvArea
-%       S.RainfedYield
-%       S.RainfedHarvArea
 %       S.IrrBlue
 %       S.IrrGreen
+%       S.RainfedYield
+%       S.RainfedHarvArea
 %       S.RainfedBlue
 %       S.RainfedGreen
 %

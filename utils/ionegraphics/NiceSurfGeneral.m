@@ -841,20 +841,14 @@ switch lower(plotarea)
         bb=S(kk).BoundingBox;
         longlatbox=[bb(1) bb(2) bb(3) bb(4)];
         
+        
+        
+        
         %% attempt to fix
-      
+        longlatbox=nsg_unproject(longlatbox);
         
-        m=mean([bb(1) bb(2)])
-        del=bb(2)-bb(1);
-        x1= (m-del*1.0)*cosd(m/4);
-        x2=(m+del*1.0)*cosd(m/4);
-        m=mean([bb(3) bb(4)])
-        del=bb(4)-bb(3);
-        y1= (m-del*1.0);
-        y2=(m+del*1.0);
         
-        longlatbox=[x1 x2 y1 y2];
-        
+       
 end
 
 

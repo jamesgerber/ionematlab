@@ -1,6 +1,10 @@
-function small=aggregatequantity(big,N)        
+function small=aggregate_quantity(big,N)        
 %aggregatequantity - aggregate quantity data down to a coarser scale
-
+%
+% Syntax:
+%   aggregate_quantity(bigmatrix,N)
+%
+% See also:  aggregate_rate
 
 small=zeros(size(big)/N);
 for m=1:N

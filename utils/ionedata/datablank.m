@@ -5,6 +5,10 @@ function out=DataBlank(Val,Res)
 %
 %    out=DataBlank(VAL,RES)    RES can be '30min' or '5min' (default)
 %
+%    out=DataBlank(MATRIX)     will return a MATRIX size matrix of ones
+%    (this syntax is sort of stupid, but it makes the code slightly easier
+%    to read.)
+%
 %  EXAMPLE
 %
 %    HoldingMatrix=DataBlank(-9);  will create a 5min sized matrix
@@ -30,4 +34,8 @@ switch Res
         error
 end
 
-out=tmp*Val;
+if numel(Val)>1
+    out=Val*0;
+else
+    out=tmp*Val;
+end

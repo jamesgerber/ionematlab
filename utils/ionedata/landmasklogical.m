@@ -49,6 +49,12 @@ switch numel(DataTemplate)
             Data=lml(1:6:end,1:6:end);
         end
         LogicalVector=(Data>0);
+    case 144*72 %2.5 degrees
+
+        lml=LandMaskLogical;
+        Data=aggregate_rate(lml,30);     
+        LogicalVector=(Data>=0.5);
+        
     otherwise
         error(['don''t have a landmask at this size'])
 end

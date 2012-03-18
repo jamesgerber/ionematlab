@@ -18,6 +18,7 @@ function [S]=getirrigationvolume(crop)
 %       S.RainfedHarvArea
 %       S.RainfedBlue
 %       S.RainfedGreen
+%       S.Units
 %
 %
 
@@ -58,13 +59,56 @@ if isstr(crop)
     end
     
     CropNo=SeibertNums{ii};
-    AH=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/AH_CROP'...
+    IAH=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/AH_CROP'...
         CropNo '.mat']);
-    S.area=AH.Data;
-    Y=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/'...
-        'YIELD_CROP'  CropNo '_1998_2002.mat']);
-    S.yield=AH.Data;
     
+    RAH=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/AH_CROP'...
+        int2str(str2num(CropNo)+29) '.mat']);   
+    
+    IY=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/'...
+        'YIELD_CROP'  CropNo '_1998_2002.mat']);
+    
+    RY=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/'...
+        'YIELD_CROP'  int2str(str2num(CropNo)+29) '_1998_2002.mat']);
+    
+    % 
+    jj=strmatch(crop,{'maize','rye','sorghum'},'exact');
+    if numel(jj)==1
+        % special case ... these are forage crops.  Since water use isn't
+        % differentiated between the two, we need to take the forage area
+        % into account when we calculate usage per unit area
+        switch jj
+            case 1
+                ForCropNo='27';
+            case 2
+                ForCropNo='28';
+            case 3
+                ForCropNo='29';
+        end
+        
+        IAHfor=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/AH_CROP'...
+            ForCropNo '.mat']);
+        
+        RAHfor=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/AH_CROP'...
+            int2str(str2num(ForCropNo)+29) '.mat']);
+%         
+%         IYfor=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/'...
+%             'YIELD_CROP'  ForCropNo '_1998_2002.mat']);
+%         
+%         RYfor=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/'...
+%             'YIELD_CROP'  int2str(str2num(ForCropNo)+29) '_1998_2002.mat']);
+%         
+%         
+    else
+        
+        IAHfor.Data=datablank;
+        RAHfor.Data=datablank;
+%         IYfor.Data=datablank;
+%         RYfor.Data=datablank;
+        
+    end
+    
+            
     
     
     IG=load([iddstring '/Irrigation/WaterUsage/processed_matfiles/'...
@@ -80,12 +124,47 @@ if isstr(crop)
         'ANNUAL_CWU_RFC_BLUE_05_MM_C'  CropNo '_1998_2002.mat']);
 
 
-    S.IrrGreen=IG.Data;
-    S.RainfedGreen=RG.Data;
-    S.IrrBlue=IB.Data;
-    S.RainfedBlue=RB.Data;
+    
+    % these are straightforward 
+    S.IrrHarvArea=IAH.Data./fma;
+    S.RainfedHarvArea=RAH.Data./fma;
+    S.IrrYield=IY.Data./fma;
+    S.RainfedYield=RY.Data./fma;
+    
+    % want units of water use ... irr data are in mm/grid cell/yr  
+    % so we divide by normalized area to get mm/ha.  Since Stefan's area is
+    % in ha, we divide his area by fiveminuteareas.
+    
+    % Green is rain
+    % Blue is irrigation
+    
+    S.IrrGreen=(IG.Data)./(IAH.Data./fma);
+    S.RainfedGreen=RG.Data./(RAH.Data./fma);
+    S.IrrBlue=IB.Data./(IAH.Data./fma);
+    S.RainfedBlue=RB.Data./(RAH.Data./fma);
     S.cropnumber=CropNo;
     S.cropname=crop;
+    S.Note1='Green is rainwater';
+    S.Note2='Blue is irrigation water';
+    
+    
+    
+    % special case, though for maize/sorghum/rye
+    if numel(jj)==1
+        
+        S.IrrGreen=(IG.Data)./((IAH.Data+IAHfor.Data)./fma);
+        S.RainfedGreen=RG.Data./((RAH.Data+RAHfor.Data)./fma);
+        S.IrrBlue=IB.Data./((IAH.Data+IAHfor.Data)./fma);
+        S.RainfedBlue=RB.Data./((RAH.Data+RAHfor.Data)./fma);
+        S.cropnumber=CropNo;
+        S.cropname=crop;
+        S.Note1='Green is rainwater';
+        S.Note2='Blue is irrigation water';
+    
+    end
+    
+    
+    
     
 end
 %ANNUAL_CWU_IRC_GREEN_05_MM_C02_1998_2002.mat

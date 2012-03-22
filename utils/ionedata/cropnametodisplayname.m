@@ -33,4 +33,4 @@ cropname=strrep(cropname,'etc',' etc.');
 
 
 
-cropname
+displayname=cropname;

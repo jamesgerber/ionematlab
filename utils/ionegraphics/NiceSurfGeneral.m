@@ -756,6 +756,9 @@ switch lower(plotarea)
     case 'europe'
         longlatbox=[-15 65 30 80];
         filename=[filename '_europe'];
+    case 'westerneurope'
+        longlatbox=[-10 25 35 50];
+        filename=[filename '_westerneurope'];
         %            ylim=.51;
     case 'westeurope'
         longlatbox=[-10 20 30 50];

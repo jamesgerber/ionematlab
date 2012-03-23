@@ -455,8 +455,8 @@ NoDataLandVal=coloraxis(2)+minstep;
 %Any points off of the land mask must be set to ocean color.
 land=LandMaskLogical(Data);
 ii=(land==0);
-size(ii)
-size(Data)
+size(ii);
+size(Data);
 ii=EasyInterp2(ii,size(Data,1),size(Data,2),'nearest');
 Data(ii)=OceanVal;
 

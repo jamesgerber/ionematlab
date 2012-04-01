@@ -33,7 +33,9 @@ if cmin > cmax
   error
 end
 
-%cmap=finemap(cmap,'','')
+if ischar(cmap)
+    cmap=finemap(cmap,'','');
+end
 
 [N,~]=size(cmap);
 

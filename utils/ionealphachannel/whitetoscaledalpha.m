@@ -1,9 +1,9 @@
-function WhiteToAlpha(OldFileName,NewFileName,ScaleFileName);
+function whitetoscaledalpha(OldFileName,NewFileName,ScaleFileName);
 % WhiteToAlpha - replace white with full transparency, non-white with 1/2
 %
 %  Example
 %
-%   WhiteToAlpha(OLDFILENAME,NEWFILENAME);
+%   whitetoscaledalpha(OldFileName,NewFileName,ScaleFileName);
 %
 
 OldFileName=fixextension(OldFileName,'.png');

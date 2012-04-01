@@ -896,6 +896,9 @@ for j=1:length(a)
         case {'triangles','froufrou','panoply','pan'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'panoplytriangles',ThisValue); 
+        case {'plotdatafile'}
+            NSS=rmfield(NSS,ThisProperty);
+            NSS=setfield(NSS,'makeplotdatafile',ThisValue);
     end
 end
 

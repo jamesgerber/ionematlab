@@ -4,7 +4,7 @@ function [Long,Lat,Long2,Lat2]=InferLongLat(Data)
 %  Syntax
 % [Long,Lat]=InferLongLat(Data)
 %
-% [Long2,Lat2]=InferLongLat(Data)
+% [Long,Lat,Long2,Lat2]=InferLongLat(Data)
 
 if nargin==0
     help(mfilename);

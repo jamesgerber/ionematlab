@@ -82,7 +82,7 @@ tma=aggregate_quantity(fma,6);
 
 ca30min=aggregate_quantity(ca,6);
 capa30min=aggregate_quantity(ca+pa,6);
-totalharvarea_30min=aggregate_quantity(TotalHarvestedArea,6);
+totalharvarea_30min=aggregate_rate(TotalHarvestedArea,6);
 
 % now we can allocate manure
  for j=1:length(mnames);
@@ -123,7 +123,7 @@ totalharvarea_30min=aggregate_quantity(TotalHarvestedArea,6);
         svnRevNo=getsvninfo;
 
         
-        DAS.DataVersion='1.0';
+        DAS.DataVersion='1.1';
         DAS.Units='kg/ha';
         DAS.Description =['Applied Nitrogen Per harvested HA (' ThisCrop ')'];
         DAS.CropName=ThisCrop;

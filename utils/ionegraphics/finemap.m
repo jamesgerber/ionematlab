@@ -36,7 +36,7 @@ function varargout=finemap(cmap,lowercolor,uppercolor);
 %    jftangerine
 %    colormap may be one of the built-in matlab colormaps (see below)
 %
-%  
+%
 %    hsv        - Hue-saturation-value color map.
 %    hot        - Black-red-yellow-white color map.
 %    gray       - Linear gray-scale color map.
@@ -65,10 +65,10 @@ end
 
 
 if nargin==1 & isstr(cmap) & isequal(lower(cmap),'version')
-
+    
     [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo;
-        varargout{1}=AllInfo;
-        return
+    varargout{1}=AllInfo;
+    return
 end
 
 
@@ -77,13 +77,13 @@ if nargin==0 | isempty(cmap)
 end
 
 if nargin<2
-%    lowercolor='robin';
+    %    lowercolor='robin';
     lowercolor=callpersonalpreferences('oceancolor');
-   
+    
 end
 
 if nargin~=3
-%    uppercolor='default';
+    %    uppercolor='default';
     uppercolor=callpersonalpreferences('nodatacolor');;
 end
 
@@ -122,8 +122,8 @@ else
             lc=[.8 .8 .8];
         case 'joanneblue'
             lc = [0.835294118 0.894117647 0.960784314];
-        %case {'joannegray','joannegrey'}
-        %    lc =[.74 .74 .74];
+            %case {'joannegray','joannegrey'}
+            %    lc =[.74 .74 .74];
         case {'lightskyblue','lightskyblue4'}
             lc=[0.3765 0.4824 0.5451];
         case {'lsb1','lightsteelblue1'}
@@ -166,7 +166,7 @@ x=1:length(map);
 xx=1:InterpStep:x(end);
 
 for j=1:3;
-  mapp(:,j)=interp1(x,map(:,j),xx);
+    mapp(:,j)=interp1(x,map(:,j),xx);
 end
 
 if ~isempty(lc)
@@ -190,42 +190,44 @@ end
 % StringToMap %
 %%%%%%%%%%%%%%%
 function cmap=StringToMap(str);
-    
+
 try
     cmap=ReadTiffCmap([iddstring '/misc/colormaps/' str '.tiff']);
     % first try matlab's built in functions (or any functions on the path)
     
 catch
     try
+        
         % now it is probably something like 'jet'
         % need to get the colormap without having matlab change it around.
         % so, get the current one, open a figure, let that get screwed up,
-        % erase the figure, reset the current colormap 
-       
+        % erase the figure, reset the current colormap
+        
         numfigs=length(allchild(0));
+        addpath([iddstring 'misc/colormaps'],'-end')
         
         if numfigs==0
-            % no figures exist.  so need to make a figure to 
+            % no figures exist.  so need to make a figure to
             tempfig=figure;
             cmap=colormap(str);
             delete(tempfig);
-    
-        
-        
+            
+            
+            
         else
             tempmap=colormap;
             tempfig=figure;
             cmap=colormap(str);
             delete(tempfig);
             colormap(tempmap);
-
+            
         end
         
         
     catch
-    
-
+        
+        
         error([' don''t know this colormap: ' str])
-end
+    end
 end
 

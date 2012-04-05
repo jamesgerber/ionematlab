@@ -55,7 +55,7 @@ C=ReadGenericCSV('croptype_NPK.csv',2);
     
     
     
-    FS.ClimateSpaceRev='N';
+    FS.ClimateSpaceRev='P';
     FS.CropNames=thiscrop;
     FS.ClimateSpaceN=10;
     FS.WetFlag='prec';

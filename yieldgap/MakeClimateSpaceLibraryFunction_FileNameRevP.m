@@ -26,6 +26,7 @@ CropNames={'maize','wheat'};
 Nspace=[5 10];
 GDDBaseDir='GDDLibrary/';
 TMILocation='./TMI.mat';
+AILocation='./AI.mat';
 %AnnualMeanPrec='./AnnualMeanPrec.mat';
 SaveFileNameBaseDir='./ClimateLibrary';
 DataYear=2000;
@@ -85,6 +86,8 @@ for N=Nspace;
                     WetFlag='aei'
                 case 4
                     WetFlag='TMI'
+case 5
+WetFlag='AI'
             end
             
             
@@ -124,6 +127,9 @@ for N=Nspace;
                     case 'prec'
                         load([AnnualMeanPrec]);
                         Prec=annualmeanprec;
+case 'AI'
+load(AILocation);
+Prec='AI';
                     otherwise
                         error(['Don''t have ability to handle' WetFlag ' in ' mfilename ]);
                 end

@@ -10,28 +10,24 @@ function [S]=getirrigationvolume(crop)
 %       S will contain fields
 %       S.cropname
 %       S.cropnumber
-%       S.IrrYield
-%       S.IrrHarvArea
-%       S.IrrBlue
-%       S.IrrGreen
-%       S.RainfedYield
+%       S.IrrYield - yield of irrigated crop (tons/ha)
+%       S.IrrHarvArea - harvested area of irrigated crops (grid cell
+%       fraction)
+%       S.IrrBlue - irrigation water on irrigated crops
+%       S.IrrGreen - rain water on irrigated crops
+%       S.RainfedYield 
 %       S.RainfedHarvArea
-%       S.RainfedBlue
-%       S.RainfedGreen
+%       S.RainfedBlue - irrigation water on rainfed crops (stayed in soil)
+%       S.RainfedGreen - rainwater on rainfed crops
 %       S.Units
 %
 %
-
-
-
-
 % % Units:
-
 % Harvested area (AH): ha/yr
 % 
 % Yield: t/(ha yr)
 % 
-% Water use: mm/yr
+% Water use: mm/yr per harvested ares
 
 
 
@@ -132,7 +128,8 @@ if isstr(crop)
     S.RainfedYield=RY.Data;
     
     % want units of water use ... irr data are in mm/grid cell/yr  
-    % so we divide by normalized area to get mm/ha.  Since Stefan's area is
+    % so we divide by normalized area to get mm on appropriate ha.
+    % Since Stefan's area is
     % in ha, we divide his area by fiveminuteareas.
     
     % Green is rain
@@ -163,6 +160,8 @@ if isstr(crop)
     
     end
     
+    
+    S.Units='mm';
     
     
     

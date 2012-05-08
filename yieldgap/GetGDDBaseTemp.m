@@ -1,9 +1,14 @@
-function T=GetGDDBaseTemp(crop)
+function [T,Tmax]=GetGDDBaseTemp(crop)
 % GetGDDBaseTemp return base GDD temperature as a string
 %
 %  example
 %
 %   GetGDDBaseTemp('maize')
+%
+%   [Tmin,Tmax]=GetGDDBaseTemp('maize')
+
+
+Tmax='99';
 
 persistent C
 
@@ -18,28 +23,28 @@ if numel(iirow)==0
     s=findstr(lower(crop),'loincome');
     if numel(s)==1
         redcrop=strrep(lower(crop),'loincome','');
-        T=GetGDDBaseTemp(redcrop);
+        [T,Tmax]=GetGDDBaseTemp(redcrop);
         return
     end
     
     s=findstr(lower(crop),'hiincome');
     if numel(s)==1
         redcrop=strrep(lower(crop),'hiincome','');
-        T=GetGDDBaseTemp(redcrop);
+        [T,Tmax]=GetGDDBaseTemp(redcrop);
         return
     end
     
     s=findstr(crop,'RF');
     if numel(s)==1
         redcrop=crop(1:end-4);
-        T=GetGDDBaseTemp(redcrop);
+        [T,Tmax]=GetGDDBaseTemp(redcrop);
         return
     end
     
     s=findstr(crop,'IRR');
     if numel(s)==1
         redcrop=crop(1:end-5);
-        T=GetGDDBaseTemp(redcrop);
+        [T,Tmax]=GetGDDBaseTemp(redcrop);
         return
     end
     
@@ -51,3 +56,15 @@ end
 
 
 T=num2str(C.GDD_Base_Temp(iirow));
+
+
+if nargout==2
+    switch crop
+        case 'maize'
+            Tmax='30';
+        case 'wheat'
+            Tmax='25';
+        case 'rice'
+            Tmax='30';
+    end
+end

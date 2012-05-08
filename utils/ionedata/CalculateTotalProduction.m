@@ -28,9 +28,18 @@ end
 if nargin==0
     cl=C.CROPNAME;
 else
-    warning([' i think there is a bug here ... need to add code to ' ...
-        ' correctly match crop characteristics with crop.  ' ...
-        'see, perhaps, CalculateTotalPotentialProduction '])
+    
+    % first make sure it's a cell array
+    if ischar(croplist)
+        croplist={croplist};
+    end
+    
+    %     warning([' i think there is a bug here ... need to add code to ' ...
+    %         ' correctly match crop characteristics with crop.  ' ...
+    %         'see, perhaps, CalculateTotalPotentialProduction '])
+    
+    % commenting out that warning because I checked total results for
+    
     cl=croplist;
 end
 

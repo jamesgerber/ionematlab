@@ -12,13 +12,15 @@ if nargin<2
 end
 
 
-load(filename,'OS');
+load(filename,'OS','FS');
 
 clear DAS
 
 DAS.CodeRevision=[ num2str(OS.RevData.CodeRevisionNo)];
 DAS.ProcessingDate=[ OS.RevData.ProcessingDate];
 DAS.FullFileNameKey=filename;
+DAS.ClimateSpaceRevision=FS.ClimateSpaceRev;
+DAS.PercentileForMaxYield=FS.PercentileForMaxYield;
 
 %ShortFileBase=makesafestring(['YieldGap_' OS.cropname]);
 [a,b]=fileparts(filename);
@@ -49,8 +51,8 @@ return
 C=ReadGenericCSV('croptype_NPK.csv',2);
 
 %for j=1:length(C.CROPNAME);
-  %  for j=[1:42 43:45 47:119 121:length(C.CROPNAME) ]
-    for j=[121:length(C.CROPNAME)]
+    for j=[1:41 43:45 47:119 121:length(C.CROPNAME) ]
+  %  for j=[1:length(C.CROPNAME)]
     thiscrop=C.CROPNAME{j};
     
     

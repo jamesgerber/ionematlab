@@ -22,6 +22,8 @@ for j=length(SoilPartStructure):-1:1;  %reason for going backwards below ...
     tmpCLPC=PE.CLPC(iRowInPE); % clay (mass %)
     tmpPHAQ=PE.PHAQ(iRowInPE); % PH in water
     tmpPERC=SPS.PROP;
+    tmpECEC=PE.ECEC(iRowInPE);
+    tmpELCO=PE.ELCO(iRowInPE);
     
     if PE.TOTC(iRowInPE) < 0
         disp(['This soil types has a flag indicating it''s not a' ...
@@ -35,6 +37,8 @@ for j=length(SoilPartStructure):-1:1;  %reason for going backwards below ...
         SDTO(counter)=tmpSDTO;
         TAWC(counter)=tmpTAWC;
         PHAQ(counter)=tmpPHAQ;
+        ECEC(counter)=tmpECEC;
+        ELCO(counter)=tmpELCO;
         Percentage(counter)=tmpPERC;
     end
 end
@@ -53,6 +57,8 @@ if counter==0
     SoilProps.AvgSDTO=tmpSDTO;
     SoilProps.AvgPHAQ=tmpPHAQ;
     SoilProps.ModalTAWC=tmpTAWC;
+    SoilProps.ModalECEC=tmpECEC;
+    SoilProps.ModalELCO=tmpELCO;
     return
 end
 
@@ -128,6 +134,19 @@ SoilProps.AvgPHAQ_Units='PH';
 SoilProps.AvgTAWC=sum(TAWC.*Percentage)/sum(Percentage);
 SoilProps.ModalTAWC=TAWC(end);
 SoilProps.AvgTAWC_Units='cm/m';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  ECEC - effective CEC  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SoilProps.ModalECEC=ECEC(end);
+SoilProps.ModalECEC_Units=' cmol_c / kg';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  ELCO - elec conductivity  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SoilProps.ModalELCO=ECEC(end);
+SoilProps.ModalELCO_Units=' dS / m';
+
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

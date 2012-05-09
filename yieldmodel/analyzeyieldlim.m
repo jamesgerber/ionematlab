@@ -169,7 +169,7 @@ dIquality = nan(4320,2160);
 % normalization constant for nitrogen
 switch scenario
     case 'minimumdistance'
-        Nmax95 = getcropfertrate(cropname, 'N', .95, datamask);
+        Nmax95 = getcropfertrate(cropname, 'N', .95); %, datamask
 end
 
 % cycle through the bins and calculate modeled yields
@@ -595,12 +595,12 @@ for bin = 1:100
                     end
                 end
                 
-                % draw surface plot of response
-                % mesh(ilist,nlist,ymod)
-                % xlabel('proportion of grid cell area irrigated');
-                % ylabel('nitrogen application rate (kg/ha)');
-                % zlabel([cropname ' yield (t/ha)']);
-                % zlim([0 floor(max(max(ymod))+2)])
+%                 % draw surface plot of response
+%                 mesh(ilist,nlist,ymod)
+%                 xlabel('proportion of grid cell area irrigated');
+%                 ylabel('nitrogen application rate (kg/ha)');
+%                 zlabel([cropname ' yield (t/ha)']);
+%                 zlim([0 floor(max(max(ymod))+2)])
                 
                 % add constant yield value line
                 % hold on

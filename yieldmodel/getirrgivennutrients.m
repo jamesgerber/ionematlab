@@ -41,8 +41,8 @@ else % call by fzero
     
     F = ymodweightavg_rfandirr - desiredyield;
     
-    if ~isfinite(F)
-        keyboard
-    end
+%     if ~isfinite(F)
+%         keyboard
+%     end
     
 end

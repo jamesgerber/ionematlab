@@ -46,7 +46,7 @@ end
 
 for N=Nspace;
     for jcrop=1:length(CropNames);
-        for   jwf=[2 4];
+        for   jwf=[5 2 4];
             jhf=1
             
             cropname=char(CropNames(jcrop));
@@ -86,8 +86,8 @@ for N=Nspace;
                     WetFlag='aei'
                 case 4
                     WetFlag='TMI'
-case 5
-WetFlag='AI'
+                case 5
+                    WetFlag='AI'
             end
             
             
@@ -127,9 +127,9 @@ WetFlag='AI'
                     case 'prec'
                         load([AnnualMeanPrec]);
                         Prec=annualmeanprec;
-case 'AI'
-load(AILocation);
-Prec='AI';
+                    case 'AI'
+                        load(AILocation);
+                        Prec=AI;
                     otherwise
                         error(['Don''t have ability to handle' WetFlag ' in ' mfilename ]);
                 end
@@ -177,14 +177,14 @@ Prec='AI';
                     [BinMatrix,PrecBins,GDDBins,ClimateDefs,CDS]=MakeClimateSpace(Heat,Prec,GDDBinEdges,PrecBinEdges);
                     BinMatrix=single(BinMatrix);
                     
-               %     % now need to refine CDS
-               %     disp('refining bins')
-               %     [CDSnew]=...
-               %         RefineClimateSpaceRevP(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask,[cropname ' ' WetFlag]);
+                    %     % now need to refine CDS
+                    %     disp('refining bins')
+                    %     [CDSnew]=...
+                    %         RefineClimateSpaceRevP(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask,[cropname ' ' WetFlag]);
                     
-               %     %% Make Climate Space
+                    %     %% Make Climate Space
                     
-               %     CDS=CDSnew;
+                    %     CDS=CDSnew;
                 else
                     %% Get bins from somewhere else
                     disp(['Getting Bins from ' GetBinsElsewhere]);
@@ -196,7 +196,7 @@ Prec='AI';
                 
                 [BinMatrix,ClimateDefs]=...
                     ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag,InsideContourLogical);
-
+                
                 
                 %%
                 %Now can make a plot

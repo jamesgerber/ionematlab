@@ -307,9 +307,9 @@ for ibin=ListOfBins(:)';
             ' (' ClimateDefs{ibin} ')']);
     end
     
-    if ibin==24
-        dbstop(mfilename,'315')
-    end
+%     if ibin==24
+%         dbstop(mfilename,'315')
+%     end
     
     %InitializeSomeVariables
     Yield90=-1;

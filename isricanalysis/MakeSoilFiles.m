@@ -32,8 +32,8 @@ TAWCMatrix_modal=-999+0*SoilIDMatrix;
 CLPCMatrix=-999+0*SoilIDMatrix;
 SDTOMatrix=-999+0*SoilIDMatrix;
 PHAQMatrix=-999+0*SoilIDMatrix;
-ECECMatrix=-999+0*SoilIDMatrix;
-ELCOMatrix=-999+0*SoilIDMatrix;
+ECECMatrix_modal=-999+0*SoilIDMatrix;
+ELCOMatrix_modal=-999+0*SoilIDMatrix;
 
 %% Loop over every SUID.
 

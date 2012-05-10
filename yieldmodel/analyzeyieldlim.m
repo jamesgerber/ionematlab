@@ -169,7 +169,7 @@ dIquality = nan(4320,2160);
 % normalization constant for nitrogen
 switch scenario
     case 'minimumdistance'
-        Nmax95 = getcropfertrate(cropname, 'N', .95); %, datamask
+        Nmax95 = getcropfertrate(cropname, 'N', .95, datamask);
 end
 
 % cycle through the bins and calculate modeled yields

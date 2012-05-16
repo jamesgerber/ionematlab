@@ -57,8 +57,9 @@ if counter==0
     SoilProps.AvgSDTO=tmpSDTO;
     SoilProps.AvgPHAQ=tmpPHAQ;
     SoilProps.ModalTAWC=tmpTAWC;
-    SoilProps.ModalECEC=tmpECEC;
-    SoilProps.ModalELCO=tmpELCO;
+    SoilProps.MedianTAWC=tmpTAWC;
+    SoilProps.MedianECEC=tmpECEC;
+    SoilProps.MedianELCO=tmpELCO;
     return
 end
 
@@ -132,20 +133,27 @@ SoilProps.AvgPHAQ_Units='PH';
 %  TAWC - total available water capacity  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SoilProps.AvgTAWC=sum(TAWC.*Percentage)/sum(Percentage);
-SoilProps.ModalTAWC=TAWC(end);
+
+S=soilpropaverages(TAWC,Percentage);
+SoilProps.ModalTAWC=S.modalvalue;
+SoilProps.MedianTAWC=S.median;
 SoilProps.AvgTAWC_Units='cm/m';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  ECEC - effective CEC  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SoilProps.ModalECEC=ECEC(end);
-SoilProps.ModalECEC_Units=' cmol_c / kg';
+S=soilpropaverages(ECEC,Percentage);
+
+SoilProps.MedianECEC=S.median; 
+SoilProps.MedianECEC_Units=' cmol_c / kg';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  ELCO - elec conductivity  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SoilProps.ModalELCO=ECEC(end);
-SoilProps.ModalELCO_Units=' dS / m';
+S=soilpropaverages(ELCO,Percentage);
+
+SoilProps.MedianELCO=S.median;
+SoilProps.MedianELCO_Units=' dS / m';
 
 
 %%

@@ -33,6 +33,9 @@ function OS=NiceSurfGeneral(varargin);
 %   [cmin cmax]
 %           coloraxis from cmin to cmax
 %
+%   [f f] where f is between 0 and 1 (same value repeated) go from -%ile to
+%   +%ile
+%
 %
 %
 %   NSS.Units ['']
@@ -369,6 +372,15 @@ Data=double(Data);
 
 
 %% colorbars
+
+% if length(coloraxis)==2 & length(unique(coloraxis))==1
+%     
+%     f=unique(abs(coloraxis));
+% 
+
+
+
+
 if length(coloraxis)<2
     
     
@@ -393,11 +405,14 @@ if length(coloraxis)<2
                 elseif coloraxis==0
                     coloraxis=[-hiaverage hiaverage];
                 else
-                    coloraxis=[loaverage hiaverage];
                     
-                    coloraxis=AMTSmartCAxisLimit([loaverage hiaverage]);
-                    cmaptemp=finemap(cmap,'','');
-                    cmap=TruncateColorMap(cmaptemp,coloraxis(1),coloraxis(2));                  
+                    if loaverage>0 & hiaverage>0
+                        coloraxis=[loaverage hiaverage];
+                    else                    
+                        coloraxis=AMTSmartCAxisLimit([loaverage hiaverage]);
+                        cmaptemp=finemap(cmap,'','');
+                        cmap=TruncateColorMap(cmaptemp,coloraxis(1),coloraxis(2));
+                    end
                 end
             end
         end

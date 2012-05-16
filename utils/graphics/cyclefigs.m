@@ -1,6 +1,7 @@
 function cyclefigs
 %CYCLEFIGS - cycle through all figures, hit any key to proceed.
-
+%
+% see also showfigs
 % JSG Jan 2009
 h=allchild(0);
 

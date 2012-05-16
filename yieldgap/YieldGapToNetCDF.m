@@ -5,7 +5,16 @@ function YieldGapToNetCDF(filename,extrainfo)
 %
 %   YieldGapToNetCDF(filename,'extrainfo')  will put string extrainfo into
 %   filename
-
+%
+% Example
+%
+% a=dir('YieldGap_*.mat');
+% for j=1:length(a);
+%  YieldGapToNetCDF(a(j).name);
+%  !gzip *.nc
+% end
+% 
+% %% see other examples at end of code base itself
 
 if nargin<2
     extrainfo='';

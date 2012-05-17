@@ -7,13 +7,13 @@ function draw5090(Data)
 %
 %   Example:
 %
-%   S=OpenNetCDF([iddstring 'Crops2000/crops/maize_5min.nc'])
+%   S=opennetcdf([iddstring 'Crops2000/crops/maize_5min.nc'])
 %   tmp=S.Data(:,:,2);  %yield ... not area
 %   draw5090(tmp);
 %
 %   See also fill5090
     load worldindexed;
-    Data=fliplr(EasyInterp2(double(Data),4320,2160));
+    Data=fliplr(easyinterp2(double(Data),4320,2160));
     bmap=immap;
     backdata=rot90(im,3)+1;
     tmp=sort(nonzeros(Data));

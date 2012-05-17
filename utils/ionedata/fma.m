@@ -4,7 +4,7 @@ function x=fma(varargin)
 %
 
 if nargin==0;
-    x=GetFiveMinGridCellAreas;
+    x=getfivemingridcellareas;
 else
-    x=GetFiveMinGridCellAreas(varargin{1:end});
+    x=getfivemingridcellareas(varargin{1:end});
 end

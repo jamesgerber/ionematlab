@@ -3,5 +3,5 @@ function string=cropdir
 %
 %
 
-SystemGlobals
+systemglobals
 string=[IoneDataDir '/Crops2000/crops/'];

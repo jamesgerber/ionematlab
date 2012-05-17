@@ -1,5 +1,5 @@
 function makedark(Data,Title,FileName,coloraxis,colormap);
-%  AMTSurf(Data,Title,FileName,coloraxis,colormap);
+%  amtsurf(Data,Title,FileName,coloraxis,colormap);
 
 if nargin<2
     Title='Data';
@@ -31,7 +31,7 @@ if length(ii)>0
     Data(ii)=0;
 end
 
-SystemGlobals
+systemglobals
 surf=AMTPlot(Data,Title,coloraxis);
 
 %amtfinemap

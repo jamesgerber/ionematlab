@@ -66,7 +66,7 @@ switch res
 
 end
 
-MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
+MaxNumFigs=callpersonalpreferences('maxnumfigsnsg');
 
 if getnumionesurffigs > MaxNumFigs
     warndlg('too many figures currently open.')
@@ -77,13 +77,13 @@ end
 NSS.cmap=0*ones(size(colormap));
 
 
-NSG(ii,NSS)
+nsg(ii,NSS)
 fud=get(gcf,'userdata')
 set(fud.ColorbarHandle,'XTick',[]);
-OutputFig('Force',FileName,NSS.Resolution);
+outputfig('Force',FileName,NSS.Resolution);
 
 set(fud.ColorbarHandle,'Visible','off')
-OutputFig('Force',FileNameNCB,NSS.Resolution);
+outputfig('Force',FileNameNCB,NSS.Resolution);
 
 % now the only oceans colormap
 NSS.cmap=ones(size(colormap));
@@ -92,22 +92,22 @@ set(fud.ColorbarHandle,'Visible','off')
 set(fud.ColorbarHandle,'XTick',[]);
 close
 
-NSG(1-ii,NSS,'lowercolor','black')
-OutputFig('Force',FileNameOceans,NSS.Resolution);
+nsg(1-ii,NSS,'lowercolor','black')
+outputfig('Force',FileNameOceans,NSS.Resolution);
 close
 % now the agri-mask colormap
 
-ii=AgriMaskLogical;
-jj=LandMaskLogical;
+ii=agrimasklogical;
+jj=landmasklogical;
 kk=(jj & ~ii);
 k=double(kk);
 k(k==1)=NaN;
 
-NSG(k,NSS,'lowercolor','black','uppercolor','black')
+nsg(k,NSS,'lowercolor','black','uppercolor','black')
 fud=get(gcf,'userdata')
 
 set(fud.ColorbarHandle,'Visible','off')
 set(fud.ColorbarHandle,'XTick',[]);
 
-OutputFig('Force',FileNameAgriMask,NSS.Resolution);
+outputfig('Force',FileNameAgriMask,NSS.Resolution);
 close

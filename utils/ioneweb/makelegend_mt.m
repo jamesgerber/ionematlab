@@ -1,4 +1,4 @@
-function makeLegend(cmap,crop,yield,cmin,cmax,tmin,tmax)
+function makelegend(cmap,crop,yield,cmin,cmax,tmin,tmax)
 % MAKELEGEND - make a legend for a KML doc
 %
 format long g;

@@ -66,7 +66,7 @@ end
 
 if nargin==1 & isstr(cmap) & isequal(lower(cmap),'version')
     
-    [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo;
+    [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=getsvninfo;
     varargout{1}=AllInfo;
     return
 end
@@ -192,7 +192,7 @@ end
 function cmap=StringToMap(str);
 
 try
-    cmap=ReadTiffCmap([iddstring '/misc/colormaps/' str '.tiff']);
+    cmap=readtiffcmap([iddstring '/misc/colormaps/' str '.tiff']);
     % first try matlab's built in functions (or any functions on the path)
     
 catch

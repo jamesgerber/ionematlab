@@ -28,9 +28,9 @@ end
 mkdir(name);
 mkdir(name,'file');
 size(data)
-MakeGlobalOverlay(data,'brightyield',[.98],'1234567890.png',0.3);
+makeglobaloverlay(data,'brightyield',[.98],'1234567890.png',0.3);
 image=imread('1234567890.png');
-eval(['makeLegendGeneral(' cmap ',[name ''/file''],name,cmin,cmax)']);
+eval(['makelegendgeneral(' cmap ',[name ''/file''],name,cmin,cmax)']);
 fid=fopen([name '/doc.kml'],'w');
 fprintf(fid,['<?xml version="1.0" encoding="UTF-8"?>'...
 '<kml xmlns="http://www.opengis.net/kml/2.2">'...

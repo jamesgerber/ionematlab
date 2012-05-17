@@ -18,9 +18,9 @@ function A=mergedata(background,blon,blat,data,dlon,dlat,method)
 % treated as transparent and will not be pasted.
 %
 % EXAMPLES
-% countries=OpenNetCDF([iddstring ...
+% countries=opennetcdf([iddstring ...
 % '/AdminBoundary2010/Raster_NetCDF/1_Countries_0.5deg/ctry_0.5.nc']);
-% S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc']);
+% S=opennetcdf([iddstring '/Crops2000/crops/maize_5min.nc']);
 % cropgrid=S.Data(:,:,4)+50000;
 % cropgrid(cropgrid>999999|cropgrid<50000)=NaN;
 % result=mergedata(countries.Data,countries.Long,countries.Lat, ...

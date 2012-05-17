@@ -30,7 +30,7 @@ end
 switch Year
     case 2000
         try
-            S=OpenNetCDF([iddstring '/Crops2000/crops/' DataString '_5min.nc']);
+            S=opennetcdf([iddstring '/Crops2000/crops/' DataString '_5min.nc']);
             iscrop=1;
         catch
             error([' can''t find ' DataString ' for Year ' int2str(Year)]);
@@ -38,7 +38,7 @@ switch Year
         
     case 2005
         try
-            S=OpenNetCDF([iddstring '/Crops'  int2str(Year)  '/crops/' ...
+            S=opennetcdf([iddstring '/Crops'  int2str(Year)  '/crops/' ...
                 DataString '_' int2str(Year) '_5min.nc']);
             iscrop=1;
         catch
@@ -58,7 +58,7 @@ switch nargout
     case 3
         
         varargout{1}=S;
-        ii=GoodDataIndices(S);
+        ii=gooddataindices(S);
         tmp=S.Data(:,:,1);
         tmp(~ii)=NaN;
         varargout{2}=tmp;

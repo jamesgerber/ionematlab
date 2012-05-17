@@ -8,7 +8,7 @@ mkdir('outfiles/yield');
 load list
 % loads a list of the names of each crop (maize, vegetablenes, etc)
 
-tmp=OpenNetCDF([iddstring 'Crops2000/Crops/' list{1} '_5min.nc']);
+tmp=opennetcdf([iddstring 'Crops2000/Crops/' list{1} '_5min.nc']);
 
 % create 2D 4320x2160 matrices of lat and long values
 Long1=zeros(4320,2160);
@@ -44,14 +44,14 @@ for i=1:length(list)
     % [crop]_data.nc
     copyfile([iddstring 'Crops2000/Crops/' ThisCropName '_5min.nc'],['outfiles/area/' ThisCropName '.nc']);
     
-    % use AMTSurf to save png maps of the current crop's area and yield,
+    % use amtsurf to save png maps of the current crop's area and yield,
     % save the results in outfiles/area and outfiles/yield as
     % [crop]_area.png and [crop]_yield.png
     areacolormap=finemap('area2');
     
-    AMTSurf(area,['Percentage of land dedicated to ' tmps ' cultivation'],...
+    amtsurf(area,['Percentage of land dedicated to ' tmps ' cultivation'],...
         ['outfiles/area/' ThisCropName '_area.png'],areacolormap);
-    AMTSurf(yield,['Average regional ' tmps ' yield (tonnes/ha)'],...
+    amtsurf(yield,['Average regional ' tmps ' yield (tonnes/ha)'],...
         ['outfiles/yield/' ThisCropName '_yield.png']);
     
     % format the data: remove absurdly large placeholder values, scale so
@@ -72,7 +72,7 @@ for i=1:length(list)
     % determining the transparency
  
   
-  %MakeGlobalOverlay(Data,colormap,coloraxis,FullFileName,BaseTransparency)
+  %makeglobaloverlay(Data,colormap,coloraxis,FullFileName,BaseTransparency)
   
 %  
 %      imwrite(ind2rgb(round(rot90(fliplr(area))),AREACMAP),...
@@ -81,7 +81,7 @@ for i=1:length(list)
 %     imwrite(ind2rgb(round(rot90(fliplr(area))),AREACMAP),...
 %         ['outfiles/yield/' ThisCropName '_overlay/file/overlay.png'],'Alpha',rot90(fliplr(area))/125+.2*(rot90(fliplr(yield))>0));
 
-    % use helper function makeLegend to make legends and IonE logos appear
+    % use helper function makelegend to make legends and IonE logos appear
     % in outfiles/area/[crop]_overlay/file and
     % outfiles/yield/[crop]_overlay/file
     

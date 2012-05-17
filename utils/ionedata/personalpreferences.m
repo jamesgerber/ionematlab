@@ -1,6 +1,6 @@
 function x=personalpreferences(variable,setting)
 % PERSONALPREFERENCES - get or set personal default settings for
-% NiceSurfGeneral and finemap, oceancolor, nodatacolor, latlongcolor, and
+% nicesurfGeneral and finemap, oceancolor, nodatacolor, latlongcolor, and
 % printingres
 %
 %  Syntax
@@ -16,7 +16,7 @@ function x=personalpreferences(variable,setting)
 %     personalpreferences('printingres')
 %     personalpreferences('printingres','-r555')
 %     personalpreferences('printingres')
-%     personalpreferences('maxnumfigsNSG')
+%     personalpreferences('maxnumfigsnsg')
 %
 %
 %
@@ -29,20 +29,20 @@ end
 
 
 persistent latlongcolor printingres GraphicsFileType oceancolor ...
-    maxnumfigsNSG nodatacolor
+    maxnumfigsnsg nodatacolor
 
 
 if isempty(latlongcolor)   
-    %% OutputFig
+    %% outputfig
     printingres='-r300';
     GraphicsFileType='-dpng';% '-djpg' ; '-dtiff';
     
     
-    %% NiceSurf / NiceSurfGeneral
+    %% nicesurf / nicesurfGeneral
     oceancolor='emblue';
     nodatacolor='gray';
     latlongcolor=[.3 .3 .3];
-    maxnumfigsNSG=3;
+    maxnumfigsnsg=3;
 
 end
 

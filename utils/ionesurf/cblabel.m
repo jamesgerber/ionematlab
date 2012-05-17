@@ -1,5 +1,5 @@
 function cblabel(text)
-% CBLabel - colorbar label for a figure made with IonESurf, etc. code
+% CBLabel - colorbar label for a figure made with ionesurf, etc. code
 %
 %
 

@@ -59,7 +59,7 @@ function varargout=finemap(cmap,lowercolor,uppercolor);
 
 if nargin==1 & isstr(cmap) & isequal(lower(cmap),'version')
 
-    [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo;
+    [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=getsvninfo;
         varargout{1}=AllInfo;
         return
 end
@@ -157,26 +157,26 @@ try
     % first try matlab's built in functions (or any functions on the path)
     cmap=colormap(str);
 catch
-                SystemGlobals
+                systemglobals
 
         try
 
-            cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/' str '.tiff']);
+            cmap=readtiffcmap([IoneDataDir '/misc/colormaps/' str '.tiff']);
         catch 
         
             switch lower(str)
 %                case {'DesertToGreen2','deserttogreen2'}
-%            SystemGlobals
-%            cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
+%            systemglobals
+%            cmap=readtiffcmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
 %                case {'GreenToDesert2','greentodesert2'}
-%            SystemGlobals
-%            [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
+%            systemglobals
+%            [dum,cmap]=readtiffcmap([IoneDataDir '/misc/colormaps/DesertToGreen2.tiff']);
                 case {'jfclover'}
-                    SystemGlobals
-                    cmap=ReadTiffCmap([IoneDataDir '/misc/colormaps/jfclover.tiff']);
+                    systemglobals
+                    cmap=readtiffcmap([IoneDataDir '/misc/colormaps/jfclover.tiff']);
               case {'jfgreen-brown'}
-                    SystemGlobals
-                    [dum,cmap]=ReadTiffCmap([IoneDataDir '/misc/colormaps/jfbrown-green.tiff']);
+                    systemglobals
+                    [dum,cmap]=readtiffcmap([IoneDataDir '/misc/colormaps/jfbrown-green.tiff']);
                   
         otherwise
             error([' don''t know this colormap '])

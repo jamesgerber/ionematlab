@@ -43,12 +43,12 @@ function [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,percent
 %     allownegativevalues
 %  Example
 %
-%       S=OpenNetCDF([iddstring '/Fertilizer2000/maizeNapprate']);
+%       S=opennetcdf([iddstring '/Fertilizer2000/maizeNapprate']);
 %       Napp_per_ha=S.Data(:,:,1);
 %       S=getdata('maize');
 %       area=S.Data(:,:,1);
 %       yield=S.Data(:,:,2);
-%       ii=CountryCodetoOutline('USA');
+%       ii=countrycodetooutline('USA');
 %       [HS,TO]=Hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
 %       disp([ int2str(TO.RB*100) '% of N goes on 20% of maize crop area in US']);
 %       [HS,TO]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
@@ -56,7 +56,7 @@ function [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,percent
 %       [HS,TO]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);
 %       disp([ int2str(HS.RG*100) '% of maize produced with 20% of applied N/ha in US']);
 %
-%       ii=LandMaskLogical;
+%       ii=landmasklogical;
 %       [HS,TO]=Hotspot(area(ii).*fma(ii),1,Napp_per_ha(ii),20);
 %       disp([ int2str(TO.RB*100) '% of N goes on 20% of maize crop area in world']);
 %       [HS,TO]=Hotspot(area(ii).*fma(ii),yield(ii),Napp_per_ha(ii),20);

@@ -10,7 +10,7 @@ if nargin==0 & nargout==0;help(mfilename);return;end
 % get crop data
 persistent C
 if isempty(C)
-    C=ReadGenericCSV([iddstring '/misc/cropdata.csv']);
+    C=readgenericcsv([iddstring '/misc/cropdata.csv']);
 end
 
 

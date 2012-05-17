@@ -1,5 +1,5 @@
 function O=centerfigure(I)
-% centerfigure - fix an off center NiceSurf figure image
+% centerfigure - fix an off center nicesurf figure image
 %
 % SYNTAX
 % centerfigure('filename') will load and center image 'filename' and resave
@@ -7,7 +7,7 @@ function O=centerfigure(I)
 % centerfigure(image) will return 'image' centered
 %
 % NOTES
-% Only works with NiceSurf and similar figures that aren't too far from the
+% Only works with nicesurf and similar figures that aren't too far from the
 % default output.
 %
 % EXAMPLES

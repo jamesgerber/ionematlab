@@ -29,12 +29,11 @@ TOTNMatrix=-999+0*SoilIDMatrix;
 BULKMatrix=-999+0*SoilIDMatrix;
 TAWCMatrix=-999+0*SoilIDMatrix;
 TAWCMatrix_modal=-999+0*SoilIDMatrix;
-TAWCMatrix_median=-999+0*SoilIDMatrix;
 CLPCMatrix=-999+0*SoilIDMatrix;
 SDTOMatrix=-999+0*SoilIDMatrix;
 PHAQMatrix=-999+0*SoilIDMatrix;
-ECECMatrix_median=-999+0*SoilIDMatrix;
-ELCOMatrix_median=-999+0*SoilIDMatrix;
+ECECMatrix_modal=-999+0*SoilIDMatrix;
+ELCOMatrix_modal=-999+0*SoilIDMatrix;
 
 %% Loop over every SUID.
 
@@ -83,12 +82,11 @@ for LayerNo=1:5;
         BULKMatrix(ii)=SoilProps.AvgBULK;
         TAWCMatrix(ii)=SoilProps.AvgTAWC;
         TAWCMatrix_modal(ii)=SoilProps.ModalTAWC;
-        TAWCMatrix_median(ii)=SoilProps.MedianTAWC;
         CLPCMatrix(ii)=SoilProps.AvgCLPC;
         SDTOMatrix(ii)=SoilProps.AvgSDTO;
         PHAQMatrix(ii)=SoilProps.AvgPHAQ;
-        ECECMatrix_median(ii)=SoilProps.MedianECEC;
-        ELCOMatrix_median(ii)=SoilProps.MedianELCO;
+        ECECMatrix_modal(ii)=SoilProps.ModalECEC;
+        ELCOMatrix_modal(ii)=SoilProps.ModalELCO;
 
     end
     delete(h) %delete the waitbar
@@ -139,42 +137,34 @@ for LayerNo=1:5;
     DAS.source='ISRIC Version 1.0';
     DAS.Description=['Total Available Water Content. Weighted Average.' ...
         ' Layer ' Layer ];
-    WriteNetCDF(Long,Lat,single(TAWC),'TAWC',['Avg_TAWC_Level' Layer '.nc'],DAS);
-    
+    WriteNetCDF(Long,Lat,single(TAWC),'TAWC',['Avg_TAWC_Level' Layer '.nc'],DAS);   
+  
     TAWC=CorrectlySizedMatrix;
     TAWC(:,EmbeddingIndices)=TAWCMatrix_modal;
     DAS.units='cm/m';
     DAS.source='ISRIC Version 1.0';
-    DAS.Description=['Total Available Water Content. Dominant Soil Type.' ...
+     DAS.Description=['Total Available Water Content. Dominant Soil Type.' ...
         ' Layer ' Layer ];
-    WriteNetCDF(Long,Lat,single(TAWC),'TAWC',['Modal_TAWC_Level' Layer '.nc'],DAS);
-    
-    TAWC=CorrectlySizedMatrix;
-    TAWC(:,EmbeddingIndices)=TAWCMatrix_median;
-    DAS.units='cm/m';
-    DAS.source='ISRIC Version 1.0';
-    DAS.Description=['Total Available Water Content. Dominant Soil Type.' ...
-        ' Layer ' Layer ];
-    WriteNetCDF(Long,Lat,single(TAWC),'TAWC',['Median_TAWC_Level' Layer '.nc'],DAS);
-    
+    WriteNetCDF(Long,Lat,single(TAWC),'TAWC',['Modal_TAWC_Level' Layer '.nc'],DAS);   
+
     ELCO=CorrectlySizedMatrix;
-    ELCO(:,EmbeddingIndices)=ELCOMatrix_median;
+    ELCO(:,EmbeddingIndices)=ELCOMatrix_modal;
     DAS.units='dS/m';
     DAS.source='ISRIC Version 1.0';
-    DAS.Description=['Electrical conductivity. Dominant Soil Type.' ...
+     DAS.Description=['Electrical conductivity. Dominant Soil Type.' ...
         ' Layer ' Layer ];
-    WriteNetCDF(Long,Lat,single(ELCO),'ELCO',['Median_ELCO_Level' Layer '.nc'],DAS);
-    
+    WriteNetCDF(Long,Lat,single(ELCO),'ELCO',['Modal_ELCO_Level' Layer '.nc'],DAS);   
+
     ECEC=CorrectlySizedMatrix;
-    ECEC(:,EmbeddingIndices)=ECECMatrix_median;
+    ECEC(:,EmbeddingIndices)=ECECMatrix_modal;
     DAS.units='cmol_c/kg';
     DAS.source='ISRIC Version 1.0';
-    DAS.Description=['Effective Cation Exchange Capacity. Dominant Soil Type.' ...
+     DAS.Description=['Effective Cation Exchange Capacity. Dominant Soil Type.' ...
         ' Layer ' Layer ];
-    WriteNetCDF(Long,Lat,single(ECEC),'ECEC',['Median_ECEC_Level' Layer '.nc'],DAS);
-    
-end
+    WriteNetCDF(Long,Lat,single(ECEC),'ECEC',['Modal_ECEC_Level' Layer '.nc'],DAS);   
 
+end
+  
 
 %end
 

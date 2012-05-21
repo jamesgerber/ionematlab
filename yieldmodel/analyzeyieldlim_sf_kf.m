@@ -214,7 +214,7 @@ end
 % missing information for each bin
 bkvector = [];
 for bin = 1:100
-    tmp = str2num(MS.b_K2O{bin});
+    tmp = 0;
     if tmp>0
         bkvector = [bkvector tmp];
     end
@@ -258,11 +258,11 @@ for bin = binlistvector
     error_bin = double(errormap(ii));
     
     % identify potential and min yields in the bin
-    potyieldbin = MS.yield_ceiling(bin);
-    minyieldbin = MS.yield_floor(bin);
+    potyieldbin = MS.potential_yield(bin);
+    minyieldbin = MS.minimum_yield(bin);
     
     % get rainfed potential yield
-    yc_rf_bin = str2num(MS.yc_rf{bin});
+    yc_rf_bin = 0;
     
     % initialize the lim_bin codes and nutrient plus vectors
     lim_bin = zeros(length(yield_bin),1);
@@ -951,7 +951,7 @@ for bin = binlistvector
                 
                 % check to make sure the desired yield > the minyield
                 udyb = unique(desiredyield_bin);
-                if udyb > MS.yield_floor(bin)
+                if udyb > MS.minimum_yield(bin)
                     
                     % add constant yield value line
                     [contmatrix, conthandle] = contour3(ilist,nlist, ...
@@ -1121,7 +1121,7 @@ for bin = binlistvector
             % examine for potash limitation
             if str2num(cb(3)) == 1
                 bFitw = str2num(MS.c_K2O{bin});
-                bk = str2num(MS.b_K2O{bin});
+                bk = 0;
                 bininfo = 1;
                 dKQ_bin = ones(length(dKQ_bin),1);
             elseif AYLoptions.adjCflag == 1

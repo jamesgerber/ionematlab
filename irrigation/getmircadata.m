@@ -37,7 +37,7 @@ if dtcode < 4
     % open irrigation data
     tmp = strmatch(cropname, mircatable.mircacrop);
     mircanumber = mircatable.mircanumber(tmp);
-    ncid = netcdf.open([iddstring '/Irrigation/MIRCA2000_processed/mirca2000_crop'...
+    ncid = netcdf.open([iddstring 'Irrigation/MIRCA2000_processed/mirca2000_crop'...
         num2str(mircanumber) '.nc'], 'NC_NOWRITE');
     
     % open the right variable
@@ -53,7 +53,7 @@ if dtcode < 4
 % irrmax75 exists separately as a .mat file in a subdirectory    
 elseif dtcode == 4
     
-    filename = [iddstring '/Irrigation/MIRCA2000_processed/maxirrsummarymaps/' ...
+    filename = [iddstring 'Irrigation/MIRCA2000_processed/' ...
         cropname '_maxirr75.mat'];
     load(filename)
     mircadata = totalmaxirr_75areaconstraint;

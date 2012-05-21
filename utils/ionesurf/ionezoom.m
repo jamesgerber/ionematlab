@@ -3,4 +3,4 @@ set(gca,'units','pixels');
 vec=get(gca,'position');
 a=ceil(vec(3));
 b=ceil(vec(4));
-out=easyinterp2(data(rmin:rmax,cmin:cmax),a,b);
+out=EasyInterp2(data(rmin:rmax,cmin:cmax),a,b);

@@ -2,7 +2,7 @@ function displayname=cropnametodisplayname(cropname)
 % CROPNAMETODISPLAYNAME make an image-friendly name  
 %
 %  This code is kind of silly - need to write something like
-%  faonamestosagenames
+%  FAONamesToSageNames
 %
 % first special cases
 switch lower(cropname)

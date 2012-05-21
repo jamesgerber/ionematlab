@@ -3,5 +3,5 @@ function string=iddstring;
 %
 %
 
-systemglobals
+SystemGlobals
 string=IoneDataDir;

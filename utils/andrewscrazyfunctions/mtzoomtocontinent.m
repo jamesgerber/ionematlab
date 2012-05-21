@@ -1,4 +1,4 @@
-function mtzoomtocontinent(varargin);
+function mtZoomToContinent(varargin);
 % MTZOOMTOCONTINENT – zoomtocontinent modified to work with mtnicesurfgeneral
 
 if nargin==0
@@ -11,13 +11,13 @@ InputFlag=varargin{1};
 switch(InputFlag)
     case 'Initialize'
         uicontrol('style','popupmenu','String','pick a continent|North America|Europe|Asia|Africa|South America|Australia|World','Callback', ...
-            'zoomtocontinent(''ZoomIn'')','position',nextbuttoncoords);	
+            'ZoomToContinent(''ZoomIn'')','position',NextButtonCoords);	
 
     case 'ZoomIn'
  
         % get scaling factor
         try
-            CanMap=checkformappingtoolbox;
+            CanMap=CheckForMappingToolbox;
         catch
             disp(['problem with Mapping Toolbox check in ' mfilename]);
             CanMap=0;
@@ -87,7 +87,7 @@ switch(InputFlag)
 	
 	
     otherwise
-        error('syntax error in zoomtocontinent.m')
+        error('syntax error in ZoomToContinent.m')
         
 end
 

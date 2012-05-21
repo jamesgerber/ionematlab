@@ -7,7 +7,7 @@ function OutputList=continent(InputList);
 %     Continent('France')
 %
 %
-%   See Also:  continentoutline
+%   See Also:  ContinentOutline
 %
 %%http://www.worldatlas.com/cntycont.htm
 if nargin==0

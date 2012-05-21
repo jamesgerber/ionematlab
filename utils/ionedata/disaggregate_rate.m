@@ -5,7 +5,7 @@ function highresdata=disaggregate_rate(loresdata,N);
 %     highresdata=disaggregate_rate(loresdata,N);
 %
 %  Example
-%     hda=gethalfdegreegridcellareas;
+%     hda=GetHalfDegreeGridCellAreas;
 %     halfdegreearea=disaggregate_rate(hda,6);
 %
 %     See also:  disaggregate_quantity

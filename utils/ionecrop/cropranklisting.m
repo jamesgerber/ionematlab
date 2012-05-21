@@ -19,7 +19,7 @@ group=group_unsort(ii);
 clear AllAreas
 
 N=8;
-Bounds=round(linspace(1,length(cropmaskindices),N))
+Bounds=round(linspace(1,length(CropMaskIndices),N))
 
 
 
@@ -27,7 +27,7 @@ Bounds=round(linspace(1,length(cropmaskindices),N))
 for Nouter=1:N-1
     %Nouter=1;
     
-    ii=cropmaskindices(Bounds(Nouter):Bounds(Nouter+1));
+    ii=CropMaskIndices(Bounds(Nouter):Bounds(Nouter+1));
     
     AllAreas(length(mnames),length(ii))=-1;  %preallocate array.
     
@@ -48,7 +48,7 @@ for Nouter=1:N-1
         %  end
         
         
-        S=opennetcdf([iddstring '/Crops2000/crops/' ThisCrop '_5min.nc' ]);
+        S=OpenNetCDF([iddstring '/Crops2000/crops/' ThisCrop '_5min.nc' ]);
         Area=S.Data(:,:,1);
         Area(Area>9e9)=-9999;
         
@@ -94,17 +94,17 @@ for j=1:length(nums)
     nums_numeric(j)=str2num(nums{j});
 end
 
-CMii=cropmaskindices;
+CMii=CropMaskIndices;
 
 for j=1:20;
-    PopularCrop=cropmasklogical*0;
+    PopularCrop=CropMaskLogical*0;
     
     PopularCrop(CMii)=TopCrops(j,:);
     
     DAS.Units=['Codes based on alphabet-sorted Monfreda data names. 1=abaca ...' ...
         ' 175=yautia'];
     DAS.Notes=['Processed ' datestr(now)];
-    writenetcdf(single(PopularCrop),'PrevalentCrop',['PrevalentCropRank' int2str(j) '.nc'],DAS);
+    WriteNetCDF(single(PopularCrop),'PrevalentCrop',['PrevalentCropRank' int2str(j) '.nc'],DAS);
     %make a version with FAO Codes
     
     PopCropMonfredaVector=TopCrops(j,:);
@@ -118,5 +118,5 @@ for j=1:20;
     PopCropFAO(CMii)=PopCropFAOVector;
      DAS.Units=['Codes from FAO.  e.g. Maize=56'];
     DAS.Notes=['Processed ' datestr(now)];
-    writenetcdf(single(PopCropFAO),'PrevalentCrop',['PrevalentCropRank_FAOCodes_' int2str(j) '.nc'],DAS);   
+    WriteNetCDF(single(PopCropFAO),'PrevalentCrop',['PrevalentCropRank_FAOCodes_' int2str(j) '.nc'],DAS);   
 end

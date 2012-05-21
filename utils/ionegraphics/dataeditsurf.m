@@ -2,7 +2,7 @@ function DataEditSurf(Data)
 
 zoom on
 
-[Long,Lat]=inferlonglat(Data);
+[Long,Lat]=InferLongLat(Data);
 
 RedLong=Long;
 RedLat=Lat;
@@ -62,8 +62,8 @@ set(hfig,'UserData',UserDataStructure);
 
 modifyPoint('Initialize');
 
-clear nextbuttoncoords
-position=nextbuttoncoords;
+clear NextButtonCoords
+position=NextButtonCoords;
 position(4)=100;
 ConsoleAxisHandle=axes('units','pixels','Position',position);
 set(ConsoleAxisHandle,'units','normalized');
@@ -75,7 +75,7 @@ axes(UserDataStructure.DataAxisHandle);
 
 end
 
-function [Long,Lat]=inferlonglat(Data)
+function [Long,Lat]=InferLongLat(Data)
 
 if nargin==0
     help(mfilename);

@@ -17,10 +17,10 @@ function I=hashmarks(im,mask,color,space,width,dir,filename)
 % Slow and likely to freeze MATLAB. No anti-aliasing. Can't do more than
 % one type of hashmark without user nesting functions. Doesn't correct user
 % entered colors if they don't match the image type. Assumes format matches
-% nsg defaults. Width argument can be challenging.
+% NSG defaults. Width argument can be challenging.
 %
 % EXAMPLES
-% S=opennetcdf([iddstring '/Crops2000/crops/maize_5min.nc']);
+% S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc']);
 % cropgrid=S.Data(:,:,4);
 % I=hashmarks(hashmarks(cropgrid,(cropgrid>.5&cropgrid<=1.0)),(cropgrid>.9&cropgrid<=1.0),[0 0 255],8,2,0,'myhashmarks.png');
 %
@@ -42,7 +42,7 @@ if size(mask,3)==1
     mask=imread('tmpmask.png');
     %image(mask);
     delete('tmpmask.png');
-    % Default max color for nsg
+    % Default max color for NSG
     c1=0.0*256;
     c2=0.243*256;
     c3=0.153*256;

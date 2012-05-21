@@ -5,10 +5,10 @@ function [ii,value]=closest(vec,val);
 %       ii=closest(vector,value)
 %       [ii,closevalue]=closest(vector,value)
 %
-%  See also  closestvalue
+%  See also  ClosestValue
 
 if length(val)==1
-    [value,ii]=closestvalue(vec,val);
+    [value,ii]=ClosestValue(vec,val);
 else
-    [value,ii]=closestvalue(val,vec);
+    [value,ii]=ClosestValue(val,vec);
 end

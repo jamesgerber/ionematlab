@@ -10,7 +10,7 @@ function varargout=GetSVNStatus(varargin);
 %          proceed if repository is not up to date.
 %
 %
-%       See Also: getsvninfo
+%       See Also: GetSVNInfo
 
 
 %  jsg

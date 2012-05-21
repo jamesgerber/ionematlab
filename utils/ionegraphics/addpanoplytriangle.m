@@ -32,5 +32,5 @@ if triangleflagvector(1) == 1
 patch(start_x-tri_x,start_y+tri_y,startcolor)
 end
 
-zeroxlim(0,1)
-zeroylim(0,1)
+ZeroXlim(0,1)
+ZeroYlim(0,1)

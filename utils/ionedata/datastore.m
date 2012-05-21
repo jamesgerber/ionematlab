@@ -31,9 +31,9 @@ if nargout==1
   tmp = length(store);
   switch tmp
       case 2069588
-          ii = agrimaskindices;
+          ii = AgriMaskIndices;
       case 920953
-          ii = cropmaskindices;
+          ii = CropMaskIndices;
   end
     
   data=-1*nan(4320,2160);
@@ -43,11 +43,11 @@ if nargout==1
 else
     switch masktyp
         case 'crop'
-            ii=cropmaskindices;
+            ii=CropMaskIndices;
         case 'agri'
-            ii=agrimaskindices;
+            ii=AgriMaskIndices;
         case 'land'
-            ii=landmaskindices
+            ii=LandMaskIndices
         otherwise
             error
     end           

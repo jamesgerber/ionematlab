@@ -13,18 +13,18 @@ function cmap=fusecolormaps(cmap1,cmap2,glue);
 %       cmap2='reds_deep';
 %       cmapfused=fusecolormaps(cmap1,cmap2);
 %
-% S=opennetcdf([iddstring '/Crops2000/crops/maize_5min.nc'])
+% S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
 % 
 %   Area=S.Data(:,:,1);
 %   Yield=S.Data(:,:,2);
 %    NSS.Units='tons/ha';
 %   fakedata=Yield-5;
 %   
-% NewMap=stretchcolormap(cmap1,-5,15);
+% NewMap=StretchColorMap(cmap1,-5,15);
 %   nsgfast(fakedata,'cmap',NewMap,'caxis',[-5 15])
-% NewMap=stretchcolormap(cmap2,-5,15);
+% NewMap=StretchColorMap(cmap2,-5,15);
 %   nsgfast(fakedata,'cmap',NewMap,'caxis',[-5 15])
-% NewMap=stretchcolormap(cmapfused,-5,15);
+% NewMap=StretchColorMap(cmapfused,-5,15);
 %   nsgfast(fakedata,'cmap',NewMap,'caxis',[-5 15])%
     
 if nargin==0

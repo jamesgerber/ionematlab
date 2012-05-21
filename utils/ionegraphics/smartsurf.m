@@ -1,5 +1,5 @@
 function OS=smartsurf(data,S)
-% SMARTSURF - nicesurfGeneral wrapper with intelligent zoom
+% SMARTSURF - NiceSurfGeneral wrapper with intelligent zoom
 %
 % SYNTAX
 % smartsurf(data) will zoom to the not-NaNs in data

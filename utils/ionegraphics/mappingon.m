@@ -5,7 +5,7 @@ function  mappingon
 %
 %    mappingon
 %
-%   See Also  checkformappingtoolbox mappingoff
+%   See Also  CheckForMappingToolbox mappingoff
 
 global DONOTUSEMAPPINGTOOLBOX
 DONOTUSEMAPPINGTOOLBOX=0;

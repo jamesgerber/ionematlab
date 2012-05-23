@@ -35,7 +35,7 @@ catch
 end
 cropname=MakeSafeString(char(crop));
 
-GDDBase=GetGDDBaseTemp(cropname);
+[GDDBase,GDDTmaxstr]=GetGDDBaseTemp(cropname);
 
 
 
@@ -59,6 +59,12 @@ switch FS.ClimateSpaceRev
     case 'M'
         ClimateSpaceDescription='ContourFilteredClimateSpaceWithSoil';
         SubDir='ContourFiltered_Soil';
+    case 'Q'
+        ClimateSpaceDescription='ContourFilteredClimateSpace';
+        SubDir='ContourFiltered';
+    case 'R'
+        ClimateSpaceDescription='AreaFilteredClimateSpace_SymmetricQuantileBins';
+        SubDir='SymmetricQuantileBins';
     otherwise
         warning(['using a default ClimateSpaceDescription in ' mfilename])
         ClimateSpaceDescription=['ClimateSpaceRev'  FS.ClimateSpaceRev];
@@ -75,6 +81,25 @@ try
                 '_ClimateSpaceRev'  FS.ClimateSpaceRev ...
                 '_soilrev' FS.csqirev ...
                 '_' num2str(FS.ClimateSpaceN)  '_' FS.WetFlag '.mat'];
+        case {'R','Q'}
+            
+             if isfield(FS,'DataYear')
+                FileName=[OutputDirBase '/' SubDir '/YieldGap_' cropname '_' ...
+                    int2str(FS.DataYear) '_' ...
+                    'BaseGDD_' GDDBase '_' 'MaxGDD_' num2str(GDDTmaxstr) ...
+                    'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
+                    '_'  ClimateSpaceDescription ...
+                    '_' num2str(FS.ClimateSpaceN) 'x' num2str(FS.ClimateSpaceN) '_' FS.WetFlag '.mat'];
+            else
+                FileName=[OutputDirBase '/' SubDir '/YieldGap_' cropname '_' ...
+                    'BaseGDD_' GDDBase '_' 'MaxGDD_' num2str(GDDTmaxstr) ...
+                    'MaxYieldPct_' num2str(FS.PercentileForMaxYield) ...
+                    '_'  ClimateSpaceDescription ...
+                    '_' num2str(FS.ClimateSpaceN) 'x' num2str(FS.ClimateSpaceN) '_' FS.WetFlag '.mat'];
+            end
+            
+            
+            
         otherwise  %{
             if isfield(FS,'DataYear')
                 FileName=[OutputDirBase '/' SubDir '/YieldGap_' cropname '_' ...

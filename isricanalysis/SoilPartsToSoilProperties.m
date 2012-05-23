@@ -56,9 +56,17 @@ if counter==0
     SoilProps.AvgCLPC=tmpCLPC;
     SoilProps.AvgSDTO=tmpSDTO;
     SoilProps.AvgPHAQ=tmpPHAQ;
+    SoilProps.MedianTOTN=tmpTOTN;
+    SoilProps.MedianTOTC=tmpTOTC;
+    SoilProps.MedianBULK=tmpBULK;
+    SoilProps.MedianTAWC=tmpTAWC;
+    SoilProps.MedianCLPC=tmpCLPC;
+    SoilProps.MedianSDTO=tmpSDTO;
+    SoilProps.MedianPHAQ=tmpPHAQ;
     SoilProps.ModalTAWC=tmpTAWC;
-    SoilProps.ModalECEC=tmpECEC;
-    SoilProps.ModalELCO=tmpELCO;
+    SoilProps.MedianTAWC=tmpTAWC;
+    SoilProps.MedianECEC=tmpECEC;
+    SoilProps.MedianELCO=tmpELCO;
     return
 end
 
@@ -84,6 +92,8 @@ SoilProps.AvgTOTC=BulkWeightedAverage(TOTC,BULK,Percentage);
 SoilProps.AvgTOTC_Units='gC/kg';
 % average for total carbon.
 
+S=soilpropaverages(TOTC,Percentage);
+SoilProps.MedianTOTC=S.median;
 
 
 
@@ -92,7 +102,10 @@ SoilProps.AvgTOTC_Units='gC/kg';
 % TOTN - nitrogen density %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % average for total nitrogen.
+S=soilpropaverages(TOTN,Percentage);
+
 SoilProps.AvgTOTN=BulkWeightedAverage(TOTN,BULK,Percentage);
+SoilProps.MedianTOTN=S.median;
 SoilProps.AvgTOTN_Units='gN/kg';
 
 %%
@@ -101,6 +114,8 @@ SoilProps.AvgTOTN_Units='gN/kg';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 WeightedBulkDensity= sum(BULK.*Percentage)./sum(Percentage);
 SoilProps.AvgBULK=WeightedBulkDensity;
+S=soilpropaverages(BULK,Percentage);
+SoilProps.MedianBULK=S.median;
 
 %SoilProps.AvgTOTN=BulkWeightedAverage(BULK,1,Percentage);
 SoilProps.AvgBULK_Units='kg/dm^3';
@@ -111,12 +126,17 @@ SoilProps.AvgBULK_Units='kg/dm^3';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SoilProps.AvgCLPC=BulkWeightedAverage(CLPC,BULK,Percentage);
 SoilProps.AvgCLPC_Units='% Clay';
+S=soilpropaverages(CLPC,Percentage);
+SoilProps.MedianCLPC=S.median;
+
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  SDTO - percentage sand  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SoilProps.AvgSDTO=BulkWeightedAverage(SDTO,BULK,Percentage);
 SoilProps.AvgSDTO_Units='% Sand';
+S=soilpropaverages(SDTO,Percentage);
+SoilProps.MedianSDTO=S.median;
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -127,25 +147,33 @@ AvgMH=sum(MolarHydrogen.*Percentage)./sum(Percentage);
 AvgPH=-log10(AvgMH);
 SoilProps.AvgPHAQ=AvgPH;
 SoilProps.AvgPHAQ_Units='PH';
-
+S=soilpropaverages(PHAQ,Percentage);
+SoilProps.MedianPHAQ=S.median;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  TAWC - total available water capacity  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SoilProps.AvgTAWC=sum(TAWC.*Percentage)/sum(Percentage);
-SoilProps.ModalTAWC=TAWC(end);
+
+S=soilpropaverages(TAWC,Percentage);
+SoilProps.ModalTAWC=S.modalvalue;
+SoilProps.MedianTAWC=S.median;
 SoilProps.AvgTAWC_Units='cm/m';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  ECEC - effective CEC  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SoilProps.ModalECEC=ECEC(end);
-SoilProps.ModalECEC_Units=' cmol_c / kg';
+S=soilpropaverages(ECEC,Percentage);
+
+SoilProps.MedianECEC=S.median; 
+SoilProps.MedianECEC_Units=' cmol_c / kg';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  ELCO - elec conductivity  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SoilProps.ModalELCO=ECEC(end);
-SoilProps.ModalELCO_Units=' dS / m';
+S=soilpropaverages(ELCO,Percentage);
+
+SoilProps.MedianELCO=S.median;
+SoilProps.MedianELCO_Units=' dS / m';
 
 
 %%

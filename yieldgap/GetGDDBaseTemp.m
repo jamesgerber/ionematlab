@@ -48,6 +48,13 @@ if numel(iirow)==0
         return
     end
     
+        s=findstr(crop,'_alt');
+    if numel(s)==1
+        redcrop=strrep(lower(crop),'_alt','');
+        [T,Tmax]=GetGDDBaseTemp(redcrop);
+        return
+    end
+    
     T='0';
     warning(['found multiple (or zero) matches for cropname ' crop ' in ' mfilename]);
     return
@@ -66,5 +73,33 @@ if nargout==2
             Tmax='25';
         case 'rice'
             Tmax='30';
+        case 'maize_alt'
+            Tmax='30';
+            T='10';
+        case 'rice_alt';
+            Tmax='30';
+            T='10';
     end
 end
+
+global JUSTIN_GDD
+if isempty(JUSTIN_GDD)
+    return
+end
+
+switch JUSTIN_GDD
+    case 'Rev1'
+        switch crop
+            case 'maize'
+                Tmax='30';
+                T='10';
+            case 'rice';
+                Tmax='30';
+                T='8';
+        end
+    otherwise
+        warning('JUSTIN_GDD global flag not empty, but don''t know this value')
+
+end
+
+                

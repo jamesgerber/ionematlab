@@ -201,7 +201,7 @@ end
 %%%%%%%% Crop specific
 cropname=char(FS.CropNames{1});
 
-GDDBase=GetGDDBaseTemp(cropname);
+[GDDBase,GDDTmaxstr]=GetGDDBaseTemp(cropname);
 
 if QuietFlag==0
     disp(['Working on ' cropname]);
@@ -229,6 +229,12 @@ switch Rev
 ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
     WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
 
+    case {'Q','R'}
+      ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_' ...
+                    'Tmax_' GDDTmaxstr '_'   ...
+    WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
+  
+        
     case 'G'
 ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
     WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev  ... 

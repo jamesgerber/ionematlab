@@ -103,8 +103,8 @@ set(hy,'FontWeight','Bold')
 
 grid off
 
-zeroxlim(0, 12000)
-zeroylim(0, 6000)
+%zeroxlim(0, 12000)
+%zeroylim(0, 6000)
 
 
 N=sqrt(length(CDS));

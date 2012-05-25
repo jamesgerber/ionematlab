@@ -1,5 +1,9 @@
 function fattenplot(hfig)
-%  FATTENPLOT  "Fatten" all lines and text in the current figure.
+%  FATTENPLOT  "Fatten" all lines and text in a figure.
+%
+% Syntax:
+%  fattenplot - fatten the current figure
+%  fattenplot(hfig) - fatten hfig
 %
 %  James Gerber
 %  Ocean Power Technologies, Inc.

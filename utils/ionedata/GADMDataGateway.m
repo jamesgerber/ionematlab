@@ -3,9 +3,9 @@ function GADMStats=GADMDataGateway(FAO3);
 %
 %  SYNTAX
 %
-%   GadmSData=GADMDataGateway('FRA');
+%   GadmStats=GADMDataGateway('FRA');
 %
-%   GadmSData=GADMDataGateway({'FRA','AFG'});
+%   GadmStats=GADMDataGateway({'FRA','AFG'});
 %% to do - make reduced set of GADM without X Y since those are huge
 
 persistent S ISO3List

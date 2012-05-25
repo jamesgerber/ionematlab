@@ -1,6 +1,7 @@
 function [DS,NS]=CSV_to_structure(fileToRead1)
 %CSV_to_structure  Imports data from the specified file
 %
+% Syntax:
 % [DS,NS]=CSV_to_structure(fileToRead1)
 % DS is a data structure whose field names are the header lines
 % NS is a data structure whose field names are column numbers

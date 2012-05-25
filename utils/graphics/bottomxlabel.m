@@ -1,4 +1,4 @@
-function varargout=leftylabel(m,n,o,string);
+function varargout=bottomxlabel(m,n,o,string);
 
 h=[];
 
@@ -7,7 +7,7 @@ if o>= n*(m-1)+1
 end
 
 if nargout==1
-   varargout{1}==h;
+   varargout{1}=h;
 end
 
 function yes=isint(x)

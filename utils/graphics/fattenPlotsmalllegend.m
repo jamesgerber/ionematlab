@@ -1,4 +1,4 @@
-function fattenplot(hfig)
+function fattenPlotsmalllegend(hfig)
 
 if ~exist('hfig')
    hfig=gcf;

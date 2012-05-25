@@ -1,5 +1,4 @@
 function OS=mtnicesurfgeneral(varargin);
-varargin
 % MTNICESURFGENERAL - uberplotting program. Much faster than nsg but no
 % borders. Not all the UI tools work.
 %

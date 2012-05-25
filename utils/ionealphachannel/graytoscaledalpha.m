@@ -1,7 +1,7 @@
 function GrayToScaledAlpha(OldFileName,NewFileName,ScaleFileName);
 % GrayToScaledAlpha - render a figure proportionally transparent 
 %
-%  Example
+%  Syntax
 %
 %   GrayToScaledAlpha(OLDFILENAME,NEWFILENAME,SCALEFILENAME);
 %

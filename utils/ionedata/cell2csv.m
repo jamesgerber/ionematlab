@@ -1,6 +1,8 @@
 function cell2csv(filename,cellArray,delimiter)
-% Writes cell array content into a *.csv file.
+% CELL2CSV - Writes cell array content into a *.csv file.
 %
+%
+% SYNTAX:
 % CELL2CSV(filename,cellArray,delimiter)
 %
 % filename      = Name of the file to save. [ i.e. 'text.csv' ]

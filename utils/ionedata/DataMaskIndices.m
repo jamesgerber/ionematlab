@@ -1,5 +1,5 @@
 function ii=DataMaskIndices(varargin);
-% DATAMASKINDICES -return indices of standard (5minute) data mask
+% DATAMASKINDICES - return indices of standard (5minute) data mask
 ii=find(DataMaskLogical);
 
 if nargin==1

@@ -1,6 +1,7 @@
 function varargout=tradeoffplot(TO,PlotStruct);
 % tradeoffplot - make a tradeoff plot
 %
+%  Syntax
 %   tradeoffplot(TO) where TO is output from hotspot.m
 %
 %   h=tradeoffplot will return handles to the plots (i.e. for legends)

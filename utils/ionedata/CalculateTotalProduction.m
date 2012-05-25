@@ -1,6 +1,7 @@
 function OS=CalculateTotalProduction(croplist);
 % CalculateTotalProduction
 %
+%   SYNTAX:
 %    OS=CalculateTotalProduction will calculate production for all crops
 %
 %    OS=CalculateTotalProduction(croplist) will calculate production only

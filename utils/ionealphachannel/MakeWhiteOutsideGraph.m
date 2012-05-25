@@ -1,5 +1,5 @@
 function MakeWhiteOutsideGraph(OldFileName,NewFileName);
-%  - add a transparent channel
+% MakeWhiteOutsideGraph - add a transparent channel
 %
 %  Example
 %

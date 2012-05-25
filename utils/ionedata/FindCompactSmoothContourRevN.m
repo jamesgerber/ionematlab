@@ -1,6 +1,6 @@
 function [ContourMask,CutoffValue,NumContours,RecLevel,CS,Areas]=...
     FindCompactSmoothContourRevN(Dist,p,Lsmooth,kx,ky,MaxNumCont,ExcludeMask,RecLevel)
-%FindContour - find smooth contours containing a certain fraction of a distribution
+%FindCompactSmoothContourRevN - find smooth contours containing a certain fraction of a distribution
 %
 %   Revision N version - this was used to make Revision N.  However, it
 %   doesn't always work ... it turns out that there are some cases where it

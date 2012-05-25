@@ -1,5 +1,5 @@
 function mtZoomToContinent(varargin);
-% MTZOOMTOCONTINENT â€“ zoomtocontinent modified to work with mtnicesurfgeneral
+% MTZOOMTOCONTINENT -€“ zoomtocontinent modified to work with mtnicesurfgeneral
 
 if nargin==0
     help(mfilename);

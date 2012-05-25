@@ -1,5 +1,5 @@
 function [UnitCodes,IDNames,UnitNames,CountryNames,CountryNumbers]=LoadPolitBoundary_5min;
-%LOADPOLITBOUNDARY_5min - Load country codes and names
+%LOADPOLITBOUNDARY_5MIN - Load country codes and names
 %
 %
 %  SYNTAX:

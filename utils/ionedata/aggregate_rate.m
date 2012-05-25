@@ -1,5 +1,5 @@
 function small=aggregate_rate(big,N)        
-%aggregaterate - aggregate rate data down to a coarser scale
+%aggregate_rate - aggregate rate data down to a coarser scale
 
 
 small=zeros(size(big)/N);

@@ -1,4 +1,4 @@
-function WhiteToAlpha(OldFileName,NewFileName);
+function whiteToalpha(OldFileName,NewFileName);
 % WhiteToAlpha - replace white with full transparency, non-white with 1/2
 %
 %  Example

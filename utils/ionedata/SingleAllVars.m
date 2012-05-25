@@ -1,9 +1,9 @@
-function singleallvars
-% singleallvars Turn all single valued variables to double
+function SingleAllVars
+% SingleAllVars - Turn all single valued variables to double
 %
 %
 %   Syntax
-%       DoubleAllVars  with no arguments will examine all variables in the
+%       SingleAllVars  with no arguments will examine all variables in the
 %       base workspace, and take those of class 'single' and make them
 %       'double.'   It's useful when trying to use tools (e.g. graphics
 %       tools) which require double precision inputs on a set of data that

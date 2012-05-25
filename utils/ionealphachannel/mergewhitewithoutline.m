@@ -1,9 +1,4 @@
-function MergeWhiteWithAlpha(OldFileName1,OldFileName2,NewFileName);
-% MergeWhiteWithAlpha - replace white with full transparency, non-white with 1/2
-%
-%  Example
-%
-%   MergeWhiteWithAlpha(OLDFILENAME1,OLDFILENAME2,NEWFILENAME);
+function mergewhitewithoutline(OldFileName1,OldFileName2,NewFileName);
 %
 
 OldFileName1=fixextension(OldFileName1,'.png');

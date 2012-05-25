@@ -1,5 +1,5 @@
 function squarefig
-%SQUAREFIG - will make a figure so that the aspect ratio is 1:1
+%SQUAREFIG - will set the aspect ratio of the current figure to 1:1
 
 pos=get(gcf,'position');
 xlim=get(gca,'Xlim');

@@ -1,5 +1,5 @@
 function CS=parse_contourc_output(C)
-% turn a contourc output vector into a structure of vector pairs
+% parse_countourc_output - turn a contourc output vector into a structure of vector pairs
 done=0;
 c=1;
 

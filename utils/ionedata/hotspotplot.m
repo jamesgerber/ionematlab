@@ -1,11 +1,12 @@
-function varargout=tradeoffplot(HS,PlotStruct);
-% tradeoffplot - make a tradeoff plot
+function varargout=hotspotplot(HS,PlotStruct);
+% hotspotplot - make a hot spot plot
 %
-%   tradeoffplot(TO) where TO is output from hotspot.m
+% Syntax:
+%   hotspotplot(TO) where TO is output from hotspot.m
 %
-%   h=tradeoffplot will return handles to the plots (i.e. for legends)
+%   h=hotspotplot will return handles to the plots (i.e. for legends)
 %
-%   tradeoffplot(TO,PlotStruct) where PlotStruct may have the fields
+%   hotspotplot(TO,PlotStruct) where PlotStruct may have the fields
 %     xstr
 %     ystr
 %     titlestr

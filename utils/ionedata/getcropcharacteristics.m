@@ -1,9 +1,9 @@
 function [OS]=getcropcharacteristics(cropname);
-% cropcharacteristics - get crop characteristics from cropinfo.csv file
+% getcropcharacteristics - get crop characteristics from cropinfo.csv file
 %
-%  CC=cropcharacteristics('wheat')
+%  CC=getcropcharacteristics('wheat')
 %
-%  CC=cropcharacteristics;
+%  CC=getcropcharacteristics;
 
 if nargin==0 & nargout==0;help(mfilename);return;end
 

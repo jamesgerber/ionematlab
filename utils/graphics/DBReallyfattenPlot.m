@@ -1,4 +1,4 @@
-function fattenplot(hfig)
+function DBReallyfattenPlot(hfig)
 
 if ~exist('hfig')
    hfig=gcf;

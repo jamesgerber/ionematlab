@@ -1,17 +1,17 @@
-function out=DataBlank(Val,Res)
+function out=datablank(Val,Res)
 % DATABLANK - initialize a matrix 
 %
 % Syntax
 %
-%    out=DataBlank(VAL,RES)    RES can be '30min' or '5min' (default)
+%    out=datablank(VAL,RES)    RES can be '30min' or '5min' (default)
 %
-%    out=DataBlank(MATRIX)     will return a MATRIX size matrix of ones
+%    out=datablank(MATRIX)     will return a MATRIX size matrix of ones
 %    (this syntax is sort of stupid, but it makes the code slightly easier
 %    to read.)
 %
 %  EXAMPLE
 %
-%    HoldingMatrix=DataBlank(-9);  will create a 5min sized matrix
+%    HoldingMatrix=datablank(-9);  will create a 5min sized matrix
 %    of -9
 if nargin<1
     Val=0;

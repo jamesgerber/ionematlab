@@ -49,11 +49,17 @@ function PointSummaryButtonDownCallback(src,event)
 if strcmp(get(src,'SelectionType'),'normal')
     
     UDS=get(gcbf,'UserData');
-    cp=gcpmap;
-    x=cp(1,1);
-    y=cp(1,2);
+    if CheckForMappingToolbox
+        cp=gcpmap;
+        y=cp(1,1);
+        x=cp(1,2);
+    else
+        cp=get(UDS.DataAxisHandle,'CurrentPoint');
+        y=cp(1,2);
+        x=cp(1,1);
+    end
     [CountryNumbers,CountryNames]=...
-        GetCountry_halfdegree(y,x);
+        GetCountry_halfdegree(x,y);
     CountryName=CountryNames{1};
     ii=find(CountryName==',');
     if ~isempty(ii)
@@ -93,14 +99,19 @@ if strcmp(get(src,'SelectionType'),'normal')
      axes(hc)
      set(hc,'xlim',[0 1]);
      set(hc,'ylim',[0 1]);
-     ht=text(0.02,.2,['Country=' CountryName]);
+     ht=text(0.02,9.5,['Country=' CountryName]);
+     display('Point Data:');
+     display(['Country = ' CountryName]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.4,['Value = ' num2str(zvalue)]);
+     ht=text(0.26,9.5,['Value = ' num2str(zvalue)]);
+     display(['Value = ' num2str(zvalue)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.6,['Lat = ' num2str(y)]);
+     ht=text(0.5,9.5,['Lat = ' num2str(y)]);
+     display(['Lat = ' num2str(y)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.8,['Lon = ' num2str(x)]);
-     set(ht,'Tag','IonEConsoleText'); 
+     ht=text(0.74,9.5,['Lon = ' num2str(x)]);
+     set(ht,'Tag','IonEConsoleText');  
+     display(['Lon = ' num2str(x)]);
      axes(UDS.DataAxisHandle);  %make data axis handle current
      try   
          evalin('base','pointdata;');
@@ -123,14 +134,20 @@ function ZoomToPointButtonDownCallback(src,event)
 if strcmp(get(src,'SelectionType'),'normal')
     
     UDS=get(gcbf,'UserData');
-    cp1=get(UDS.DataAxisHandle,'CurrentPoint');
-    x1=cp1(1,1);
-    y1=cp1(1,2);
-    cp=gcpmap;
-    x=cp(1,1);
-    y=cp(1,2);
+    cp=get(UDS.DataAxisHandle,'CurrentPoint');
+    y1=cp(1,2);
+    x1=cp(1,1);
+    if CheckForMappingToolbox
+        cp=gcpmap;
+        y=cp(1,1);
+        x=cp(1,2);
+    else
+        cp=get(UDS.DataAxisHandle,'CurrentPoint');
+        y=cp(1,2);
+        x=cp(1,1);
+    end
     [CountryNumbers,CountryNames]=...
-        GetCountry_halfdegree(y,x);
+        GetCountry_halfdegree(x,y);
     CountryName=CountryNames{1};
     ii=find(CountryName==',');
     if ~isempty(ii)
@@ -145,7 +162,7 @@ if strcmp(get(src,'SelectionType'),'normal')
          xxvect=xx(1:numel(xx));
          yyvect=yy(1:numel(xx));
          zvect=z(1:numel(z));
-         [dum,ii]=min( (xxvect-x).^2+(yyvect-y).^2);
+         [dum,ii]=min((xxvect-x).^2+(yyvect-y).^2);
          zvalue=z(ii);
      else
          [dum,ix]=min((xx-x).^2);
@@ -160,14 +177,19 @@ if strcmp(get(src,'SelectionType'),'normal')
      %now new text
      hc=UDS.ConsoleAxisHandle;
      axes(hc)
-     ht=text(0.02,.2,['Country=' CountryName]);
+     ht=text(0.02,9.5,['Country=' CountryName]);
+     display('Point Data:');
+     display(['Country = ' CountryName]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.4,['Value = ' num2str(zvalue)]);
+     ht=text(0.26,9.5,['Value = ' num2str(zvalue)]);
+     display(['Value = ' num2str(zvalue)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.6,['Lat = ' num2str(y)]);
+     ht=text(0.5,9.5,['Lat = ' num2str(y)]);
+     display(['Lat = ' num2str(y)]);
      set(ht,'Tag','IonEConsoleText');
-     ht=text(0.02,.8,['Lon = ' num2str(x)]);
+     ht=text(0.74,9.5,['Lon = ' num2str(x)]);
      set(ht,'Tag','IonEConsoleText');  
+     display(['Lon = ' num2str(x)]);
      
      try   
          evalin('base','pointdata;');

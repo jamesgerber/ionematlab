@@ -12,6 +12,7 @@ function B=EasyInterp2(A,rows,cols,method)
 %     B=EasyInterp2(A,rows,cols, method); B is A stretched to size rows x
 %     cols using method
 %
+%     B=EasyInterp2(A); B is A stretched to size 4320x2160
 %
 %     EasyInterp2 is designed to make interp2, the built in 2-d matrix
 %     interpolation function, more accessible. It can be used to stretch a
@@ -24,6 +25,10 @@ function B=EasyInterp2(A,rows,cols,method)
 % B=EasyInterp2(magic(5,5),4320,2160,'linear');
 %
 
+if (nargin==1)
+    rows=4320;
+    cols=2160;
+end
 if nargin<4
     method='nearest';
 end

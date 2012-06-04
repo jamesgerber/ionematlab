@@ -66,29 +66,14 @@ if strcmp(get(src,'SelectionType'),'normal')
         CountryName=CountryName(1:(ii(1)-1));
     end
 
-     [xx,yy,z]=GetSurfaceDataFromAxes;
+     z=UDS.Data;
      
-     %% section to find this value.  tricky if xx,yy are mappings.  use
-     %% some ugly code...
-     if size(z,1)==2160 & size(z,2)==4320
-         [yy,xx]=InferLongLat(z);
-         [dum,ix]=min((xx-x).^2);
-         [dum,iy]=min((yy-y).^2);
-         zvalue=z(iy,ix);
-         disp(['ix=' int2str(ix)])
-         disp(['iy=' int2str(iy)])
-         disp(['vectorindex=' int2str(sub2ind(size(z),iy,ix))]);
-     elseif ~isvector(xx)
-         xxvect=xx(1:numel(xx));
-         yyvect=yy(1:numel(xx));
-         zvect=z(1:numel(z));
-         [dum,ii]=min( (xxvect-x).^2+(yyvect-y).^2);
-         zvalue=z(ii);
-     else
-         [dum,ix]=min((xx-x).^2);
-         [dum,iy]=min((yy-y).^2);
-         zvalue=z(iy,ix);
-     end
+     [ix,iy]=LatLong2RowCol(-y,x,z);
+     zvalue=z(ix,iy);
+     disp(['ix=' int2str(ix)])
+     disp(['iy=' int2str(iy)])
+     disp(['vectorindex=' int2str(sub2ind(size(z),ix,iy))]);     
+
      %%% now set text in the console
      % first delete old text
      h=findobj('Tag','IonEConsoleText');
@@ -154,21 +139,15 @@ if strcmp(get(src,'SelectionType'),'normal')
         CountryName=CountryName(1:(ii(1)-1));
     end
 
-     [xx,yy,z]=GetSurfaceDataFromAxes;
+     z=UDS.Data;
      
-     %% section to find this value.  tricky if xx,yy are mappings.  use
-     %% some ugly code...
-     if ~isvector(xx)
-         xxvect=xx(1:numel(xx));
-         yyvect=yy(1:numel(xx));
-         zvect=z(1:numel(z));
-         [dum,ii]=min((xxvect-x).^2+(yyvect-y).^2);
-         zvalue=z(ii);
-     else
-         [dum,ix]=min((xx-x).^2);
-         [dum,iy]=min((yy-y).^2);
-         zvalue=z(iy,ix);
-     end
+     [ix,iy]=LatLong2RowCol(-y,x,z);
+     zvalue=z(ix,iy);
+     disp(['ix=' int2str(ix)])
+     disp(['iy=' int2str(iy)])
+     disp(['vectorindex=' int2str(sub2ind(size(z),ix,iy))]);
+     
+     
      %%% now set text in the console
      % first delete old text
      h=findobj('Tag','IonEConsoleText');

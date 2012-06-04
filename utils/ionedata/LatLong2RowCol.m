@@ -9,6 +9,10 @@ function [row,col]=LatLong2RowCol(latpos,longpos,Lat,Long)
 %     associated with latpos/longpos in a map of size Lat/Long or of size
 %     length(Lat)/length(Long).
 %
+if nargin==2
+    Lat=2160;
+    Long=4320;
+end
 if nargin==3
     Long=size(Lat,1);
     Lat=size(Lat,2);

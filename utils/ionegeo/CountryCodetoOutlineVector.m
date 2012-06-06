@@ -55,7 +55,7 @@ if iscell(countrycode)
     indices = compositeii;
 end
 
-persistent snu_htable state_htable ctry_htable ctry_outlines
+persistent snu_htable state_htable ctry_htable ctry_outlines ctry_outlines_vector lmlindices
 
 if isstr(countrycode)
     % check to see if the 'state_htable' hash table exists in memory
@@ -66,6 +66,9 @@ if isstr(countrycode)
         if exist(ht_path) == 2
             eval(['load ' ht_path]);
             ctry_outlines=single(ctry_outlines);
+            ctry_outlines_vector=ctry_outlines(landmasklogical);
+            lmlindices=find(landmasklogical);
+
             % if it doesn't exist in the folder, construct the hash table using
             % AdminBoundary data
         else
@@ -159,12 +162,12 @@ if isstr(countrycode)
     if length(countrycode) == 3;
         
         c = ctry_htable.get(countrycode);
-        indices = find(ctry_outlines == c);
-        outline = zeros(4320,2160);
-        outline(indices) = 1;
+        indices = (ctry_outlines_vector == c);
+        outline = logical(zeros(4320,2160));
+        outline(lmlindices(indices)) = 1;
         
     elseif length(countrycode) == 5;
-        outline = zeros(4320,2160);
+        outline = logical(zeros(4320,2160));
         sagecodes = state_htable.get(countrycode);
         indices = [];
         for c = 1:length(sagecodes);
@@ -176,7 +179,7 @@ if isstr(countrycode)
         
     elseif length(countrycode == 8);
         
-        outline = zeros(4320,2160);
+        outline = logical(zeros(4320,2160));
         indices = snu_htable.get(countrycode);
         outline(indices) = 1;
         
@@ -187,4 +190,4 @@ if isstr(countrycode)
     end
 end
 
-outline = logical(outline);
+%outline = logical(outline);

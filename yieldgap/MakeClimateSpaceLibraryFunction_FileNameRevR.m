@@ -46,7 +46,7 @@ end
 
 for N=Nspace;
     for jcrop=1:length(CropNames);
-        for   jwf=[5 2 4];
+        for   jwf=[ 2 4 5];
             jhf=1
             
             cropname=char(CropNames(jcrop));

@@ -170,6 +170,11 @@ else
     [Long,Lat]=InferLongLat(Data);
 end
 
+if (size(Data,1)~=4320||size(Data,2)~=2160)
+    [bLong,bLat]=InferLongLat(zeros(4320,2160);
+    mergedata(zeros(4320,2160),bLong,bLat,Data,Long,Lat);
+    longlatbox=[min(Long) max(Long) min(Lat) max(Lat)];
+end
 
 %%% the following logic is awful ... but my joint if conditional statement
 %%% was crashing so i put in this monstrosity.

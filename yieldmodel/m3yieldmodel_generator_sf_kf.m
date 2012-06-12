@@ -1,5 +1,5 @@
 function [cropOS] = m3yieldmodel_generator_sf_kf(input, ...
-    modelnumber, LSQflag)
+    modelnumber, LSQflag, varargin)
 
 % [cropOS] = reg_m3yieldmodel_generator_sf_kf(input, ...
 %            modelnumber, LSQflag)
@@ -34,6 +34,8 @@ function [cropOS] = m3yieldmodel_generator_sf_kf(input, ...
 %                Kdatatype: [4320x2160 double]
 
 slopemultvect = [.5 .75 1 1.5 2];
+% slopemultvect = 1;
+
 
 binrwlist = [];
 binyieldlist = [];
@@ -59,6 +61,24 @@ switch modelnumber
         modelname = 'VL_MBM';
         modelnamelong = 'von Liebig Mitscherlich-Baule model';
 end
+
+if exist('varargin')
+    for n = 1:length(varargin)
+        thisvar = varargin{n};
+        if ischar(thisvar)
+            if strmatch(thisvar,'CrossVal')
+                crossvalflag = 1;
+                crossvalsamplenum = varargin{n+1};
+                disp(['running yield model cross-validation sample ' ...
+                    num2str(crossvalsamplenum)]);
+                
+            elseif strmatch(thisvar,'Boostrap')
+                
+            end
+        end
+    end
+end
+
 
 
 % find upper and lower bound of acceptable slopes for each nutrient if the
@@ -1227,8 +1247,14 @@ cropOS.processingdate = date;
 cropOS.modelversion = input.modelversion;
 csdim = sqrt(double(max(max(input.ClimateMask))));
 climspace = [num2str(csdim) 'x' num2str(csdim)];
-eval(['save ' input.cropname 'OS_m3yield_' ...
-    modelname '_' climspace ' cropOS']);
+if crossvalflag == 1
+    eval(['save ' input.cropname 'OS_m3yield_' ...
+        modelname '_' climspace '_crossvalrun' ...
+        num2str(crossvalsamplenum) ' cropOS' ]);
+else
+    eval(['save ' input.cropname 'OS_m3yield_' ...
+        modelname '_' climspace ' cropOS']);
+end
 
 % output modeled vs observed yield plot
 X = double(cropOS.monfredayieldmap(ii));
@@ -1261,7 +1287,13 @@ plot3(x,y,ones(length(x)).*10000,'color','blue')
 % [bFitw,sew_b,msew] =  lscov(X,Y(:),areas(:));
 % y = bFitw(1).*x;
 % plot3(x,y,ones(length(x)).*10000,'color','red')
-title([cropOS.cropname ': modeled vs M3 yields, model ' modelname '_BF']);
+if crossvalflag == 1
+    title([cropOS.cropname ': modeled vs M3 yields, model ' ...
+        modelname '_BF cross-val run ' num2str(crossvalsamplenum)]);
+else
+    title([cropOS.cropname ': modeled vs M3 yields, model ' ...
+        modelname '_BF']);
+end
 OutputFig('Force');
 
 
@@ -1452,8 +1484,13 @@ output{4,17} = ['processed on ' date];
 output{5,17} = ['version ' input.modelversion];
 output{6,17} = [input.cropname ' GDD base temp = ' input.GDDBaseTemp];
 
-cell2csv([input.cropname '_m3yieldmodeldata_' modelname '.csv'] ...
-    ,output,',');
+if crossvalflag == 1
+    filename = [input.cropname '_m3yieldmodeldata_' modelname ...
+        '_crossvalrun' num2str(crossvalsamplenum) '.csv'];
+else
+    filename = [input.cropname '_m3yieldmodeldata_' modelname '.csv'];
+end
+cell2csv(filename,output,',');
 
 cd ../
 

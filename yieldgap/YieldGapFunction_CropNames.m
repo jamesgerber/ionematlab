@@ -49,8 +49,8 @@ try
 catch
     systemglobals
     % For backwards compatibility
-    %OutputDirBase=[IoneDataDir 'YieldGap'];
-    OutputDirBase=cd;
+    OutputDirBase=[IoneDataDir 'YieldGap'];
+    %OutputDirBase=cd;
 end
 
 if numel(FS.CropNames)>1 | numel(FS.ClimateSpaceN)>1 ...
@@ -80,8 +80,6 @@ end
 %% Determine filename tokens
 
 [FileName,DirName]=YieldGapFunctionFileNames_CropName(FS,OutputDirBase);
-FileName
-DirName=cd;
 if ~exist(DirName,'dir');
 mkdir(DirName)
 end

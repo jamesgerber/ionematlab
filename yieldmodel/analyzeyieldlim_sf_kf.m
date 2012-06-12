@@ -928,20 +928,32 @@ for bin = binlistvector
                             0,assign);
                 end
                 
-                % run for N/I values
-                ymod = nan(101,101);
-                nlist = 0:2:800;
-                ilist = 0:.01:1;
-                for n = 1:length(nlist)
-                    for i = 1:length(ilist)
-                        x(1) = nlist(n);
-                        x(2) = ilist(i);
-                        tmp = agmgmt_mbm_irrintmodel_nutoneirron_sf(b,x);
-                        ymod(n,i) = tmp;
+                % see if we have the yield surface saved locally
+                try
+                    filename =  [cropname '_bin' num2str(bin) ...
+                        '_NxIsurface.mat'];
+                    path = [pwd '/cropyieldsurfaces/' filename];
+                    load(path)
+                % if not, run for N/I values to create yield surface
+                catch
+                    ymod = nan(101,101);
+                    nlist = 0:2:800;
+                    ilist = 0:.01:1;
+                    for n = 1:length(nlist)
+                        for i = 1:length(ilist)
+                            x(1) = nlist(n);
+                            x(2) = ilist(i);
+                            tmp = agmgmt_mbm_irrintmodel_nutoneirron_sf(b,x);
+                            ymod(n,i) = tmp;
+                        end
                     end
+                    mkdir('cropyieldsurfaces')
+                    cd cropyieldsurfaces/
+                    save(filename,'ymod','nlist','ilist')
+                    cd ../
                 end
                 
-                % draw surface plot of response
+                %                 % draw surface plot of response
                 %                 mesh(ilist,nlist,ymod)
                 %                 xlabel('proportion of grid cell area irrigated');
                 %                 ylabel('nitrogen application rate (kg/ha)');

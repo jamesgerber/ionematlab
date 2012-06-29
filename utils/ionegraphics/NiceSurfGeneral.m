@@ -70,6 +70,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.DataCutoff=9e9;
 %   NSS.MakePlotDataFile='off';
 %   NSS.NewPlotAreaMethod='0'
+%   NSS.font
 %
 %  Example
 %
@@ -219,7 +220,7 @@ ListOfProperties={
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
     'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
-    'cbarvisible','transparent','textcolor','newplotareamethod'};
+    'cbarvisible','transparent','textcolor','newplotareamethod','font'};
 
 %% set defaults for these properties
 units='';
@@ -261,6 +262,7 @@ categorical='off';
 categoryranges={};
 categoryvalues={};
 transparent=0;
+font='';
 textcolor=[0 0 0];
 %%now pull property values out of structure
 
@@ -679,12 +681,18 @@ set(ht,'HorizontalAlignment','center');
 set(ht,'FontSize',14)
 set(ht,'FontWeight','Bold')
 set(ht,'tag','NSGTitleTag')
+if (~isempty(font))
+    set(ht,'FontName',font);
+end
 set(ht,'Color',textcolor)
 
 hcbtitle=get(fud.ColorbarHandle,'Title');
 set(hcbtitle,'string',[' ' units ' '])
 set(hcbtitle,'fontsize',12);
 set(hcbtitle,'fontweight','bold');
+if (~isempty(font))
+    set(hcbtitle,'FontName',font);
+end
 set(hcbtitle,'Color',textcolor);
 %cblabel(Units)
 

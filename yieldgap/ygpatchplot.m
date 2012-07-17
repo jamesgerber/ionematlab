@@ -1,4 +1,4 @@
-function ygpatchplot(CDS,Vector)
+function [xvect,yvect]=ygpatchplot(CDS,Vector)
 % YGPatchPlot - make a patch plot given a vector and a CDS structure
 %
 %  basedir= ...
@@ -29,7 +29,10 @@ for ibin=1:length(CDS)
     y(5)=S.Precmin;
     x=double(x);y=double(y);
     
-    patch(x,y,Vector(ibin));
+    xvect(ibin)=mean([S.GDDmin S.GDDmax]);
+    yvect(ibin)=mean([S.Precmin S.Precmax]);
+    
+    patch(x,y,Vector(ibin)*[1 1 1 1 1],Vector(ibin));
 end
 
 

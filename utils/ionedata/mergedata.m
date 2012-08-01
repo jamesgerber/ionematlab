@@ -43,7 +43,7 @@ numlon=abs(ilon1-ilon2)+1;
 [~,ilat1]=nearestelement(blat,min(dlat));
 [~,ilat2]=nearestelement(blat,max(dlat));
 numlat=abs(ilat1-ilat2)+1;
-data=easyinterp2(data,numlon,numlat,method);
+data=EasyInterp2(data,numlon,numlat,method);
 if (ilon1>ilon2)
     tmp=ilon1;
     ilon1=ilon2;

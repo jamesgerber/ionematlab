@@ -48,17 +48,17 @@ cmap='revsummer';
 coloraxis=[0 100];
 BaseTransparency=0.5;
 kmzfilenamebase='test';
-folderbase='./kmlfolder'
-KS.header1='filetext'
-KS.description1='desc 1'
-KS.header2=''
-KS.description2=''
+folderbase='./kmlfolder';
+KS.header1='filetext';
+KS.description1='desc 1';
+KS.header2='';
+KS.description2='';
 KS.logoname='';
 KS.legendname='';
 
 
 
-expandstructure(MKS);
+ExpandStructure(MKS);
 
 TempFileName=[folderbase '/overlay.png'];
 
@@ -75,7 +75,7 @@ KS.folderbase=folderbase;
 
 makekml(KS)
 
-zip('tempkml',folderbase); 
+zip('tempkml','*',folderbase); 
 
 movefile('tempkml.zip',[kmzfilenamebase '.kmz'] );
 

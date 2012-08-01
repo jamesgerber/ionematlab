@@ -68,7 +68,7 @@ coloraxis=OSS.coloraxis;
 end
 
 
-iiNaN=find(isnan(Data));
+iiNaN=find(isnan(Data)|(Data<=0));
 
 Alpha=ones(size(Data))*BaseTransparency;
 

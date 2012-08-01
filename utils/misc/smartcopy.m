@@ -2,6 +2,13 @@ function smartcopy(SearchStr,FromDir,ToDir);
 %  SMARTCOPY - copy files from a local directory to a remote directory
 %  w/o overwriting. 
 %
+% SYNTAX
+%  smartcopy(FromDir,ToDir) - copy all files from FromDir to ToDir
+%  smartcopy(SearchStr,FromDir,ToDir) - copy all files with names matching
+%  SearchStr from FromDir to ToDir
+%
+%
+% EXAMPLE
 %  smartcopy('FreqDomainModel*.mat',...
 %            'c:/jgerber/sandbox/jsg_0162_FreqDomainModel/',...
 %            'o:/sandbox/jsg_0162/frequencyDomainResults/');
@@ -18,7 +25,7 @@ function smartcopy(SearchStr,FromDir,ToDir);
 warning('I recommend using the free utility robocopy.exe instead of this.')
 
 
-If nargin==0
+if nargin==0
     help(mfilename)
     return
 end
@@ -29,15 +36,17 @@ if nargin==1
 end
 
 
-%SearchStr='Fre*';
-aFrom=dir([FromDir SearchStr]);
-aTo=dir(ToDir);
-
 if nargin==0;help(mfilename);return;end
 
 if nargin<3
    SearchStr=[];
 end
+
+
+
+%SearchStr='Fre*';
+aFrom=dir([FromDir SearchStr]);
+aTo=dir(ToDir);
 
 % Set up cell array of remote names
 

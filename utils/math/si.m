@@ -1,11 +1,10 @@
 function [si]=si(xx);
-% function [si]=si(x);
-%  computes Sine Integral
+% SI - compute Sine Integral
 %           /x
 %  si(x) =  |  sin(t)/t dt
 %           /0 
 %
-% See Numerical Recipies for small x, large x algorithms
+% See Numerical Recipes for small x, large x algorithms
 %
 % Beware the many different conventions for defining this function
 %

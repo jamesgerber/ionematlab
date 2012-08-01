@@ -1,5 +1,8 @@
 function fattenPlotsmalllegend(hfig)
-
+% FATTENPLOTSMALLLEGEND - fatten the plot but leave a small legend
+%
+% SYNTAX
+% fattenPlotsmalllegend(hfig) - fatten figure hfig 
 if ~exist('hfig')
    hfig=gcf;
 end

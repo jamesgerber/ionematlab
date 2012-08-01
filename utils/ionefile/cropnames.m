@@ -1,5 +1,10 @@
 function names=cropnames(j)
-% Get Monfreda cropnames
+% CROPNAMES - get a list of all Monfreda crop names
+%
+% SYNTAX
+% names=cropnames - set name to a one-column cell array of all Monfreda
+% crop names
+% name=cropnames(j) - get the crop name at index j
 
 fid=fopen([iddstring 'misc/Reconcile_Monfreda_FAO_cropnames.txt'],'r');
 C = textscan(fid,'%s%s%s%s','Delimiter',tab,'HeaderLines',1);

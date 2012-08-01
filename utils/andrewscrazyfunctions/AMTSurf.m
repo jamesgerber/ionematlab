@@ -1,17 +1,10 @@
 function AMTSurf(Data,Title,FileName,colormap,cutoff,coloraxis)
-% This function renders the given data (held in a 2D matrix containing the
-% value of a certain variable, such as a crop's yield, across the world)
-% into a world map and then saves that image. It is designed to handle crop
-% information (yield, output, etc) but could also be used with certain
-% other data, such as wind speed. It would not currently work with
-% partially or entirely negative data.
-
+% AMTSURF - nicely display global data
+%
+% SYNTAX:
+% AMTSurf(Data,Title,FileName,colormap,cutoff,coloraxis)
 % Data: 2D matrix of data to plot. All sizes are acceptable, but will be 
-% scaled to 4320x2160. The upper-left corner of this matrix corresponds to
-% the NW corner of the output map, the lower-right corner of the matrix
-% corresponds to the SE corner of the map, the upper-right corner of the
-% matrix corresponds to the SW corner of the map, and the lower-left
-% corner of the matrix corresponds to the NE corner of the map.
+% scaled to 4320x2160. Up/down=north/south Left/right=west/east
 % Title: title to print below plot. If this isn't provided by the user, the
 % title will be left blank.
 % FileName: output image destination given as a string. If this isn't

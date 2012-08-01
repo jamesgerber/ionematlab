@@ -1,4 +1,15 @@
 function makeLegendGeneral(cmap,dir,label,cmin,cmax)
+% MAKELEGENDGENERAL - make a legend for a KMZ map
+%
+% SYNTAX
+% makeLegendGeneral(cmap,dir,label,cmin,cmax) - make a KMZ legend and save
+% it as legend.png. Inputs:
+%   cmap - the colormap to use
+%   dir - the directory to save legend.png in
+%   label - the text label to place on the legend
+%   cmin - the colorbar minimum
+%   cmax - the colorbar maximum
+%
 format long g;
 fig=figure('units','pixels','position',[500 500 300 300])
 axes('position',[.15,.1,.7,.75],'visible','off')

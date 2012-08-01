@@ -1,4 +1,20 @@
 function s=runningrms(t,y,T);
+% RUNNINGRMS - calculate running root mean square
+%
+% SYNTAX
+% s=runningrms(t,y,T) - set s to running rms of y over time t with
+% smoothing length T
+%
+% EXAMPLE
+% t=.01:.01:10;
+% T=1;
+% y=sin(2*pi/T*t);
+% plot(t,y,t,runningrms(t,y,T/4),t,runningrms(t,y,T/2),t,runningrms(t,y,T),t,runningrms(t,y,2*T));
+% xlabel('sec')
+% ylabel('signal')
+% legend('inst. signal','T/4','T/2','T','2T');
+% title('Test of RunningRMS code')
+% fattenplot
 
 z=y.^2;
 

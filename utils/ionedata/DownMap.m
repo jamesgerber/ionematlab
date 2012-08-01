@@ -1,4 +1,4 @@
-function varargout=DownMap(Long,Lat,Data);
+function varargout=DownMap(Long,Lat,Data)
 % DownMap - resample data by 1:4, maintaining mean,max,min,mean square
 %
 %  SYNTAX

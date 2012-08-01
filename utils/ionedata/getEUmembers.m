@@ -1,4 +1,6 @@
 function countrycodelist = getEUmembers
+% GETEUMEMBERS - return a list of the 3-letter ISO codes for all EU members
+
 
 % Austria, Belgium, Bulgaria, Cyprus, Czech Republic, Denmark, Estonia,
 % Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia,

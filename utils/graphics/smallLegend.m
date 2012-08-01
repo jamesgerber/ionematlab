@@ -1,6 +1,9 @@
-
 function smallLegend(hfig)
-
+% SMALLLEGEND - make legend small
+%
+% SYNTAX
+% smallLegend(hfig) - give all children of figure hfig that are tagged
+% 'legend' smaller fonts
 if ~exist('hfig')
    hfig=gcf;
 end

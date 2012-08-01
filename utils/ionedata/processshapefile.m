@@ -1,4 +1,5 @@
-function output=processshapefile(S,field,scale)
+function output=processshapefile(S,field,scale,outfile)
+
 short=round(8384*scale);
 long=round(9182*scale);
 output=zeros(short,long);
@@ -31,7 +32,10 @@ close(h)
 end
 %output=inpolygon(X,Y,((polyx+4463000)/(4463000+4639000))*9102,((polyy+4000000)/(4000000+4384000))*8384);
 
-save ihavedata polyx polyy output;
+if (nargin==4)
+    save(outfile,'polyx','polyy','output');
+end
+    
 close(f)
 
 % 

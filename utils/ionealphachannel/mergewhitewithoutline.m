@@ -1,5 +1,4 @@
-function mergewhitewithoutline(OldFileName1,OldFileName2,NewFileName);
-%
+function mergewhitewithoutline(OldFileName1,OldFileName2,NewFileName)
 
 OldFileName1=fixextension(OldFileName1,'.png');
 plotimage1=imread(OldFileName1);

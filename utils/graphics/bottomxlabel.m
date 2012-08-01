@@ -1,5 +1,9 @@
 function varargout=bottomxlabel(m,n,o,string);
-
+% BOTTOMXLABEL - draw a label on the x axis beneath the plot
+%
+% SYNTAX
+% f=bottomxlabel(m,n,o,string) - if o>=n*(m-1)+1, write string onx-axis and
+% return figure handle
 h=[];
 
 if o>= n*(m-1)+1

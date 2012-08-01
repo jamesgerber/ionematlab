@@ -1,4 +1,5 @@
-function sage=getOutlines    
+function sage=getoutlines
+% GETOUTLINES - get global administrative boundaries
 SystemGlobals;
 path = [IoneDataDir 'AdminBoundary2005/Raster_NetCDF/' ...
     '3_M3lcover_5min/admincodes.csv'];

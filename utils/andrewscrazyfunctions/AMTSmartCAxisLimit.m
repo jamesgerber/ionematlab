@@ -1,4 +1,10 @@
-function newlims=AMTSmartCaxisLimit(caxis);
+function newlims=AMTSmartCAxisLimit(caxis)
+% AMTSMARTCAXISLIMIT - version of SmartCAxisLimit that rounds to the same
+% order of magnitude on both sides of 0
+%
+% SYNTAX
+% newlims=AMTSmartCAxisLimit(caxis) - set newlims to 'nice' approximations
+% of coloraxis limits caxis.
 c1=caxis(1);
 c2=caxis(2);
 

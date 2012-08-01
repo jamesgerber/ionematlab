@@ -1,4 +1,8 @@
-function cl=sixteencrops;
+function cl=sixteencrops
+% SIXTEENCROPS - get the names of the sixteen main crops
+%
+% SYNTAX
+% c=sixteencrops - set c to a cell array of the sixteen main crops
 
 cl={'barley',...
 'cassava',...

@@ -1,5 +1,5 @@
-function makedark(Data,Title,FileName,coloraxis,colormap);
-%  AMTSurf(Data,Title,FileName,coloraxis,colormap);
+function makedark(Data,Title,FileName,coloraxis,colormap)
+% makedark(Data,Title,FileName,coloraxis,colormap);
 
 if nargin<2
     Title='Data';
@@ -16,6 +16,7 @@ end
 
 if isempty(coloraxis)
     Data(Data~=0  & isfinite(Data))=10;
+    coloraxis=[0 1];
 end
 
 if nargin<5

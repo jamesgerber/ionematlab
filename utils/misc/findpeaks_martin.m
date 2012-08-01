@@ -1,6 +1,26 @@
-function [iipos,ypos,iineg,yneg]=findpeaks_martin(t,y)
+function [iipos,ypos,iineg,yneg,tpos,tneg,ymag]=findpeaks_martin(t,y)
+% FINDPEAKS_MARTIN - find peaks and troughs
+%
+% SYNTAX
+% [iipos,ypos,iineg,yneg,tpos,tneg,ymag]=findpeaks_martin(t,y) - find the
+% peaks and troughs of y over t. If t is not specified, assume that t
+% starts at one and increments by one for every y value. Set the outputs:
+%   iipos - indices of the peaks
+%   ypos - y values of the peaks
+%   iineg - indices of the troughs
+%   yneg - y values of the troughs
+%   tpos - t values of the peaks
+%   tneg - t values of the troughs
+%   ymag - magnitudes of all peaks/troughs
+%
+% EXAMPLE
+% A=rand(1,20)
+% [iipos,ypos,iineg,yneg,tpos,tneg,ymag]=findpeaks_martin(A)
 
-
+        if (nargin==1)
+            y=t;
+            t=1:length(y);
+        end
                 % *** Peak picking code ***
         %Find crossing points
         y_positive = find(y>mean(y));
@@ -23,21 +43,21 @@ function [iipos,ypos,iineg,yneg]=findpeaks_martin(t,y)
             [y_peak(k), index] =     max(y(crossing_to_positive(k):crossing_to_negative(k+1)));
             pos_peak(k) = crossing_to_positive(k) + index - 1;
         end
-        t_peak = t(pos_peak);
+        tpos = t(pos_peak);
         %Find minimum of trough
         for k=1:length(crossing_to_positive)
             [y_trough(k), index] = min(y(crossing_to_negative(k):crossing_to_positive(k)));
             pos_trough(k) = crossing_to_negative(k) + index - 1;
 
         end
-        t_trough = t(pos_trough);
+        tneg = t(pos_trough);
 
         %Find ABSOLUTE magnitudes of all peaks/troughs in one array
-        y_mag = abs([y_peak, y_trough]);
+        ymag = abs([y_peak, y_trough]);
         % *** End of peak picking code ***
         
         iipos=pos_peak;
-        y_pos=y_peak;
+        ypos=y_peak;
         iineg=pos_trough;
-        y_neg=y_trough;
+        yneg=y_trough;
         

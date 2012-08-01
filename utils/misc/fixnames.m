@@ -1,4 +1,11 @@
 function filenames=fixnames(d)
+% FIXNAMES - a helper function for lowerFunction.  Lowercases all MATLAB
+% files in a directory and returns the list of files renamed.
+%
+% SYNTAX
+% filenames=fixnames(d) - renames all files in directory d to their
+% lowercase versions and returns sets filenames to the list of files
+% changed.
 N=dir(d);
 filenames={};
 for i=1:length(N)

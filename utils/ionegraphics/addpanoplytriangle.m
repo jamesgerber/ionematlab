@@ -1,5 +1,15 @@
 function addpanoplytriangle(triangleflagvector, map)
-
+% ADDPANOPLYTRIANGLE - add triangles to either side of the colorbar
+% indicating the color representing values above or below the colorbar
+% limits.
+%
+% SYNTAX
+% addpanoplytriangle(triangleflagvector) - triangleflagvector is a
+% two-element logical vector. The first value represents whether to display
+% a left-side triangle, and the second represents whether to display a
+% right-side triangle.
+% addpanoplytriangle(triangleflagvector,map) - map is the colormap to use
+% for drawing the triangles, instead of the current colormap.
 if nargin < 2
     map=colormap;
 end

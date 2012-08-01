@@ -1,5 +1,3 @@
-% ConnectPaths
-
 wd=which(mfilename)
 
 base=wd(1:end-17);

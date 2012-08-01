@@ -1,14 +1,14 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf360
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;}
-\margl1440\margr1440\vieww7860\viewh20380\viewkind0
+\margl1440\margr1440\vieww27180\viewh18900\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
 
 \f0\fs24 \cf0 The following is a possibly incomplete list of codes that may require changes to their header comments.\
 \
 \
 \
-Most of the ionesurf headers are incomplete but these are functions that would generally not be directly called by the user so I feel forgiving.\
+Note: most of the ionesurf headers are incomplete but these are functions that would generally not be directly called by the user so I feel forgiving.\
 \
 \
 Missing properly formatted description lines:\
@@ -196,14 +196,13 @@ graphics/connectaxes.m\
 andrewscrazyfunctions/AMTSurf.m\
 \
 \
-Looks dubious:\
+Generally dubious code:\
 misc/testGetSVNInfo.m (just calls GetSVNInfo)\
 misc/ismalthus.m (just checks whether there are >20 users)\
 misc/findpeaks.m (overwriting a MATLAB function)\
-math/ln.m (just an alias for MATLAB log function)\
 ioneweb/webdatascript.m (very specific script to create a very specific webpage for a very specific dataset. Probably doesn't belong in the utils folder)\
-graphics/fill5090 and graphics/draw5090 (could be generalized)\
+graphics/fill5090 and graphics/draw5090 (should be generalized)\
 ionegraphics/exportlimits.m (empty)\
 ionegeo/AmazoniaAmazon.m (unclear how it is different than Amazonia.  Header is identical.)\
 graphics/monthString.m (bad choice of folder.  Maybe misc?)\
-andrewscrazyfunctions/AMTcolormap.m (what was this even for?)}
+}

@@ -1,7 +1,11 @@
-function ExpandStructure(a);
-% put all fields in a structure (or vector of structures) into workspace
+function ExpandStructure(a)
+% EXPANDSTRUCTURE - put all fields in a structure (or vector of structures) into workspace
 %
-% note ... doesn't handle vectors of structures where structures have
+% SYNTAX
+% ExpandStructure(a) - copy all fields of structure a into workspace
+% variables.
+%
+% Note: doesn't handle vectors of structures where structures have
 % vector-valued fields
 list=fieldnames(a);
 

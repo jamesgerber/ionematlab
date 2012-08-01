@@ -1,5 +1,10 @@
-function E=airyerror(tep,t,y);
+function E=AiryError(tep,t,y)
 % AIRYERROR - determine mean square error of data and sine wave model  
+%
+% SYNTAX
+% E=AiryError(tep,t,y) - tep is a vector representing a sine function,
+% with format [T, Eta, phase, mean] (mean is optional and defaults to 0), 
+% and t and y are vectors defining the data to be tested.
 %
 %  Called by BestAiryFit.m
 

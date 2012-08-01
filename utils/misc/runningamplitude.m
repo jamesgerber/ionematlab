@@ -1,7 +1,13 @@
 function [ampvector]=runningamplitude(t,y,T);
 % RUNNINGAMPLITUDE  Finds local amplitude for a signal. 
 %
-% Output is a vector of amplitudes.
+% SYNTAX
+% [ampvector]=runningamplitude(t,y,T) - for the signal defined by vectors t
+% and y, returns a vector of length(t)/T amplitudes, evenly spaced over t.
+% If T is unspecified, returns 20 amplitudes.
+%
+% EXAMPLE
+% runningamplitude(1:40,rand(1,40),4);
 
 
 t=t-t(1);

@@ -1,4 +1,9 @@
 function DBReallyfattenPlot(hfig)
+% DBREALLYFATTENPLOT - make fonts bold and lines fatter, but slightly less
+% than ReallyfattenPlot
+%
+% SYNTAX
+% DBReallyfattenPlot(hfig) - fatten figure hfig 
 
 if ~exist('hfig')
    hfig=gcf;

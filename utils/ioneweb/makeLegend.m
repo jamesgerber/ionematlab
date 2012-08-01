@@ -1,6 +1,12 @@
 function makeLegend(legendtext,filename,cmap,cmin,cmax)
 % MAKELEGEND - make a legend for a KML doc
 %
+% SYNTAX
+% makeLegend(legendtext,filename,cmap,cmin,cmax) - make a legend for a KML
+% document. legendtext is the text to put on the legend, filename defines
+% where to save it, cmap is the colormap to use, cmin and cmax are the
+% colormap minimum and maximums.
+%
 %  This is a more general version of Andrew Mercer-Taylor's code which I
 %  renamed makelegend_mt.m
 %

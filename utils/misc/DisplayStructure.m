@@ -1,4 +1,8 @@
-function ExpandStructure(a);
+function DisplayStructure(a)
+% DISPLAYSTRUCTURE - display the fields of a structure
+% 
+% SYNTAX
+% DisplayStructure(a) - print the fields of the structure a to the screen
 
 list=fieldnames(a);
 

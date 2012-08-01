@@ -1,5 +1,13 @@
-function a=normrnd(N);
-% fills a with N gaussian random variables.  see Numerical recipes for algorithm.
+function a=makeGRV(N)
+% makeGRV - generate Gaussian random variables. See numerical recipes for algorithm.
+%
+% SYNTAX
+% a=makeGRV - set a to a Gaussian random variable. 
+% a=makeGRV(N) - set a to a vector of N Gaussian random variables.
+%
+% EXAMPLE
+% a=makeGRV(3)
+
 persistent resetstate
 
 if nargin==0

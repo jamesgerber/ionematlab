@@ -1,5 +1,9 @@
 function out=callpersonalpreferences(in);
-%function callpersonalpreferences  - gateway & defaults for personalpreferences
+%CALLPERSONALPREFERENCES  - gateway & defaults for personalpreferences
+%
+%SYNTAX
+%out=callpersonalpreferences(in) - set out to personal preference
+%specified by string in. If something goes wrong, give helpful feedback.
 
 
 

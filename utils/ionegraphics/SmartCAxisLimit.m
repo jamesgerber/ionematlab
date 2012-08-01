@@ -1,6 +1,9 @@
-function newlims=SmartCAxisLimit(caxis);
+function newlims=SmartCAxisLimit(caxis)
+% SMARTCAXISLIMIT - adjust coloraxis limits to 'nice' values.
 %
-%
+% SYNTAX
+% newlims=SmartCAxisLimit(caxis) - set newlims to 'nice' approximations of 
+% coloraxis limits caxis.
 c1=caxis(1);
 c2=caxis(2);
 

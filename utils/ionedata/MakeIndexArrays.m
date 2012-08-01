@@ -1,5 +1,4 @@
 function [MatrixToOrderedRow,MatrixToOrderedRowReduced]=MakeIndexArrays(Nrow,Ncol);
-
 legacy=0;
 if legacy==1
     ii=[1:4  (1:4)+Nrow (1:4)+Nrow*2 (1:4)+Nrow*3];
@@ -56,7 +55,7 @@ else
         jj=[jj ii+2*(j-1)];
     end
     
-    kk=-1*ones(1,Nrow*Ncol/4);;
+    kk=-1*ones(1,Nrow*Ncol/4);
     for j=1:Ncol/4;
         kk( (1:length(jj))+ (j-1)*length(jj))=[jj+Nrow*(j-1)];
     end

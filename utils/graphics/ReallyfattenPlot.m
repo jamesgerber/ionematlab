@@ -1,5 +1,8 @@
-function fattenplot(hfig)
-
+function ReallyfattenPlot(hfig)
+% REALLYFATTENPLOT - make fonts bold and lines fatter
+%
+% SYNTAX
+% ReallyfattenPlot(hfig) - fatten figure hfig 
 if ~exist('hfig')
    hfig=gcf;
 end

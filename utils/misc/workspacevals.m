@@ -1,4 +1,3 @@
-
 a=whos;
 for j=1:length(a);
    switch a(j).class;

@@ -55,7 +55,7 @@ switch nargin
 end
 
 Matrix=0*ones(size(MatrixTemplate));
-[Long,Lat]=inferlonglat(Matrix);
+[Long,Lat]=InferLongLat(Matrix);
 
 [LatGrid,LongGrid]=meshgrid(Lat,Long);
 

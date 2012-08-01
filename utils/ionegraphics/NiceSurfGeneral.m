@@ -71,6 +71,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.MakePlotDataFile='off';
 %   NSS.NewPlotAreaMethod='0'
 %   NSS.font
+%   NSS.statewidth=.2;
 %
 %  Example
 %
@@ -220,7 +221,7 @@ ListOfProperties={
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
     'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
-    'cbarvisible','transparent','textcolor','newplotareamethod','font'};
+    'cbarvisible','transparent','textcolor','newplotareamethod','font','statewidth'};
 
 %% set defaults for these properties
 units='';
@@ -238,7 +239,7 @@ makeplotdatafile='off';
 cbarvisible='on';
 projection='';  %empty is default
 newplotareamethod=1;
-
+statewidth=.1;
 datacutoff=9e9;
 
 % new Joanne colors - now set in personalpreferencestemplate
@@ -536,13 +537,13 @@ switch(lower(plotstates))
     case {'off','none'}
         % do nothing
     case {'bric','bricnafta','nafta'}
-        AddStates(0.05,gcf,'bricnafta');
+        AddStates(statewidth,gcf,'bricnafta');
     case {'world','lev0'}
-        AddStates(0.05,gcf,'all');
+        AddStates(statewidth,gcf,'all');
     case {'gadm0'}
-        AddStates(0.05,gcf,'gadm0');
+        AddStates(statewidth,gcf,'gadm0');
     case {'gadm1'}
-        AddStates(0.05,gcf,'gadm1');
+        AddStates(statewidth,gcf,'gadm1');
     otherwise
         error(['have not yet implemented this in AddStates'])
 end

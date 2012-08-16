@@ -5,6 +5,9 @@ function [Long,Lat,Long2,Lat2]=InferLongLat(Data)
 % [Long,Lat]=InferLongLat(Data)
 %
 % [Long,Lat,Long2,Lat2]=InferLongLat(Data)
+%
+% EXAMPLE
+% [long,lat]=InferLongLat(testdata);
 
 if nargin==0
     help(mfilename);

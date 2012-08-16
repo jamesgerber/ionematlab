@@ -1,8 +1,13 @@
-function [jj]=FindPeaks(y,threshold);
-% FINDPEAKS - find maxima 
+function [jj]=findpeaks_jg(y,threshold);
+% FINDPEAKS_JG - find maxima 
 %
-%   Syntax  ii=FindPeaks(Y,THRESH) will return indices of all maxima in Y
+%   Syntax  ii=findpeaks_jg(Y,THRESH) will return indices of all maxima in Y
 %   which are above THRESH
+%
+%
+%   EXAMPLE
+%   A=rand(1,20)
+%   ii=findpeaks_jg(A,.5)
 
 if nargin==0;help(mfilename);return;end;
 

@@ -4,6 +4,10 @@ function x=AreaWeightedPercentile(area,data,p);
 %  SYNTAX
 %    PercentileValue=AreaWeightedPercentile(Area,Data,p);
 %  
+%  EXAMPLE
+%    AreaWeightedPercentile(fma,testdata,50)
+%
+
 if ~isequal(length(area),length(data))
     error('unequal vector lengths');
 end

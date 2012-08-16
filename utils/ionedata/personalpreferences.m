@@ -51,17 +51,18 @@ end
 if nargin==2
     
     
-    a=whos(variable);
-    if isequal(a.class,'double')
-        disp(['Setting ' variable '=' num2str(setting) ';']);
-        eval([variable '=' num2str(setting) ';']);
-        
-    else
-        
-        disp(['Setting ' variable '=''' setting ''';']);
- 
-        eval([variable '=''' setting ''';']);
-    end
+    a=whos(variable)
+    a.class
+    %if isequal(a.class,'double')
+        disp(['Setting ' variable '=' var2str(setting) ';']);
+        eval([variable '=' var2str(setting) ';']);
+%         
+%     else
+%         
+%         disp(['Setting ' variable '=''' setting ''';']);
+%  
+%         eval([variable '=''' setting ''';']);
+%     end
     
     return
 end

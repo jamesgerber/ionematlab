@@ -1,9 +1,13 @@
-function [ii,value]=closest(vec,val);
-% closest - return closest index
+function [ii,value]=closest(vec,val)
+% closest - return closest linear index
 %
 %  Syntax
-%       ii=closest(vector,value)
-%       [ii,closevalue]=closest(vector,value)
+%       ii=closest(matrix,value)
+%       [ii,closevalue]=closest(matrix,value)
+%
+%  EXAMPLE
+%       A=rand(5)
+%       ii=closest(A,.5)
 %
 %  See also  ClosestValue
 

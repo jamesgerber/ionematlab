@@ -1,5 +1,5 @@
-function ii=AgriMaskIndices(varargin);
-% AGRIMASKINDICES -return indices of standard (5minute) agri mask
+function ii=AgriMaskIndices(varargin)
+% AGRIMASKINDICES - return indices of standard (5minute) agri mask
 %
 %  See Also AgriMaskLogical DataMaskIndices LandMaskLogical
 

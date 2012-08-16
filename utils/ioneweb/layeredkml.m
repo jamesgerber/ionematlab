@@ -5,6 +5,9 @@ function layeredkml(image,name)
 %
 %  layeredkml(image,name) where image is an rgb image and name
 %  serves as a title and a directory name, makes a .kmz of image
+%
+%  EXAMPLE
+%  layeredkml(ind2rgb(rot90(floor(testdata*128)),jet(128)),'text.kmz');
 
 mkdir(name);
 mkdir(name,'file');

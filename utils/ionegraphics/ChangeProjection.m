@@ -1,6 +1,6 @@
 function ChangeProjection(varargin);
-% ChangeProjection - Change projection of map.
-
+% ChangeProjection - Change projection of map. Helper for IonESurf.
+%
 if nargin==0
     help(mfilename);
     return
@@ -44,7 +44,7 @@ switch(InputFlag)
                     ||strcmp(mapproj,'gnomonic')||strcmp(mapproj,'ortho')||strcmp(mapproj,'stereo')||strcmp(mapproj,'vperspec')||strcmp(mapproj,'wiechel'))
                 setm(gca,'mapproj','cassini');
             end
-            setm(gca,'mapproj',key(Val,:));
+            setm(gca,'mapproj',regexprep(key(Val,:), '[^A-Za-z0-9]', ''));
         end
     otherwise
     error(['syntax error in ' mfilename])

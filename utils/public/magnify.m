@@ -1,6 +1,10 @@
 function magnify(f1)
 %
-%magnify(f1)
+% MAGNIFY - create magnification box
+%
+% SYNTAX
+%  magnify(figure) - create box in figure
+%  magnify - use current figure
 %
 %  Figure creates a magnification box when under the mouse
 %  position when a button is pressed.  Press '+'/'-' while

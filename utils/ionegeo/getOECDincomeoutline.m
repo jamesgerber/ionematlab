@@ -1,4 +1,4 @@
-function Outline=getOECDincomeoutline(incomelevel);
+function Outline=getOECDincomeoutline(incomelevel)
 % getOECDincomeoutline - get outlines of OECD income levels
 %
 %   Syntax
@@ -20,9 +20,10 @@ function Outline=getOECDincomeoutline(incomelevel);
 %     Outline=getOECDincomeoutline('um'); just 'Upper middle income'
 %     Outline=getOECDincomeoutline('lm'); just 'Lower middle income'
 %     Outline=getOECDincomeoutline('low');   just "Low income"
-
-
-
+%
+%
+%   EXAMPLE
+%       NSG(getOECDincomeoutline('high'));
 %  
 path = [iddstring 'misc/wbiclass.csv'];
 WBI = ReadGenericCSV(path);

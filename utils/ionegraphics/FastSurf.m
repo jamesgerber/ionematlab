@@ -1,4 +1,4 @@
-function varargout=FastSurf(Long,Lat,Data,Units,TitleStr);
+function varargout=FastSurf(Long,Lat,Data,Units,TitleStr)
 % THINSurf - undersample data to keep plot memory below 200MB
 %
 % SYNTAX
@@ -14,6 +14,9 @@ function varargout=FastSurf(Long,Lat,Data,Units,TitleStr);
 %     FastSurf(DS);  where DS is a matlab structure will look for fields
 %     Long, Lat, Data, Title, Units
 %
+%
+% EXAMPLE
+%     FastSurf(testdata);
 %
 %    See Also:  ThinSurf  IoneSurf DownSurf
 

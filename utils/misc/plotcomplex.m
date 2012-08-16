@@ -3,13 +3,20 @@ function handle=plotcomplex(t,z,t2,z2);
 %
 %  Syntax:
 %
-%   h=Plotcomplex(Z)
+%   h=plotcomplex(Z); - plot vector Z over 1:length(Z)
 %
-%   h=Plotcomplex(f,Z)
+%   h=plotcomplex(t,Z); - plot vector Z over t
 %
-%   h=Plotcomplex(f,Z,style)
+%   h=plotcomplex(t,Z,style); - style indicator will be used with plot
 %
-%   h=Plotcomplex(f,Z,f2,Z2);
+%   h=plotcomplex(t,Z,t2,Z2); - plot both Z over t and Z2 over t2
+%
+%
+%  EXAMPLE
+%   v=cumsum(rand(1,5)*i+rand(1,5));
+%   t=cumsum(rand(1,5));
+%   plotcomplex(t,v);
+
 
 if nargin==1
    z=t;

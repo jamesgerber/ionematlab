@@ -16,7 +16,11 @@ function varargout=DownSurf(Long,Lat,Data,Units,TitleStr);
 %
 %
 %    See Also:  ThinSurf  IoneSurf
-
+%
+%
+% EXAMPLE
+%   DownSurf(testdata);
+%
 %    This code differs from ThinSurf by only one line
 
 if nargin==0

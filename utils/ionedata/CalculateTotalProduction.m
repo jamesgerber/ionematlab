@@ -1,4 +1,4 @@
-function OS=CalculateTotalProduction(croplist);
+function OS=CalculateTotalProduction(croplist)
 % CalculateTotalProduction
 %
 %   SYNTAX:

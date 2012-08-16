@@ -1,5 +1,9 @@
-function H=cfig(H);
-% CFIG  -   Open a figure widnow in the corner of the screen
+function H=cfig(H)
+% CFIG - Open a figure window in the corner of the screen
+%
+% SYNTAX
+% cfig(H) - move figure H to the corner of the screen
+% H=cfig - create figure H in the corner of the screen
 pos=get(0,'ScreenSize');
 
 X=pos(3);

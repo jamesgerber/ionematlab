@@ -1,5 +1,5 @@
-function [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,percentage,flags);
-% Hotspot - determine Hotspots in a dataset
+function [Hotspot,Tradeoff,GI]=hotspot(area,goodthingperha,badthingperha,percentage,flags);
+% HOTSPOT - determine Hotspots in a dataset
 %
 %   Hotspot determines which points are most associated with some undesired
 %   characteristic.   It works in two ways:  it determines Hotspots, which
@@ -10,7 +10,7 @@ function [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,percent
 %
 %   Syntax
 %
-%       [Hotspot,Tradeoff,GI]=Hotspot(area,goodthingperha,badthingperha,N)
+%       [Hotspot,Tradeoff,GI]=hotspot(area,goodthingperha,badthingperha,N)
 %
 %       Tradeoff is a structure which contains fields
 %           .RB   % relative badness, in other words, 100*N% of goodthing

@@ -95,7 +95,11 @@ for j=1:length(longlist);
       CountryNames{j}='ocean';
   else
       ii=find(NumList==CountryNumbers(j));
-      CountryNames{j}=NameList{ii};
+      if (isempty(ii))
+          CountryNames{j}='ocean';
+      else
+        CountryNames{j}=NameList{ii};
+      end
   end
   
 end

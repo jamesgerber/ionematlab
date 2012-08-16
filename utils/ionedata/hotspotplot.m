@@ -1,4 +1,4 @@
-function varargout=hotspotplot(HS,PlotStruct);
+function varargout=hotspotplot(HS,PlotStruct)
 % hotspotplot - make a hot spot plot
 %
 % Syntax:
@@ -11,6 +11,12 @@ function varargout=hotspotplot(HS,PlotStruct);
 %     ystr
 %     titlestr
 %     plotstyle
+%
+% EXAMPLE
+%   [A B C] = hotspot(testdata,testdata,testdata,50)
+%   hotspotplot(A)
+%
+%
 %   see also:  hotspot.m
 
 xstr=' good thing - % ';
@@ -31,8 +37,8 @@ title(titlestr);
 
 grid on
 
-zeroxlim(0,100);
-zeroylim(0,100);
+ZeroXlim(0,100);
+ZeroYlim(0,100);
 
 if nargout==1
     varargout{1}=h;

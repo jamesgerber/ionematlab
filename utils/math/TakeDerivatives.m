@@ -17,6 +17,11 @@ function [vel, accel, uu]=TakeDerivatives(x,delt,skipPoints)
 %      
 %      the code returns the first(vel) and second (accel) derivative of the passed vector, found via this central 
 %      differences methodology. the code will also identify all location where vel~=0, this is uu.
+%
+%
+%      EXAMPLE:
+%               x=rand(1,10)
+%               [vel,accel,uu]=TakeDerivatives(x,.1,1)
 %      
 % Diana Bull                                                                                           04-12-06
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

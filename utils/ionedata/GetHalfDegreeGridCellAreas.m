@@ -1,4 +1,4 @@
-function [Long,Lat,FiveMinGridCellAreas]=GetHalfDegreeGridCellAreas(indices);
+function [Long,Lat,HalfDegGridCellAreas]=GetHalfDegreeGridCellAreas(indices);
 % GetHalfDegreeGridCellAreas determine area in centered grids that are 30min x 30min
 %
 %  Syntax

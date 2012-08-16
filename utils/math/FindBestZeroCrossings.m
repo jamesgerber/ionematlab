@@ -12,6 +12,9 @@ function [PosVarZeros, NegVarZeros, BestVarZeros] = FindBestZeroCrossings(time, 
 %                [ column2 - column1 = # of positive(negative) datapoints between 2 zero's ... can easily search for peaks between column1 & column 2]
 %                a zx1 vector of the values locations (datapoints) closest to zero.
 %
+% EXAMPLE
+%      [PosVarZeros, NegVarZeros, BestVarZeros]=FindBestZeroCrossings(1:100, cumsum(rand(1,100)-.5), 1)
+%
 % diana bull                                                                                                                         10-24-06
 %                                                                                                                 released on server 11-14-06
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

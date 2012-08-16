@@ -1,4 +1,4 @@
-function v=nearestNonZero(r,c,G)
+function [v,i]=nearestnonzero(r,c,G)
 % NEARESTNONZERO - return the value of the nearest nonzero element to index r,c
 %
 % SYNTAX

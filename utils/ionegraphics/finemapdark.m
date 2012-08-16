@@ -1,4 +1,4 @@
-function varargout=finemap(cmap,lowercolor,uppercolor);
+function varargout=finemapdark(cmap,lowercolor,uppercolor)
 % FINEMAP - interpolate the colormap finely and put blue on the bottom
 %
 %  Syntax
@@ -55,7 +55,10 @@ function varargout=finemap(cmap,lowercolor,uppercolor);
 %    spring     - Shades of magenta and yellow color map.
 %    winter     - Shades of blue and green color map.
 %    summer     - Shades of green and yellow color map.
-
+%
+%
+%  EXAMPLE
+%   finemapdark(jet,'aqua','black');
 
 if nargin==1 & isstr(cmap) & isequal(lower(cmap),'version')
 

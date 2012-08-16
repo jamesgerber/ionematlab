@@ -4,9 +4,12 @@ function varargout=SparSurf(Long,Lat,Data,Units,TitleStr);
 % SYNTAX
 %     SparSurf(Long,Lat,Data);
 %   
-%
 %     SparSurf(Data);  will assume global coverage of data and construct
 %     Long, Lat
+%
+% EXAMPLE
+%     SparSurf(testdata);
+
 if nargin==0
   help(mfilename);
   return
@@ -56,7 +59,7 @@ end
 
 % now if there is any ocean, set it to zero.
 
-Mask=OceanMask(Long,Lat,Data);
+Mask=LandMaskLogical(Data);
 ii=find(Mask==0);
 Data(ii)=0;
 

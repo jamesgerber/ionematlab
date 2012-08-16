@@ -4,6 +4,11 @@ function maketransparencymasks(res)
 %   This function makes some necessary masks to allow us to make
 %   transparent backgrounds using maketransparentoceans.
 %
+% SYNTAX
+% maketransparencymasks(res) - make transparency masks at the specified
+% resolution ('r150', 'r300', 'r600', or 'r1200' dpi).  If res is
+% unspecified, make at all available resolutions.
+%
 %  This can be called automatically by maketransparentoceans, or you can
 %  call it from the commandline without arguments
 if nargin==0

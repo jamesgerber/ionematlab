@@ -1,5 +1,10 @@
-function AddColorbarFinalPlus(Handle);
-% AddColorbarFinalPlus - add a "+"  to final number on colorbar
+function AddColorbarMinus(Handle)
+% AddColorbarFinalPlus - add a "<" before the first number on colorbar
+%
+% SYNTAX
+% AddColorbarPercent(h) - add < to the first number on the colorbar either
+% specified by handle h or in the figure specified by handle h.
+%
 if nargin==0;
   Handle=gcf;
 end

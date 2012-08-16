@@ -1,4 +1,4 @@
-function [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(X,Y,XBinEdges,YBinEdges,Weight);
+function [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(X,Y,XBinEdges,YBinEdges,Weight)
 % GENERATEJOINTDIST - Generate joint distribution of two vectors
 %
 %  [jp,xbins,ybins]=GenerateJointDist(X,Y,XBinEdges,YBinEdges,Weight);
@@ -14,6 +14,10 @@ function [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(X,Y,XBinEdges,YB
 %      jp is the joint probability distribution
 %      xbins is a vector denoting the centers of the bins.  so
 %      length(xbins)=length(XBinEdges)-1 
+%
+%  EXAMPLE
+%      [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(rand(1,30),rand(1,30),5,5)
+%
 %
 %   See Also:  SelectUniformBins
 %

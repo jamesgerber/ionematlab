@@ -1,6 +1,9 @@
 function LogicalVector=DataMaskLogical(DataTemplate);
-% DATAMASKLOGICAL -  logical array of standard (5 min) datamask
-
+% DATAMASKLOGICAL - logical array of standard (5 min) datamask
+% 
+% SYNTAX
+% DataMaskLogical(DataTemplate) - return the logical data mask fitting
+% DataTemplate.  If DataTemplate is unspecified, return 5min data mask.
 persistent DataLandMaskVector
 
 if isempty(DataLandMaskVector)
@@ -33,7 +36,7 @@ switch numel(DataTemplate)
         
         LogicalVector=LogicalVector10min;
     otherwise
-        error(['don''t have a landmask at this size'])
+        EasyInterp2(LogicalVector,size(DataTemplate,1),size(DataTemplate,2));
 end
 
 

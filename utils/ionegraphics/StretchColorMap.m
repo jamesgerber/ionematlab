@@ -4,6 +4,11 @@ function newmap=StretchColorMap(cmap,cmin,cmax,center);
 %     Use this if data goes from negative to positive but isn't
 %     centered
 %
+%   SYNTAX
+%   newmap=StretchOutColorMap(cmap,cmin,cmax,center) - set newmap to a new
+%   version of colormap cmap between cmin and cmax, centered on center.
+%
+%
 %   Example
 %
 %   M=getdata('maize');

@@ -1,5 +1,5 @@
 function ii=CropMaskIndices(varargin);
-% CROPMASKINDICES -return indices of standard (5minute) data mask
+% CROPMASKINDICES - return indices of standard (5minute) data mask
 ii=find(CropMaskLogical);
 
 if nargin==1

@@ -2,6 +2,14 @@ function [NeighborCodesSage,NeighborNamesSage,DistanceProxy] ...
     = NearestNeighbor(SageCountryCode,RecursionLevel);
 % NearestNeighbor - find nearest neighboring countries
 %
+% SYNTAX
+% [NeighborCodesSage,NeighborNamesSage,DistanceProxy]
+%   = NearestNeighbor(SageCountryCode,RecursionLevel) - return a list of a
+%   country's nearest neighbors, their sage codes, and their distances.
+%   SageCountryCode is the Sage code of the country to examine and the
+%   recursion level, if greater than 1, will have the algorithms also
+%   include the countries close to neighbors of the original country up to
+%   the specified depth.
 %
 %  Example
 %

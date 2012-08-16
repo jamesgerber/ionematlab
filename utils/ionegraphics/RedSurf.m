@@ -1,7 +1,9 @@
 function varargout=RedSurf(Long,Lat,Data);
 % REDSURF Surface plot for a reduced dataset
 %
-%
+% SYNTAX
+% h=RedSurf(Long,Lat,Data) - plot Data with IonESurf and return the figure
+% handle
 if nargin==0
   help(mfilename);
   return
@@ -18,7 +20,7 @@ if nargin==1
   Lat =evalin('base','LatRed');
 end
 
-h=IoneSurf(Long,Lat,double(Data),'','');
+h=IonESurf(Long,Lat,double(Data),'','');
 
 if nargout==1
     varargout{1}=h;

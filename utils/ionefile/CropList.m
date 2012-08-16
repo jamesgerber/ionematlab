@@ -1,7 +1,12 @@
 function CropList=CropList(DirString,flag);
 % CropList - return a list of crops
 %
-%
+% SYNTAX
+% CropList=CropList(DirString,flag) - return a cell array of the names of
+% all the crop gridsfound in the specified directory in
+% <iddstring>/Crops2000/crops.  If flag is 'limited', don't include rainfed
+% or income-limited crops; if flag is 'all', include all.  If flag is
+% unspecified, default is 'limited'.
 
 if nargin  ==0
     DirString='';

@@ -12,6 +12,8 @@ function O=matrixoffset(I,roff,coff,fill)
 % EXAMPLES
 % O=matrixoffset(magic(5),2,-1,0)
 %
+roff=mod(roff,size(I,1));
+coff=mod(coff,size(I,2));
 O=zeros(size(I));
 if (roff>0)
     O((1+roff):size(O,1),:)=I(1:(size(I,1)-roff),:);

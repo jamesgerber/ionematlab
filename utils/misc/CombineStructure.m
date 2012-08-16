@@ -1,9 +1,13 @@
-function S=CombineStructure(S1,S2,AFieldName);
+function S=CombineStructure(S1,S2,AFieldName)
 % CombineStructure - create a structure with combined vector fields
 %
 % Syntax:
 %  S=CombineStructure(S1,S2,AFieldName);
 %
+% EXAMPLE
+%  S1=testdata(4320,2160,1);
+%  S2=testdata(4320,2160,1);
+%  S=CombineStructure(S1,S2,'RandomVector')
 %
 
 a1=fieldnames(S1);

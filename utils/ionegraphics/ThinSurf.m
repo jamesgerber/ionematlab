@@ -14,6 +14,8 @@ function varargout=ThinSurf(Long,Lat,Data,Units,TitleStr);
 %     ThinSurf(DS);  where DS is a matlab structure will look for fields
 %     Long, Lat, Data, Title, Units
 %
+% EXAMPLE
+%  ThinSurf(testdata(4320,2160,1));
 %
 %    See Also:  DownMap DownSurf  IoneSurf
 
@@ -100,7 +102,7 @@ else
     [RedLong,RedLat,RedData]=DownMap(Long,Lat,Data);
 end
 
-h=IoneSurf(RedLong,RedLat,RedData,Units,TitleStr);
+h=IonESurf(RedLong,RedLat,RedData,Units,TitleStr);
 
 if nargout==1
     varargout{1}=h;

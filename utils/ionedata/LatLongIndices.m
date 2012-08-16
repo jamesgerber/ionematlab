@@ -1,6 +1,12 @@
-function [iilong,jjlat]=LatLongIndices(data,site);
+function [iilong,jjlat]=LatLongIndices(data,site)
 % LATLONGINDICES - Long/Lat range for a given country
-
+%
+% SYNTAX
+% LatLongIndies(data,site) -
+% return the long and lat indices bounding a given country, where data is
+% used to determine the lat/long resolution and site is the name of the
+% country. Currently only accepts 'us' and 'am'.
+%
 
 [Nlong,Nlat]=size(data);
 

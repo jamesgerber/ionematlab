@@ -84,17 +84,22 @@ for j=1:length(CountryNameList)
       otherwise
           if length(unique(CountryNumbers(ii)))>1
               % this means more than one country
-          error([CountryNameList{j} ' is ambiguous'])
+              display([CountryNameList{j} ' could mean:']);
+              display(CountryNames(ii));
+              iii=strmatch(lower(CountryNameList{j}),CountryNamesLower,'exact');
+              if length(iii)~=1
+                error([CountryNameList{j} ' is ambiguous']);
+              else
+                  Code(c)=CountryNumbers(iii);
+                  OutputCountryNameList(c)=CountryNames(iii);
+                  c=c+1;
+              end
           else
               Code(c)=CountryNumbers(ii(1));
               OutputCountryNameList(c)=CountryNames(ii(1));
               c=c+1;
           end
   end
-
-
-
-  
 end
 if c==1
     error(['Found no country matches'])

@@ -5,9 +5,9 @@ function cell2csv(filename,cellArray,delimiter)
 % SYNTAX:
 % CELL2CSV(filename,cellArray,delimiter)
 %
-% filename      = Name of the file to save. [ i.e. 'text.csv' ]
-% cellarray    = Name of the Cell Array where the data is in
-% delimiter = seperating sign, normally:',' (it's default)
+% filename = Name of the file to save. [ i.e. 'text.csv' ]
+% cellarray = Name of the Cell Array where the data is in
+% delimiter = seperating sign, normally: ',' (its default)
 %
 % by Sylvain Fiedler, KA, 2004
 % modified by Rob Kohr, Rutgers, 2005 - changed to english and fixed delimiter

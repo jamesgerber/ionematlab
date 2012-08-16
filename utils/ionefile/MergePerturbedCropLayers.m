@@ -1,4 +1,4 @@
-function MergePerturbedCropLayers(cropname,NewArea,NewYield,Year,DAS);
+function MergePerturbedCropLayers(cropname,NewArea,NewYield,Year,DAS)
 % MergePerturbedCropLayers - combines area / yield into a new data layer
 
 if nargin < 5

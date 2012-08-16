@@ -1,11 +1,17 @@
-function OutputList=continent(InputList);
+function OutputList=continent(InputList)
 % Continent - return a list of countries in each continent
 %
-%  Syntax
-%     Continent('Europe')
+%  SYNTAX
+%     continent(names) - where names is a single string or a cell array of
+%     strings, return the list of countries in each specified continent or
+%     the continent containing the specified country.
 %
-%     Continent('France')
+%  EXAMPLES
+%     continent('Europe')
 %
+%     continent('France')
+%
+%     continent({'northamerica','southamerica'})
 %
 %   See Also:  ContinentOutline
 %

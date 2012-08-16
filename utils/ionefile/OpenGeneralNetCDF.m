@@ -2,9 +2,7 @@ function Svector=OpenGeneralNetCDF(FileName)
 % OPENGENERALNETCDF - Open a general netcdf file
 %
 %  Syntax
-%
 %    S=OpenGeneralNetCDF(FileName) will pull all data out of a netcdf file.
-%
 %
 %  See also OpenNetCDF
 if (nargin==0 && nargout~=1)    

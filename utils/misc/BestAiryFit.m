@@ -1,4 +1,4 @@
-function [T,eta,phi]=bestairyfit(t,x,T0,eta0,xmean);
+function [T,eta,phi]=BestAiryFit(t,x,T0,eta0,xmean)
 % BESTAIRYFIT - determine parameters of a sine wave which most closely matches data
 %
 %  This can be extremely useful for determinining a relatively small set of 
@@ -11,7 +11,10 @@ function [T,eta,phi]=bestairyfit(t,x,T0,eta0,xmean);
 %
 %   [Tbest,eta_best,Phi_best]=BestAiryFit(t,x,T0_guess,eta0_guess,xmean_guess)
 %
-
+%  EXAMPLE
+%   t=0:10
+%   x=sin(t)+rand(1,11)
+%   [Tbest,eta_best,Phi_best]=BestAiryFit(t,x,.2,0.0,.4)
 if nargin==0
     help(mfilename);
     return
@@ -34,18 +37,18 @@ x=x(:);
 options=optimset;
 options.TolFun=1e-6;
 x0=[T0 eta0 0 xmean];
-[tep1,fval1]=fminsearch('airyerror',x0,options,t,x);
+[tep1,fval1]=fminsearch('AiryError',x0,options,t,x);
 
 x0=[T0 eta0 pi/2 xmean];
-[tep2,fval2]=fminsearch('airyerror',x0,options,t,x);
+[tep2,fval2]=fminsearch('AiryError',x0,options,t,x);
 
 
 x0=[T0 eta0 pi xmean];
-[tep3,fval3]=fminsearch('airyerror',x0,options,t,x);
+[tep3,fval3]=fminsearch('AiryError',x0,options,t,x);
 
 
 x0=[T0 eta0 -pi/2 xmean];
-[tep4,fval4]=fminsearch('airyerror',x0,options,t,x);
+[tep4,fval4]=fminsearch('AiryError',x0,options,t,x);
 
 
 [dum,ii]=min([fval1 fval2 fval3 fval4]);

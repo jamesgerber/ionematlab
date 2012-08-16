@@ -1,5 +1,12 @@
 function CS=parse_contourc_output(C)
 % parse_countourc_output - turn a contourc output vector into a structure of vector pairs
+%
+% SYNTAX
+% parse_contourc_output(C) - where C is a contourc output vector, return a
+% structure containing seperate X-Y polygons for every contour.
+%
+% EXAMPLE
+% S=parse_contourc_output(contourc(testdata(50,50));
 done=0;
 c=1;
 

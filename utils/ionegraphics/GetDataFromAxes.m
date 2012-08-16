@@ -1,4 +1,4 @@
-function [x,y,z]=GetSurfaceDataFromAxes(ha);
+function [x,y,z]=GetDataFromAxes(ha)
 % GetDataFromAxes - Pull surface data out from a given axis handle
 %
 %  SYNTAX
@@ -8,8 +8,6 @@ function [x,y,z]=GetSurfaceDataFromAxes(ha);
 %       [x,y,z]=GetSurfaceDataFromAxes; will execute a gcbf, and if
 %       gcbf is empty (e.g. it's not a callback) then will execute
 %       a gcf
-
-
 
 if nargin==0
   hfig=gcbf;

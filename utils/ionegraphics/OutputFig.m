@@ -7,7 +7,10 @@ function FileName=OutputFig(Hfig,FileName,ResFlag,transparent)
 % OutputFig('Force','FileName')
 % OutputFig('Force','FileName','-r150')
 % OutputFig(gcf,'FileName')
-
+%
+% EXAMPLE
+% NSG(testdata);
+% OutputFig;
 if nargin==0
     Hfig=gcf;
     ForcePlots=0;

@@ -110,6 +110,6 @@ for j=1:3;
 end
 imagearray=newimagearray;
 
-imagearray=uint8(imagearray);
+imagearray=uint8(imresize(imagearray,.1));
 % image(imagearray)
- imwrite(imagearray,FullFileName,'png','Alpha',uint8(Alpha*255));
+ imwrite(imagearray,FullFileName,'png','Alpha',uint8(EasyInterp2(Alpha*255,.1)));

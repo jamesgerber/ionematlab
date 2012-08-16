@@ -4,7 +4,10 @@ function [slope,x1,y1,x2,y2]=guislope;
 %  Syntax
 %          [slope,x1,y1,x2,y2]=guislope;
 %
-%
+%  EXAMPLE
+%   [A B C] = hotspot(testdata,testdata,testdata,50);
+%   hotspotplot(A);
+%   guislope;
 
 [run,rise]=ginput(2);
 slope=(rise(2)-rise(1))/(run(2)-run(1));

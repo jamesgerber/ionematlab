@@ -1,5 +1,10 @@
-function AddAlphaOutline(OldFileName,NewFileName);
-% AddAlphaOutline - add a transparent channel
+function addalphaoutline(OldFileName,NewFileName);
+% ADDALPHAOUTLINE - add a transparent channel
+%
+% SYNTAX
+% adalphaoutline(OldFileName,NewFileName) - make all white pixels in
+% OldFileName transparent and save the resulting image as NewFileName.
+% If NewFileName is unspecified, use <OldFileName>_alpha.png
 %
 %  Example
 %

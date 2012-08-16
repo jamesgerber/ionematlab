@@ -1,6 +1,11 @@
 function [OS]=getcropcharacteristics(cropname);
 % getcropcharacteristics - get crop characteristics from cropinfo.csv file
 %
+% SYNTAX
+% getcropcharacteristics(cropname) - return characteristic struct for the
+% given cropname.
+%
+% EXAMPLE
 %  CC=getcropcharacteristics('wheat')
 %
 %  CC=getcropcharacteristics;

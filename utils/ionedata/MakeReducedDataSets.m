@@ -1,5 +1,5 @@
-function MakeReducedDataSets(varargin);
-% MakeReducedDataSets - Zoom graph to maximum value.
+function MakeReducedDataSets(varargin)
+% MakeReducedDataSets - make reduced datasets of current figure's data
 %
 %  Syntax:
 %
@@ -10,8 +10,12 @@ function MakeReducedDataSets(varargin);
 %         workspace with 5minute resolution.
 %
 %     These datasets will have the suffix "Red" appended to the filenames.
-%
 %     Datasets LatRed and LongRed will be created.
+%
+%  EXAMPLE
+%   NSG(testdata);
+%   MakeReducedDataSets('Initialize');
+%
 %
 %
 if nargin==0

@@ -4,6 +4,11 @@ function small=aggregate_quantity(big,N)
 % Syntax:
 %   aggregate_quantity(bigmatrix,N)
 %
+%
+% EXAMPLE
+%   A=testdata;
+%   B=aggregate_quantity(A,5);
+%
 % See also:  aggregate_rate
 
 small=zeros(size(big)/N);

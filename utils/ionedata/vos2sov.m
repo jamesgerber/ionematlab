@@ -1,5 +1,10 @@
-function SOV=dfd(S)
+function SOV=vos2sov(S)
 % VOS2SOV - Vector of Structures to Structure of Vectors
+%
+% SYNTAX
+% vos2sov(S) - S is a vector of structures.  Returns a structure of vectors
+% with the same length as the length of S, where each vector represents one
+% of the common attributes of S's structures.
 
 
 a=fieldnames(S)

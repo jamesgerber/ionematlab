@@ -20,11 +20,13 @@ if nargin==3
     Long=max(size(Lat));
     Lat=min(size(Lat));
 end
-if ~isscalar(Long)
-    Long=length(Long);
+if isscalar(Long)
+    tmp=linspace(-1,1,2*Long+1);
+    Long=180*tmp(2:2:end).';
 end
-if ~isscalar(Lat)
-    Lat=length(Lat);
+if isscalar(Lat)
+    tmp=linspace(-1,1,2*Lat+1);
+    Lat=-90*tmp(2:2:end).';
 end
-latpos=90-((col-1)/(Lat-1))*180;
-longpos=((row-1)/(Long-1))*360-180;
+latpos=Lat(col);
+longpos=Long(row);

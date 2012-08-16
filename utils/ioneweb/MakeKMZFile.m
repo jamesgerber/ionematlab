@@ -11,6 +11,7 @@ function MakeKMZFile(MKS)
 %MKS.BaseTransparency=0.5;
 %MKS.folderbase='./kmlfolder'
 %MKS.kmzfilenamebase='test'
+%MKS.lores=0;
 %MKS.KS.header1='filetext'
 %MKS.KS.description1='desc 1'
 %MKS.KS.header2=''
@@ -43,7 +44,7 @@ function MakeKMZFile(MKS)
 %
 %  See Also  makelegend makekml
 
-
+lores=0;
 cmap='revsummer';
 coloraxis=[0 100];
 BaseTransparency=0.5;

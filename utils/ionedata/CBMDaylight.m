@@ -1,6 +1,11 @@
 function D=CBMDaylight(J,Latitude)
 %CBMDaylight - calculate hours of daylight according to CBM model
 %
+% SYNTAX
+% CBMDaylight(J,Latitude) - where J is the number of days past the March
+% equinox and Latitude is the latitude, return the number of hours of
+% daylight
+%
 %  See W.C. Forsythe et al. / Ecological Modelling 80 (1995) 87-95
 
 if nargin==0

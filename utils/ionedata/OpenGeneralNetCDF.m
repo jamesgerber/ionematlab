@@ -28,6 +28,7 @@ for varid=0:nvars-1
     [varname,xtype,dimids,natts] = netcdf.inqVar(ncid,varid);
     S.varname=varname;
     S.Data=netcdf.getVar(ncid,varid);
+    AttS=[];
     for jatt=0:(natts-1);
         [attname] = netcdf.inqAttName(ncid,varid,jatt);
         attrvalue = netcdf.getAtt(ncid,varid,attname);

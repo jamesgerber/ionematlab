@@ -5,7 +5,11 @@ function [Long,Lat,Data,Units,TitleStr,NDS]=ExtractDataFromStructure(DS);
 %
 %     [Long,Lat,Data,TitleStr,Units,NDS]=ExtractDataFromStructure(DS);
 %     NDS is a version of the structure without the data.
-
+%
+%   EXAMPLE
+%     S=testdata(100,50,1);
+%     ExtractDataFromStructure(S);
+%
 a=fieldnames(DS);
 
 %% Data

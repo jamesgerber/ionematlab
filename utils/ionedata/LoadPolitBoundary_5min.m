@@ -11,7 +11,6 @@ function [UnitCodes,IDNames,UnitNames,CountryNames,CountryNumbers]=LoadPolitBoun
 %  glctry.nc which was provided by Navin Ramankutty (for reference:
 %  ADMINBDRY/Raster_NetCDF/2_States_5min/)
 %
-%
 
 try
     SystemGlobals

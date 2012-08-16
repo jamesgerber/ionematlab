@@ -2,8 +2,11 @@ function PlanetView(long,lat,Data);
 % PlanetView - put up data on a rotation globe
 %
 % Syntax
-%
+%   PlanetView(Data) - assume Data is global coverage
 %   PlanetView(long,lat,Data);
+%
+% EXAMPLE
+%   PlanetView(testdata);
 
 
 

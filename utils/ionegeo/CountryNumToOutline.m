@@ -2,9 +2,10 @@ function [iiRegion,RegionName]=CountryNumToOutline(j);
 % CountryNumToOutline - turn a sage country number to an outline & name
 %
 % Syntax
-%        [iiRegion,RegionName]=CountryNumToOutline(5);
+%        [iiRegion,RegionName]=CountryNumToOutline(SageNumber);
 %
-%
+% EXAMPLE
+%   NSG(CountryNumToOutline(ceil(rand*237)));
 persistent IndicesWithSageNames NS
 if isempty(IndicesWithSageNames)
     NS=StandardCountryNames;

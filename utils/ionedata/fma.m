@@ -1,6 +1,5 @@
 function x=fma(varargin)
-% fma - five minute areas
-%
+% fma - alias for GetFiveMinGridCellAreas
 %
 
 if nargin==0;

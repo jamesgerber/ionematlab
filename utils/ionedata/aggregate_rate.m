@@ -1,6 +1,8 @@
 function small=aggregate_rate(big,N)        
 %aggregate_rate - aggregate rate data down to a coarser scale
-
+%
+% aggregate_rate(big,N) - where big is a 2D matrix and N is a scalar,
+% returns the big reduced in size by a factor of N.
 
 small=zeros(size(big)/N);
 for m=1:N

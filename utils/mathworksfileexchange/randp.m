@@ -1,6 +1,8 @@
 function X = randp(P,varargin) ;
 % RANDP - pick random values with relative probability
 %
+%     SYNTAX
+%
 %     R = RANDP(PROB,..) returns integers in the range from 1 to
 %     NUMEL(PROB) with a relative probability, so that the value X is
 %     present approximately (PROB(X)./sum(PROB)) times in the matrix R.

@@ -1,5 +1,5 @@
 function OS=NiceSurfGeneral(varargin);
-% NICESURFGENERAL -uberplotting program
+% NICESURFGENERAL - uberplotting program
 %
 %
 % Syntax:
@@ -212,7 +212,6 @@ end
 
 %% sort through everything passed in ...
 
-
 ListOfProperties={
     'units','titlestring','filename','cmap','longlatbox','plotarea', ...
     'logicalinclude','coloraxis','displaynotes','description',...
@@ -221,7 +220,8 @@ ListOfProperties={
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
     'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
-    'cbarvisible','transparent','textcolor','newplotareamethod','font','statewidth'};
+    'cbarvisible','transparent','textcolor','newplotareamethod','font',...
+    'statewidth','gridcolor','userinterppreference','maxnumfigs'};
 
 %% set defaults for these properties
 units='';
@@ -249,6 +249,9 @@ datacutoff=9e9;
 uppermap=callpersonalpreferences('nodatacolor');
 lowermap=callpersonalpreferences('oceancolor');
 resolution=callpersonalpreferences('printingres');
+gridcolor=callpersonalpreferences('latlongcolor');
+userinterppreference=callpersonalpreferences('texinterpreter');
+maxnumfigs=callpersonalpreferences('maxnumfigsNSG');
 
 colorbarpercent='off';
 colorbarfinalplus='off';
@@ -281,10 +284,15 @@ for j=1:length(a)
     ThisProperty=a{j};
     if isempty(strmatch(lower(ThisProperty),lower(ListOfProperties),'exact'))
         ListOfProperties
-        error(['Property "' ThisProperty '" not recognized in ' mfilename])
+        display(['Property "' ThisProperty '" not recognized in ' mfilename])
     end
     %disp([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
     eval([ lower(ThisProperty) '=NSS.' ThisProperty ';'])
+    
+    % STUPID STUPID STUPID STUPID FIGURE OUT BETTER APPROACH LATER
+    eval([ ThisProperty '=NSS.' ThisProperty ';'])
+    % WE DON'T NEED 2 COPIES OF EVERY VARIABLE BUT SOME OF THE VARIABLES
+    % ARE NOT LOWERCASE AND THERE'S NO GOOD WAY TO TELL WHICH ARE
 end
 
 if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so as to define OSS
@@ -565,7 +573,7 @@ if fud.MapToolboxFig==1
         gridm('off');
     else
         gridm
-        gridcolor=callpersonalpreferences('latlongcolor');
+
         gridm('GColor',gridcolor);
     end
 else
@@ -611,6 +619,10 @@ end
 if isequal(colorbarminus,'on')
     AddColorbarMinus;
 end
+
+
+
+
 
 fud.titlestring=titlestring;
 fud.units=units;
@@ -665,9 +677,7 @@ else
     ht=text(0,pi/2,titlestring);
     if length(titlestring)>1
         set(ht,'Position',[0 1.635 0]);
-    UserInterpPreference=callpersonalpreferences('texinterpreter');
-    
-    set(ht,'interp',UserInterpPreference);
+    set(ht,'interp',userinterppreference);
     end
 end
 
@@ -712,9 +722,8 @@ if ~isempty(displaynotes)
     ht=text(0,0.5,displaynotes)
     set(hx,'visible','off')
     set(ht,'fontsize',6)
-        UserInterpPreference=callpersonalpreferences('texinterpreter');
     
-    set(ht,'interp',UserInterpPreference);
+    set(ht,'interp',userinterppreference);
     axes(mainaxes);
 end
 
@@ -739,8 +748,6 @@ if isequal(filename,'on')
 end
 
 
-MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
-
 
 OS.Data=single(OS.Data);
 OS.cmap=cmap;
@@ -752,12 +759,22 @@ if ~isempty(filename)
     FN=fixextension(ActualFileName,'.png')
     %save to disk
     if isequal(makeplotdatafile,'yes') | isequal(makeplotdatafile,'on')
+        if (isstr(cmap))
+            eval(['cmap=' cmap ';']);
+        end
+        NSS.cmap=cmap;
+        NSS.uppermap=uppermap;
+        NSS.lowermap=lowermap;
+        NSS.resolution=resolution;
+        NSS.gridcolor=gridcolor;
+        NSS.userinterppreference=userinterppreference;
+        NSS.maxnumfigs=maxnumfigs;
         save([strrep(FN,'.png','') '_SavedFigureData'],'OS','NSS')
     end
     if isequal(figfilesave,'on')
         hgsave(filename);
     end
-    if length(get(allchild(0)))>MaxNumFigs
+    if length(get(allchild(0)))>maxnumfigs
         close(gcf)
     end
 end

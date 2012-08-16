@@ -41,7 +41,7 @@ if nargout==1
   data(ii)=store(:);  %note that store is dataname within saved file
     varargout{1}=data;
 else
-    switch masktyp
+    switch masktype
         case 'crop'
             ii=CropMaskIndices;
         case 'agri'

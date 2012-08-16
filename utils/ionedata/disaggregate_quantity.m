@@ -5,6 +5,8 @@ function highresdata=disaggregate_quantity(loresdata,N);
 %     highresdata=disaggregate_quantity(loresdata,N);
 %
 %  Example
+%     loresdata=testdata(100,50);
+%     highresdata=disaggregate_quantity(testdata,.1);
 %
 %    See also: disaggregate_rate
 

@@ -14,8 +14,6 @@ function [xkeep,ykeep]=ShapeFileToXY(S,minkmsq,thinninglength)
 %      minkmsq (default 200), and will smooth out multiple points within
 %      thinning length of each other.
 %
-%   Example
-%
 
 if nargin==1
     minkmsq=200;

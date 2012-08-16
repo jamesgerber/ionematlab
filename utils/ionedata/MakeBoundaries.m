@@ -10,7 +10,9 @@ function NewArray=MakeBoundaries(ctry,RegionValues);
 %    of contiguous points within ctry with equal non-zero values.
 %    This code is particularly useful on datasets which have some
 %    value corresponding to a political regions.
-
+%
+% EXAMPLE
+%   boundaries=MakeBoundaries(round(testdata*3));
 
 
 switch nargin   %nargin is a built-in matlab function which returns the number of arguments that this was called with.

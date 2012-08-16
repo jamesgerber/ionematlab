@@ -1,8 +1,12 @@
-function [varargout]=MapZoom(long,lat,Map);
+function [varargout]=MapZoom(long,lat,Map)
 % MapZoom - limit dataset to user-selected region of the world
 %
 %
 %  SYNTAX  [NewLong,NewLat,NewMap]=MapZoom(long,lat,Map)
+%
+%  EXAMPLE
+%   S=testdata(4320,2160,1);
+%   [NewLong,NewLat,NewMap]=MapZoom(S.Long,S.Lat,S.Data);
 if nargin==0
     help(mfilename);
     return

@@ -1,5 +1,10 @@
 function AddColorbarPercent(Handle);
 % ADDCOLORBARPERCENT - add a % sign to each number on colorbar
+%
+% SYNTAX
+% AddColorbarPercent(h) - add % to each number on the colorbar either
+% specified by handle h or in the figure specified by handle h.
+
 if nargin==0;
   Handle=gcf;
 end

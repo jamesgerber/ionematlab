@@ -5,8 +5,14 @@ function s=runningsmooth(t,y,T,LEGACY);
 %  SYNTAX
 %
 %  runningsmooth(t,y,T)
-%
 %  runningsmooth(t,y,T,1)  will use the legacy version (no interpolation)
+%
+%
+%  EXAMPLE
+%  t=cumsum(rand(1,25))
+%  y=cumsum(rand(1,25))
+%  runningsmooth(t,y,1.0)
+%
 
 if nargin<3;    help(mfilename);return;end
 

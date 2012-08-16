@@ -180,14 +180,14 @@ for N=Nspace;
                     [BinMatrix,PrecBins,GDDBins,ClimateDefs,CDS]=MakeClimateSpace(Heat,Prec,GDDBinEdges,PrecBinEdges);
                     BinMatrix=single(BinMatrix);
                     
-               %     % now need to refine CDS
-               %     disp('refining bins')
-               %     [CDSnew]=...
-               %         RefineClimateSpaceRevN(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask,[cropname ' ' WetFlag]);
+                    %     % now need to refine CDS
+                    %     disp('refining bins')
+                    %     [CDSnew]=...
+                    %         RefineClimateSpaceRevN(Heat,Prec,CultivatedArea,CDS,xbins,ybins,ContourMask,[cropname ' ' WetFlag]);
                     
-               %     %% Make Climate Space
+                    %     %% Make Climate Space
                     
-               %     CDS=CDSnew;
+                    %     CDS=CDSnew;
                 else
                     %% Get bins from somewhere else
                     disp(['Getting Bins from ' GetBinsElsewhere]);
@@ -196,7 +196,7 @@ for N=Nspace;
                 
                 [BinMatrix,ClimateDefs]=...
                     ClimateDataStructureToClimateBins(CDS,Heat,Prec,CultivatedArea,HeatFlag,WetFlag,InsideContourLogical);
-
+                
                 
                 %%
                 %Now can make a plot
@@ -208,7 +208,7 @@ for N=Nspace;
                     'PercentToDrop','WetFlag','HeatFlag','CultivatedArea',...
                     'CDS','InsideContourLogical','GDDTempstr','xbins','ybins','ContourMask');
                 DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
-              %  WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
+                %  WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
             end
             close all
         end

@@ -1,5 +1,7 @@
-function ClimateBinPlot(BinMatrix,NSS)
-%load ClimateMask_Maize_GDD8_prec_5x5_RevH
+function ClimateBinPlot_variableN(BinMatrix,NSS)
+%ClimateBinPlot_variableN(BinMatrix,NSS)
+%
+%
 
 
 a=BinMatrix;

@@ -5,9 +5,14 @@ function ConvertNetCDFs2mat
 pwd
 a=dir;
 
+
+if ~isequal(a(1).name,'.')
+    error('funny things in directory.');
+end
+
 for j=3:length(a)  %first two are self/parent dir
     
-    if a(j).isdir
+    if a(j).isdir            
         cd(a(j).name)
         ConvertNetCDFs2mat
         cd ../

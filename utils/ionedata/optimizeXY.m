@@ -1,4 +1,9 @@
 function [lat,long]=optimizeXY(lat,long)
+% OPTIMIZEXY - remove duplicate line segments from XY data
+%
+% SYNTAX
+% [newX,newY]=optimizeXY(oldX,oldY);
+%
 
 lat(2:(length(lat)+1))=lat(1:length(lat));
 lat(1)=NaN;

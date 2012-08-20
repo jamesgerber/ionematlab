@@ -1,4 +1,22 @@
 function OS=clusterFit(X,Y,model,sseThresh,nderivs,last)
+% CLUSTERFIT - segmented regression based on kmeans clustering
+%
+% SYNTAX
+% OS=clusterFit(Y)
+% OS=clusterFit(X,Y,model,sseThresh,nDerivs) - model is a string
+% representing the model to be used and can be anything accepted by fit.
+% sseThresh is the SSE threshold above which the data will be split into
+% multiple clusters, perhaps recursively.  nDerivs is the number of
+% derivatives to take into account when clustering.
+% model defaults to 'poly3', sseThresh defaults to infinity, and nDerivs
+% defaults to 2.
+% Returns a structure containing the expressions used to fit the data and
+% their ranges.
+%
+% EXAMPLE
+% clusterFit(0:.1:10,sin(0:.1:10)+(0:.1:10),'poly2',10)
+%
+
 if (nargin<2)
     Y=X(:);
     X=1:numel(X);

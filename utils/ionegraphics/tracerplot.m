@@ -14,9 +14,14 @@ function tracerplot(data,bg,cmap,ctrace,squeeze,breadth,depth)
 % All arguments except data are optional; for an argument to be specified,
 % all arguments to its left must also be specified. The default bg is
 % data(:,:,1) and the default cmap is jet.
-%
+% 
 % EXAMPLE
-%
+% q=testdata(100,50);
+% A=zeros(100,50,10);
+% for i=1:6
+%    A(:,:,i)=q.*(50-i);
+% end
+% tracerplot(A)
 data=double(data);
 if nargin<2
     bg=data(:,:,1);
@@ -31,10 +36,10 @@ for i=1:size(data,3)
 end
 colormap(cmap);
 h=axes; contourf(h,bg,length(cmap)); shading flat; set(h,'Visible','off');
-SystemGlobals;
-load(ADMINBOUNDARY_VECTORMAP);
-[long,lat]=LatLong2RowCol(-lat,long,bg');
-line(long,lat,'Color','black');
+%SystemGlobals;
+%load(ADMINBOUNDARY_VECTORMAP);
+%[long,lat]=LatLong2RowCol(-lat,long,bg');
+%line(long,lat,'Color','black');
 while ishandle(h)
     try
         waitforbuttonpress;

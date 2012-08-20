@@ -1,4 +1,11 @@
 function OS=importCRUTable(filename)
+% IMPORTCRUTABLE - import data formatted like TYN CY 3.0
+%
+% SYNTAX
+% OS=importCRUTable(filename) - output a struct containing a map for each
+% column of filename.
+%
+
 fid=fopen(filename,'r');
 head=textscan(fid,'%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s',1,'HeaderLines',19);
 head=head(2:numel(head));

@@ -1,5 +1,11 @@
 function mat=CRUImport(filename,gridx,gridy,mult)
-%filename='cru_ts_2_10.1901-2002.pre';
+% CRUImport - import monthly historical data formatted like CRU TS 2.1
+%
+% SYNTAX
+% mat=CRUImport(filename,gridx,gridy,mult) - import data in filename,
+% assuming it's on a grid of size gridx*gridy.  Multiply by mult.
+% gridx,gridy are 720,360 by default.
+% mult is 1 by default.
 if nargin<3
     gridx=720;
     gridy=360;

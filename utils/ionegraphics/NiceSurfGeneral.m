@@ -760,7 +760,7 @@ if ~isempty(filename)
     %save to disk
     if isequal(makeplotdatafile,'yes') | isequal(makeplotdatafile,'on')
         if (isstr(cmap))
-            eval(['cmap=' cmap ';']);
+            eval(['cmap=''' cmap ''';']);
         end
         NSS.cmap=cmap;
         NSS.uppermap=uppermap;
@@ -782,7 +782,7 @@ end
 % now ... if there is a metadata request, open and then resave the file
 if ~isempty(description) & ~isequal(fastplot,'on')
     if ~strcmp(ActualFileName(end-3:end),'.png');
-        ActualFileName=[ActualFileName '.png'];
+        ActualFileName=[ActualFileName '.'];
     end
     a=imread(ActualFileName);
     imwrite(a,ActualFileName,'Description',description);

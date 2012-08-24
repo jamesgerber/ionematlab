@@ -22,7 +22,7 @@ function tracerplot(data,bg,cmap,ctrace,squeeze,breadth,depth)
 %    A(:,:,i)=q.*(50-i);
 % end
 % tracerplot(A)
-data=double(data);
+data=double(squeeze(data));
 if nargin<2
     bg=data(:,:,1);
 end

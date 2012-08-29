@@ -18,7 +18,7 @@ function traceContoursGreater(data,thresh,cMap,bg,contourColors,sec)
 % end
 % traceContoursGreater(A)
 if (nargin<2)
-    thresh=sqrt(var(data(:)))/10;
+    thresh=0;
 end
 data=double(squeeze(data));
 if nargin<4

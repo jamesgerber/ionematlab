@@ -29,7 +29,7 @@ if nargin<3
     cMap=jet;
 end
 if nargin<5
-    contourColors=gray;
+    contourColors=flipud(gray);
 end
 if nargin<6
     sec=.5;

@@ -1,14 +1,14 @@
-function traceContours(data,thresh,cMap,bg,contourColors,sec)
+function traceContoursGreater(data,thresh,cMap,bg,contourColors,sec)
 % TRACECONTOURS - an interactive tool for displaying time-varying data
 %
 % SYNTAX
-% traceContours(data,thresh,cMap,bg,contourColors) - plots 2d matrix bg
-% with colormap cMap and, when user clicks anywhere, finds the value at
-% that location and draws contours around areas within thresh of that value
+% traceContoursGreater(data,thresh,cMap,bg,contourColors) - plots 2d matrix
+% bg with colormap cMap and, when user clicks anywhere, finds the value at
+% that location and draws contours around areas above that value-thresh
 % in every third-dimenion layer of data. Uses colormap contourColors to
 % select colors for the contours. Waits sec between drawing contours.
 % By default, contourColors is gray, bg is the first layer of data, cMap is
-% jet, thresh is sqrt(var(data(:)))/10, and sec is .5
+% jet, thresh is 0, and sec is .5
 % 
 % EXAMPLE
 % q=testdata(100,50);
@@ -16,7 +16,7 @@ function traceContours(data,thresh,cMap,bg,contourColors,sec)
 % for i=1:6
 %    A(:,:,i)=q.*(50-i);
 % end
-% traceContours(A)
+% traceContoursGreater(A)
 if (nargin<2)
     thresh=sqrt(var(data(:)))/10;
 end
@@ -55,8 +55,8 @@ while ishandle(h)
         z=bdata(r,c,1);
         disp([r c z]);
         for i=1:size(bdata,3)
-            contourColors(i,:)
-            contour(abs(bdata(:,:,i)-z),[thresh thresh],'Linecolor',contourColors(i,:));
+            contourColors(i,:);
+            contour(bdata(:,:,i)-z,[thresh thresh],'Linecolor',contourColors(i,:));
             pause(sec);
         end
 end

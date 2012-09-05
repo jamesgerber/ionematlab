@@ -40,16 +40,20 @@ catch
 end
 
 
-ncid=netcdf.open(ADMINBOUNDARYMAP_5min,'NOWRITE');
-netcdf.inqVar(ncid,0);
+% ncid=netcdf.open(ADMINBOUNDARYMAP_5min,'NOWRITE');
+% netcdf.inqVar(ncid,0);
+% 
+% long=netcdf.getVar(ncid,0);
+% lat=netcdf.getVar(ncid,1);
+% level=netcdf.getVar(ncid,2);
+% time=netcdf.getVar(ncid,3);
+% ctry=netcdf.getVar(ncid,4);
+% ctry=double(ctry);
 
-long=netcdf.getVar(ncid,0);
-lat=netcdf.getVar(ncid,1);
-level=netcdf.getVar(ncid,2);
-time=netcdf.getVar(ncid,3);
-ctry=netcdf.getVar(ncid,4);
-ctry=double(ctry);
-
+x=OpenNetCDF(ADMINBOUNDARYMAP_5min);
+ctry=x.Data;
+long=x.Long;
+lat=x.Lat;
 
 if nargin==1
     indexlist=longlist;

@@ -3,15 +3,21 @@ function varargout=getcropdata(DataString,Year);
 %
 %  Syntax
 %
-%   [S]=getdata(DataString)
+%   [CropStruct]=getdata(DataString)
+%   [CropStruct,area,yield]=getdata(DataString)
 %
-%   [S]=getdata(DataString,Year)
+%   [CropStruct]=getdata(DataString,Year)
 %
 %   Default value for Year is 2000
 %
+%   There is also a special syntax to allow the calling function to look in
+%   a particular place for the data.
+%
+%   [S]=getdata(FileName,DirectoryLocation)
+%
+%
 %  Example
 %
-%    [Long,Lat,maize2000]=getcropdata('maize',2000);
 %
 %  if DataString is a crop, and there are three output arguments
 %   [CropStruct,area,yield]=getdata('croparea');
@@ -46,9 +52,15 @@ switch Year
         end
         
     otherwise
-        error([' Don''t have anything yet for year ' int2str(Year) ]);
-        
-        
+        if numel(Year)==4
+            error([' Don''t have anything yet for year ' int2str(Year) ]);
+        else
+            disp([' Using special syntax in getcrop data.  Looking for'])
+            disp([ Year DataString ]);
+            
+            S=OpenNetCDF([ Year filesep DataString ])
+           
+        end
 end
 
 

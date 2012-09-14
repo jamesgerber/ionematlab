@@ -105,10 +105,16 @@ for N=Nspace;
                 NoBaseFileName=['/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
             else
-                FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' int2str(DataYear) '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                if isstr(DataYear)
+                    yrstring='';
+                else
+                    yrstring=[int2str(DataYear) '_']
+                end
+                
+                FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' yrstring  HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
                 
-                NoBaseFileName=['/ClimateMask_' cropname '_' int2str(DataYear) '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                NoBaseFileName=['/ClimateMask_' cropname '_' yrstring  HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
             end
             

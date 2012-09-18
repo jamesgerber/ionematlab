@@ -58,8 +58,8 @@ if strcmp(get(src,'SelectionType'),'normal')
         y=cp(1,2);
         x=cp(1,1);
     end
-    [CountryNumbers,CountryNames]=...
-        GetCountry_halfdegree(x,y);
+    [CountryNumbers,CountryNames,longlist,latlist]=...
+        GetCountry5min(x,y);
     CountryName=CountryNames{1};
     ii=find(CountryName==',');
     if ~isempty(ii)
@@ -68,7 +68,7 @@ if strcmp(get(src,'SelectionType'),'normal')
 
      z=UDS.Data;
      
-     [ix,iy]=LatLong2RowCol(-y,x,z);
+     [ix,iy]=LatLong2RowCol(y,x,z);
      zvalue=z(ix,iy);
      disp(['ix=' int2str(ix)])
      disp(['iy=' int2str(iy)])

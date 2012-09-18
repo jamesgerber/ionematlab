@@ -14,8 +14,8 @@ if nargin > 0
     RandStream.setDefaultStream(RandStream('swb2712','seed',n));
 end
 switch fix(10*rand)
-    case 0,        a = special_case;
-    case {1 2 3},  a = phrase;
+    case {0 1 2 3},        a = special_case;
+    case { 4 5 6},  a = phrase;
     otherwise,     a = sentence;
 end
 a(1) = upper(a(1));
@@ -28,19 +28,20 @@ end
 %------------------
 
 function a = special_case
-switch fix(30*rand)
+switch fix(15*rand)
     case 0,   a = 'why not?';
     case 1,   a = 'don''t ask!';
     case 2,   a = 'it''s your karma.';
     case 3,   a = 'stupid question!';
-    case 4,   a = 'how should I know?';
+    case 4,   a = 'would you like falafel with that?';
     case 5,   a = 'can you rephrase that?';
     case 6,   a = 'it should be obvious.';
-    case 7,   a = 'the devil made me do it.';
+    case 7,   a = 'Huzzah!';
     case 8,   a = 'the computer did it.';
     case 9,   a = 'the yield gap is your fault';
     case 10,  a = 'don''t you have something better to do?';
-    otherwise,a = 'so Christine doesn''t crush you.';
+    case 11,  a = 'so Christine doesn''t crush you.';
+    otherwise,a = 'because Christine dreamt it.';
 end
 
 function a = phrase
@@ -76,7 +77,7 @@ switch fix(4*rand)
 end
 
 function a = proper_noun
-switch fix(17*rand) 
+switch fix(19*rand) 
     case 0,    a = 'Jon';
     case 1,    a = 'Jamie';
     case 2,    a = 'Nathan';
@@ -93,7 +94,10 @@ switch fix(17*rand)
     case 13,   a = 'Kim';
     case 14,   a = 'The other Emily';
     case 15,   a = 'Graham';
-    case 16,   a = 'Mary';
+    case 16,   a = 'Shipeng';
+    case 17,   a = 'Julia';
+    case 18,   a = 'Paul';
+    otherwise ,  a = 'Navin';
     end
 
 function a = noun_phrase

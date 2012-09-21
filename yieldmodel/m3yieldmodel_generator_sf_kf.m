@@ -62,6 +62,7 @@ switch modelnumber
         modelnamelong = 'von Liebig Mitscherlich-Baule model';
 end
 
+crossvalflag = 0;
 if exist('varargin')
     for n = 1:length(varargin)
         thisvar = varargin{n};

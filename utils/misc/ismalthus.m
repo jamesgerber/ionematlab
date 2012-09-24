@@ -3,7 +3,7 @@ function x=ismalthus
 
 a=dir('/Users');
 
-if length(a) > 20
+if length(a) > 15
     x=1;
 else
     x=0;

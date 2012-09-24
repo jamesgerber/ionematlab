@@ -28,7 +28,7 @@ switch username
 end
 
 if ismalthus==1
-    IoneDataDir=['/Library/IonE/data/'];
+    IoneDataDir=['/Library/IonE/ionedata/'];
 end
 
 

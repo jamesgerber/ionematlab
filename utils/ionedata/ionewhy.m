@@ -41,6 +41,7 @@ switch fix(15*rand)
     case 9,   a = 'the yield gap is your fault';
     case 10,  a = 'don''t you have something better to do?';
     case 11,  a = 'so Christine doesn''t crush you.';
+    case 12,  a = 'because deepak is too #&^##ing lazy to use subversion';
     otherwise,a = 'because Christine dreamt it.';
 end
 
@@ -71,13 +72,13 @@ end
 
 function a = subject
 switch fix(4*rand)
-    case 0,    a = proper_noun;
-    case 1,    a = nominative_pronoun;
+    case {0 1} ,    a = proper_noun;
+    case 2,    a = nominative_pronoun;
     otherwise, a = [article ' ' noun_phrase];
 end
 
 function a = proper_noun
-switch fix(19*rand) 
+switch fix(20*rand) 
     case 0,    a = 'Jon';
     case 1,    a = 'Jamie';
     case 2,    a = 'Nathan';
@@ -97,6 +98,7 @@ switch fix(19*rand)
     case 16,   a = 'Shipeng';
     case 17,   a = 'Julia';
     case 18,   a = 'Paul';
+    case 19,   a = 'The Junior Scientist';
     otherwise ,  a = 'Navin';
     end
 

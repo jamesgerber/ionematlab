@@ -28,10 +28,10 @@ end
 %------------------
 
 function a = special_case
-switch fix(15*rand)
+switch fix(19*rand)
     case 0,   a = 'why not?';
     case 1,   a = 'don''t ask!';
-    case 2,   a = 'it''s your karma.';
+    case 2,   a = 'because Christine dreamt it.';
     case 3,   a = 'stupid question!';
     case 4,   a = 'would you like falafel with that?';
     case 5,   a = 'can you rephrase that?';
@@ -42,7 +42,7 @@ switch fix(15*rand)
     case 10,  a = 'don''t you have something better to do?';
     case 11,  a = 'so Christine doesn''t crush you.';
     case 12,  a = 'because deepak is too #&^##ing lazy to use subversion';
-    otherwise,a = 'because Christine dreamt it.';
+    otherwise,a = 'dedos al frente!!!!!!';
 end
 
 function a = phrase

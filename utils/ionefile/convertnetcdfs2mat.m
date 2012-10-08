@@ -1,7 +1,14 @@
-function ConvertNetCDFs2mat
-% ConvertNetCDFs2mat - recursively save .nc to .mat / gzip the .nc
+function convertnetcdfs2mat
+% CONVERTNETCDFS2MAT - recursively save .nc to .mat and gzip the .nc
 %
-% See Also OpenNetCDF
+% You would do this if you will mostly be opening these .nc files in matlab
+% going forward and want to save space.
+%
+% This won't work if there are files in the directory whose names start
+% with "."  specifically, the first two listings of a "dir" command have to
+% be "." and ".."
+%
+% See also opennetcdf writenetcdf
 pwd
 a=dir;
 

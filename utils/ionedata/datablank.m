@@ -21,7 +21,9 @@ if nargin<2
 end
 
 switch Res
-    case '30min'
+    case '2.5deg'
+        tmp=ones(144,72);
+   case '30min'
         tmp=ones(720,360);
     case '10min'
         tmp=ones(2160,1080);

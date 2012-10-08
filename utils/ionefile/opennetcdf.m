@@ -3,12 +3,17 @@ function varargout=opennetcdf(FileName,force);
 %
 %  Syntax
 %
-%    [Long,Lat,Data]=OpenNetCDF;
+%    [Long,Lat,Data]=OpenNetCDF - prompts user for a .nc to open
 %
 %    [DS]=OpenNetCDF   Will return just a data structure.
 %
-%
 %    [Long,Lat,Data]=OpenNetCDF(FileName);
+%
+%    This code will attempt to make a directory call ncmat/ in the location
+%    of the .nc file, and will put a .mat file in there which can be used
+%    to open the file next time.  uses a bit of extra space on the disk,
+%    but it is much faster.  also, the original .nc can be zipped up.
+%
 %
 %  a=dir('*.nc');
 %  for j=1:length(a); S=OpenNetCDF(a(j).name); end

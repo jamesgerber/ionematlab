@@ -1,5 +1,14 @@
 function insertcopyright(filename,newroot);
 %insertcopyright - insert BSD copyright into a file
+%
+%
+%  Example
+%
+% mkdir codetoshare
+% insertcopyright('opennetcdf','codetoshare')
+% insertcopyright('opengeneralnetcdf','codetoshare')
+% insertcopyright('ncdump','codetoshare')
+% insertcopyright('writenetcdf','codetoshare')
 
 
 [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=getsvninfo(filename);
@@ -22,12 +31,14 @@ done=0;
 z=fgetl(fid);fprintf(newfid,'%s\n',z);
 
 while ~done
-    z=fgetl(fid);
+    z=fgetl(fid)
     if length(z)==0
         done=1;
     end
-    if ~isequal(z(1),'%')
-        done=1;
+    if done==0
+        if ~isequal(z(1),'%')
+            done=1;
+        end
     end
     
     if done==0

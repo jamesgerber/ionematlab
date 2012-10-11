@@ -55,6 +55,8 @@ end
 
 x=InString;
 x=strrep(x,'/','_');
+x=strrep(x,'+','_');
+x=strrep(x,',','');
 x=strrep(x,'.','_');
 x=strrep(x,'%','_');
 x=strrep(x,'!','');

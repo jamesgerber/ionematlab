@@ -38,7 +38,8 @@ for j=1:N
     for k=1:N
 
     basecolor=linearcmap(s(j),1:3);
-        modified_color=ColorFadeFunction(basecolor,k,N);
+%        modified_color=ColorFadeFunction(basecolor,k,N);
+        modified_color=ColorFadeFunction(basecolor,(N+1-k),N);
         shortmap( (j-1)*N+k,1:3) = modified_color;
         for m=1:16
             newmap(end+1,1:3)=modified_color;
@@ -124,7 +125,7 @@ set(hy,'FontSize',30,'HorizontalAlignment','Center','Rotation',90);
 
 function newcolor= ColorFadeFunction(basecolor,k,N); 
 % have color fade.  when k=1 newcolor=basecolor;
-kslide=linspace(1,.7,N);
+kslide=linspace(1,.75,N);
 newcolor=basecolor*kslide(k);
 
 %% fade to white

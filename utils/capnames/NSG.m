@@ -3,6 +3,5 @@ function varargout=NSG(varargin)
 disp(['called ' mfilename ' (note caps)']);
 [varargout{1:nargout}]=feval(lower(mfilename),varargin{:});
 
-%if (nargout) [varargout{1:nargout}]=feval(lower(mfilename),varargin{:});
 
 

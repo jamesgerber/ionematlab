@@ -55,6 +55,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.colorbarfinalplus='off';%
 %   NSS.colorbarminus='off';%
 %   NSS.panoplytriangles=[0 0]; % left/right logical turns on L/R triangle
+%   NSS.panoplytriangles=[0 0 0 .4 .8 .3]; % no left triangle, right has
+%   RGB pair [.4 .8 .3]
 %   NSS.eastcolorbar='off';%
 %   NSS.resolution='-r600';%
 %   NSS.figfilesave='on';%
@@ -548,7 +550,7 @@ switch(lower(plotstates))
         AddStates(statewidth,gcf,'bricnafta');
     case {'world','lev0'}
         AddStates(statewidth,gcf,'all');
-    case {'gadm0'}
+    case {'gadm0','countries'}
         AddStates(statewidth,gcf,'gadm0');
     case {'gadm1'}
         AddStates(statewidth,gcf,'gadm1');

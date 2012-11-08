@@ -1,3 +1,9 @@
 function Svector=OpenGeneralNetCDF(varargin)
-disp(['calling version with (no caps)']);
+persistent madewarning
+
+if isempty(madewarning)
+    disp(['calling version with (no caps)']);
+    madewarning=1;
+end
+
 Svector=opengeneralnetcdf(varargin{:});

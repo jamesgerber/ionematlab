@@ -22,6 +22,10 @@ if nargin==0
     FileName=[pathname filesep filename];
 end
 
+if nargin==1
+    FileName=fixextension(FileName,'.nc');
+end
+
 %% OpenFile
 ncid=netcdf.open(FileName,'NOWRITE');
 

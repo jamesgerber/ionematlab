@@ -37,3 +37,27 @@ for yy=1902:1902;
     end
 end
 
+return
+
+% code to get timeseries for north america
+ii=ContinentOutline('Northern America');
+ii5min=aggregate_rate(ii,6);
+jj=ii5min>.5;
+
+load WFDindices iivect
+
+outblanklogical=datablank(0,'30min');
+outblankindices=datablank(0,'30min');
+outblanklogical(iivect)=1;
+outblankindices(iivect)=iivect;
+
+logicalkeep=(jj & outblanklogical);
+
+indices=outblankindices(logicalkeep);
+
+indices=indices(indices>0);
+
+
+
+[mdnvect,ts]=pullwatchtimeseries(indices,basedir); 
+

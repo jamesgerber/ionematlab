@@ -25,8 +25,9 @@ for yy=1902:2001;
        %   x=S(4).Attributes(4).attrvalue
         
         
-        mdn0=datenum(yy,01,01,00,00,00);  % note this should be hardwired to Jan
-        mdn=mdn0+S(4).Data/(24*3600);  %mdn in units of days.  so go from seconds to days.
+        mdn0=datenum(yy,mm,01,00,00,00);  % note this should be hardwired to Jan
+        ttemp=S(4).Data-S(4).Data(1);
+        mdn=mdn0+ttemp/(24*3600);  %mdn in units of days.  so go from seconds to days.
        % datestr(double(mdn(1)))
         tstmp=S(6).Data(idx,:);
         
@@ -78,8 +79,9 @@ save USAcornbelt mdnvect ts indices outblanklogical outblankindices logicalkeep
 
 mkdir stripes
 
+basedir = 'stripes';
 jj=1:67240;
-Nsteps=100;
+Nsteps=50;
 endpoints=round(linspace(1,67240,Nsteps));
 
 for j=1:(Nsteps-1);
@@ -89,9 +91,10 @@ j
 
     
     
-    for m=ii
-        FileName=[basedir '/Tair_WFD_pt' int2str(m)];
-        Tair=ts(:,m);
+    for m=1:length(ii)
+        
+        FileName=[basedir '/Tair_WFD_pt' int2str(ii(m))];
+        Tair=ts(m,:);
         notes.processdate=datestr(now);
         save(FileName,'Tair','mdnvect','notes')
     end

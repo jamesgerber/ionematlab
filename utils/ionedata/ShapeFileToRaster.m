@@ -92,6 +92,9 @@ for j=1:length(S);
     
     LogicalCountryMatrix=logical(zeros(size(MatrixTemplate)));
     
+ii=find(LongGrid > nanmin(xx)-.1 & LongGrid < nanmax(xx)+.1 & ...
+          LatGrid > nanmin(yy)-.1 & LatGrid < nanmax(yy)+.1);
+    
     for k=2:length(kk);%
         
         x=xx(kk(k-1)+1:kk(k)-1);
@@ -106,8 +109,11 @@ for j=1:length(S);
             LogicalPlotMatrix=0*ones(size(MatrixTemplate));
         end
         
-        ii=find(LongGrid > min(x)-.1 & LongGrid < max(x)+.1 & ...
-            LatGrid > min(y)-.1 & LatGrid < max(y)+.1);
+        % jsg Nov 2012: find ii outside of this loop.  it turns out this
+        % find statement takes waaaay longer than inpolygon for some calls
+        % the downside of course is that ii isn't as limited in space
+    %    ii=find(LongGrid > min(x)-.1 & LongGrid < max(x)+.1 & ...
+    %        LatGrid > min(y)-.1 & LatGrid < max(y)+.1);
         
         [IN ON]=inpolygon(LongGrid(ii),LatGrid(ii),x,y);
         

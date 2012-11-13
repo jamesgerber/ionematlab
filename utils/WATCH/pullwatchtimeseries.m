@@ -44,16 +44,12 @@ return
 % code to get timeseries for north america
 ii=ContinentOutline('Northern America');
 
-
 ii=CountryCodetoOutline('USA');
 
 ii5min=aggregate_rate(ii,6);
 jj=ii5min>.5;
 
 % us corn belt
-
-
-
 
 D=OpenNetCDF('Belt_North_America_maize_75_30min_perc.nc');
 jj=logical(D.Data);
@@ -78,5 +74,30 @@ indices=indices(indices>0);
 save USAcornbelt mdnvect ts indices outblanklogical outblankindices logicalkeep
 
 
+%% code to make timeseries stripes
 
+mkdir stripes
 
+jj=1:67240;
+Nsteps=100;
+endpoints=round(linspace(1,67240,Nsteps));
+
+for j=1:(Nsteps-1);
+j
+    ii=endpoints(j):endpoints(j+1);
+    [mdnvect,ts]=pullwatchtimeseries(ii); 
+
+    
+    
+    for m=ii
+        FileName=[basedir '/Tair_WFD_pt' int2str(m)];
+        Tair=ts(:,m);
+        notes.processdate=datestr(now);
+        save(FileName,'Tair','mdnvect','notes')
+    end
+end
+
+        
+
+    
+    

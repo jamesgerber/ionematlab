@@ -1,4 +1,4 @@
-function [Long,Lat,Raster]=ShapeFileToRaster(S,FieldName,MatrixTemplate,plotflag)
+function [Long,Lat,Raster,Areasqkm]=ShapeFileToRaster(S,FieldName,MatrixTemplate,plotflag)
 % ShapefileToRaster - Turn a shapefile into a 5 minute matrix
 %
 %  Syntax:
@@ -6,30 +6,30 @@ function [Long,Lat,Raster]=ShapeFileToRaster(S,FieldName,MatrixTemplate,plotflag
 %
 %      S is a vector of structures with the fields "X" "Y" and
 %      FIELD.  This function most useful when S comes from a SHAPEREAD command
-%      executed on a .shp file.  
+%      executed on a .shp file.
 %      RASTER will be a matrix corresponding to the values of the field
-%      FIELD.  
+%      FIELD.
 %
 %      if PLOTFLAG is 1, a plot will be made as things go alond
 %
 %      Possible problems:
 %      * Not all shaperead commands result in an X,Y that are in lat/long.
 %      Function would fail in this case
-%      * If polygons overlap, then results will be arbitrary 
+%      * If polygons overlap, then results will be arbitrary
 %      * Function can be very slow
 %      * This function is based on the function inpolygon
 %      I don't know how well this would behave if we tried to
-%      operate it on a shapefile which included a bunch of lakes.  
+%      operate it on a shapefile which included a bunch of lakes.
 %
 %    Example
 %   S=shaperead([iddstring ...
 %   'AdminBoundary2005/Vector_ArcGISShapefile/gladmin_m3lcover'])
 %
 %   %make a smaller shapefile just for demonstrating this code
-%  
-%   
+%
+%
 %    NS=S(1:800);
-%   
+%
 %   for j=1:800
 %    NS(j).NumericalField=j;
 %   end
@@ -69,8 +69,8 @@ end
 hh=waitbar(0,'working ... ')
 for j=1:length(S);
     
-   % if int(j/length(
-        waitbar(j/length(S),hh);
+    % if int(j/length(
+    waitbar(j/length(S),hh);
     %end
     %for j=120;
     xx=S(j).X;
@@ -87,18 +87,25 @@ for j=1:length(S);
         error('This S vector isn''t quite working out ... ')
     end
     
-%    disp(['Working on ' S(j).ID '(' num2str(j) ' out of ' num2str(length(S)) ...
-%        ').  ' num2str(length(kk)-1) ' regions.']);
+    %    disp(['Working on ' S(j).ID '(' num2str(j) ' out of ' num2str(length(S)) ...
+    %        ').  ' num2str(length(kk)-1) ' regions.']);
     
     LogicalCountryMatrix=logical(zeros(size(MatrixTemplate)));
     
-ii=find(LongGrid > nanmin(xx)-.1 & LongGrid < nanmax(xx)+.1 & ...
-          LatGrid > nanmin(yy)-.1 & LatGrid < nanmax(yy)+.1);
+    ii=find(LongGrid > nanmin(xx)-.1 & LongGrid < nanmax(xx)+.1 & ...
+        LatGrid > nanmin(yy)-.1 & LatGrid < nanmax(yy)+.1);
     
+    AreaAdditionSpace=0;
     for k=2:length(kk);%
         
         x=xx(kk(k-1)+1:kk(k)-1);
         y=yy(kk(k-1)+1:kk(k)-1);
+        
+        
+        AreaSquareDegrees=polyarea(x,y);
+        AreaAdditionSpace=AreaAdditionSpace+AreaSquareDegrees*(40075/360)^2*cosd(mean(y));
+        
+        
         
         if plotflag==1
             figure(11)
@@ -112,8 +119,8 @@ ii=find(LongGrid > nanmin(xx)-.1 & LongGrid < nanmax(xx)+.1 & ...
         % jsg Nov 2012: find ii outside of this loop.  it turns out this
         % find statement takes waaaay longer than inpolygon for some calls
         % the downside of course is that ii isn't as limited in space
-    %    ii=find(LongGrid > min(x)-.1 & LongGrid < max(x)+.1 & ...
-    %        LatGrid > min(y)-.1 & LatGrid < max(y)+.1);
+        %    ii=find(LongGrid > min(x)-.1 & LongGrid < max(x)+.1 & ...
+        %        LatGrid > min(y)-.1 & LatGrid < max(y)+.1);
         
         [IN ON]=inpolygon(LongGrid(ii),LatGrid(ii),x,y);
         
@@ -140,11 +147,15 @@ ii=find(LongGrid > nanmin(xx)-.1 & LongGrid < nanmax(xx)+.1 & ...
     end  % end of k loop over regions within each country
     % end of country loop
     jj=find(LogicalCountryMatrix);
-  %  if (FieldName~='d')
-        Matrix(jj)=getfield(S(j),FieldName);
-   % else
-   %     Matrix(jj)=1;
-   % end
+    %  if (FieldName~='d')
+    Matrix(jj)=getfield(S(j),FieldName);
+    % else
+    %     Matrix(jj)=1;
+    % end
+    
+    Areasqkm(j)=AreaAdditionSpace;
+    
+    
 end % end of j loop over countries
 
 

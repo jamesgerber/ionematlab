@@ -1,4 +1,4 @@
-function varargout=OpenNetCDF(varargin);
+function varargout=callwithoutcaps(varargin);
 % function to work around caps-sensitive matlab version 
 persistent madewarning
 if isempty(madewarning)
@@ -7,4 +7,3 @@ if isempty(madewarning)
 end
 
 [varargout{1:nargout}]=feval(lower(mfilename),varargin{:});
-

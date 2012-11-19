@@ -22,7 +22,7 @@ function MakeKMZFile(MKS)
 %
 %
 %
-%  Example:
+%  Example 
 %
 %  clear MKS
 %  m=getdata('maize');
@@ -36,6 +36,14 @@ function MakeKMZFile(MKS)
 %  MKS.KS.header1='maize yield yr 2000';
 %  MKS.KS.description1='maize yield from Monfreda et al 2008'
 %
+%
+% %%Example 1:
+%
+% % No legend%
+%
+%  MakeKMZFile(MKS);
+%
+%  % Now with legend
 %   makelegend('tons/ha','./legend.png','revsummer',0,12);
 %   MKS.KS.legendname='./legend.png'; 
 %

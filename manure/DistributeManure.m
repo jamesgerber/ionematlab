@@ -160,7 +160,7 @@ totalcropappN=0
         
         [dum,itemp]=min(newx>PappliedCutoff);
         
-        maxPval=vals(itemp
+        maxPval=vals(itemp);
         AppliedPhosphorusManure(AppliedPhosphorusManure>maxPval)=maxPval;
         
         
@@ -192,7 +192,7 @@ totalcropappN=0
         
         [dum,itemp]=min(newx>NappliedCutoff);
         
-        maxNval=vals(itemp
+        maxNval=vals(itemp);
         AppliedNitrogenManure(AppliedNitrogenManure>maxNval)=maxNval;
         
         

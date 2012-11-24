@@ -55,7 +55,8 @@ switch(InputFlag)
         % little bit of code to handle z being all zeros (if mapping
         % toolbox was used)
         
-        if length(unique(z))==1
+%        if length(unique(z))==1
+        if length(unique(z(isfinite(z))))==1
             z=get(hc(end),'CData');
         end
  

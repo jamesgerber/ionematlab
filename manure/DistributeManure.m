@@ -23,6 +23,11 @@ end
 clear S
 
 
+NappliedCutoff=0.99;
+PappliedCutoff=0.99;
+AreaCutoff=0.95;
+
+
 load('Workspace1.mat','mnames');
 
 
@@ -71,6 +76,9 @@ pa=PastArea.Data;
 clear CropArea
 clear PastArea
 
+fid=fopen('trackinginfo.csv','w');
+fprintf(fid,['crop,Nmanure_kgpercropha,Nmanure_kg,thiscroparea_30min,' ...
+                'thiscroparea_30min,totalharvarea_30min,Transfer30min,ca30min,capa30min\n']);
 
 %Nmanure=disaggregate_rate(SN(6).Data,6).*(ca./(pa+ca));  %Estmiate of manure produced on feedlot.
 %Pmanure=disaggregate_rate(SP(6).Data,6).*(ca./(pa+ca));
@@ -83,9 +91,10 @@ tma=aggregate_quantity(fma,6);
 ca30min=aggregate_quantity(ca,6);
 capa30min=aggregate_quantity(ca+pa,6);
 totalharvarea_30min=aggregate_rate(TotalHarvestedArea,6);
-
+totalcropappN=0
 % now we can allocate manure
  for j=1:length(mnames);
+ %    for j=14
         %for j=1:20
         ThisCrop=mnames{j}       
         
@@ -96,7 +105,7 @@ totalharvarea_30min=aggregate_rate(TotalHarvestedArea,6);
         
       %  ThisCropTransferFunction=(ca./(pa+ca)).*(Area./TotalHarvestedArea);
         
-      ii_include=areafilter(croparea,croparea,.9);
+      ii_include=areafilter(croparea,croparea,AreaCutoff);
       croparea(~ii_include)=0;
 
         thiscroparea_30min=aggregate_rate(croparea,6);
@@ -120,31 +129,125 @@ totalharvarea_30min=aggregate_rate(TotalHarvestedArea,6);
         %kg. per gridcell.
         AppliedPhosphorusManure=(Pmanure_kgpercropha_5min).*ptem;  
         
-        svnRevNo=getsvninfo;
+      
+        
+        %  see what largest values are for P (P first so variables
+        %  retain N values for subsequent .csv files
+        
+        jj=find(isfinite(Pmanure_kgpercropha) & Pmanure_kgpercropha>0 );
+       
+        x=Pmanure_kgpercropha(jj);
+        xarea=thiscroparea_30min(jj);
+        
+        [vals,kk]=sort(x,'descend');
 
         
-        DAS.DataVersion='1.1';
-        DAS.Units='kg/ha';
-        DAS.Description =['Applied Nitrogen Per harvested HA (' ThisCrop ')'];
-        DAS.CropName=ThisCrop;
-        DAS.ProcessingDate=datestr(now);
-        DAS.CodeRevNo=svnRevNo;
-        WriteNetCDF(single(AppliedNitrogenManure),'AppliedNitrogenManure',['./OutputData/' MakeSafeString(ThisCrop) 'NapprateFromManure' ],DAS );
-        S=OpenNetCDF(['./OutputData/' MakeSafeString(ThisCrop) 'NapprateFromManure' ] );
+        % make a plot of application rate vs cumulative applied N
         
-        DAS.Units='kg/ha';
-        DAS.Description =['Applied Phosphorus Per harvested HA (' ThisCrop ')'];
-        DAS.CropName=ThisCrop;
-        DAS.ProcessingDate=datestr(now);
-        WriteNetCDF(single(AppliedPhosphorusManure),'AppliedPhosphorusManure',['./OutputData/'  MakeSafeString(ThisCrop) 'PapprateFromManure'],DAS );
-        S=OpenNetCDF(['./OutputData/'  MakeSafeString(ThisCrop) 'PapprateFromManure'] );
+        carea=xarea(kk);
+        cumPapplied=cumsum(carea.*vals);       
+        newx=cumPapplied(end:-1:1);
+        newx=newx/max(newx);
+
+        debugplots2=1;
+        if debugplots2==1;
+            figure
+            loglog(vals,newx)
+            ylabel(['cumulative applied P.  ' ThisCrop ]);
+            xlabel('max application rate')
+            grid on
+        end
         
-        !gzip ./OutputData/*.nc
+        [dum,itemp]=min(newx>PappliedCutoff);
+        
+        maxPval=vals(itemp
+        AppliedPhosphorusManure(AppliedPhosphorusManure>maxPval)=maxPval;
+        
+        
+        % now see what largest values are for N
+        
+        jj=find(isfinite(Nmanure_kgpercropha) & Nmanure_kgpercropha>0 );
+       
+        x=Nmanure_kgpercropha(jj);
+        xarea=thiscroparea_30min(jj);
+        
+        [vals,kk]=sort(x,'descend');
+
+        
+        % make a plot of application rate vs cumulative applied N
+        
+        carea=xarea(kk);
+        cumNapplied=cumsum(carea.*vals);       
+        newx=cumNapplied(end:-1:1);
+        newx=newx/max(newx);
+
+        debugplots2=1;
+        if debugplots2==1;
+            figure
+            loglog(vals,newx)
+            ylabel(['cumulative applied N.  ' ThisCrop ]);
+            xlabel('max application rate')
+            grid on
+        end
+        
+        [dum,itemp]=min(newx>NappliedCutoff);
+        
+        maxNval=vals(itemp
+        AppliedNitrogenManure(AppliedNitrogenManure>maxNval)=maxNval;
+        
+        
+      
+
+        
+        % print out csv of biggest points for nitrogen
+        mm=jj(kk(1:36:min(361,length(kk))))
+                for jd=1:min(10,length(mm))
+            m=mm(jd);
+            fprintf(fid,'%s,%f,%f,%f,%f,%f,%f,%f,%f\n',ThisCrop,Nmanure_kgpercropha(m),Nmanure_kg(m),thiscroparea_30min(m),...
+                thiscroparea_30min(m),totalharvarea_30min(m),Transfer30min(m),ca30min(m),capa30min(m));
+        end
+        
+        %%
+        
+        
+        
+        
+        
+        
+        svnRevNo=getsvninfo;
+
+%         
+%         DAS.DataVersion='1.2';
+%         DAS.Units='kg/ha';
+%         DAS.Description =['Applied Nitrogen Per harvested HA (' ThisCrop ')'];
+%         DAS.CropName=ThisCrop;
+%         DAS.ProcessingDate=datestr(now);
+%         DAS.CodeRevNo=svnRevNo;
+%         WriteNetCDF(single(AppliedNitrogenManure),'AppliedNitrogenManure',['./OutputData/' MakeSafeString(ThisCrop) 'NapprateFromManure' ],DAS );
+%         S=OpenNetCDF(['./OutputData/' MakeSafeString(ThisCrop) 'NapprateFromManure' ] );
+%         
+%         DAS.Units='kg/ha';
+%         DAS.Description =['Applied Phosphorus Per harvested HA (' ThisCrop ')'];
+%         DAS.CropName=ThisCrop;
+%         DAS.ProcessingDate=datestr(now);
+%         WriteNetCDF(single(AppliedPhosphorusManure),'AppliedPhosphorusManure',['./OutputData/'  MakeSafeString(ThisCrop) 'PapprateFromManure'],DAS );
+%         S=OpenNetCDF(['./OutputData/'  MakeSafeString(ThisCrop) 'PapprateFromManure'] );
+        
+        
+   %      yy=Nmanure_kgpercropha_5min.*croparea.*fma;
+   %     yy(~isfinite(yy))=0;
+   
+   yy=AppliedNitrogenManure.*croparea.*fma;
+   yy(~isfinite(yy))=0;
+   
+   thiscropappN =sum(sum(yy));
+   totalcropappN=totalcropappN+thiscropappN
+   !gzip ./OutputData/*.nc
         
         
  end
  
-                
+                fclose(fid)
    
 
 

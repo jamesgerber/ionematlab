@@ -107,7 +107,7 @@ try
                     
                     yrstring='';
                 else
-                    yrstring=[int2str(FS.DataYear) '_']
+                    yrstring=[int2str(FS.DataYear) '_'];
                 end
                 
                 

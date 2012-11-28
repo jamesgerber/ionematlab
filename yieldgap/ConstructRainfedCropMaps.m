@@ -3,9 +3,9 @@ function ConstructRainfedCropMaps
 
 
 
-for IP=[10];
+for IP=[25];
     
-    for jCrop=[1];
+    for jCrop=[1 2 3 8];
         jCrop
         switch jCrop
             case 1
@@ -72,7 +72,7 @@ for IP=[10];
         
         DataYear=2005;
         
-        ncid = netcdf.open([iddstring '/MIRCA2000_processed/mirca2000_crop' ...
+        ncid = netcdf.open([iddstring '/Irrigation/MIRCA2000_processed/mirca2000_crop' ...
             int2str(jCrop) '.nc'], 'NC_NOWRITE');
         percirrarea = netcdf.getVar(ncid,6);
         
@@ -82,7 +82,7 @@ for IP=[10];
         length(find(iirainfed))
         
     %    S=OpenNetCDF([iddstring '/Crops2000/crops/' name '_5min.nc']);
-        S=getcropdata(name,2005);
+        S=getcropdata(name,2000);
         %% Rainfed crops
         a=S.Data(:,:,1);
         y=S.Data(:,:,2);

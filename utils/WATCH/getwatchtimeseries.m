@@ -1,6 +1,8 @@
-function [mdnvect,ts]=pullwatchtimeseries(idx,basedir);
+function [mdnvect,ts]=getwatchtimeseries(idx,type);
 % pullwatchtimeseries
 
+%   getwatchtimeseries(indices,type)  where type can be
+%   'Tair','rain','snow'
 
 Ntimeseries=(365.25*100*8);
 
@@ -8,9 +10,16 @@ Nindices=length(find(idx));
 ts=single(zeros(Nindices,Ntimeseries));
 
 mdnvect=[];
-
-if nargin==1
-    basedir=[iddstring '/Climate/reanalysis/WATCH/Tair_WFD/'];
+switch type
+    case 'Tair'        
+        basedir=[iddstring '/Climate/reanalysis/WATCH/Tair_WFD/'];
+        FileBase='Tair_WFD_';
+    case 'rain'
+        basedir=[iddstring '/Climate/reanalysis/WATCH/Rainf/'];
+        FileBase='Rainf_WFD_GPCC_';
+    case 'snow'
+        basedir=[iddstring '/Climate/reanalysis/WATCH/Snowf/'];
+        FileBase='Snowf_WFD_GPCC_';
 end
 %basedir='./'
 
@@ -25,13 +34,13 @@ for yy=1902:2002;
             
             disp(['skipping ' datestr(double(datenum(yy,mm,01,00,00,00)))]);
         else
-            FileNameBase=['Tair_WFD_' int2str(yy) sprintf('%02d',mm) ];
+            FileNameBase=[FileBase int2str(yy) sprintf('%02d',mm) ];
             FileName=[basedir FileNameBase '.nc'];
-           disp(['hard wired to read the ncmat on Disk1'])
-       %     S=OpenGeneralNetCDF(FileName);
+       %    disp(['hard wired to read the ncmat on Disk1'])
+            S=OpenGeneralNetCDF(FileName);
            
-           x=load(['/Volumes/Disk1/Climate/ncmat/' FileNameBase '.mat']);
-           S=x.Svector;
+        %   x=load(['/Volumes/Disk1/Climate/ncmat/' FileNameBase '.mat']);
+        %   S=x.Svector;
            
            disp(FileName)
             % initial date string
@@ -94,11 +103,11 @@ save USAcornbelt mdnvect ts indices outblanklogical outblankindices logicalkeep
 %pause(1800)
 
 basedir = 'stripes';
-jj=1:67240;
-Nsteps=100;
-endpoints=round(linspace(1,67240,Nsteps));
+jj=1:67420;
+Nsteps=375;
+endpoints=round(linspace(1,67420,Nsteps));
 
-for j=62:(Nsteps-1);
+for j=(Nsteps-2):(Nsteps-1);
     j
     ii=endpoints(j):endpoints(j+1);
     [mdnvect,ts]=pullwatchtimeseries(ii);
@@ -114,6 +123,59 @@ for j=62:(Nsteps-1);
     end
 end
 
+
+%% code to make rainf stripes
+
+%pause(1800)
+
+basedir = 'stripes';
+mkdir(basedir)
+jj=1:67420;
+Nsteps=375;
+endpoints=round(linspace(1,67420,Nsteps));
+
+for j=(Nsteps-1);
+    j
+    ii=endpoints(j):endpoints(j+1);
+    [mdnvect,ts]=getwatchtimeseries(ii,'rain');
+    
+    
+    
+    for m=1:length(ii)
+        
+        FileName=[basedir '/rain_pt' int2str(ii(m))];
+        rain=ts(m,:);
+        notes.processdate=datestr(now);
+        save(FileName,'rain','mdnvect','notes')
+    end
+end
+
+
+%% code to make snow stripes
+
+%pause(1800)
+
+basedir = 'stripes';
+mkdir(basedir)
+jj=1:67420;
+Nsteps=375;
+endpoints=round(linspace(1,67420,Nsteps));
+
+for j=(Nsteps-1);
+    j
+    ii=endpoints(j):endpoints(j+1);
+    [mdnvect,ts]=getwatchtimeseries(ii,'snow');
+    
+    
+    
+    for m=1:length(ii)
+        
+        FileName=[basedir '/snow_pt' int2str(ii(m))];
+        snow=ts(m,:);
+        notes.processdate=datestr(now);
+        save(FileName,'snow','mdnvect','notes')
+    end
+end
 
 
 

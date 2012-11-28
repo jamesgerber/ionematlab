@@ -486,7 +486,7 @@ OceanVal=coloraxis(1)-minstep;
 NoDataLandVal=coloraxis(2)+minstep;
 
 %Any points off of the land mask must be set to ocean color.
-land=LandMaskLogical(Data);
+land=landmasklogical(Data);
 ii=(land==0);
 size(ii);
 size(Data);

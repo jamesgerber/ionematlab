@@ -85,8 +85,8 @@ for j=1:N
   end
 end
 
-zeroxlim(0,N+1);
-zeroylim(0,N+1);
+ZeroXlim(0,N+1);
+ZeroYlim(0,N+1);
 
 set(gca,'visib','off')
 hx=text(N/2+1,0.06125,'  GDD  ');
@@ -114,8 +114,8 @@ for j=1:N
   end
 end
 
-zeroxlim(0,N+1);
-zeroylim(0,N+1);
+ZeroXlim(0,N+1);
+ZeroYlim(0,N+1);
 
 set(gca,'visib','off')
 hx=text(N/2+1,0.06125,'  GDD  ');

@@ -12,7 +12,7 @@ persistent LogicalLandMaskVector
 
 if isempty(LogicalLandMaskVector)
     SystemGlobals
-    [Long,Lat,Data]=OpenNetCDF(LANDMASK_5MIN);
+    [Long,Lat,Data]=opennetcdf(LANDMASK_5MIN);
     LogicalLandMaskVector=(Data>0);
 end
 

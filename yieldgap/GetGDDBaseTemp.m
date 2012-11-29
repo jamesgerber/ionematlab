@@ -36,14 +36,16 @@ if numel(iirow)==0
     
     s=findstr(crop,'RF');
     if numel(s)==1
-        redcrop=crop(1:end-4);
+        %        redcrop=crop(1:end-4);
+        redcrop=crop(1:s-1);
         [T,Tmax]=GetGDDBaseTemp(redcrop);
         return
     end
     
     s=findstr(crop,'IRR');
     if numel(s)==1
-        redcrop=crop(1:end-5);
+        %        redcrop=crop(1:end-5);
+        redcrop=crop(1:s-1);
         [T,Tmax]=GetGDDBaseTemp(redcrop);
         return
     end

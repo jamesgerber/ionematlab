@@ -1,11 +1,12 @@
-function ConstructRainfedCropMaps(IPvec,politunitflag, DataYear)
+function ConstructRainfedCropMaps(IPvec,politunitflag, DataYear, ...
+    excludestrangedatatypesflag)
 %  CONSTRUCTRAINFEDCROPMAPS
 %
 % politunitflag of 0 filters out grid cells with greater than the
 % designated irrigation percentage (IP). politunitflag of 1 filters out
 % political units with greater than the designated irrigation percentage.
 
-% switch filter label
+% switch filter label - PUT THIS IN TITLE?
 switch politunitflag
     case 0
         filterlabel = 'gridcellirrfiltered';
@@ -116,6 +117,10 @@ for IP = IPvec
         y(y>9e9)=0;
         a = a.*GetFiveMinGridCellAreas;
         
+        % get political unit source info from crop data
+        yielddq = S.Data(:,:,4);
+        yielddq(yielddq>9e9)=NaN;
+        
         switch politunitflag
             case 0
                 iirainfed=percirrarea<IP/100;
@@ -129,10 +134,6 @@ for IP = IPvec
                 
                 % set nan irr values to 0
                 percirrarea(isnan(percirrarea))=0;
-                
-                % get political unit source info from crop data
-                yielddq = S.Data(:,:,4);
-                yielddq(yielddq>9e9)=NaN;
                 
                 % loop through each country - check for crop area and
                 % which political unit level the yield data came from
@@ -154,6 +155,7 @@ for IP = IPvec
                             datatype = ctrydatatypes(d);
                             
                             switch datatype
+                                
                                 case .25 % country-level
                                     jj = ctrylogical & yielddq==datatype;
                                     irrha = sum(sum(ctrylogical .* ...
@@ -164,15 +166,9 @@ for IP = IPvec
                                         iirainfed(jj) = 1;
                                     end
                                     
-                                case .5 % interpolated - NEEDS HELP
-                                    jj = ctrylogical & yielddq==datatype;
-                                    irrha = sum(sum(ctrylogical .* ...
-                                        percirrarea .* a));
-                                    totha = sum(sum(ctrylogical.*a));
-                                    irrprop = irrha./totha;
-                                    if irrprop<(IP/100)
-                                        iirainfed(jj) = 1;
-                                    end
+                                case .5 % interpolated
+                                    % assume that these areas are 
+                                   
                                     
                                 case .75
                                     tmp=strmatch(countrycode,statecodes);
@@ -209,11 +205,24 @@ for IP = IPvec
                                             end
                                         end
                                     end
+                                    
+                                case 0
+                                    warndlg(['warning: found datatype ' ...
+                                        '0 for ' cropname ' in ' ...
+                                        countrycode]);
+                                    
+                                otherwise
+                                    warndlg('dont know this datatype')
                             end
                             
                         end
                     end
                 end
+                
+                ii_irr = false(4320,2160);
+                ii_irr(a>0)=1;
+                ii_irr(iirainfed)=0;
+                ii_irr(yielddq==0|yielddq==.5) = 0; 
         end
         
         
@@ -225,8 +234,14 @@ for IP = IPvec
         iiareabig=(a>9e9);
         
         a(ii_irr)=0;
+        if excludestrangedatatypesflag ==1
+            a(yielddq==0|yielddq==.5) = 0; 
+        end
         a(iiareabig)=S.missing_value;
         y(ii_irr)=S.missing_value;
+        if excludestrangedatatypesflag ==1
+            y(yielddq==0|yielddq==.5) = S.missing_value;
+        end
         
         S.Data(:,:,1)=a;
         S.Data(:,:,2)=y;
@@ -242,7 +257,8 @@ for IP = IPvec
         DAS.Description1=[num2str(DataYear) ' data and 2000 MIRCA ' ...
             'irrigation data - ' filterlabel];
         writenetcdf(S.Long,S.Lat,S.Data,[cropname 'rainfed' num2str(IP) ], ...
-            [cropname 'RF' num2str(IP) '_' int2str(DataYear) '_5min.nc'],DAS)
+            [cropname 'RF' num2str(IP) '_' filterlabel '_' ...
+            int2str(DataYear) '_5min.nc'],DAS)
         
         
         %%  Irrigated crops
@@ -254,8 +270,14 @@ for IP = IPvec
         iiareabig=(a>9e9);
         
         a(iirainfed)=0;
+        if excludestrangedatatypesflag ==1
+            a(yielddq==0|yielddq==.5) = 0; 
+        end
         a(iiareabig)=S.missing_value;
         y(iirainfed)=S.missing_value;
+        if excludestrangedatatypesflag ==1
+            y(yielddq==0|yielddq==.5) = S.missing_value; 
+        end
         
         S.Data(:,:,1)=a;
         S.Data(:,:,2)=y;
@@ -272,7 +294,8 @@ for IP = IPvec
             'irrigation data - ' filterlabel];
         
         writenetcdf(S.Long,S.Lat,S.Data,[cropname 'irrigated' num2str(IP) ],...
-            [cropname 'IRR' num2str(IP) '_' int2str(DataYear) '_5min.nc'],DAS)
+            [cropname 'IRR' num2str(IP) '_' filterlabel '_' ...
+            int2str(DataYear) '_5min.nc'],DAS)
     end
 end
 

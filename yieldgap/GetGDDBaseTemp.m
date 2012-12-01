@@ -1,4 +1,4 @@
-function [T,Tmax]=GetGDDBaseTemp(crop)
+function [T,Tmax,redcrop]=GetGDDBaseTemp(crop)
 % GetGDDBaseTemp return base GDD temperature as a string
 %
 %  example

@@ -19,6 +19,11 @@ function MakeClimateSpaceLibraryFunctionRevP(FlagStructure)
 %
 %
 % Get crop information section
+%  This version very close to MakeClimateSpaceLibraryFunction_FileName
+%  _RevP.  The only change is that if cropname has "IRR" or "RF"it will
+%  have the base bins be the bins defined for maize
+
+
 
 Rev='P';
 
@@ -98,11 +103,15 @@ for N=Nspace;
                     HeatFlag='GSL'
             end
             
+            
+            % introduce variable for cropname to go into filename
+            [Tdum,Tmaxdum,redcrop]=GetGDDBaseTemp(cropname)
+           
             if DataYear==2000
                 FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
                 
-                NoBaseFileName=['/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                NoBaseFileName=['/ClimateMask_' redcrop '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
             else
                 if isstr(DataYear)
@@ -114,7 +123,7 @@ for N=Nspace;
                 FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' yrstring  HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
                 
-                NoBaseFileName=['/ClimateMask_' cropname '_' yrstring  HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                NoBaseFileName=['/ClimateMask_' redcrop '_' yrstring  HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
             end
             

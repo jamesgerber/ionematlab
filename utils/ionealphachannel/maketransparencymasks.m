@@ -14,6 +14,8 @@ function maketransparencymasks(res)
 if nargin==0
    maketransparencymasks('r150');
    maketransparencymasks('r300');
+   maketransparencymasks('r400');
+   maketransparencymasks('r500');
    maketransparencymasks('r600');
    maketransparencymasks('r1200');
    return
@@ -22,6 +24,7 @@ ii=datablank;
 
 NSS.cmap=0*ones(size(colormap));%[1 1 1; 1 1 1];
 
+res
 
 % lines of code to make sure there is a directory for the masks.
 
@@ -31,45 +34,47 @@ if exist([iddstring '/misc/mask']) ~=7
     mkdir([iddstring '/misc/mask'])
 end
 
-switch res
-    case 'r150';        
-        NSS.Resolution='-r150';
-        FileName=[iddstring '/misc/mask/OutputMask_colorbar_r150.png'];
-        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r150.png'];
-        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r150.png'];
-        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r150.png'];
-
-    case 'r300';        
-        NSS.Resolution='-r300';
-        FileName=[iddstring '/misc/mask/OutputMask_colorbar_r300.png'];
-        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r300.png'];
-        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r300.png'];
-        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r300.png'];
-    case 'r600';        
-        NSS.Resolution='-r600';
-        FileName=[iddstring '/misc/mask/OutputMask_colorbar_r600.png'];
-        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r600.png'];
-        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r600.png'];
-        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r600.png'];
-   case 'r1200';        
-        NSS.Resolution='-r1200';
-        FileName=[iddstring '/misc/mask/OutputMask_colorbar_r1200.png'];
-        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r1200.png'];
-        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r1200.png'];
-        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r1200.png'];
-
-    otherwise
-        disp('warning ... using a new resolution ... making masks')
+% switch res
+%     case 'r150';        
+%         NSS.Resolution='-r150';
+%         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r150.png'];
+%         FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r150.png'];
+%         FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r150.png'];
+%         FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r150.png'];
+% 
+%     case 'r300';        
+%         NSS.Resolution='-r300';
+%         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r300.png'];
+%         FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r300.png'];
+%         FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r300.png'];
+%         FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r300.png'];
+%     case 'r600';        
+%         NSS.Resolution='-r600';
+%         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r600.png'];
+%         FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r600.png'];
+%         FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r600.png'];
+%         FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r600.png'];
+%    case 'r1200';        
+%         NSS.Resolution='-r1200';
+%         FileName=[iddstring '/misc/mask/OutputMask_colorbar_r1200.png'];
+%         FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_r1200.png'];
+%         FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_r1200.png'];
+%         FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_r1200.png'];
+% 
+%     otherwise
+%         disp('warning ... using a new resolution ... making masks')
         NSS.Resolution=['-' res];
-        res
-        FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '.png'];
-        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png'];
-        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
-        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
+        ver=version;
+        VerNo=ver(1)
+        vs=['ver' VerNo '_'];  % ' vs '
+        FileName=[iddstring '/misc/mask/OutputMask_' vs 'colorbar_' res '.png'];
+        FileNameNCB=[iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_' res '.png'];
+        FileNameOceans=[iddstring '/misc/mask/OutputMask_' vs 'oceans_' res '.png'];
+        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_' vs 'agrimask_' res '.png'];
 
         
 
-end
+% end
 
 MaxNumFigs=callpersonalpreferences('maxnumfigsNSG');
 

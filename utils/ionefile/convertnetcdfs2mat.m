@@ -19,7 +19,7 @@ end
 
 for j=3:length(a)  %first two are self/parent dir
     
-    if a(j).isdir            
+    if a(j).isdir
         cd(a(j).name)
         ConvertNetCDFs2mat
         cd ../
@@ -27,9 +27,15 @@ for j=3:length(a)  %first two are self/parent dir
         thisname=a(j).name;
         if length(thisname) >3 & isequal(thisname(end-2:end),'.nc')
             disp(['converting ' thisname]);
-            S=OpenNetCDF(thisname);
-            disp(['compressing ' thisname]);
-            dos(['gzip -f ' thisname])
+            try
+                S=OpenNetCDF(thisname);
+                disp(['compressing ' thisname]);
+                dos(['gzip -f ' thisname])
+            catch
+                S=OpenGeneralNetCDF(thisname);
+                disp(['compressing ' thisname]);
+                dos(['gzip -f ' thisname])
+            end
         end
     end
 end

@@ -1,7 +1,10 @@
-function ClimateBinPlot_variableN(BinMatrix,NSS)
+function ClimateBinPlot_variableN(BinMatrix,NSS,suppressbox)
 %ClimateBinPlot_variableN(BinMatrix,NSS)
 %
+%  ClimateBinPlot_variableN(BinMatrix,NSS,suppressbox)
 %
+%  if suppressbox=1 then no box gets printed.  useful if planning a
+%  transparency.
 
 
 a=BinMatrix;
@@ -15,6 +18,9 @@ end
 %NiceSurfGeneral(BinMatrix,NSS)
 
 
+if nargin<3
+    suppressbox=0;
+end
 
 N=sqrt(length(unique(BinMatrix))-1)
 
@@ -67,36 +73,37 @@ Hfig=gcf;
 fud=get(Hfig,'userdata');
 set(fud.ColorbarHandle,'visible','off')
 
-
-
-hax=axes('position',[.025 .2 .3 .3],'tag','tmpaxis');%,
-
-x=1:N;
-y=1:N;
-for j=1:N
-  for k=1:N
-      m=(j-1)*N+k;
-   % cv=vect{j};
-   % color=cv*s(k);
-    xvect=[x(j)-.5 ,x(j)+.5, x(j)+.5, x(j)-.5, x(j)-.5];
-    yvect=[y(k)-.5 ,y(k)-.5, y(k)+.5, y(k)+.5, y(k)-.5];    
-
-    patch(xvect,yvect,shortmap(m,1:3))
-  end
+if suppressbox==0
+    
+    hax=axes('position',[.025 .2 .3 .3],'tag','tmpaxis');%,
+    
+    x=1:N;
+    y=1:N;
+    for j=1:N
+        for k=1:N
+            m=(j-1)*N+k;
+            % cv=vect{j};
+            % color=cv*s(k);
+            xvect=[x(j)-.5 ,x(j)+.5, x(j)+.5, x(j)-.5, x(j)-.5];
+            yvect=[y(k)-.5 ,y(k)-.5, y(k)+.5, y(k)+.5, y(k)-.5];
+            
+            patch(xvect,yvect,shortmap(m,1:3))
+        end
+    end
+    
+    ZeroXlim(0,N+1);
+    ZeroYlim(0,N+1);
+    
+    set(gca,'visib','off')
+    hx=text(N/2+1,0.06125,'  GDD  ');
+    set(hx,'FontSize',12,'HorizontalAlignment','Center');
+    hy=text(0.06125,N/2+1,'  precipitation  ');
+    set(hy,'FontSize',12,'HorizontalAlignment','Center','Rotation',90);
+    
+    if suppressbox==1
+        set(gca,'PlotBoxAspectRatioMode','manual')
+    end
 end
-
-ZeroXlim(0,N+1);
-ZeroYlim(0,N+1);
-
-set(gca,'visib','off')
-hx=text(N/2+1,0.06125,'  GDD  ');
-set(hx,'FontSize',12,'HorizontalAlignment','Center');
-hy=text(0.06125,N/2+1,'  precipitation  ');
-set(hy,'FontSize',12,'HorizontalAlignment','Center','Rotation',90);
-
-set(gca,'PlotBoxAspectRatioMode','manual')
-
-
 
 figure
 

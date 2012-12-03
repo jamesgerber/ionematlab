@@ -28,6 +28,18 @@ OldFileName=fixextension(OldFileName,'.png');
 
 plotimage=imread(OldFileName);
 
+if nargin==1
+    NewFileName=strrep(OldFileName,'.png','_alpha.png');
+end
+
+
+
+
+ver=version;
+VerNo=ver(1)
+vs=['ver' VerNo '_'];  % ' vs '
+
+
 KeepText=0;
 if ~ischar(NewFileName)
     TextColor=NewFileName;
@@ -55,32 +67,35 @@ end
 try
     switch(size(plotimage,1))
         case 633
-            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r150.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r150.png']);
+            a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_r150.png']);
+            ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_r150.png']);
         case 1266
-            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r300.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r300.png']);
+            a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_r300.png']);
+            ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_r300.png']);
         case 2534
-            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r600.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r600.png']);
+            a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_r600.png']);
+            ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_r600.png']);
+        case 5066
+            a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_r1200.png']);
+            ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_r1200.png']);
         otherwise
-            warndlg(['don''t know this resolution.   attempting to run maketransparencymasks'])
-            x=personalpreferences('printingres');
-            res=x(2:end)
+            apparentres=ceil( size(plotimage,1) * 1200/5066);
+            res=['r' int2str(apparentres)];
             try
-                maketransparencymasks(res)
-             a=imread([iddstring '/misc/mask/OutputMask_colorbar_' res '.png']);
-                ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png']);
-         
-                
-                
-                
+                a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_' res '.png']);
+                ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_' res '.png']);
+                        
             catch
-                warning(['maketransparencymasks didn''t work. possible reasons '...
-                    'include too many figures currently open.  also, best' ...
-                    'to set resolution via personalpreferences'])
-                error(['maketransparencymasks didn''t work.'])
+                error(['don''t have masks for this resolution.  try maketransparencymasks(''r' int2str(apparentres) ''')  '])
+                
+                % warning(['maketransparencymasks didn''t work. possible reasons '...
+                %  'include too many figures currently open.  also, best' ...
+                %  'to set resolution via personalpreferences'])
+                %error(['maketransparencymasks didn''t work.'])
             end
+            
+            
+        
     end
 catch
     error(['prob need to run maketransparencymasks'])

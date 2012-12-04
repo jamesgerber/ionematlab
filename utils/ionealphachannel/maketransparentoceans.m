@@ -70,57 +70,24 @@ vs=['ver' VerNo '_'];  % ' vs '
 
 
 
-try
-    switch(size(plotimage,1))
-        case 633
-            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r150.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r150.png']);
-            aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r150.png']);
-            aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_r150.png']);
-            
-        case 1266
-            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r300.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r300.png']);
-            aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r300.png']);
-            aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_r300.png']);
-            
-        case 2534
-            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r600.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r600.png']);
-            aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r600.png']);
-            aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_r600.png']);
-            
-        case 5066
-            a=imread([iddstring '/misc/mask/OutputMask_colorbar_r1200.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_r1200.png']);
-            aocean=imread([iddstring '/misc/mask/OutputMask_oceans_r1200.png']);
-            aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_r1200.png']);
-            
-            
-        otherwise
-            apparentres=ceil( size(plotimage,1) * 1200/5066);
-            res=['r' int2str(apparentres)];
-            try
-                a=imread([iddstring '/misc/mask/OutputMask_colorbar_' res '.png']);
-                ancb=imread([iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png']);
-                aocean=imread([iddstring '/misc/mask/OutputMask_oceans_' res '.png']);
-                aagrimask=imread([iddstring '/misc/mask/OutputMask_agrimask_' res '.png']);
-                
-            catch
-                error(['don''t have masks for this resolution.  try maketransparencymasks(''r' int2str(apparentres) ''')  '])
-                
-                % warning(['maketransparencymasks didn''t work. possible reasons '...
-                %  'include too many figures currently open.  also, best' ...
-                %  'to set resolution via personalpreferences'])
-                %error(['maketransparencymasks didn''t work.'])
-            end
-            
-            
-            
-    end
-catch
-    error(['prob need to run maketransparencymasks'])
-end
+a=plotimage;
+
+res=['size' num2str(size(a,1)) '_' num2str(size(a,2))];
+
+
+FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '.png'];
+FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png'];
+FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
+FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
+
+a=imread(FileName);
+ancb=imread(FileNameNCB);
+aocean=imread(FileNameOceans);
+aagrimask=imread(FileNameAgriMask);
+
+
+
+
 
 
 

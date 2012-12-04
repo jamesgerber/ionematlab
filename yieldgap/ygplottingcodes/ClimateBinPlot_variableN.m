@@ -124,11 +124,17 @@ end
 ZeroXlim(0,N+1);
 ZeroYlim(0,N+1);
 
-set(gca,'visib','off')
-hx=text(N/2+1,0.06125,'  GDD  ');
-set(hx,'FontSize',30,'HorizontalAlignment','Center');
-hy=text(0.06125,N/2+1,'  precipitation  ');
-set(hy,'FontSize',30,'HorizontalAlignment','Center','Rotation',90);
+   
+    set(gca,'visib','off')
+    if suppressbox==0
+
+    hx=text(N/2+1,0.06125,'  GDD  ');
+    set(hx,'FontSize',30,'HorizontalAlignment','Center');
+    hy=text(0.06125,N/2+1,'  precipitation  ');
+    set(hy,'FontSize',30,'HorizontalAlignment','Center','Rotation',90);
+else
+    disp('not putting x y labels on stand-alone legend because suppressbox=1')
+end
 
 function newcolor= ColorFadeFunction(basecolor,k,N); 
 % have color fade.  when k=1 newcolor=basecolor;

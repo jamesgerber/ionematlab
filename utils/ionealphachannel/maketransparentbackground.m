@@ -62,44 +62,26 @@ if nargin>=3
     KeepText=1;
 end
 
+a=plotimage;
+
+res=['size' num2str(size(a,1)) '_' num2str(size(a,2))];
 
 
-try
-    switch(size(plotimage,1))
-        case 633
-            a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_r150.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_r150.png']);
-        case 1266
-            a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_r300.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_r300.png']);
-        case 2534
-            a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_r600.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_r600.png']);
-        case 5066
-            a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_r1200.png']);
-            ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_r1200.png']);
-        otherwise
-            apparentres=ceil( size(plotimage,1) * 1200/5066);
-            res=['r' int2str(apparentres)];
-            try
-                a=imread([iddstring '/misc/mask/OutputMask_' vs 'colorbar_' res '.png']);
-                ancb=imread([iddstring '/misc/mask/OutputMask_' vs 'nocolorbar_' res '.png']);
-                        
-            catch
-                error(['don''t have masks for this resolution.  try maketransparencymasks(''r' int2str(apparentres) ''')  '])
-                
-                % warning(['maketransparencymasks didn''t work. possible reasons '...
-                %  'include too many figures currently open.  also, best' ...
-                %  'to set resolution via personalpreferences'])
-                %error(['maketransparencymasks didn''t work.'])
-            end
-            
-            
-        
-    end
-catch
-    error(['prob need to run maketransparencymasks'])
-end
+FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '.png'];
+FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png'];
+FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
+FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
+FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '.png'];
+
+a=imread(FileName);
+ancb=imread(FileNameNCB);
+apt=imread(FileNamePT);
+%aocean=imread(FileNameOceans);
+%aagrimask=imread(FileNameAgriMask);
+
+
+a=apt;   % i think this is all we need to do ... to include panoply triangles
+
 
 
 

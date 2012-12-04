@@ -82,6 +82,7 @@ end
         FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png'];
         FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
         FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
+        FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '.png'];  % panoply triangles
 
         
 
@@ -106,12 +107,24 @@ OutputFig('Force',FileName,NSS.Resolution);
 set(fud.ColorbarHandle,'Visible','off')
 OutputFig('Force',FileNameNCB,NSS.Resolution);
 
+
+
+
 % now the only oceans colormap
 NSS.cmap=ones(size(colormap));
 fud=get(gcf,'userdata')
 set(fud.ColorbarHandle,'Visible','off')
 set(fud.ColorbarHandle,'XTick',[]);
 close
+
+%panoply triangles 
+NSG(ii,'cmap',NSS.cmap*0,'resolution',NSS.Resolution,'panoplytriangles',[1 1])
+fud=get(gcf,'userdata')
+set(fud.ColorbarHandle,'XTick',[]);
+%set(fud.ColorbarHandle,'Visible','off')
+OutputFig('Force',FileNamePT,NSS.Resolution);
+close
+
 
 NSG(1-ii,NSS,'lowercolor','black')
 OutputFig('Force',FileNameOceans,NSS.Resolution);

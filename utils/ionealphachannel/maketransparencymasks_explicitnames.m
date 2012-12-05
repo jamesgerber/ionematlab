@@ -83,6 +83,8 @@ end
         FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
         FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
         FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '.png'];  % panoply triangles
+        FileNamePTL=[iddstring '/misc/mask/OutputMask_PTL_' res '.png'];  % panoply triangles
+        FileNamePTR=[iddstring '/misc/mask/OutputMask_PTR_' res '.png'];  % panoply triangles
 
         
 
@@ -124,6 +126,22 @@ set(fud.ColorbarHandle,'XTick',[]);
 %set(fud.ColorbarHandle,'Visible','off')
 OutputFig('Force',FileNamePT,NSS.Resolution);
 close
+
+% %panoply triangles 
+% NSG(ii,'cmap',NSS.cmap*0,'resolution',NSS.Resolution,'panoplytriangles',[1 0])
+% fud=get(gcf,'userdata')
+% set(fud.ColorbarHandle,'XTick',[]);
+% %set(fud.ColorbarHandle,'Visible','off')
+% OutputFig('Force',FileNamePTL,NSS.Resolution);
+% close
+% 
+% %panoply triangles 
+% NSG(ii,'cmap',NSS.cmap*0,'resolution',NSS.Resolution,'panoplytriangles',[0 1])
+% fud=get(gcf,'userdata')
+% set(fud.ColorbarHandle,'XTick',[]);
+% %set(fud.ColorbarHandle,'Visible','off')
+% OutputFig('Force',FileNamePTR,NSS.Resolution);
+% close
 
 
 NSG(1-ii,NSS,'lowercolor','black')

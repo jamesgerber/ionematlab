@@ -37,7 +37,7 @@ if politunitflag ==1
 end
 
 for IP = IPvec
-    for jCrop=2 %[1 2 3 8];
+    for jCrop=[1 2 3 8];
         jCrop
         switch jCrop
             case 1

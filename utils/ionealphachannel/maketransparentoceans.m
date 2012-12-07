@@ -44,15 +44,15 @@ plotimage=imread(OldFileName);
 KeepText=0;
 if ~ischar(NewFileName)
     TextColor=NewFileName;
-    NewFileName=strrep(OldFileName,'.png','_alpha.png');
-    NewFileName=[makesafestring(NewFileName(1:end-4)) '.png']
+    NewFileName=strrep(OldFileName,'.png','_alpha_to');
+    NewFileName=[makesafestring(NewFileName) '.png']
     NewFileName=fixextension(NewFileName,'.png');
     KeepText=1;
 end
 
 if nargin==1
-    NewFileName=strrep(OldFileName,'.png','_alpha.png');
-    NewFileName=[makesafestring(NewFileName(1:end-3)) '.png']
+    NewFileName=strrep(OldFileName,'.png','_alpha_to');
+    NewFileName=[makesafestring(NewFileName) '.png']
 else
     NewFileName=fixextension(NewFileName,'.png');
 end
@@ -79,11 +79,13 @@ FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '.png'];
 FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png'];
 FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
 FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
+FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '.png'];
 
 a=imread(FileName);
 ancb=imread(FileNameNCB);
 aocean=imread(FileNameOceans);
 aagrimask=imread(FileNameAgriMask);
+apt=imread(FileNamePT);
 
 
 
@@ -98,6 +100,16 @@ b=plotimage;
 ii_colorbar= ~((a(:,:,1) ~=ancb(:,:,1)) | (a(:,:,2) ~=ancb(:,:,2)) | (a(:,:,3) ~=ancb(:,:,3)));
 ii_text= ((a(:,:,1) ~=b(:,:,1)) | (a(:,:,2) ~=b(:,:,2)) | (a(:,:,3) ~=b(:,:,3)))  ...
     & ~ii_foreground & ii_colorbar;
+
+ii_triangles=((a(:,:,1) ~=apt(:,:,1)) | (a(:,:,2) ~=apt(:,:,2)) | (a(:,:,3) ~=apt(:,:,3)));
+%ii_trianglesl=((a(:,:,1) ~=aptl(:,:,1)) | (a(:,:,2) ~=aptl(:,:,2)) | (a(:,:,3) ~=aptl(:,:,3)));
+%ii_trianglesr=((a(:,:,1) ~=aptr(:,:,1)) | (a(:,:,2) ~=aptl(:,:,2)) | (a(:,:,3) ~=aptr(:,:,3)));
+
+%
+ii_keep_triangles=ii_text & ii_triangles;
+
+ii_colorbar=ii_colorbar & ~ii_keep_triangles;
+
 
 ii_ocean=(aocean(:,:,1)==255 & aocean(:,:,2) ==255 & aocean(:,:,3)==255);
 

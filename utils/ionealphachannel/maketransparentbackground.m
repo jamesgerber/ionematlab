@@ -29,7 +29,7 @@ OldFileName=fixextension(OldFileName,'.png');
 plotimage=imread(OldFileName);
 
 if nargin==1
-    NewFileName=strrep(OldFileName,'.png','_alpha.png');
+    NewFileName=strrep(OldFileName,'.png','_alpha_tb.png');
 end
 
 

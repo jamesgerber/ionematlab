@@ -15,15 +15,15 @@ function [FileName,DirName]=YieldGapFunctionFileNames_CropName(FS,OutputDirBase)
 %   FS.PercentileForMaxYield;
 %
 %   Optional Field
-%   FS.DataYear
+%   FS.DataYear  %sometimes best to omit this 
 %
 %  example
-%   FS.ClimateSpaceRev='K';
+%   FS.ClimateSpaceRev='P';
 %   FS.CropNames='maize';
 %   FS.ClimateSpaceN=10;
 %   FS.WetFlag='prec';
-%   FS.PercentileForMaxYield=90;
-%   FS.DataYear=2000;
+%   FS.PercentileForMaxYield=95;
+%  % FS.DataYear=2000;  %sometimes best to omit this line
 %   OutputDirBase=[iddstring '/ClimateBinAnalysis/YieldGap/'];
 %   FileName=YieldGapFunctionFileNames_CropName(FS,OutputDirBase);
 %

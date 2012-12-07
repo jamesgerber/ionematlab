@@ -12,12 +12,12 @@ function maketransparencymasks_explicitnames(res)
 %  This can be called automatically by maketransparentoceans, or you can
 %  call it from the commandline without arguments
 if nargin==0
-   maketransparencymasks_explicitnames('r150');
-   maketransparencymasks_explicitnames('r300');
-   maketransparencymasks_explicitnames('r400');
-   maketransparencymasks_explicitnames('r500');
-   maketransparencymasks_explicitnames('r600');
-  % maketransparencymasks_explicitnames('r1200');
+   maketransparencymasks('r150');
+   maketransparencymasks('r300');
+   maketransparencymasks('r400');
+   maketransparencymasks('r500');
+   maketransparencymasks('r600');
+  % maketransparencymasks('r1200');
    return
 end
 ii=datablank;

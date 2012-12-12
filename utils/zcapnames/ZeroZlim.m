@@ -1,40 +1,11 @@
-function Zerozlim(h,Ymax);
-% ZEROzLIM - sets the z=0 axis to zero.
-% SYNTAX:
-%
-%   Zerozlim(AxisHandle)  - sets the lower z limit to 0 on axis whos handle is
-%                           AxisHandle 
-%
-%   ZeroZlim              - sets the lower z limit to 0 on current axis  (via
-%                           gca command)
-%   
-%   ZeroZlim(Zmax)        - sets the lower z limit to 0 on current axis  (via
-%                           gca command), upper zlimit to Zmax
-%   
-%   
-%   ZeroYlim(Zmin,Zmax)   - sets the lower z limit to Zmin on current axis  (via
-%                           gca command), upper zlimit to Zmax
-%   
-
-% 
-%   James Gerber
-%   Ocean Power Technologies
-
-if nargin==0
-   h=gca;
-else
-    if nargin==2
-        set(gca,'zlim',[h Ymax]);
-        return
-    end
-    if ~ishandle(h) %~strcmp(get(h,'type'),'axes')
-        % warning('this handle is not an axis')
-        %disp('using gca')
-        set(gca,'zlim',[0 h]);
-        return
-    end
+function varargout=helperfunction(varargin)
+% helper function to deal with capitalization issue
+persistent madewarning
+if isempty(madewarning)
+    madewarning=1;
+    disp(['calling ' lower(mfilename) ' (no caps)']);
 end
+[varargout{1:nargout}]=feval(lower(mfilename),varargin{:});
 
-xv=get(h,'zlim');
-set(h,'zlim',xv.*[0 1]);
+
 

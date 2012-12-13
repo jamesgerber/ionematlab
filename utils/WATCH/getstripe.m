@@ -16,7 +16,27 @@ function [mdn,ts]=getstripe(idx,type);
 %
 %    [mdn,ts1]=getstripe(m(1),'rain');
 %    [mdn,ts2]=getstripe(m(1),'snow');
-
+%
+%
+%    % Example 2 : save a bunch of data
+%    useful to run this on malthus
+%
+%    ii=landmasklogical(zeros(720,360));
+%    [outline] = CountryCodetoOutline('IND24');
+%    outline30min=aggregate_rate(outline,6);
+%    outline30min=outline30min>0.5;
+%
+%    m=find(outline30min);
+%
+%    for j=1:length(m)
+%    [mdn,ts1]=getstripe(m(j),'rain');
+%    [mdn,ts2]=getstripe(m(j),'snow');
+%    [mdn,ts3]=getstripe(m(j),'Tair');
+%    DS(j).rain=ts1;
+%    DS(j).snow=ts2;
+%    DS(j).Tair=ts3;
+%    end
+%    save IND24 DS mdn
 if nargin==0
     help(mfilename)
     return

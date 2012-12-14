@@ -11,7 +11,7 @@ function outmap=embedWFDvector(vector);
 
 persistent WFDgrid iivect
 if isempty(WFDgrid)
-    load WFDgrid iivect
+    load WFDindices iivect
 end
 
 

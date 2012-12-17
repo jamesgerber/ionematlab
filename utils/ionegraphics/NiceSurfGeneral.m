@@ -139,10 +139,19 @@ end
 
 arglist=varargin;  %so we can hack this down as we remove arguments
 
+
+
 if nargin==1
     % make sure at least two arguments, for less error checking below
     NSS.PlotArea='World';
     arglist{2}=NSS;
+    % also, if only 1 arg in, we are probably just using this in
+    % exploratory mode.  So, try to guess a title, and put in a 'showui' at
+    % the end.
+    showuiattheend=1;
+else
+    showuiattheend=0;
+    NSS.Title=inputname(1);
 end
 
 
@@ -298,6 +307,9 @@ for j=1:length(a)
 end
 
 if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so as to define OSS
+    if showuiattheend ==1
+        showui
+    end
     return
 end
 
@@ -502,6 +514,9 @@ OS.cmap_final=finemap(cmap,lowermap,uppermap);  %don't change unless change fine
 OS.caxis_final=[(cmin-minstep)  (cmax+minstep)];%don't change unless change caxis call below.
 
 if isequal(plotflag,'off')   %if nargout ~= 0, need to keep going so as to define NSS
+    if showuiattheend ==1
+        showui
+    end
     return
 end
 
@@ -789,6 +804,10 @@ if ~isempty(description) & ~isequal(fastplot,'on')
     a=imread(ActualFileName);
     imwrite(a,ActualFileName,'Description',description);
 end
+
+    if showuiattheend ==1
+        showui
+    end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%

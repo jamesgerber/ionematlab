@@ -1,13 +1,11 @@
-function ShowUI;
-% ShowUI - show uicontrols in the current figure
-%
-%  See Also HideUI
-Hfig=gcf;
-
-h=get(Hfig,'children');
-for j=1:length(h)
-  if isequal( get(h(j),'type'),'uicontrol')
-    set(h(j),'Visib','on');
-  end
+function varargout=helperfunction(varargin)
+% helper function to deal with capitalization issue
+persistent madewarning
+if isempty(madewarning)
+    madewarning=1;
+    disp(['calling ' lower(mfilename) ' (no caps)']);
 end
+[varargout{1:nargout}]=feval(lower(mfilename),varargin{:});
+
+
 

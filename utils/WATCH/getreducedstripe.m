@@ -1,4 +1,4 @@
-function [mdn,ts,stripeno]=getstripe(idx,type);
+function [mdn,ts]=getstripe(idx,type);
 % getstripe
 %
 %   getstripe(index,type)  where
@@ -64,8 +64,8 @@ end
 
 
 if isequal(type,'precip')
-    [md1,ts1]=getstripe(idx,'rain');
-    [md2,ts2]=getstripe(idx,'snow');
+    [md1,ts1]=getreducedstripe(idx,'rain');
+    [md2,ts2]=getreducedstripe(idx,'snow');
     mdn=md1;
     ts=ts1+ts2;
     return
@@ -85,13 +85,13 @@ stripeno=find(iivect==idx);
 
 switch type
     case 'Tair'
-        basedir=[iddstring '/Climate/reanalysis/WATCH/Tair/stripes/'];
+        basedir=[iddstring '/Climate/reanalysis/WATCH_reduced/Tair/stripes/'];
         FileBase='Tair_WFD_pt';
     case 'rain'
-        basedir=[iddstring '/Climate/reanalysis/WATCH/Rainf/stripes/'];
+        basedir=[iddstring '/Climate/reanalysis/WATCH_reduced/Rainf/stripes/'];
         FileBase='rain_pt';
     case 'snow'
-        basedir=[iddstring '/Climate/reanalysis/WATCH/Snowf/stripes/'];
+        basedir=[iddstring '/Climate/reanalysis/WATCH_reduced/Snowf/stripes/'];
         FileBase='snow_pt';
 end
 

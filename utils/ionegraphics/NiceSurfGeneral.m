@@ -144,14 +144,17 @@ arglist=varargin;  %so we can hack this down as we remove arguments
 if nargin==1
     % make sure at least two arguments, for less error checking below
     NSS.PlotArea='World';
-    arglist{2}=NSS;
     % also, if only 1 arg in, we are probably just using this in
     % exploratory mode.  So, try to guess a title, and put in a 'showui' at
     % the end.
     showuiattheend=1;
+    NSS.TitleString=inputname(1);
+    
+    arglist{2}=NSS;
+
+    
 else
     showuiattheend=0;
-    NSS.Title=inputname(1);
 end
 
 

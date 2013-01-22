@@ -174,11 +174,15 @@ else
     % harvested nitrogen
     HarvestedNitrogenPerHA=Yield.*DryFraction*Nfrac*1000;
     
-    %set max Nfix to harvested N
-    if Nfix > HarvestedNitrogenPerHA
-        Nfix = HarvestedNitrogenPerHA
+% %     %set max Nfix to harvested N
+% %     if Nfix > HarvestedNitrogenPerHA
+% %         Nfix = HarvestedNitrogenPerHA
+% %     end
+   
+    jj=find(Nfix > HarvestedNitrogenPerHA);
+    if length(jj) > 0
+        Nfix(jj)=HarvestedNitrogenPerHA(jj);
     end
-    
     % applied nitrogen
     %    if ~isequal(crop,'soybean')
     if newNmapflag == 0

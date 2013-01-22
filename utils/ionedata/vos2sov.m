@@ -5,6 +5,8 @@ function SOV=vos2sov(S)
 % vos2sov(S) - S is a vector of structures.  Returns a structure of vectors
 % with the same length as the length of S, where each vector represents one
 % of the common attributes of S's structures.
+%
+% See also sov2vos
 
 
 a=fieldnames(S)

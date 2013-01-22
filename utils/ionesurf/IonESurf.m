@@ -207,6 +207,7 @@ ZoomToContinent('Initialize');
 PropagateLimits('Initialize');
 OutputFig('Initialize');
 IonEButtonDownFunctions('Initialize');
+PropagateCaxis('Initialize');
 
 
 %% Add Console

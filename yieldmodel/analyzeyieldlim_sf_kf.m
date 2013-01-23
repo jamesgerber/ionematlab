@@ -100,6 +100,9 @@ function [yieldlim, dN, dNquality, dP, dPquality, dK, dKquality, ...
 %              option 2 if you're unsure of what to use!
 %
 
+% round correction value
+rc = .001;
+
 % check input variables
 switch modelnumber
     case 1
@@ -318,8 +321,8 @@ for bin = binlistvector
             % why we really only want the irrroundcorrection on when we're
             % using modeled current yields
             if AYLoptions.irryieldroundcorrection == 1
-                ee = desiredyield_bin >= potyieldbin;
-                desiredyield_bin(ee)=potyieldbin-.001;
+                ee = desiredyield_bin >= potyieldbin-rc;
+                desiredyield_bin(ee)=potyieldbin-rc;%.001;
             end
             
             % create desired ymodnutbin for backcalculting nutrient
@@ -331,8 +334,8 @@ for bin = binlistvector
                 desired_ymodirrbin_kk = (((1-irr_bin(kk)).*yc_rf_bin) ...
                     -desiredyield_bin(kk))./-irr_bin(kk);
                 if AYLoptions.irryieldroundcorrection == 1
-                    bb = desired_ymodirrbin_kk >= potyieldbin;
-                    desired_ymodirrbin_kk(bb)=potyieldbin-.001;
+                    bb = desired_ymodirrbin_kk >= potyieldbin-rc;
+                    desired_ymodirrbin_kk(bb)=potyieldbin-rc;%.001;
                 end
                 rr = ~kk;
                 desired_ymodbin_rr = desiredyield_bin(rr);
@@ -548,14 +551,14 @@ for bin = binlistvector
                 current_ymodirrbin_kk = (((1-irr_bin(kk)).*yc_rf_bin) ...
                     -yield_bin(kk))./-irr_bin(kk);
                 if AYLoptions.irryieldroundcorrection == 1
-                    bb = current_ymodirrbin_kk >= potyieldbin;
-                    current_ymodirrbin_kk(bb)=potyieldbin-.0001;
+                    bb = current_ymodirrbin_kk >= potyieldbin-rc;
+                    current_ymodirrbin_kk(bb)=potyieldbin-rc;%.0001;
                 end
                 rr = ~kk;
                 current_ymodbin_rr = yield_bin(rr);
                 if AYLoptions.irryieldroundcorrection == 1
-                    current_ymodbin_rr(current_ymodbin_rr>potyieldbin) = ...
-                        potyieldbin - .0001;
+                    current_ymodbin_rr(current_ymodbin_rr>(potyieldbin ...
+                        -rc)) = potyieldbin - rc;
                 end
                 
                 % get current effective N rate (since it will only exactly
@@ -849,15 +852,15 @@ for bin = binlistvector
                 current_ymodirrbin_kk = (((1-irr_bin(kk)).*yc_rf_bin) ...
                     -yield_bin(kk))./-irr_bin(kk);
                 if AYLoptions.irryieldroundcorrection == 1
-                    bb = current_ymodirrbin_kk >= potyieldbin;
-                    current_ymodirrbin_kk(bb)=potyieldbin-.0001;
+                    bb = current_ymodirrbin_kk >= potyieldbin-rc;
+                    current_ymodirrbin_kk(bb)=potyieldbin-rc;%.0001;
                 end
                 rr = ~kk;
                 current_ymodbin_rr = yield_bin(rr);
                 % this is new:
                 if AYLoptions.irryieldroundcorrection == 1
-                    current_ymodbin_rr(current_ymodbin_rr>potyieldbin) = ...
-                        potyieldbin - .0001;
+                    current_ymodbin_rr(current_ymodbin_rr> ...
+                        (potyieldbin-rc)) = potyieldbin -rc;% .0001;
                 end
                 
                 %                 current_ymodnutbin = yield_bin;
@@ -894,17 +897,17 @@ for bin = binlistvector
                     case 2 % VL MBM
                         eff_nfertirr_bin_kk = log((1 - ...
                             (current_ymodirrbin_kk ./ potyieldbin)) ./ ...
-                            bnut) ./ -bFitw;
+                            bnut) ./ -bFitw; %irrigated yields, limited by other nuts
                         eff_nfertrfyc_bin = log((1 - (yc_rf_bin ./ ...
-                            potyieldbin)) ./ bnut) ./ -bFitw;
+                            potyieldbin)) ./ bnut) ./ -bFitw; % rf yields
                         eff_nfert_bin_kk = ((1-irr_bin(kk)) .* ...
                             eff_nfertrfyc_bin) + (irr_bin(kk) .* ...
-                            eff_nfertirr_bin_kk);
+                            eff_nfertirr_bin_kk); % combined eff N for grid cells w/ some irr
                         eff_nfert_bin_rr= log((1-(current_ymodbin_rr...
-                            ./ potyieldbin)) ./ bnut) ./ -bFitw;
+                            ./ potyieldbin)) ./ bnut) ./ -bFitw; %eff N rate for rf grid cells
                         eff_nfert_current = nan(length(yield_bin),1);
                         eff_nfert_current(kk) = eff_nfert_bin_kk;
-                        eff_nfert_current(rr) = eff_nfert_bin_rr;
+                        eff_nfert_current(rr) = eff_nfert_bin_rr; % vector for all grid cells
                 end
                 
                 % normalize the effective nitrogen application rate vector
@@ -937,7 +940,7 @@ for bin = binlistvector
                 % if not, run for N/I values to create yield surface
                 catch
                     ymod = nan(101,101);
-                    nlist = 0:2:800;
+                    nlist = 0:2:1200;
                     ilist = 0:.01:1;
                     for n = 1:length(nlist)
                         for i = 1:length(ilist)
@@ -953,13 +956,13 @@ for bin = binlistvector
                     cd ../
                 end
                 
-                %                 % draw surface plot of response
-                %                 mesh(ilist,nlist,ymod)
-                %                 xlabel('proportion of grid cell area irrigated');
-                %                 ylabel('nitrogen application rate (kg/ha)');
-                %                 zlabel([cropname ' yield (t/ha)']);
-                %                 zlim([0 floor(max(max(ymod))+2)])
-                %                 hold on
+                %                                 % draw surface plot of response
+                %                                 mesh(ilist,nlist,ymod)
+                %                                 xlabel('proportion of grid cell area irrigated');
+                %                                 ylabel('nitrogen application rate (kg/ha)');
+                %                                 zlabel([cropname ' yield (t/ha)']);
+                %                                 zlim([0 floor(max(max(ymod))+2)])
+                %                                 hold on
                 
                 % check to make sure the desired yield > the minyield
                 udyb = unique(desiredyield_bin);
@@ -976,11 +979,11 @@ for bin = binlistvector
                     irrplus_bin = nan(length(eff_nfert_current),1);
                     for q = 1:length(eff_nfert_current)
                         
-                        %                     disp(num2str(q))
-                        %                     dy = desiredyield_bin(q);
-                        %                     [contmatrix, conthandle] = contour3(ilist,nlist, ...
-                        %                         ymod,[dy,dy]);
-                        %                     contmatrix = contmatrix(:,2:length(contmatrix(1,:)));
+%                         disp(num2str(q))
+%                         dy = desiredyield_bin(q);
+%                         [contmatrix, conthandle] = contour3(ilist,nlist, ...
+%                             ymod,[dy,dy]);
+%                         contmatrix = contmatrix(:,2:length(contmatrix(1,:)));
                         
                         Ncurrent = eff_nfert_current(q);
                         Icurrent = irr_bin(q);
@@ -1014,8 +1017,8 @@ for bin = binlistvector
                 desired_ymodirrbin_kk = (((1-irrplus_bin(kk)).*yc_rf_bin) ...
                     -desiredyield_bin(kk))./-irrplus_bin(kk);
                 if AYLoptions.irryieldroundcorrection == 1
-                    bb = desired_ymodirrbin_kk >= potyieldbin;
-                    desired_ymodirrbin_kk(bb)=potyieldbin-.0001;
+                    bb = desired_ymodirrbin_kk >= potyieldbin-rc;
+                    desired_ymodirrbin_kk(bb)=potyieldbin-rc;
                 end
                 rr = ~kk;
                 desired_ymodbin_rr = desiredyield_bin(rr);

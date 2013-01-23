@@ -1,5 +1,5 @@
 function [apprate] = getcropfertrate(cropname, nutrient, percentile, ...
-    datamask)
+    datamask, appratemap, areamap)
 
 % function [apprate] = getcropfertrate(cropname, nutrient, percentile, ...
 %    datamask)
@@ -19,16 +19,20 @@ end
 if percentile > 1
     percentile = percentile ./ 100;
 end
-    
-% get fertilizer data
-DS = getfertdata(cropname, nutrient);
-appratemap = DS.Data(:,:,1);
 
-% get area data
-DS = getdata(cropname);
-areamap = DS.Data(:,:,1);
-areamap(areamap > 10) = NaN;
-areamap = areamap .* GetFiveMinGridCellAreas;
+if nargin < 5
+    % get fertilizer data
+    DS = getfertdata(cropname, nutrient);
+    appratemap = DS.Data(:,:,1);
+end
+
+if nargin < 6
+    % get area data
+    DS = getdata(cropname);
+    areamap = DS.Data(:,:,1);
+    areamap(areamap > 10) = NaN;
+    areamap = areamap .* GetFiveMinGridCellAreas;
+end
 
 % identify grid cells to examine
 ii = (datamask == 1) & isfinite(appratemap) & isfinite(areamap);

@@ -16,21 +16,19 @@ if nargin==1
     NewFileName=strrep(OldFileName,'.png','_whiteout.png');
 end
 
-res=callpersonalpreferences('printingres')
-try
-    switch res
-        case '-r150'
-            a=imread([iddstring '/misc/mask/OutputMaskr150.png']);
-        case '-r300'
-            a=imread([iddstring '/misc/mask/OutputMaskr300.png']);
-        case '-r600'
-            a=imread([iddstring '/misc/mask/OutputMaskr600.png']);
-        otherwise
-            error(['don''t know this resolution.'])
-    end
-catch
-    error(['need masks in ' iddstring '/misc/mask/OutputMaskr600.png']);
-end
+a=plotimage;
+
+res=['size' num2str(size(a,1)) '_' num2str(size(a,2))];
+
+
+FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '.png'];
+
+
+%try
+   a=imread(FileName);
+%catch
+%    error(['need masks in ' iddstring '/misc/mask/OutputMaskr600.png']);
+%end
 
 
 

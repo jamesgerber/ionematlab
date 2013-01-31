@@ -7,7 +7,7 @@ function [T,Tmax,redcrop]=GetGDDBaseTemp(crop)
 %
 %   [Tmin,Tmax]=GetGDDBaseTemp('maize')
 
-
+redcrop=crop;
 Tmax='99';
 
 persistent C

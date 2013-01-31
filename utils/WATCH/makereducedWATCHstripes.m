@@ -1,6 +1,6 @@
 function makeralsfjsl
+% makereducedWATCHstripes - make a reduced set of stripes
 
-ii=landmasklogical(zeros(720,360));
 [outline] = CropMaskLogical;
 outline30min=aggregate_rate(outline,6);
 outline30min=outline30min>0;
@@ -9,7 +9,7 @@ mm=find(outline30min);
  
 mdnstart=datenum(1958,1,1,0,0,0);
 length(mm)
-for j=3496:length(mm)
+for j=1:length(mm)
     try
     [mdnlong,ts1,stripeno]=getstripe(mm(j),'rain');
     [mdnlong,ts2,stripeno]=getstripe(mm(j),'snow');

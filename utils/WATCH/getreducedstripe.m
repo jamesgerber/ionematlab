@@ -29,9 +29,9 @@ function [mdn,ts]=getstripe(idx,type);
 %    m=find(outline30min);
 %
 %    for j=1:length(m)
-%    [mdn,ts1]=getstripe(m(j),'rain');
-%    [mdn,ts2]=getstripe(m(j),'snow');
-%    [mdn,ts3]=getstripe(m(j),'Tair');
+%    [mdn,ts1]=getreducedstripe(m(j),'rain');
+%    [mdn,ts2]=getreducedstripe(m(j),'snow');
+%    [mdn,ts3]=getreducedstripe(m(j),'Tair');
 %    DS(j).rain=ts1;
 %    DS(j).snow=ts2;
 %    DS(j).Tair=ts3;

@@ -144,6 +144,8 @@ if skipNcalcsflag == 1
     Area(ii)=0;
     N.Area=Area;
     N.details = 'skipped N';
+    ExtraInfo.ManureDataVersion='na';
+
 else
     
     % nitrogen fixation by legumes

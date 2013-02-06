@@ -31,6 +31,13 @@ a=plotimage;
 
 ii=(a(:,:,1)>=254 & a(:,:,2) >=254 & a(:,:,3)>=254);
 
+
+
+Alpha=(double(255-scaleimage(:,:,1))/255);
+
+imwrite(plotimage,NewFileName,'png','Alpha',double(Alpha));%,'Background',ones(size(Alpha)));
+
+return
 %% here is example code
 
 % paste it in ... the "return" statement above keeps this code from
@@ -105,8 +112,3 @@ OSS=NiceSurfGeneral(P.Data*100, NSS);
 MakeSMMOverlay(OSS,'pasture_layer')
 OSS=NiceSurfGeneral(P.Data*100, NSS,'filename','pasturegray','cmap','revgray');
 MakeSMMOverlay(OSS,'pasture_layer_gray')
-
-
-Alpha=(double(255-scaleimage(:,:,1))/255);
-
-imwrite(plotimage,NewFileName,'png','Alpha',double(Alpha));%,'Background',ones(size(Alpha)));

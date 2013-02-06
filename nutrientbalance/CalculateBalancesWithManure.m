@@ -1,8 +1,8 @@
-function [C,N,P]=CalculateBalancesWithManure(crop,varargin)
+function [C,N,P,ExtraInfo]=CalculateBalancesWithManure(crop,varargin)
 % CalculateBalances -
 %
 % SYNTAX
-%     [C,N,P]=CalculateBalancesWithManure(CROPNAME, optionalargs) will
+%     [C,N,P,ExtraInfo]=CalculateBalancesWithManure(CROPNAME, optionalargs) will
 %     return structure C,N,P
 %
 %     optional arguments include:
@@ -14,7 +14,7 @@ function [C,N,P]=CalculateBalancesWithManure(crop,varargin)
 %
 %  Example
 %   crop='maize'
-%   [C,N,P]=CalculateBalances(crop)
+%   [C,N,P,ExtraInfo]=CalculateBalances(crop)
 %   NSS.cmap='nathangreenscale2';
 %   NSS.coloraxis=[0 250];
 %   NSS.TitleString =['applied nitrogen (' crop ')']
@@ -30,7 +30,7 @@ function [C,N,P]=CalculateBalancesWithManure(crop,varargin)
 %    NSS.FileName=['Excess Nitrogen ' crop '']
 %    NiceSurfGeneral(N.ExcessNitrogenPerHA,NSS);
 
-persistent D NDS Ndep
+persistent D NDS Ndep ExtraInfo
 
 FixMethod='linear';
 P2O5toPconv = 0.4366; %(31/(31+2.5*16)), 31=atomic mass P, 16 atomic mass O
@@ -64,6 +64,11 @@ for n = 1:length(varargin)
     end
 end
    
+[RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo(mfilename);
+ExtraInfo.SubversionRevNo=RevNo;
+ExtraInfo.SubversionLCRevNo=LCRevNo;
+ExtraInfo.SubversionLCRevString=LCRevString;
+
 
 if isempty(D)
     D=ReadGenericCSV([adstring 'croptype_NPK.csv'],2);
@@ -81,6 +86,9 @@ if isempty(D)
     
     Ndep=Ndep.*correctionfactor;
 end
+
+ExtraInfo.NDepNotes='data from NOyTDEP_S1_5min.nc';
+
 
 cropnames=D.CROPNAME;
 
@@ -211,9 +219,14 @@ else
     x=DS.Data(:,:,1);
     x(~isfinite(x))=0;
     x(x>9e9)=0;
+  %  x=x*0;
+  %  warning('just added line 214 which breaks calculate balances with manure')
     AppliedNitrogenPerHA=AppliedNitrogenPerHA+x;
     Nmanure=x;
     % end of add manure Nitrogen section
+    
+    
+    ExtraInfo.ManureDataVersion=DS.dataversion;
     
     %%
     ExcessNitrogenPerHA=Ndep+AppliedNitrogenPerHA-HarvestedNitrogenPerHA + Nfix;

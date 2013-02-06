@@ -1,4 +1,4 @@
-function [Long,Lat,FiveMinGridCellAreas]=GetFiveMinGridCellAreas(indices);
+function [Long,Lat,FiveMinGridCellAreasout]=GetFiveMinGridCellAreas(indices);
 % GetFiveMinGridCellAreas determine area in centered grids that are 5min x 5min
 %
 %  Syntax
@@ -14,21 +14,28 @@ function [Long,Lat,FiveMinGridCellAreas]=GetFiveMinGridCellAreas(indices);
 %   assumes a perfectly spherical earth of radius 6371km, which is mean
 %   radius of earth
 
+persistent FiveMinGridCellAreas
 
-tmp=linspace(-1,1,2*4320+1);
-Long=180*tmp(2:2:end).';
-tmp=linspace(-1,1,2*2160+1);
-Lat=-90*tmp(2:2:end).';
-%EarthCircumference=40075;
-% EarthCircumference=40024;
-EarthCircumference=6371*2*pi;  %source: wikipedia
+if isempty(FiveMinGridCellAreas);
+    
+    
+    
+    tmp=linspace(-1,1,2*4320+1);
+    Long=180*tmp(2:2:end).';
+    tmp=linspace(-1,1,2*2160+1);
+    Lat=-90*tmp(2:2:end).';
+    %EarthCircumference=40075;
+    % EarthCircumference=40024;
+    EarthCircumference=6371*2*pi;  %source: wikipedia
+    
+    
+    
+    FiveMinGridAreaAtEquator=EarthCircumference.^2*(1/360/12)^2*1e2; %1e2 is sq km to ha
+    %
+    FiveMinGridCellAreasha=FiveMinGridAreaAtEquator*ones(size(Long))*cosd(Lat.');
+    FiveMinGridCellAreas=FiveMinGridCellAreasha;
 
-
-
-FiveMinGridAreaAtEquator=EarthCircumference.^2*(1/360/12)^2*1e2; %1e2 is sq km to ha
-%
-FiveMinGridCellAreasha=FiveMinGridAreaAtEquator*ones(size(Long))*cosd(Lat.');
-FiveMinGridCellAreas=FiveMinGridCellAreasha;
+end
 
 
 if nargout==1
@@ -39,5 +46,5 @@ end
 if nargout==1 & nargin==1
     Long=FiveMinGridCellAreas(indices);
 end
-
+FiveMinGridCellAreasout=FiveMinGridCellAreas;
 return

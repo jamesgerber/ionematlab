@@ -202,6 +202,8 @@ else
             C=-1;
             N.ExcessNitrogenPerHA_x_Area=NaN;
             P.ExcessPhosphorusPerHA_x_Area=NaN;
+            ExtraInfo.ManureDataVersion='na';
+
             return
         end
         AppliedNitrogenPerHA=x.DS.Data(:,:,1);

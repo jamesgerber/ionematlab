@@ -30,7 +30,7 @@ function [C,N,P,ExtraInfo]=CalculateBalancesWithManure(crop,varargin)
 %    NSS.FileName=['Excess Nitrogen ' crop '']
 %    NiceSurfGeneral(N.ExcessNitrogenPerHA,NSS);
 
-persistent D NDS Ndep ExtraInfo
+persistent D NDS Ndep
 
 FixMethod='linear';
 P2O5toPconv = 0.4366; %(31/(31+2.5*16)), 31=atomic mass P, 16 atomic mass O

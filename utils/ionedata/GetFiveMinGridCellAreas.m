@@ -1,4 +1,4 @@
-function [Long,Lat,FiveMinGridCellAreasout]=GetFiveMinGridCellAreas(indices);
+function [Longout,Latout,FiveMinGridCellAreasout]=GetFiveMinGridCellAreas(indices);
 % GetFiveMinGridCellAreas determine area in centered grids that are 5min x 5min
 %
 %  Syntax
@@ -14,7 +14,7 @@ function [Long,Lat,FiveMinGridCellAreasout]=GetFiveMinGridCellAreas(indices);
 %   assumes a perfectly spherical earth of radius 6371km, which is mean
 %   radius of earth
 
-persistent FiveMinGridCellAreas
+persistent FiveMinGridCellAreas Long Lat
 
 if isempty(FiveMinGridCellAreas);
     
@@ -36,15 +36,16 @@ if isempty(FiveMinGridCellAreas);
     FiveMinGridCellAreas=FiveMinGridCellAreasha;
 
 end
-
+Longout=Long;
+Latout=Lat;
 
 if nargout==1
-    Long=FiveMinGridCellAreas;
+    Longout=FiveMinGridCellAreas;
 end
 
 
 if nargout==1 & nargin==1
-    Long=FiveMinGridCellAreas(indices);
+    Longout=FiveMinGridCellAreas(indices);
 end
 FiveMinGridCellAreasout=FiveMinGridCellAreas;
 return

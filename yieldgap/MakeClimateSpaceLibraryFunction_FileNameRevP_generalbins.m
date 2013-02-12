@@ -65,7 +65,7 @@ for N=Nspace;
             
             
             
-            disp(['Working on ' cropname ' for ' int2str(DataYear)]);
+      %      disp(['Working on ' cropname ' for ' int2str(DataYear)]);
             
             
             %% read in crop netCDF file, extract area fraction.
@@ -154,13 +154,16 @@ for N=Nspace;
                 
                 
                 
-                
+            
             if skipthisfile==1
-                im=ismalthus;
                 disp(['Already have ' FileName '.mat'])
-                save([FileName],'FileName','im');
                 
             else
+                disp(['Working on '  FileName '.mat'])
+                im=ismalthus;
+                
+                save([FileName],'FileName','im');
+                
                 
                 [Long,Lat,Heat]=OpenNetCDF([GDDBaseDir ...
                     HeatFlag GDDTempstr '.nc']);

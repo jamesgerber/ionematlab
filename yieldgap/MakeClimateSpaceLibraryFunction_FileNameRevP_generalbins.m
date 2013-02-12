@@ -84,28 +84,28 @@ for N=Nspace;
             
             switch jwf
                 case 1
-                    WetFlag='prec_on_gdd'
+                    WetFlag='prec_on_gdd';
                 case 2
-                    WetFlag='prec'
+                    WetFlag='prec';
                 case 3
-                    WetFlag='aei'
+                    WetFlag='aei';
                 case 4
-                    WetFlag='TMI'
+                    WetFlag='TMI';
                 case 5
-                    WetFlag='AI'
+                    WetFlag='AI';
             end
             
             
             switch jhf
                 case 1
-                    HeatFlag='GDD'
+                    HeatFlag='GDD';
                 case 2
-                    HeatFlag='GSL'
+                    HeatFlag='GSL';
             end
             
             
             % introduce variable for cropname to go into filename
-            [Tdum,Tmaxdum,redcrop]=GetGDDBaseTemp(cropname)
+            [Tdum,Tmaxdum,redcrop]=GetGDDBaseTemp(cropname);
            
             if DataYear==2000
                 FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
@@ -128,11 +128,40 @@ for N=Nspace;
             end
             
             
+            skipthisfile=0;
+            
+            
+            
             
             if exist([FileName '.mat'])==2
+                
+                a=dir([FileName '.mat'])
+                
+                % if file is very small and file is more than 10 minutes
+                % old, overwrite.
+                
+                
+                if a.bytes < 1000  &  ((now-a.datenum) > 10/(24*60))
+                
+                    warning([' overwriting ' FileName '.mat'])
+                
+                    skipthisfile=0;
+                else
+                    % no
+                    skipthisfile=1;
+                end
+            end 
+                
+                
+                
+                
+            if skipthisfile==1
+                im=ismalthus;
                 disp(['Already have ' FileName '.mat'])
-                save([FileName '.mat'],'FileName');
+                save([FileName],'FileName','im');
+                
             else
+                
                 [Long,Lat,Heat]=OpenNetCDF([GDDBaseDir ...
                     HeatFlag GDDTempstr '.nc']);
                 

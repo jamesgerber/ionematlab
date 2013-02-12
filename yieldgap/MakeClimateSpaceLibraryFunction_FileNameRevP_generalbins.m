@@ -52,7 +52,7 @@ end
 for N=Nspace;
     for jcrop=1:length(CropNames);
         for   jwf=[2];
-            jhf=1
+            jhf=1;
             
             cropname=char(CropNames(jcrop));
             
@@ -65,7 +65,7 @@ for N=Nspace;
             
             
             
-      %      disp(['Working on ' cropname ' for ' int2str(DataYear)]);
+            %      disp(['Working on ' cropname ' for ' int2str(DataYear)]);
             
             
             %% read in crop netCDF file, extract area fraction.
@@ -106,7 +106,7 @@ for N=Nspace;
             
             % introduce variable for cropname to go into filename
             [Tdum,Tmaxdum,redcrop]=GetGDDBaseTemp(cropname);
-           
+            
             if DataYear==2000
                 FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
@@ -135,25 +135,25 @@ for N=Nspace;
             
             if exist([FileName '.mat'])==2
                 
-                a=dir([FileName '.mat'])
+                a=dir([FileName '.mat']);
                 
                 % if file is very small and file is more than 10 minutes
                 % old, overwrite.
                 
                 
                 if a.bytes < 1000  &  ((now-a.datenum) > 10/(24*60))
-                
+                    
                     warning([' overwriting ' FileName '.mat'])
-                
+                    
                     skipthisfile=0;
                 else
                     % no
                     skipthisfile=1;
                 end
-            end 
-                
-                
-                
+            end
+            
+            
+            
             
             if skipthisfile==1
                 disp(['Already have ' FileName '.mat'])
@@ -249,17 +249,17 @@ for N=Nspace;
                 %%
                 %Now can make a plot
                 if makeplots==1
-                MultiBoxPlotInClimateSpace(CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,InsideContourLogical);
+                    MultiBoxPlotInClimateSpace(CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,InsideContourLogical);
                 end
                 %%
                 save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...
                     'PercentToDrop','WetFlag','HeatFlag','CultivatedArea',...
                     'CDS','InsideContourLogical','GDDTempstr','ContourMask','xbins','ybins',...
                     'ContourStructure');
-           %     DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
-           %     WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
-           %     S=OpenNetCDF([FileName '.nc']);
-   %             dos(['gzip  ' FileName '.nc']);
+                %     DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
+                %     WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
+                %     S=OpenNetCDF([FileName '.nc']);
+                %             dos(['gzip  ' FileName '.nc']);
             end
             close all
         end

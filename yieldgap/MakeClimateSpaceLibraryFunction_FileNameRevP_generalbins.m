@@ -131,7 +131,7 @@ for N=Nspace;
             
             if exist([FileName '.mat'])==2
                 disp(['Already have ' FileName '.mat'])
-                save([FileName '.mat'],cropname);
+                save([FileName '.mat'],'FileName');
             else
                 [Long,Lat,Heat]=OpenNetCDF([GDDBaseDir ...
                     HeatFlag GDDTempstr '.nc']);

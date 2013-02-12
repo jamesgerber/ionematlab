@@ -24,7 +24,7 @@ function MakeClimateSpaceLibraryFunctionRevP(FlagStructure)
 %  have the base bins be the bins defined for maize
 
 
-
+makeplots=0;
 Rev='P';
 
 CropNames={'maize','wheat'};
@@ -215,9 +215,9 @@ for N=Nspace;
                 
                 %%
                 %Now can make a plot
-                
+                if makeplots==1
                 MultiBoxPlotInClimateSpace(CDS,CultivatedArea,Heat,Prec,cropname,Rev,WetFlag,InsideContourLogical);
-                
+                end
                 %%
                 save(FileName,'BinMatrix','ClimateDefs','Prec','GDD',...
                     'PercentToDrop','WetFlag','HeatFlag','CultivatedArea',...

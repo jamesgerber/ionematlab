@@ -131,6 +131,7 @@ for N=Nspace;
             
             if exist([FileName '.mat'])==2
                 disp(['Already have ' FileName '.mat'])
+                save([FileName '.mat'],FileName);
             else
                 [Long,Lat,Heat]=OpenNetCDF([GDDBaseDir ...
                     HeatFlag GDDTempstr '.nc']);
@@ -223,9 +224,9 @@ for N=Nspace;
                     'PercentToDrop','WetFlag','HeatFlag','CultivatedArea',...
                     'CDS','InsideContourLogical','GDDTempstr','ContourMask','xbins','ybins',...
                     'ContourStructure');
-                DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
-                WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
-                S=OpenNetCDF([FileName '.nc']);
+           %     DAS.Description=['Climate Space Library, Revision ' Rev '. ' datestr(now)];
+           %     WriteNetCDF(Long,Lat,single(BinMatrix),'ClimateMask',[FileName '.nc'],DAS);
+           %     S=OpenNetCDF([FileName '.nc']);
    %             dos(['gzip  ' FileName '.nc']);
             end
             close all

@@ -1,4 +1,4 @@
-function scaledalphacolorbar(cmap,newfilename,range);
+function scaledalphacolorbar(cmap,graymap,newfilename,range);
 % scaledalphacolorbar
 
 newfilename='newlegend.png';

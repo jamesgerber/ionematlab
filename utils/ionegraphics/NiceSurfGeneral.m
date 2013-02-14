@@ -170,11 +170,25 @@ end
 %take care of the cases where first argin is a vector.
 
 if min(size(arglist{1}))==1
-    Long=arglist{1};
-    Lat=arglist{2};
-    arglist=arglist(3:end);
+    switch numel(arglist{1})
+        case 3237023
+            % landmasklogical
+            x=datablank(NaN);
+            x(landmasklogical)=arglist{1};
+            
+            arglist{1}=x;
+        case 920953
+            %cropmasklogical
+            x=datablank(NaN);
+            x(cropmasklogical)=arglist{1};
+            arglist{1}=x;
+        otherwise
+            %assume long/lat
+            Long=arglist{1};
+            Lat=arglist{2};
+            arglist=arglist(3:end);
+    end
 end
-
 
 % now resolve for data to be a structure or a matrix
 Data=arglist{1};

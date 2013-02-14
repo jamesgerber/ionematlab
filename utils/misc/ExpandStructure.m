@@ -1,4 +1,4 @@
-function ExpandStructure(a)
+function list=ExpandStructure(a)
 % EXPANDSTRUCTURE - put all fields in a structure (or vector of structures) into workspace
 %
 % SYNTAX

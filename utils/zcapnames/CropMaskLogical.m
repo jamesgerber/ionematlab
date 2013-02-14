@@ -1,26 +1,11 @@
-function LogicalVector=CropMaskLogical;
-% CROPMASKLOGICAL -  logical array of standard (5 min) landmask
-
-persistent CropLandMaskVector
-
-if isempty(CropLandMaskVector)
-    SystemGlobals
-    [Long,Lat,Crop]=OpenNetCDF([iddstring '/Crops2000/Cropland2000_5min.nc']);
-  %  AllIndices=1:numel(Crop);
-    CropLandMaskVector=(Crop>0 & Crop < 1e10 & DataMaskLogical);
+function varargout=helperfunction(varargin)
+% helper function to deal with capitalization issue
+persistent madewarning
+if isempty(madewarning)
+    madewarning=1;
+    disp(['calling ' lower(mfilename) ' (no caps)']);
 end
-LogicalVector=CropLandMaskVector;
+[varargout{1:nargout}]=feval(lower(mfilename),varargin{:});
 
 
 
-% function LogicalVector=CropMaskLogical;
-% % CROPMASKLOGICAL -  logical array of standard (5 min) landmask
-% 
-% persistent CropLandMaskVector
-% 
-% if isempty(CropLandMaskVector)
-%     SystemGlobals
-%     [Long,Lat,Data]=OpenNetCDF(LANDMASK_5MIN);
-%     CropLandMaskVector=(Data==3)|(Data==7)|(Data>8);
-% end
-% LogicalVector=CropLandMaskVector;

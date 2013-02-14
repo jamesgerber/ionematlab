@@ -1,21 +1,11 @@
-function OS=NSGfast(varargin);
-% NICESURFGENERALfast / NSGfast
-%
-%  calls NiceSurfGeneral after reducing data
-%
-%  See also NiceSurfGeneral
-
-if nargin==0
-    help('NiceSurfGeneral')
-    return
+function varargout=helperfunction(varargin)
+% helper function to deal with capitalization issue
+persistent madewarning
+if isempty(madewarning)
+    madewarning=1;
+    disp(['calling ' lower(mfilename) ' (no caps)']);
 end
-Data=varargin{1};
+[varargout{1:nargout}]=feval(lower(mfilename),varargin{:});
 
-%RedData=Data(1:6:end,1:6:end);
 
-if length(varargin)==1;
-    OS=NiceSurfGeneral(Data,'fastplot','halfdegree');
-else
-    OS=NiceSurfGeneral(Data,varargin{2:end},'fastplot','halfdegree');
-end
 

@@ -286,7 +286,7 @@ end
 
 
 if OutputBinDQ==1
-    fid=fopen([BinDQFileName '_' cropname '.csv'],'w');
+    fid=fopen([BinDQFileName '_' cropname '.csv'],'a');
 end
 
 

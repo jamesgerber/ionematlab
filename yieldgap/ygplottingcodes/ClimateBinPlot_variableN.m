@@ -1,4 +1,4 @@
-function colors=ClimateBinPlot_variableN(BinMatrix,NSS,suppressbox)
+function colors=ClimateBinPlot_variableN(BinMatrix,NSS,CBPS)
 %ClimateBinPlot_variableN(BinMatrix,NSS)
 %
 %  colors=ClimateBinPlot_variableN(BinMatrix,NSS,suppressbox)
@@ -7,22 +7,45 @@ function colors=ClimateBinPlot_variableN(BinMatrix,NSS,suppressbox)
 %  transparency.
 %
 %   colors is a structure with the rgbmaps of the patches
+%
+%  CBPS has fields:
+%             suppressbox (default 0)
+%             titlestring  (default 'Climate Zones.')
+%             cmapname (default 'jet')
+%             xtext    (default ' GDD ')
+%             ytext    (default ' prec')
+
 
 
 a=BinMatrix;
 a(a==0)=NaN;
 
 
-if nargin==1
-    
-    NSS.TitleString='Climate Zones.';
+
+suppressbox=0;
+titlestring='Climate Zones.';
+cmapname='jet';
+xtext='  GDD  ';
+ytext='  precipitation  ';
+
+if nargin >2
+    expandstructure(CBPS);
 end
+   
+
+NSS.TitleString=titlestring;
+
+
 %NiceSurfGeneral(BinMatrix,NSS)
 
 
-if nargin<3
-    suppressbox=0;
-end
+
+
+
+
+
+
+
 
 N=sqrt(length(unique(BinMatrix))-1)
 
@@ -34,7 +57,7 @@ N=sqrt(length(unique(BinMatrix))-1)
 newmap=[];
 linearcmap=finemap('red_yellow_blue_deep','','');
 linearcmap=finemap('revkbbluered','','');
-linearcmap=finemap('jet','','');
+linearcmap=finemap(cmapname,'','');
 
 s=round(linspace(1,length(linearcmap),N))
 
@@ -62,6 +85,7 @@ newmap=finemap(newmap,'','');
 
 NSS.coloraxis=[1 N^2];
 NSS.cmap=newmap;
+NSS.cbarvisible='off';
 
 %NSS.uppermap='white';
 %NSS.units='dry/cold to warm/wet';
@@ -98,9 +122,9 @@ if suppressbox==0
     ZeroYlim(0,N+1);
     
     set(gca,'visib','off')
-    hx=text(N/2+1,0.06125,'  GDD  ');
+    hx=text(N/2+1,0.06125,xtext);
     set(hx,'FontSize',12,'HorizontalAlignment','Center');
-    hy=text(0.06125,N/2+1,'  precipitation  ');
+    hy=text(0.06125,N/2+1,ytext);
     set(hy,'FontSize',12,'HorizontalAlignment','Center','Rotation',90);
     
     if suppressbox==1
@@ -133,9 +157,9 @@ ZeroYlim(0,N+1);
 set(gca,'visib','off')
 if suppressbox==0
     
-    hx=text(N/2+1,0.06125,'  GDD  ');
+    hx=text(N/2+1,0.06125,xtext);
     set(hx,'FontSize',30,'HorizontalAlignment','Center');
-    hy=text(0.06125,N/2+1,'  precipitation  ');
+    hy=text(0.06125,N/2+1,ytext);
     set(hy,'FontSize',30,'HorizontalAlignment','Center','Rotation',90);
 else
     disp('not putting x y labels on stand-alone legend because suppressbox=1')

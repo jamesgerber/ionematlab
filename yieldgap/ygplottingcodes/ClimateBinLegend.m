@@ -1,4 +1,33 @@
-function Cbl(CDS,colors,titlestring);
+function ClimateBinLegend(CDS,colors,BinMatrix,CBPS);
+% ClimateBinLegend - make a climate bin legend which is appropriately
+% spaced
+%
+%  ClimateBinLegend(CDS,colors,BinMatrix,CBPS);
+%
+%  CBPS has fields:
+%             suppressbox (default 0)
+%             titlestring  (default 'Climate Zones.')
+%             cmapname (default 'jget')
+%             xtext    (default ' GDD ')
+%             ytext    (default ' prec')
+
+
+
+a=BinMatrix;
+a(a==0)=NaN;
+
+
+
+suppressbox=0;
+titlestring='Climate Zones.';
+cmapname='jet';
+xtext='  GDD  ';
+ytext='  precipitation  ';
+
+if nargin >3
+    expandstructure(CBPS);
+end
+
 
 N=sqrt(length(CDS));
 
@@ -45,6 +74,6 @@ for j=1:N
         
     end
 end
-xlabel('GDD')
-ylabel('Precip')
+xlabel(xtext)
+ylabel(ytext)
 title(titlestring)

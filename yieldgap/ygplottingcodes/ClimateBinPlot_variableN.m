@@ -47,7 +47,7 @@ NSS.TitleString=titlestring;
 
 
 
-N=sqrt(length(unique(BinMatrix))-1)
+N=ceil(sqrt(length(unique(BinMatrix))-1))
 
 
 

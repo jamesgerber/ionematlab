@@ -39,6 +39,11 @@ function varargout=StandardCountryNames(Input,NameForm,OutputForm);
 %      NameStructure=StandardCountryNames;  Will return a structure with
 %      vectors of all country names and codes, suitable for looping.
 %
+%     names=StandardCountryNames;
+%     [names.ordering names.GADM_NAME_ENGLISH];
+%
+%     namestruct=sov2vos(names)
+%
 
 if nargin==0 & nargout==0
     help(mfilename)
@@ -75,6 +80,11 @@ if nargin==0 & nargout==1
     NS.GADM_ISO=GADM_ISO;
     NS.GADM_NAME_ISO=GADM_NAME_ISO;
     NS.GADM_NAME_FAO=GADM_NAME_FAO;
+    
+    for j=1:length(Sage3);
+    ordering{j}=num2str(j);
+    end
+    NS.ordering=ordering';
     varargout{1}=NS;
     return
 end

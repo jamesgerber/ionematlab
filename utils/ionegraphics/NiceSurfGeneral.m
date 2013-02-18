@@ -69,6 +69,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.categorical='off';
 %   NSS.categoryranges={};
 %   NSS.categoryvalues={};
+%   NSS.separatecatlegend='no';
 %   NSS.DataCutoff=9e9;
 %   NSS.MakePlotDataFile='off';
 %   NSS.NewPlotAreaMethod='0'
@@ -101,6 +102,7 @@ function OS=NiceSurfGeneral(varargin);
 %
 %   NiceSurfGeneral(Yield,NSS)
 %
+%   NSS.cbarvisible='off';
 %
 %   Example:
 %
@@ -116,6 +118,7 @@ function OS=NiceSurfGeneral(varargin);
 %  %or%
 %   NSS.categoryvalues={'[0 4]','[4 6]','[6 8]','[8 20]'}  
 %   NSS.cmap='revsummer'
+%      NSS.separatecatlegend='yes';
 %   NiceSurfGeneral(Yield,NSS);
 %
 %   Syntax for getting coloraxis.
@@ -244,7 +247,7 @@ ListOfProperties={
     'units','titlestring','filename','cmap','longlatbox','plotarea', ...
     'logicalinclude','coloraxis','displaynotes','description',...
     'uppermap','lowermap','colorbarpercent','colorbarfinalplus',...
-    'colorbarminus','resolution','longlatlines',...
+    'colorbarminus','resolution','longlatlines','separatecatlegend'...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
     'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
@@ -269,6 +272,7 @@ projection='';  %empty is default
 newplotareamethod=1;
 statewidth=.1;
 datacutoff=9e9;
+separatecatlegend='no';
 
 % new Joanne colors - now set in personalpreferencestemplate
 % lowermap=[0.835294118 0.894117647 0.960784314];
@@ -765,21 +769,59 @@ HideUI
 
 
 
-
-if strcmp(categorical,'on')
-    bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
-    legh=legend(bb,categoryvalues,3);
-    hlegt=get(legh,'title');
-    set(hlegt,'string',units);
-    set(bb,'Visi','off')
-    set(legh,'position',[0.4362 0.1938 0.3188 0.1865])
-end
-
 %% did user want to print?
 
 if isequal(filename,'on')
     filename=titlestring;
 end
+
+
+if strcmp(categorical,'on')
+    
+    if strcmp(separatecatlegend,'yes')
+        %% This code kind of works ... it gets the colors wrong though.
+        Hfig=gcf;
+   %     colors=colormap;
+   %     Hlegendfig=figure;
+   %     colormap(colors);
+        bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+        legh=legend(bb,categoryvalues,3);
+        hlegt=get(legh,'title');
+        set(hlegt,'string',units);
+        set(bb,'Visi','off')
+        set(gca,'Visible','off','Position',[.13 .11 .25 .25])
+        set(Hlegendfig,'position',[442   857   160   120])
+        if ~isempty(filename)
+            OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+        end
+        figure(Hfig);
+
+% %  %try this crazy method:  make the thing the same way as below, but then
+% %  %reassign.
+% %  
+% %  bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+% %         legh=legend(bb,categoryvalues,3);
+% %         hlegt=get(legh,'title');
+% %         set(hlegt,'string',units);
+% %         set(bb,'Visi','off')
+% %         set(legh,'position',[0.4362 0.1938 0.3188 0.1865])
+% %         set(legh,'position',[.13 .11 .25 .25])
+% %         set(gca,'Visible','off','Position',[.13 .11 .25 .25])
+% %         set(Hlegendfig,'position',[442   857   160   120])
+% %         set(legh,'parent',Hlegendfig);
+% %         
+
+    else
+        
+        bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+        legh=legend(bb,categoryvalues,3);
+        hlegt=get(legh,'title');
+        set(hlegt,'string',units);
+        set(bb,'Visi','off')
+        set(legh,'position',[0.4362 0.1938 0.3188 0.1865])
+    end
+end
+
 
 
 

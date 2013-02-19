@@ -779,13 +779,13 @@ end
 if strcmp(categorical,'on')
     
     if strcmp(separatecatlegend,'yes')
-        %% This code kind of works ... it gets the colors wrong though.
         Hfig=gcf;
-   %     colors=colormap;
-   %     Hlegendfig=figure;
-   %     colormap(colors);
+        Hlegendfig=figure;
         bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
-        legh=legend(bb,categoryvalues,3);
+        colormap(OS.cmap_final(2:end-1,:));  
+        %need to skip first/last value because those are the ocean/no data colors
+        
+        legh=legend(bb,categoryvalues,3);      
         hlegt=get(legh,'title');
         set(hlegt,'string',units);
         set(bb,'Visi','off')
@@ -794,22 +794,7 @@ if strcmp(categorical,'on')
         if ~isempty(filename)
             OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
         end
-        figure(Hfig);
-
-% %  %try this crazy method:  make the thing the same way as below, but then
-% %  %reassign.
-% %  
-% %  bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
-% %         legh=legend(bb,categoryvalues,3);
-% %         hlegt=get(legh,'title');
-% %         set(hlegt,'string',units);
-% %         set(bb,'Visi','off')
-% %         set(legh,'position',[0.4362 0.1938 0.3188 0.1865])
-% %         set(legh,'position',[.13 .11 .25 .25])
-% %         set(gca,'Visible','off','Position',[.13 .11 .25 .25])
-% %         set(Hlegendfig,'position',[442   857   160   120])
-% %         set(legh,'parent',Hlegendfig);
-% %         
+        figure(Hfig);  % make previous figure current.
 
     else
         

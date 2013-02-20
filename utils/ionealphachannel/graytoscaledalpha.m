@@ -29,7 +29,7 @@ scaleimage=imread(ScaleFileName);
 
 a=plotimage;
 
-ii=(a(:,:,1)>=254 & a(:,:,2) >=254 & a(:,:,3)>=254);
+%%ii=(a(:,:,1)>=254 & a(:,:,2) >=254 & a(:,:,3)>=254);
 
 
 

@@ -33,7 +33,7 @@ if nargin<4
 end
 
 if nargin==1
-    NewFileName=strrep(OldFileName,'.png','_alpha.png');
+    NewFileName=strrep(OldFileName,'.png','_alpha_to_na.png');
 end
 
 
@@ -44,15 +44,16 @@ plotimage=imread(OldFileName);
 KeepText=0;
 if ~ischar(NewFileName)
     TextColor=NewFileName;
-    NewFileName=strrep(OldFileName,'.png','_alpha_to');
+    NewFileName=strrep(OldFileName,'.png','_alpha_to_na');
     NewFileName=[makesafestring(NewFileName) '.png']
     NewFileName=fixextension(NewFileName,'.png');
     KeepText=1;
 end
 
-if nargin==1
-    NewFileName=strrep(OldFileName,'.png','_alpha_to');
-    NewFileName=[makesafestring(NewFileName) '.png']
+if nargin==1 | isempty(NewFileName)
+    NewFileName=strrep(OldFileName,'.png','_alpha_to_na');
+    NewFileName=fixextension(NewFileName,'.png');
+ %   NewFileName=[makesafestring(NewFileName) '.png']
 else
     NewFileName=fixextension(NewFileName,'.png');
 end

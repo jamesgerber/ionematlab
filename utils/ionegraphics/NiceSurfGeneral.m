@@ -816,7 +816,7 @@ OS.cmap=cmap;
 
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
-
+    OS.ActualFileName=ActualFileName;
     FN=fixextension(ActualFileName,'.png')
     %save to disk
     if isequal(makeplotdatafile,'yes') | isequal(makeplotdatafile,'on')

@@ -50,9 +50,10 @@ if ~ischar(NewFileName)
     KeepText=1;
 end
 
-if nargin==1
+if nargin==1 | isempty(NewFileName)
     NewFileName=strrep(OldFileName,'.png','_alpha_to');
-    NewFileName=[makesafestring(NewFileName) '.png']
+    NewFileName=fixextension(NewFileName,'.png');
+ %   NewFileName=[makesafestring(NewFileName) '.png']
 else
     NewFileName=fixextension(NewFileName,'.png');
 end

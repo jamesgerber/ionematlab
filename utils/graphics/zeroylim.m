@@ -1,14 +1,14 @@
-function Zerozlim(h,Ymax);
-% ZEROzLIM - sets the z=0 axis to zero.
+function Zeroylim(h,Ymax);
+% ZEROYLIM - sets the z=0 axis to zero.
 % SYNTAX:
 %
-%   Zerozlim(AxisHandle)  - sets the lower z limit to 0 on axis whos handle is
+%   Zeroylim(AxisHandle)  - sets the lower z limit to 0 on axis whos handle is
 %                           AxisHandle 
 %
-%   ZeroZlim              - sets the lower z limit to 0 on current axis  (via
+%   Zeroylim              - sets the lower z limit to 0 on current axis  (via
 %                           gca command)
 %   
-%   ZeroZlim(Zmax)        - sets the lower z limit to 0 on current axis  (via
+%   Zeroylim(Zmax)        - sets the lower z limit to 0 on current axis  (via
 %                           gca command), upper zlimit to Zmax
 %   
 %   
@@ -24,7 +24,7 @@ if nargin==0
    h=gca;
 else
     if nargin==2
-        set(gca,'zlim',[h Ymax]);
+        set(gca,'ylim',[h Ymax]);
         return
     end
     if ~ishandle(h) %~strcmp(get(h,'type'),'axes')
@@ -35,6 +35,6 @@ else
     end
 end
 
-xv=get(h,'zlim');
-set(h,'zlim',xv.*[0 1]);
+xv=get(h,'ylim');
+set(h,'ylim',xv.*[0 1]);
 

@@ -75,6 +75,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.NewPlotAreaMethod='0'
 %   NSS.font
 %   NSS.statewidth=.2;
+%   NSS.userinterppreference='tex'
 %
 %  Example
 %

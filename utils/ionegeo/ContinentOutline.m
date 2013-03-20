@@ -1,9 +1,10 @@
-function Outline=ContinentOutline(ContinentList)
+function [Outline,CountryNameList]=ContinentOutline(ContinentList)
 %  ContinentOutline - return outline of continents
 %
 %  SYNTAX
 %     Outline=ContinentOutline(ContinentName)
 %
+%     [Outline,CountryNameList]=ContinentOutline(ContinentName);
 %   
 %    where ContinentName can be one of the names below.
 %   EXAMPLES
@@ -57,8 +58,10 @@ if length(ContinentList)==1
     end
 else
     ii=datablank;
-    TempOutline=ContinentOutline(ContinentList(1));
-    Outline=TempOutline | ContinentOutline(ContinentList(2:end));
+    [TempOutline,TempNameList]=ContinentOutline(ContinentList(1));
+    [TempOutline2,TempNameList2]=ContinentOutline(ContinentList(2:end));
+    Outline=TempOutline | TempOutline2;
+    CountryNameList=[TempNameList(:)' TempNameList2(:)'];
     return
 end
 
@@ -77,7 +80,7 @@ if isempty(ii)
 end
 
 Outline=datablank;
-
+CountryNameList={};
 for j=1:length(ii)
     
     FAO=NAME_FAO(ii(j));
@@ -89,6 +92,7 @@ for j=1:length(ii)
             disp(['ignoring ' FAO])
         else
             Outline=Outline | CountryCodetoOutline(S3{1});
+            CountryNameList(end+1)=FAO;
         end
     end
 end

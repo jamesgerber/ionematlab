@@ -65,6 +65,11 @@ else
     return
 end
 
+switch ContinentName
+    case 'North America'
+        ContinentName='Northern America';
+end
+
 
 load([iddstring '/misc/ContinentOutlineData.mat'])
 

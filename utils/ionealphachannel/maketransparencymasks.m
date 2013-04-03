@@ -145,6 +145,8 @@ close
 
 
 NSG(1-ii,NSS,'lowercolor','black')
+fud=get(gcf,'userdata')
+set(fud.ColorbarHandle,'XTick',[]);
 OutputFig('Force',FileNameOceans,NSS.Resolution);
 close
 % now the agri-mask colormap

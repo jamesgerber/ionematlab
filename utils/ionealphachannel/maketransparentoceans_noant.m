@@ -53,7 +53,7 @@ end
 if nargin==1 | isempty(NewFileName)
     NewFileName=strrep(OldFileName,'.png','_alpha_to_na');
     NewFileName=fixextension(NewFileName,'.png');
- %   NewFileName=[makesafestring(NewFileName) '.png']
+    %   NewFileName=[makesafestring(NewFileName) '.png']
 else
     NewFileName=fixextension(NewFileName,'.png');
 end
@@ -73,6 +73,10 @@ vs=['ver' VerNo '_'];  % ' vs '
 
 a=plotimage;
 
+approxdpi2010=1200*size(a,1)/5066;
+approxdpi2012=1200*size(a,1)/6334;
+
+
 res=['size' num2str(size(a,1)) '_' num2str(size(a,2))];
 
 
@@ -82,11 +86,24 @@ FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
 FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
 FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '.png'];
 
-a=imread(FileName);
-ancb=imread(FileNameNCB);
-aocean=imread(FileNameOceans);
-aagrimask=imread(FileNameAgriMask);
-apt=imread(FileNamePT);
+try
+    a=imread(FileName);
+    ancb=imread(FileNameNCB);
+    aocean=imread(FileNameOceans);
+    aagrimask=imread(FileNameAgriMask);
+    apt=imread(FileNamePT);
+catch
+    warning([' did not find one or more of the masks!!'])
+    disp([' you probably need to run maketransparencymasks.m '])
+    disp([' The resolution seems to be '  int2str(approxdpi2010)])
+        disp([' or '  int2str(approxdpi2012)])
+    disp([' Note, however, that due to some matlab quirks, there are different '])
+    disp([' masks made for Matlab2010, Matlab2012, and 15" vs 17" laptops, '])
+    disp([' so you may need to find a friend to make the masks for you.  Jamie '])
+    disp([' has a pretty good collection on malthus '])
+    error(lasterr)
+end
+
 
 
 

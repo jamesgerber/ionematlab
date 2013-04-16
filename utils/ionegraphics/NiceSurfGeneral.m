@@ -54,6 +54,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.colorbarpercent='off';
 %   NSS.colorbarfinalplus='off';%
 %   NSS.colorbarminus='off';%
+%   NSS.cbarvisible='on';
 %   NSS.panoplytriangles=[0 0]; % left/right logical turns on L/R triangle
 %   NSS.panoplytriangles=[0 0 0 .4 .8 .3]; % no left triangle, right has
 %   RGB pair [.4 .8 .3]
@@ -76,6 +77,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.font
 %   NSS.statewidth=.2;
 %   NSS.userinterppreference='tex'
+%   NSS.FrameLimitsVector=[-180 180 -90 90];
+%   NSS.FrameOff=
 %
 %  Example
 %
@@ -253,7 +256,7 @@ ListOfProperties={
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
     'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
     'cbarvisible','transparent','textcolor','newplotareamethod','font',...
-    'statewidth','gridcolor','userinterppreference','maxnumfigs'};
+    'statewidth','gridcolor','userinterppreference','maxnumfigs','framelimitsvector'};
 
 %% set defaults for these properties
 units='';
@@ -274,6 +277,7 @@ newplotareamethod=1;
 statewidth=.1;
 datacutoff=9e9;
 separatecatlegend='no';
+FrameLimitsVector=[-180 180 -90 90];
 
 % new Joanne colors - now set in personalpreferencestemplate
 % lowermap=[0.835294118 0.894117647 0.960784314];
@@ -566,6 +570,7 @@ if  ~isequal(projection,'')
     setm(gca,'mapproj',projection)
 end
 
+OS.axishandle=gca;
 
 
 
@@ -659,9 +664,15 @@ if isequal(colorbarminus,'on')
     AddColorbarMinus;
 end
 
+mapaxishandle=fud.MapHandle;
+OS.mapaxishandle=mapaxishandle;
 
+%maud=get(mapaxishandle,'UserData');  %mapaxisuserdata
+%maud.maplatlimit=FrameLimitsVector(3:4);
+%maud.maplonlimit=FrameLimitsVector(1:2);
 
-
+setm(mapaxishandle,'maplatlimit',FrameLimitsVector(3:4));
+setm(mapaxishandle,'maplonlimit',FrameLimitsVector(1:2));
 
 fud.titlestring=titlestring;
 fud.units=units;

@@ -79,6 +79,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.userinterppreference='tex'
 %   NSS.FrameLimitsVector=[-180 180 -90 90];
 %   NSS.FrameOff=
+%   NSS.sink='';
+%   NSS.sink='nonagplaces';
 %
 %  Example
 %
@@ -256,7 +258,8 @@ ListOfProperties={
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
     'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
     'cbarvisible','transparent','textcolor','newplotareamethod','font',...
-    'statewidth','gridcolor','userinterppreference','maxnumfigs','framelimitsvector'};
+    'statewidth','gridcolor','userinterppreference','maxnumfigs','framelimitsvector',...
+    'sink'};
 
 %% set defaults for these properties
 units='';
@@ -278,6 +281,7 @@ statewidth=.1;
 datacutoff=9e9;
 separatecatlegend='no';
 FrameLimitsVector=[-180 180 -90 90];
+sink='none'; 
 
 % new Joanne colors - now set in personalpreferencestemplate
 % lowermap=[0.835294118 0.894117647 0.960784314];
@@ -531,7 +535,18 @@ size(Data);
 ii=EasyInterp2(ii,size(Data,1),size(Data,2),'nearest');
 Data(ii)=OceanVal;
 
-% no make no-data points above color map to get 'uppermap' (white)
+switch lower(sink)
+    case {'','default','none'}
+        % do nothing
+    case {'nonagplaces'}
+        mm=AgriMaskLogical;
+        mm=~mm;
+        ii=EasyInterp2(mm,size(Data,1),size(Data,2),'nearest');
+        Data(ii)=OceanVal;
+end
+
+
+% now make no-data points above color map to get 'uppermap' (white)
 Data(isnan(Data))=NoDataLandVal;
 
 
@@ -596,6 +611,9 @@ switch(lower(plotstates))
         AddStates(statewidth,gcf,'gadm0');
     case {'gadm1'}
         AddStates(statewidth,gcf,'gadm1');
+    case {'agplaces'}
+        AddStates(statewidth,gcf,'AgPlaces');
+
     otherwise
         error(['have not yet implemented this in AddStates'])
 end
@@ -634,6 +652,7 @@ set(fud.ColorbarHandle,'Visible',cbarvisible);
 if strcmp(categorical,'on')
     set(fud.ColorbarHandle,'Visible','off');
 end
+OS.colorbarhandle=fud.ColorbarHandle;
 %set(fud.ColorbarHandle,'Position',[0.1811+.1 0.08 0.6758-.2 0.0568])
 drawnow
 

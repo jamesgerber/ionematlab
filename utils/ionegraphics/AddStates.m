@@ -51,6 +51,8 @@ switch lower(AllStates)
         AllStatesFlag=1;
     case {'gadm0'}
         AllStatesFlag=2;
+    case {'agplaces'};
+        AllStatesFlag=3;
 end
 
 
@@ -61,15 +63,21 @@ SystemGlobals
 try
     switch AllStatesFlag
         case 0
-        Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
-        States=load(WORLDCOUNTRIES_BRIC_NAFTASTATES_VECTORMAP_HIRES);
+            Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
+            States=load(WORLDCOUNTRIES_BRIC_NAFTASTATES_VECTORMAP_HIRES);
         case 1
-        Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
-        States=load(WORLDCOUNTRIES_LEVEL1_HIRES);
+            Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
+            States=load(WORLDCOUNTRIES_LEVEL1_HIRES);
         case 2
-         Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
-        States=load(WORLDCOUNTRIES_LEVEL0_HIRES);
-       otherwise
+            Countries=load(WORLDCOUNTRIES_LEVEL0_HIRES);
+            States=load(WORLDCOUNTRIES_LEVEL0_HIRES);
+        case 3
+            Countries=load([iddstring '/AdminBoundary2010/AgPlacesRev1.mat']);
+            States.lat=NaN;
+            States.long=NaN;
+            
+            
+        otherwise
             error(['Prob with switch statement in ' mfilename ])
     end
     

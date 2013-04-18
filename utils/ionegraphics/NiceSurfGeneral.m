@@ -670,9 +670,11 @@ OS.mapaxishandle=mapaxishandle;
 %maud=get(mapaxishandle,'UserData');  %mapaxisuserdata
 %maud.maplatlimit=FrameLimitsVector(3:4);
 %maud.maplonlimit=FrameLimitsVector(1:2);
+if fud.MapToolboxFig==1
+    setm(mapaxishandle,'maplatlimit',FrameLimitsVector(3:4));
+    setm(mapaxishandle,'maplonlimit',FrameLimitsVector(1:2));
+end
 
-setm(mapaxishandle,'maplatlimit',FrameLimitsVector(3:4));
-setm(mapaxishandle,'maplonlimit',FrameLimitsVector(1:2));
 
 fud.titlestring=titlestring;
 fud.units=units;

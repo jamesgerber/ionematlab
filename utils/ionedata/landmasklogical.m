@@ -56,7 +56,9 @@ switch numel(DataTemplate)
         LogicalVector=(Data>=0.5);
         
     otherwise
-        error(['don''t have a landmask at this size'])
+        warning(['don''t have a landmask at this size.  trying ...'])
+        lml=EasyInterp2(LandMaskLogical,size(DataTemplate,1),size(DataTemplate,2),'nearest');
+        LogicalVector=lml>0.5;
 end
 
 

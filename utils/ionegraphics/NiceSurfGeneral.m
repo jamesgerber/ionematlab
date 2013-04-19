@@ -282,7 +282,6 @@ datacutoff=9e9;
 separatecatlegend='no';
 FrameLimitsVector=[-180 180 -90 90];
 sink='none'; 
-
 % new Joanne colors - now set in personalpreferencestemplate
 % lowermap=[0.835294118 0.894117647 0.960784314];
 % uppermap=[.92 .92 .92];
@@ -781,7 +780,9 @@ set(hcbtitle,'Color',textcolor);
 
 %% add panoply triangles
 if sum(panoplytriangles) > 0
-addpanoplytriangle(panoplytriangles, cmap)
+    pthandles=addpanoplytriangle(panoplytriangles, cmap)
+else
+    pthandles=[-1 -1];
 end
 
 
@@ -845,6 +846,7 @@ end
 
 OS.Data=single(OS.Data);
 OS.cmap=cmap;
+OS.panoplytrianglehandlepatches=pthandles;
 
 
 if ~isempty(filename)
@@ -866,7 +868,7 @@ if ~isempty(filename)
         save([strrep(FN,'.png','') '_SavedFigureData'],'OS','NSS')
     end
     if isequal(figfilesave,'on')
-        hgsave(filename);
+        hgsave(MakeSafeString(filename,1));
     end
     if length(get(allchild(0)))>maxnumfigs
         close(gcf)
@@ -1040,9 +1042,12 @@ for j=1:length(a)
         case {'triangles','froufrou','panoply','pan'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'panoplytriangles',ThisValue); 
-        case {'plotdatafile'}
+        case {'plotdatafile','savedata','datafile','makedatafile'}
             NSS=rmfield(NSS,ThisProperty);
             NSS=setfield(NSS,'makeplotdatafile',ThisValue);
+        case {'hgsave','hgfile'}
+            NSS=rmfield(NSS,ThisProperty);
+            NSS=setfield(NSS,'figfilesave',ThisValue);
     end
 end
 

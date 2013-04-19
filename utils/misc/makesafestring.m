@@ -1,7 +1,7 @@
-function OutString=MakeSafeString(InString);
+function OutString=MakeSafeString(InString,directory);
 %MakeSafeString - make a string safe for being a fieldname
 %
-%   MakeSafeString(QUESTIONABLEFILENAME)
+%   MakeSafeString(QUESTIONABLEFILENAME,DIRECTORY)
 %
 %    MakeSafeString will remove characters that can't be in a filename.  It
 %    will replace many of them with "_"  although an "_" at the beginning
@@ -14,12 +14,18 @@ function OutString=MakeSafeString(InString);
 %    MakeSafeString('')
 %    clear MakeSafeString
 %    MakeSafeString('')
+%
+%    MakeSafeString('')
 
 % jsg  Dec 2009
 
 if nargin==0
     help(mfilename)
     return
+end
+
+if nargin==1
+    directory=0;
 end
 
 if isequal(InString(1),' ') | isequal(InString(1),'_')
@@ -54,7 +60,9 @@ if ~isempty(tmp)
 end
 
 x=InString;
-x=strrep(x,'/','_');
+if directory==0
+    x=strrep(x,'/','_');
+end
 x=strrep(x,'+','_');
 x=strrep(x,',','');
 x=strrep(x,'.','_');

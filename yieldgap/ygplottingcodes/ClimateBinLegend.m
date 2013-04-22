@@ -4,6 +4,8 @@ function ClimateBinLegend(CDS,colors,BinMatrix,CBPS);
 %
 %  ClimateBinLegend(CDS,colors,BinMatrix,CBPS);
 %
+%   colors is an NxN structure with field .rgb.  It is output from ClimateBinPlot_variableN
+%
 %  CBPS has fields:
 %             suppressbox (default 0)
 %             titlestring  (default 'Climate Zones.')

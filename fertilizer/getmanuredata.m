@@ -10,7 +10,7 @@ function S = getmanuredata(cropname,nutrient)
 % exist flag is a binary indicator (1 or 0) indicating whether data was
 % returned for this crop-nutrient combination in structure S.
 
-outputpath = [iddstring 'misc/CropSpecificManureAdditions/'];
+outputpath = [iddstring '/manure/apprates/'];
 switch nutrient
     case 'N'
         nutword = 'Nitrogen';
@@ -18,6 +18,6 @@ switch nutrient
         nutword = 'Phosphorus';
 end
 
-datastr = [outputpath nutword 'FromManure' cropname '.nc'];
+datastr = [outputpath cropname nutrient 'apprateFromManure.nc'];
 
 S = OpenNetCDF(datastr);

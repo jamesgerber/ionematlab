@@ -103,6 +103,7 @@ ii_triangles=((a(:,:,1) ~=apt(:,:,1)) | (a(:,:,2) ~=apt(:,:,2)) | (a(:,:,3) ~=ap
 
 %
 ii_keep_triangles=ii_text & ii_triangles;
+ii_text_notriangles=ii_text &~ii_triangles;
 
 ii_colorbar=ii_colorbar & ~ii_keep_triangles;
 % what should we keep?
@@ -115,9 +116,9 @@ if KeepText==0;
 else
     Alpha=(~ii_background | ~ii_colorbar ) ;
     Alpha(ii_text)=1;
-    x=plotimage(:,:,1); x(ii_text)=TextColor(1)*255; plotimage(:,:,1)=x;
-    x=plotimage(:,:,2); x(ii_text)=TextColor(2)*255; plotimage(:,:,2)=x;
-    x=plotimage(:,:,3); x(ii_text)=TextColor(3)*255; plotimage(:,:,3)=x;
+    x=plotimage(:,:,1); x(ii_text_notriangles)=TextColor(1)*255; plotimage(:,:,1)=x;
+    x=plotimage(:,:,2); x(ii_text_notriangles)=TextColor(2)*255; plotimage(:,:,2)=x;
+    x=plotimage(:,:,3); x(ii_text_notriangles)=TextColor(3)*255; plotimage(:,:,3)=x;
     imwrite(plotimage,NewFileName,'png','Alpha',uint8(Alpha*255));
 end
 

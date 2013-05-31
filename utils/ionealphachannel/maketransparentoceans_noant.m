@@ -123,6 +123,9 @@ ii_triangles=((a(:,:,1) ~=apt(:,:,1)) | (a(:,:,2) ~=apt(:,:,2)) | (a(:,:,3) ~=ap
 %ii_trianglesl=((a(:,:,1) ~=aptl(:,:,1)) | (a(:,:,2) ~=aptl(:,:,2)) | (a(:,:,3) ~=aptl(:,:,3)));
 %ii_trianglesr=((a(:,:,1) ~=aptr(:,:,1)) | (a(:,:,2) ~=aptl(:,:,2)) | (a(:,:,3) ~=aptr(:,:,3)));
 
+
+ii_text_notriangles=ii_text &~ii_triangles;
+
 %
 ii_keep_triangles=ii_text & ii_triangles;
 
@@ -148,10 +151,11 @@ if AgFlag==0
         finalwrite(plotimage,NewFileName,'png','Alpha',uint8(Alpha*255));
     else
         Alpha=(~ii_background | ~ii_colorbar )& ii_ocean ; ;
-        Alpha(ii_text)=1;
-        x=plotimage(:,:,1); x(ii_text)=TextColor(1)*255; plotimage(:,:,1)=x;
-        x=plotimage(:,:,2); x(ii_text)=TextColor(2)*255; plotimage(:,:,2)=x;
-        x=plotimage(:,:,3); x(ii_text)=TextColor(3)*255; plotimage(:,:,3)=x;
+        Alpha(ii_keep_triangles)=1;
+      %  Alpha(ii_colorbar)=1;
+        x=plotimage(:,:,1); x(ii_text_notriangles)=TextColor(1)*255; plotimage(:,:,1)=x;
+        x=plotimage(:,:,2); x(ii_text_notriangles)=TextColor(2)*255; plotimage(:,:,2)=x;
+        x=plotimage(:,:,3); x(ii_text_notriangles)=TextColor(3)*255; plotimage(:,:,3)=x;
         finalwrite(plotimage,NewFileName,'png','Alpha',uint8(Alpha*255));
     end
     
@@ -168,9 +172,9 @@ else
         Alpha(FlipToZero)=0;
         
         Alpha(ii_text)=1;
-        x=plotimage(:,:,1); x(ii_text)=TextColor(1)*255; plotimage(:,:,1)=x;
-        x=plotimage(:,:,2); x(ii_text)=TextColor(2)*255; plotimage(:,:,2)=x;
-        x=plotimage(:,:,3); x(ii_text)=TextColor(3)*255; plotimage(:,:,3)=x;
+        x=plotimage(:,:,1); x(ii_text_notriangles)=TextColor(1)*255; plotimage(:,:,1)=x;
+        x=plotimage(:,:,2); x(ii_text_notriangles)=TextColor(2)*255; plotimage(:,:,2)=x;
+        x=plotimage(:,:,3); x(ii_text_notriangles)=TextColor(3)*255; plotimage(:,:,3)=x;
         finalwrite(plotimage,NewFileName,'png','Alpha',uint8(Alpha*255));
     end
 end

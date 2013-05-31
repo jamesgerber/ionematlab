@@ -1,15 +1,15 @@
-function maketransparentoceans(OldFileName,NewFileName,TextColor,AgFlag);
-% maketransparentoceans - add a transparent channel around landmass
+function maketransparentoceans_noant(OldFileName,NewFileName,TextColor,AgFlag);
+% maketransparentoceans_noant - add a transparent channel around landmass
 %
 %  Example
 %   Syntax
-%        maketransparentoceans(OLDFILENAME,NEWFILENAME);
+%        maketransparentoceans_noant(OLDFILENAME,NEWFILENAME);
 %
-%        maketransparentoceans(OLDFILENAME,NEWFILENAME,TEXTCOLOR);
+%        maketransparentoceans_noant(OLDFILENAME,NEWFILENAME,TEXTCOLOR);
 %
-%        maketransparentoceans(OLDFILENAME,NEWFILENAME,TEXTCOLOR,AGFLAG);%
+%        maketransparentoceans_noant(OLDFILENAME,NEWFILENAME,TEXTCOLOR,AGFLAG);%
 %
-%        maketransparentoceans(OLDFILENAME,TEXTCOLOR);
+%        maketransparentoceans_noant(OLDFILENAME,TEXTCOLOR);
 %    TEXTCOLOR is a three element vector
 %
 %
@@ -20,11 +20,18 @@ function maketransparentoceans(OldFileName,NewFileName,TextColor,AgFlag);
 %     nsg(y,'filename','test_mtb.png','title','maize yield','caxis',.98,...
 %     'cmap','summer','units','tons/ha')
 %
-%     maketransparentoceans('test_mtb','test_mto_alpha_white',[1 1 1])
+%     maketransparentoceans_noant('test_mtb','test_mto_alpha_white',[1 1 1])
 %
-%     maketransparentoceans('test_mtb','test_mto_alpha_umnmaroon',umnmaroon)
+%     maketransparentoceans_noant('test_mtb','test_mto_alpha_umnmaroon',umnmaroon)
 %
-%     maketransparentoceans('test_mtb','test_mto_alpha_agrimask_umnmaroon',umnmaroon,1)
+%     maketransparentoceans_noant('test_mtb','test_mto_alpha_agrimask_umnmaroon',umnmaroon,1)
+%
+%     m=getdata('maize');
+%     y=m.Data(:,:,2);
+%     nsg(y,'filename','test_mtb2.png','title','maize yield','caxis',.98,...
+%     'cmap','summer','units','tons/ha','sink','nonagplaces','states','agplaces')
+% 
+%     maketransparentoceans_noant('test_mtb2','test_mtb2_alpha_white',[1 1 1],1)
 %
 %    see also maketransparencymasks maketransparentbackground maketransparentoceans
 

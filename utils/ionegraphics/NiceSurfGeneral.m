@@ -80,7 +80,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.FrameLimitsVector=[-180 180 -90 90];
 %   NSS.FrameOff=
 %   NSS.sink='';
-%   NSS.sink='nonagplaces';
+%   NSS.sink='nonagplaces';  % note that this goes well with NSS.states='agplaces'
 %
 %  Example
 %

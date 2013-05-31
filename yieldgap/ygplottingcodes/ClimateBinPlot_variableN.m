@@ -39,14 +39,6 @@ NSS.TitleString=titlestring;
 %NiceSurfGeneral(BinMatrix,NSS)
 
 
-
-
-
-
-
-
-
-
 N=ceil(sqrt(length(unique(BinMatrix))-1))
 
 
@@ -55,8 +47,8 @@ N=ceil(sqrt(length(unique(BinMatrix))-1))
 %% first a linear colormap
 
 newmap=[];
-linearcmap=finemap('red_yellow_blue_deep','','');
-linearcmap=finemap('revkbbluered','','');
+%linearcmap=finemap('red_yellow_blue_deep','','');
+%linearcmap=finemap('revkbbluered','','');
 linearcmap=finemap(cmapname,'','');
 
 s=round(linspace(1,length(linearcmap),N))

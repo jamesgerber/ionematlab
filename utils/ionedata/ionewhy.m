@@ -29,7 +29,7 @@ end
 
 function a = special_case
 switch fix(19*rand)
-    case 0,   a = 'why not?';
+    case 0,   a = '42';
     case 1,   a = 'don''t ask!';
     case 2,   a = 'because Christine dreamt it.';
     case 3,   a = 'stupid question!';

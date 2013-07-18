@@ -244,10 +244,12 @@ else
     N.TotalInputNitrogen=N.Ndeposited+N.NmanurePerHA+N.NfertPerHA;
     
     if isequal(D.CROPNAME{ii},'rice')
-        N2O=N.TotalInputNitrogen*0.0031;
-    else
-        N2O=N.TotalInputNitrogen*0.01;
+  %      N2O=N.TotalInputNitrogen*0.0031;
+    disp([' no longer treating rice N2O output differently '])
     end
+  %  else
+        N2O=N.TotalInputNitrogen*0.01;
+  %  end
     
     ii=find(Area==0 | Area > 9e9);
     Area(ii)=0;

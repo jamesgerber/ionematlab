@@ -1,4 +1,4 @@
-function [mdnvect,ts]=getWFDEIstripe(idx,type);
+function [mdnvect,ts,struct]=getWFDEIstripe(idx,type);
 % getWFDEIstripe
 %
 %   getWFDEItimeseries(getWFDEIstripe,type)  where type can be
@@ -15,11 +15,11 @@ basedir = [iddstring 'Climate/reanalysis/WFDEI/stripes'];
 
 for j=1:length(idx);
         FileName=[basedir '/' WFDEIVar '/' WFDEIVar int2str(idx(j))];
-        x=load(FileName)
+        x=load(FileName);
      %   mdnvect=x;
 end
 
 mdnvect=x.mdnvect;
 ts=x.tsvect;
-
+struct=x;
 

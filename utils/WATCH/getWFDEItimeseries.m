@@ -11,18 +11,22 @@ ts=single(zeros(Nindices,Ntimeseries));
 
 mdnvect=[];
 switch type
-    case 'Tair_WFDEI'        
-        basedir=[iddstring '/Climate/reanalysis/WFDEI/Tair_WFDEI/'];
-        FileBase='Tair_WFDEI_';
-    case 'Tair_daily_WFDEI'
-        basedir=[iddstring '/Climate/reanalysis/WFDEI/Tair_daily_WFDEI/'];
-        FileBase='Tair_daily_WFD_';
-    case 'Rainf_WFDEI_GPCC'
-        basedir=[iddstring '/Climate/reanalysis/WFDEI/Rainf/'];
-        FileBase='Rainf_WFD_GPCC_';
-    case 'snow'
-        basedir=[iddstring '/Climate/reanalysis/WFDEI/Snowf/'];
-        FileBase='Snowf_WFD_GPCC_';
+%     case 'Tair_WFDEI'        
+%         basedir=[iddstring '/Climate/reanalysis/WFDEI/Tair_WFDEI/'];
+%         FileBase='Tair_WFDEI_';
+%     case 'Tair_daily_WFDEI'
+%         basedir=[iddstring '/Climate/reanalysis/WFDEI/Tair_daily_WFDEI/'];
+%         FileBase='Tair_daily_WFD_';
+%     case 'Rainf_WFDEI_GPCC'
+%         basedir=[iddstring '/Climate/reanalysis/WFDEI/Rainf/'];
+%         FileBase='Rainf_WFD_GPCC_';
+%     case 'snow'
+%         basedir=[iddstring '/Climate/reanalysis/WFDEI/Snowf/'];
+%         FileBase='Snowf_WFD_GPCC_';
+    otherwise
+        basedir=[iddstring '/Climate/reanalysis/WFDEI/' type '/'];
+        FileBase=[type '_'];
+
 end
 %basedir='./'
 
@@ -33,10 +37,7 @@ for yy=1979:2009;
     % note that 1901_09 is missing
     
     for mm=1:12
-        if ((yy==1901) & (mm~=12) ) |((yy==2002) & (mm~=1) )
-            
-            disp(['skipping ' datestr(double(datenum(yy,mm,01,00,00,00)))]);
-        else
+       
             FileNameBase=[FileBase int2str(yy) sprintf('%02d',mm) ];
             FileName=[basedir FileNameBase '.nc'];
        %    disp(['hard wired to read the ncmat on Disk1'])
@@ -52,7 +53,7 @@ for yy=1979:2009;
             
             mdn0=datenum(yy,mm,01,00,00,00);  % note this should be hardwired to Jan
             ttemp=S(4).Data-S(4).Data(1);
-            mdn=mdn0+ttemp/(24*3600);  %mdn in units of days.  so go from seconds to days.
+            mdn=mdn0+double(ttemp)/(24*3600);  %mdn in units of days.  so go from seconds to days.
             % datestr(double(mdn(1)))
             
             %% old code . doesn't work with WFDEI bec S(5).Data is 3D
@@ -61,7 +62,7 @@ for yy=1979:2009;
             %% new code / ugly version
             D=S(5).Data;
             for m=1:size(D,3);
-              x=D(:,:,m);
+              x=D(:,end:-1:1,m);
               sz=size(x);
 
               
@@ -82,9 +83,12 @@ for yy=1979:2009;
             
             mdnvect=[ mdnvect ; mdn];
             clear tstmp
-        end
     end
 end
+
+ts=ts(1:Nindices,1:length(mdnvect));
+mdnvect=mdnvect(:);
+
 
 return
 
@@ -200,5 +204,38 @@ for j=(Nsteps-1);
     end
 end
 
+%% code to make stripes
 
+%WFDEIVar='Tair_daily_WFDEI';
+c={'Rainf_WFDEI_CRU','Tair_WFDEI','Snowf_WFDEI_CRU'};
+
+for kk=1:3
+    WFDEIVar=c{kk}
+    S=OpenGeneralNetCDF([iddstring 'Climate/reanalysis/WFDEI/WFDEI-elevation.nc']);
+    x=S(end).Data(:,end:-1:1);
+    goodpoints=find(x < 1e10);
+    
+    basedir = [iddstring 'Climate/reanalysis/WFDEI/stripes'];
+    mkdir([basedir filesep WFDEIVar]);
+    
+    jj=1:length(goodpoints);
+    Nsteps=50;
+    endpoints=round(linspace(1,length(goodpoints),Nsteps));
+    
+    for j=1:(Nsteps-1);
+        j
+        ii=goodpoints(endpoints(j):endpoints(j+1));
+        [mdnvect,ts]=getWFDEItimeseries(ii,WFDEIVar);
+        
+        
+        for m=1:length(ii)
+            
+            FileName=[basedir '/' WFDEIVar '/' WFDEIVar int2str(ii(m))];
+            tsvect=ts(m,:);
+            notes.processdate=datestr(now);
+            save(FileName,'tsvect','mdnvect','notes')
+        end
+    end
+    
+end
 

@@ -136,6 +136,7 @@ switch model
        
         Y=alpha0+alpha1.*X+epsilon;
     case 'meanNLNRR'
+        %mean of the model
         mu0=0.19;
         mu1=0.0037;
         sigma0=0.72;
@@ -144,6 +145,7 @@ switch model
         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) );
 
     case {'meanNLNRRzyi','meanNLNRRresponse'}
+        % mean of the model but we subtract off the zero value
         mu0=0.19;
         mu1=0.0037;
         sigma0=0.72;
@@ -154,6 +156,7 @@ switch model
 
         
     case 'derivmeanNLNRR'
+        % derivative of the mean of the model
         mu0=0.19;
         mu1=0.0037;
         sigma0=0.72;

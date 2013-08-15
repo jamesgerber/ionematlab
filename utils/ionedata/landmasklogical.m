@@ -55,6 +55,11 @@ switch numel(DataTemplate)
         Data=aggregate_rate(lml,30);     
         LogicalVector=(Data>=0.5);
         
+%     case 1080*540
+%         lml=LandMaskLogical;
+%         data=aggregate_quantity(lml,4);
+%         LogicalVector=(data>=0.5);
+        
     otherwise
         warning(['don''t have a landmask at this size.  trying ...'])
         lml=EasyInterp2(LandMaskLogical,size(DataTemplate,1),size(DataTemplate,2),'nearest');

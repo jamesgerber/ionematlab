@@ -34,7 +34,7 @@ persistent D NDS Ndep
 
 FixMethod='linear';
 P2O5toPconv = 0.4366; %(31/(31+2.5*16)), 31=atomic mass P, 16 atomic mass O
-K2OtoKconv= 0.4149; %(39/(2*39+16), 39 = atomic mass K, 16 atomic mass O
+K2OtoKconv= 0.8298; %(2*39/(2*39+16), 39 = atomic mass K, 16 atomic mass O
 % check inputs
 newNmapflag = 0;
 newPmapflag = 0;

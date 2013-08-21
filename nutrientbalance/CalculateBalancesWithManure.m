@@ -1,9 +1,9 @@
-function [C,N,P,ExtraInfo]=CalculateBalancesWithManure(crop,varargin)
+function [C,N,P,K,ExtraInfo]=CalculateBalancesWithManure(crop,varargin)
 % CalculateBalances -
 %
 % SYNTAX
-%     [C,N,P,ExtraInfo]=CalculateBalancesWithManure(CROPNAME, optionalargs) will
-%     return structure C,N,P
+%     [C,N,P,K,ExtraInfo]=CalculateBalancesWithManure(CROPNAME, optionalargs) will
+%     return structure C,N,P,K
 %
 %     optional arguments include:
 %       - 'Nappratemap' (this should be followed by a 5min map of N
@@ -14,7 +14,7 @@ function [C,N,P,ExtraInfo]=CalculateBalancesWithManure(crop,varargin)
 %
 %  Example
 %   crop='maize'
-%   [C,N,P,ExtraInfo]=CalculateBalances(crop)
+%   [C,N,P,K,ExtraInfo]=CalculateBalances(crop)
 %   NSS.cmap='nathangreenscale2';
 %   NSS.coloraxis=[0 250];
 %   NSS.TitleString =['applied nitrogen (' crop ')']
@@ -34,13 +34,15 @@ persistent D NDS Ndep
 
 FixMethod='linear';
 P2O5toPconv = 0.4366; %(31/(31+2.5*16)), 31=atomic mass P, 16 atomic mass O
-
+K2OtoKconv= 0.4149; %(39/(2*39+16), 39 = atomic mass K, 16 atomic mass O
 % check inputs
 newNmapflag = 0;
 newPmapflag = 0;
+newKmapflag = 0;
 newyieldmapflag = 0;
 skipNcalcsflag = 0;
 skipPcalcsflag = 0;
+skipKcalcsflag = 0;
 for n = 1:length(varargin)
     thisvar = varargin{n};
     if ischar(thisvar)
@@ -102,9 +104,10 @@ end
 %Pfrac=str2num(D.P_Perc_Dry_Harv(ii))/100;
 Nfrac=(D.N_Perc_Dry_Harv(ii))/100;
 Pfrac=(D.P_Perc_Dry_Harv(ii))/100;
+Kfrac=(D.K_Perc_Dry_Harv(ii))/100;
 
 Nfixer=D.Nfix_High{ii};
-Nfixer
+%Nfixer
 
 % open crop data
 CS=OpenNetCDF([iddstring '/crops2000/crops/' crop ...
@@ -319,6 +322,48 @@ else
     
     P.TotalInputPhosphorus=P.PmanurePerHA+P.PfertPerHA;
 end
+%% K
+if skipKcalcsflag == 1
+    K = 'skipped';
+else
+    if newKmapflag == 0
+        disp(['Loading observed ' crop ' K2O5 application rate map.'])
+        x=load([iddstring '/Fertilizer2000/ncmat/' crop 'K2Oapprate.mat']);
+        AppliedPotassiumPerHA=x.DS.Data(:,:,1).*K2OtoKconv;
+    end
+    %AppliedPotassiumPerHA=datastore([...
+    %    'fert_app_ver7/'   crop '_K_ver2_25_rate_FAO_SNS_FINAL.mat']);
+    AppliedPotassiumPerHA(isnan(AppliedPotassiumPerHA))=0;
+    
+    K.KfertPerHA=AppliedPotassiumPerHA;
+    
+    
+% % %     %% now add manure Potassium
+% % %     %load(['./CropSpecificManureAdditions/ncmat/PotassiumFromManure' crop '.mat']);
+% % %     DS=OpenNetCDF([iddstring 'manure/apprates/' crop 'KapprateFromManure.nc']);
+% % %     
+% % %     x=DS.Data(:,:,1);
+% % %     x(~isfinite(x))=0;
+% % %     x(x>9e9)=0;
+% % %     AppliedPotassiumPerHA=AppliedPotassiumPerHA+x;
+% % %     Kmanure=x;
+% % %     % end of add manure Potassium section
+    
+    
+    HarvestedPotassiumPerHA=Yield.*DryFraction*Kfrac*1000;
+    ExcessPotassiumPerHA=AppliedPotassiumPerHA-HarvestedPotassiumPerHA;
+% % %     K.KmanurePerHA=Kmanure;
+    K.ExcessPotassiumPerHA=ExcessPotassiumPerHA;
+    K.AppliedPotassiumPerHA=AppliedPotassiumPerHA;
+    K.HarvestedPotassiumPerHA=HarvestedPotassiumPerHA;
+    K.Kfrac=Kfrac;
+    K.crop=crop;
+    K.ExcessPotassiumPerHA_x_Area=ExcessPotassiumPerHA.*Area;
+    
+% % %     K.TotalInputPotassium=K.KmanurePerHA+K.KfertPerHA;
+     K.TotalInputPotassium=K.KfertPerHA;
+end
+
 return
 
 

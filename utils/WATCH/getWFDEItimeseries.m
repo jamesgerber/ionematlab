@@ -51,9 +51,20 @@ for yy=1979:2009;
             %   x=S(4).Attributes(4).attrvalue
             
             
-            mdn0=datenum(yy,mm,01,00,00,00);  % note this should be hardwired to Jan
-            ttemp=S(4).Data-S(4).Data(1);
-            mdn=mdn0+double(ttemp)/(24*3600);  %mdn in units of days.  so go from seconds to days.
+            if size(S(5).Data,3)>31
+                % this is a month ... so if more than 31 days, this is
+                % sub-daily data
+                
+                mdn0=datenum(yy,mm,01,00,00,00);  % note this should be hardwired to Jan
+                ttemp=S(4).Data-S(4).Data(1);
+                mdn=mdn0+double(ttemp)/(24*3600);  %mdn in units of days.  so go from seconds to days.
+            else
+             mdn0=datenum(yy,mm,01,00,00,00);  % note this should be hardwired to Jan
+             ttemp=S(4).Data-S(4).Data(1);
+             mdn=mdn0+double(ttemp);  %mdn in units of days.  so no transform
+       
+            end
+                
             % datestr(double(mdn(1)))
             
             %% old code . doesn't work with WFDEI bec S(5).Data is 3D
@@ -207,9 +218,9 @@ end
 %% code to make stripes
 
 %WFDEIVar='Tair_daily_WFDEI';
-c={'Rainf_WFDEI_CRU','Tair_WFDEI','Snowf_WFDEI_CRU'};
+c={'Tair_daily_WFDEI','Rainf_WFDEI_CRU','Tair_WFDEI','Snowf_WFDEI_CRU'};
 
-for kk=1:3
+for kk=1
     WFDEIVar=c{kk}
     S=OpenGeneralNetCDF([iddstring 'Climate/reanalysis/WFDEI/WFDEI-elevation.nc']);
     x=S(end).Data(:,end:-1:1);

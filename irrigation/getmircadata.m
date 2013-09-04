@@ -32,7 +32,7 @@ if dtcode < 4
     
     % open mirca crop number lookup table
     mircatable = ReadGenericCSV([iddstring ...
-        'MIRCA2000_processed/mircacroptable.csv']);
+        'Irrigation/MIRCA2000_processed/mircacroptable.csv']);
 
     % open irrigation data
     tmp = strmatch(cropname, mircatable.mircacrop);

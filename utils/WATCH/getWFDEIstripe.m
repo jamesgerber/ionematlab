@@ -1,10 +1,25 @@
 function [mdnvect,ts,struct]=getWFDEIstripe(idx,type);
 % getWFDEIstripe
 %
-%   getWFDEItimeseries(getWFDEIstripe,type)  where type can be
+%   getWFDEIstripe(getWFDEIstripe,type)  where type can be
 %   'Rainf_WFDEI_CRU		Tair_WFDEI
 %   Snowf_WFDEI_CRU		Tair_daily_WFDEI
 %
+%
+%  Example
+%
+%    [mdnvect,tsvect,struct]=getWFDEIstripe(237409,'Rainf_WFDEI_CRU'); 
+%    figure
+%    mdnplot(mdnvect,tsvect);
+%    [mdnvect,tsvect,struct]=getWFDEIstripe(237409,'Tair_WFDEI'); 
+%    figure
+%    mdnplot(mdnvect,tsvect);
+%    [mdnvect,tsvect,struct]=getWFDEIstripe(237409,'Tair_daily_WFDEI'); 
+%    figure
+%    mdnplot(mdnvect,tsvect);
+%    [mdnvect,tsvect,struct]=getWFDEIstripe(237409,'Snowf_WFDEI_CRU'); 
+%    figure
+%    mdnplot(mdnvect,tsvect);
 
 %% code to make stripes
 

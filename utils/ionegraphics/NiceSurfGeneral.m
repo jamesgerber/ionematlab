@@ -692,9 +692,12 @@ if isequal(colorbarminus,'on')
     AddColorbarMinus;
 end
 
-mapaxishandle=fud.MapHandle;
-OS.mapaxishandle=mapaxishandle;
-
+if isfield(fud,'MapHandle');
+    mapaxishandle=fud.MapHandle;
+    OS.mapaxishandle=mapaxishandle;
+else
+    OS.mapaxishandle=-1;
+end
 %maud=get(mapaxishandle,'UserData');  %mapaxisuserdata
 %maud.maplatlimit=FrameLimitsVector(3:4);
 %maud.maplonlimit=FrameLimitsVector(1:2);

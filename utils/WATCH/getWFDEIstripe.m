@@ -36,7 +36,7 @@ function [mdnvect,ts,struct]=getWFDEIstripe(idx,type);
 %
 %    ii=landmasklogical(zeros(2160,1080));
 %    [outline] = CountryCodetoOutline('IND24');
-%    outline10min=aggregate_rate(outline,2);
+%    outline10min=aggregate_rate(outline,6);
 %    outline10min=outline10min>0.5;
 %
 %    m=find(outline10min);
@@ -45,6 +45,7 @@ function [mdnvect,ts,struct]=getWFDEIstripe(idx,type);
 %    [mdn,ts1]=getWFDEIstripe(m(j),'Rainf_WFDEI_CRU');
 %    [mdn,ts2]=getWFDEIstripe(m(j),'Snowf_WFDEI_CRU');
 %    [mdn,ts3]=getWFDEIstripe(m(j),'Tair_WFDEI');
+%    DS(j).mdn=mdn;
 %    DS(j).rain=ts1;
 %    DS(j).snow=ts2;
 %    DS(j).Tair=ts3;

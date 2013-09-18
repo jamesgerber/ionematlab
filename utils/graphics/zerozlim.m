@@ -1,4 +1,4 @@
-function Zeroylim(h,Ymax);
+function Zerozlim(h,Ymax);
 % ZEROYLIM - sets the z=0 axis to zero.
 % SYNTAX:
 %
@@ -24,17 +24,17 @@ if nargin==0
    h=gca;
 else
     if nargin==2
-        set(gca,'ylim',[h Ymax]);
+        set(gca,'zlim',[h Ymax]);
         return
     end
     if ~ishandle(h) %~strcmp(get(h,'type'),'axes')
         % warning('this handle is not an axis')
         %disp('using gca')
-        set(gca,'ylim',[0 h]);
+        set(gca,'zlim',[0 h]);
         return
     end
 end
 
-xv=get(h,'ylim');
-set(h,'ylim',xv.*[0 1]);
+xv=get(h,'zylim');
+set(h,'zlim',xv.*[0 1]);
 

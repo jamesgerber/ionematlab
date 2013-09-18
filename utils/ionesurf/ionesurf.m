@@ -163,16 +163,22 @@ if ~isempty(ExtraCommands)
         %  hm=axesm('robinson','Frame','On');
         %  h=surfacem(lat2D,lon2D,double(Production_ag.'),double(Production_ag.'));
         b=double(RedData);
+        
+        [long,lat]=InferLongLat(b);
+        [lat2D,lon2D]=meshgrat(lat,long);
+        
+        
         lml=LandMaskLogical(b);
         b(~lml)=NaN;
         figure
-        hm=gca;
- [lat2D,lon2D]=meshgrat(RedLat,RedLong);
-        h=surfm(lat2D,lon2D,double(RedData.'));
+      %  hm=gca;
+        [lat2D,lon2D]=meshgrat(RedLat,RedLong);
+      %  h=surfm(lat2D,lon2D,double(RedData.'));
  %       h=surface(RedLat,RedLong,double(b),double(b));
-        h=surface(RedLong,RedLat,double(b.'),double(b.'));
+        h=surface(long,lat,double(b.'),double(b.'));
         shading flat
-         
+          grid on
+        view(15,40)
     
     
 else

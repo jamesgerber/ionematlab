@@ -106,6 +106,9 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.projection='';
 %   NSS.projection='hatano';
 %
+%
+%   NSS.modifycolormap='stretch';
+%
 %   NiceSurfGeneral(Yield,NSS)
 %
 %   NSS.cbarvisible='off';
@@ -256,10 +259,11 @@ ListOfProperties={
     'colorbarminus','resolution','longlatlines','separatecatlegend'...
     'figfilesave','plotflag','fastplot','plotstates','categorical',...
     'categoryranges','categoryvalues','categorycolors','datacutoff',...
-    'eastcolorbar','MakePlotDataFile','panoplytriangles','projection'...
+    'eastcolorbar','makeplotdatafile','panoplytriangles','projection'...
     'cbarvisible','transparent','textcolor','newplotareamethod','font',...
     'statewidth','gridcolor','userinterppreference','maxnumfigs','framelimitsvector',...
-    'sink'};
+    'sink','modifycolormap'};
+ListOfProperties=unique(ListOfProperties);
 
 %% set defaults for these properties
 units='';
@@ -282,6 +286,9 @@ datacutoff=9e9;
 separatecatlegend='no';
 FrameLimitsVector=[-180 180 -90 90];
 sink='none'; 
+modifycolormap='none';
+%   NSS.modifycolormap='stretch';
+
 % new Joanne colors - now set in personalpreferencestemplate
 % lowermap=[0.835294118 0.894117647 0.960784314];
 % uppermap=[.92 .92 .92];
@@ -437,7 +444,10 @@ Data=double(Data);
 %     f=unique(abs(coloraxis));
 % 
 
-
+if isequal(lower(modifycolormap),'stretch');
+   % ok ... user wants to stretch colormap.   
+    cmap=StretchColorMap(cmap,coloraxis(1),coloraxis(2));
+end
 
 
 if length(coloraxis)<2

@@ -20,6 +20,36 @@ function [mdnvect,ts,struct]=getWFDEIstripe(idx,type);
 %    [mdnvect,tsvect,struct]=getWFDEIstripe(237409,'Snowf_WFDEI_CRU'); 
 %    figure
 %    mdnplot(mdnvect,tsvect);
+%
+%
+%
+%  S=OpenGeneralNetCDF([iddstring 'Climate/reanalysis/WFDEI/WFDEI-elevation.nc']);
+%x=S(end).Data(:,end:-1:1);
+%goodpoints=find(x < 1e10);
+%
+%ii=(x < 1e10);
+%
+%y=datablank(x);
+%y(goodpoints)=goodpoints;
+%
+%  % now y is a matrix whose values correspond to the stripe number.
+%
+%    ii=landmasklogical(zeros(2160,1080));
+%    [outline] = CountryCodetoOutline('IND24');
+%    outline10min=aggregate_rate(outline,2);
+%    outline10min=outline10min>0.5;
+%
+%    m=find(outline10min);
+%
+%    for j=1:length(m)
+%    [mdn,ts1]=getWFDEIstripe(m(j),'Rainf_WFDEI_CRU');
+%    [mdn,ts2]=getWFDEIstripe(m(j),'Snowf_WFDEI_CRU');
+%    [mdn,ts3]=getWFDEIstripe(m(j),'Tair_WFDEI');
+%    DS(j).rain=ts1;
+%    DS(j).snow=ts2;
+%    DS(j).Tair=ts3;
+%    end
+
 
 %% code to make stripes
 

@@ -45,8 +45,21 @@ end
 
 CanMap=CheckForMappingToolbox;
 
+ExtraCommands='';
+PretendOneNargin=0;
 
-if nargin==1
+if nargin==2
+    % look to see if the second argument is a structure for extra commands.
+    if isstruct(Lat)
+        ExtraCommands=Lat;
+        PretendOneNargin=1;
+    end
+end
+
+    
+
+
+if nargin==1 | PretendOneNargin==1
     % only one argument in.  Either user is simply passing in a big array and
     % expecting ThinSurf to infer the Lat and Long, or that one argument is a
     % structure that has the data in it.
@@ -144,6 +157,26 @@ else
 % leading to warning.  So, we put in a bunch of ones.  that seems to make
 % the error go away, and doesn't seem to change the output.
 
+if ~isempty(ExtraCommands)
+    % dont even check what extra command is
+    %  figure
+        %  hm=axesm('robinson','Frame','On');
+        %  h=surfacem(lat2D,lon2D,double(Production_ag.'),double(Production_ag.'));
+        b=double(RedData);
+        lml=LandMaskLogical(b);
+        b(~lml)=NaN;
+        figure
+        hm=gca;
+ [lat2D,lon2D]=meshgrat(RedLat,RedLong);
+        h=surfm(lat2D,lon2D,double(RedData.'));
+ %       h=surface(RedLat,RedLong,double(b),double(b));
+        h=surface(RedLong,RedLat,double(b.'),double(b.'));
+        shading flat
+         
+    
+    
+else
+
     hm=axesm('robinson','Frame','On');
 
     hpatch=findobj(allchild(hm),'type','patch')
@@ -160,7 +193,7 @@ else
         h=meshm(double(RedData.'),R,[50 100],-1);
     end
     shading flat;
-    
+end  
     
     % set(gca,'Position',[0.1800    0.1100    0.6750    0.8150]);
     UserDataStructure.DataAxisHandle=gca;

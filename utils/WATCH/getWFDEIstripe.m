@@ -1,4 +1,4 @@
-function [mdnvect,ts,struct]=getWFDEIstripe(idx,type);
+function [mdn,ts,struct]=getWFDEIstripe(idx,type);
 % getWFDEIstripe
 %
 %   getWFDEIstripe(getWFDEIstripe,type)  where type can be
@@ -63,9 +63,26 @@ for j=1:length(idx);
         FileName=[basedir '/' WFDEIVar '/' WFDEIVar int2str(idx(j))];
         x=load(FileName);
      %   mdnvect=x;
+     
+     
+     
+     if j==1
+         N=length(x.tsvect);       
+         ts(1:N,1:length(idx))=single(-99999);
+         mdn=x.mdnvect(:).';
+     end
+          
+     % using 1:N on left, colon on right to catch the unexpected case where
+     % the number of rows changes at different points. 
+     ts(1:N,j)=x.tsvect(:).';  
+
 end
 
-mdnvect=x.mdnvect;
-ts=x.tsvect;
-struct=x;
+
+
+
+struct.notes=x.notes;
+struct.indices=idx;
+
+
 

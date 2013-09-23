@@ -68,6 +68,19 @@ switch model
         alpha1=normdist(mu1,sigma1.^2,X);
         
         Y=exp(alpha0+alpha1.*X)+epsilon;
+   case 'NLNRRmeanparameters'
+        mu0=0.19;
+        mu1=0.0037;
+        sigma0=0.72;
+        sigma1=0.0025;
+        tau=1.94;
+        
+        
+        epsilon=0;
+        alpha0=mu0;
+        alpha1=mu1;
+        
+        Y=exp(alpha0+alpha1.*X)-exp(alpha0);
         
     case 'NLNRRzyi'
         mu0=0.19;

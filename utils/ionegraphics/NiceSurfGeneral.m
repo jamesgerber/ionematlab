@@ -108,6 +108,7 @@ function OS=NiceSurfGeneral(varargin);
 %
 %
 %   NSS.modifycolormap='stretch';
+%   NSS.stretchcolormapcentervalue=0;
 %
 %   NiceSurfGeneral(Yield,NSS)
 %
@@ -262,7 +263,7 @@ ListOfProperties={
     'eastcolorbar','makeplotdatafile','panoplytriangles','projection'...
     'cbarvisible','transparent','textcolor','newplotareamethod','font',...
     'statewidth','gridcolor','userinterppreference','maxnumfigs','framelimitsvector',...
-    'sink','modifycolormap'};
+    'sink','modifycolormap','stretchcolormapcentervalue'};
 ListOfProperties=unique(ListOfProperties);
 
 %% set defaults for these properties
@@ -287,6 +288,7 @@ separatecatlegend='no';
 FrameLimitsVector=[-180 180 -90 90];
 sink='none'; 
 modifycolormap='none';
+stretchcolormapcentervalue=0;
 %   NSS.modifycolormap='stretch';
 
 % new Joanne colors - now set in personalpreferencestemplate
@@ -446,7 +448,19 @@ Data=double(Data);
 
 if isequal(lower(modifycolormap),'stretch');
    % ok ... user wants to stretch colormap.   
-    cmap=StretchColorMap(cmap,coloraxis(1),coloraxis(2));
+
+    if length(coloraxis)<2
+        ii=find(isfinite(Data));
+        tmp01=Data(ii);
+        coloraxis=[min(tmp01) max(tmp01)]
+    end
+    cmap=StretchColorMap(cmap,coloraxis(1),coloraxis(2),stretchcolormapcentervalue);
+
+    % this ugly bit of code catches a problem below.  need coloraxes to get
+    % cmap, but certain 1-element values of cmap which act as flags lead to
+    % code below for which you need to define both below.  it would be much
+    % better to move StretchColorMap as well as TruncateColorMap below the
+    % length(coloraxis)<2 code.   #nicetodo ...
 end
 
 

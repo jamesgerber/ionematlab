@@ -690,10 +690,23 @@ if isequal(eastcolorbar,'off')
         secondbar= colorbar('Location','South','XTickLabel',...
             {''});
         set(secondbar,'Position',[x0 0.10 delx 0.02568],'YColor',[0 0 0])
-        set(secondbar,'Visible','off') 
+        set(secondbar,'Visible','off')
     end
 else
-    error('haven''t yet implemented eastcolorbar')
+    if fud.MapToolboxFig==0
+        set(fud.DataAxisHandle,'Position',[0.00625 .2 0.8875 .7]);
+        set(fud.ColorbarHandle,'Location','East');
+        set(fud.ColorbarHandle,'Position',[0.9218 0.2237 0.0357 0.6500]);
+    else
+        error(' haven''t yet implemented this unless mappingoff')
+        delx= 0.7558;
+        x0= 1/2*(1-delx);
+        set(fud.ColorbarHandle,'Position',[x0 0.10 delx 0.02568],'XColor',textcolor,'YColor',textcolor)
+        secondbar= colorbar('Location','South','XTickLabel',...
+            {''});
+        set(secondbar,'Position',[x0 0.10 delx 0.02568],'YColor',[0 0 0])
+        set(secondbar,'Visible','off')
+    end
 end
 
 if isequal(colorbarpercent,'on')

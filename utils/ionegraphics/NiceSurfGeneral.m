@@ -371,6 +371,25 @@ if iscell(cmap)
     cmap=ExpandCellCmap(cmap);
 end
 
+% if categoryranges is a set of integers, then special case.  build
+% category values
+
+if ~iscell(categoryranges)
+    disp(['category ranges non-char']);
+    cr=categoryranges;
+    clear categoryranges;  % now make it into a cell array, so clear it.
+    del=min(diff(cr));
+    
+    for j=1:length(cr);
+        
+        categoryranges{j}=[cr(j)-del/10 cr(j)+del/10];
+        categoryvalues{j}=num2str(cr(j));
+    end
+    
+end
+
+
+
 % is categoryvalues empty?  make it category values
 if ~isempty(categoryranges) & isempty(categoryvalues)
     
@@ -522,18 +541,18 @@ end
 OS.coloraxis=coloraxis;
 OS.Data=Data;
 
-temp=Data;
+temp=Data*NaN;
 if strcmp(categorical,'on')
     coloraxis=[1,length(categoryvalues)];
     for ii=1:length(categoryranges)
         cur=categoryranges{ii};
         temp(Data>=cur(1)&Data<cur(2))=ii;
     end
-end
-
 Data=temp;
 clear temp
 
+
+end
 
 %% Color axis manipulation
 cmax=coloraxis(2);
@@ -864,7 +883,7 @@ if strcmp(categorical,'on')
         set(hlegt,'string',units);
         set(bb,'Visi','off')
         set(gca,'Visible','off','Position',[.13 .11 .25 .25])
-        set(Hlegendfig,'position',[442   857   160   120])
+        set(Hlegendfig,'position',[442   457   160   240])
         if ~isempty(filename)
             OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
         end

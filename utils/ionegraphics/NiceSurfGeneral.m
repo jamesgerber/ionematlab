@@ -380,10 +380,19 @@ if ~iscell(categoryranges)
     clear categoryranges;  % now make it into a cell array, so clear it.
     del=min(diff(cr));
     
-    for j=1:length(cr);
+    if isempty(categoryvalues)
+       
+        for j=1:length(cr);
+            
+            categoryranges{j}=[cr(j)-del/10 cr(j)+del/10];
+            categoryvalues{j}=num2str(cr(j));
+        end
+    else
+        for j=1:length(cr);
+            
+            categoryranges{j}=[cr(j)-del/10 cr(j)+del/10];
+        end
         
-        categoryranges{j}=[cr(j)-del/10 cr(j)+del/10];
-        categoryvalues{j}=num2str(cr(j));
     end
     
 end
@@ -882,8 +891,8 @@ if strcmp(categorical,'on')
         hlegt=get(legh,'title');
         set(hlegt,'string',units);
         set(bb,'Visi','off')
-        set(gca,'Visible','off','Position',[.13 .11 .25 .25])
-        set(Hlegendfig,'position',[442   457   160   240])
+        set(gca,'Visible','off','Position',[.13 .11 .45 .25])
+        set(Hlegendfig,'position',[442   457   260   240])
         if ~isempty(filename)
             OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
         end

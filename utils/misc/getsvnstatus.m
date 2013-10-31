@@ -17,6 +17,7 @@ function varargout=GetSVNStatus(varargin);
 %  IonE - Jan 2010
 
 fullpath=which(mfilename);
+disp(['!svn status ' fullpath(1:end-25)]);
 [s,w]=unix(['svn status ' fullpath(1:end-25)]);
 
 if s==1

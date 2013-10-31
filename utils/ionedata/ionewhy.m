@@ -14,8 +14,8 @@ if nargin > 0
     RandStream.setDefaultStream(RandStream('swb2712','seed',n));
 end
 switch fix(10*rand)
-    case {0 1 2 3},        a = special_case;
-    case { 4 5 6},  a = phrase;
+    case {0 1 2 3 4},        a = special_case;
+    case {  5 6 7},  a = phrase;
     otherwise,     a = sentence;
 end
 a(1) = upper(a(1));
@@ -42,6 +42,8 @@ switch fix(19*rand)
     case 10,  a = 'don''t you have something better to do?';
     case 11,  a = 'so Christine doesn''t crush you.';
     case 12,  a = 'because deepak is too #&^##ing lazy to use subversion';
+    case 13,  a = 'because deepak is too #&^##ing lazy to use subversion';
+    case 14,   a = 'Huzzah!';
     otherwise,a = 'dedos al frente!!!!!!';
 end
 
@@ -78,7 +80,7 @@ switch fix(4*rand)
 end
 
 function a = proper_noun
-switch fix(20*rand) 
+switch fix(22*rand) 
     case 0,    a = 'Jon';
     case 1,    a = 'Jamie';
     case 2,    a = 'Nathan';
@@ -90,7 +92,7 @@ switch fix(20*rand)
     case 8,    a = 'Emily';
     case 9,    a = 'Kate';
     case 10,   a = 'Peder';
-    case 11,   a = 'Andrew';
+    case 11,   a = 'Boy Genius';
     case 12,   a = 'Peter';
     case 13,   a = 'Kim';
     case 14,   a = 'The other Emily';
@@ -99,6 +101,7 @@ switch fix(20*rand)
     case 17,   a = 'Julia';
     case 18,   a = 'Paul';
     case 19,   a = 'The Junior Scientist';
+    case 20,   a = 'Xavier';
     otherwise ,  a = 'Navin';
     end
 

@@ -874,7 +874,7 @@ HideUI
 %% did user want to print?
 
 if isequal(filename,'on')
-    filename=titlestring;
+    filename=makesafestring(titlestring);
 end
 
 

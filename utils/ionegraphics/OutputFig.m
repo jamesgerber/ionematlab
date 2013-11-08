@@ -22,6 +22,7 @@ if nargin>0
             case {'force','Force'}
                 ForcePlots=1;
                 Hfig=gcf;
+                MakeSafe=1;
             case 'Initialize'
                 uicontrol('String','OutputFig','Callback', ...
                     'OutputFig(gcf,'''',''-r300'',-1);','position',NextButtonCoords);  
@@ -92,6 +93,7 @@ try
         InitGuess=strrep(InitGuess,':','_');
         InitGuess=strrep(InitGuess,'/','_');
         InitGuess=strrep(InitGuess,',','_');
+        InitGuess=makesafestring(InitGuess);
     end
 catch
     InitGuess='Figure';

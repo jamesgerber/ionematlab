@@ -13,6 +13,9 @@ function csv2tabdelimited(inputfilename,outputfilename)
 %   0577400	"Almonds, Shelled Basis"	AG	"Algeria"	2001	2010	10	176	"Ending Stocks"	21	"(MT)"	0
 %   where those are tabs.
 %
+%   Note that readgenericcsv has an option to read in a tab-delimited file.
+%    
+%
 %  See Also:  readgenericcsv
 
 inputfilename=fixextension(inputfilename,'.csv');

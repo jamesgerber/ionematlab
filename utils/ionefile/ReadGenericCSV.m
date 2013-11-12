@@ -31,7 +31,9 @@ function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
 %   This function is very sensitive to files that have unexpected cells
 %   somewhere below the first two lines.  
 %
-
+%
+%  See Also:  csv2tabdelimited
+%
 % first get headers, then figure out what the individual columns look like
 
 if nargin==0

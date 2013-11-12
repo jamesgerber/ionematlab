@@ -218,7 +218,7 @@ end
 
 UserDataStructure.Lat=RedLat;
 UserDataStructure.Long=RedLong;
-UserDataStructure.Data=RedData;
+UserDataStructure.Data=RedData(:,end:-1:1);
 UserDataStructure.SurfaceHandle=h;
 %axes(UserDataStructure.DataAxisHandle);
 set(gca,'Tag','IonEAxis')

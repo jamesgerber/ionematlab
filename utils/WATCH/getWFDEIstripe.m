@@ -1,23 +1,32 @@
 function [mdn,ts,struct]=getWFDEIstripe(idx,type);
-% getWFDEIstripe
+% getWFDEIstripe - get a stripe from the WFDEI dataset
 %
-%   getWFDEIstripe(getWFDEIstripe,type)  where type can be
+%   getWFDEIstripe(stripenumber,type)  where type can be
 %   'Rainf_WFDEI_CRU		Tair_WFDEI
 %   Snowf_WFDEI_CRU		Tair_daily_WFDEI
 %
 %
+%        stripenumber corresponds to an index into a 2160x1080 grid of the
+%        world.  You can't just make up a stripenumber ... because they
+%        only exist for points on a landmask.  That landmask is defined by
+%        the WFDEI-elevation.nc dataset.   Don't overthink it - use the
+%        example below.
+%
+%  This code only runs if you have the WFDEI stripes set up on your
+%  computer.  Work on malthus, or see jamie for help.
+%
 %  Example
 %
-%    [mdnvect,tsvect,struct]=getWFDEIstripe(237409,'Rainf_WFDEI_CRU'); 
+%    [mdnvect,tsvect,struct]=getWFDEIstripe(97729,'Rainf_WFDEI_CRU'); 
 %    figure
 %    mdnplot(mdnvect,tsvect);
-%    [mdnvect,tsvect,struct]=getWFDEIstripe(237409,'Tair_WFDEI'); 
+%    [mdnvect,tsvect,struct]=getWFDEIstripe(97729,'Tair_WFDEI'); 
 %    figure
 %    mdnplot(mdnvect,tsvect);
-%    [mdnvect,tsvect,struct]=getWFDEIstripe(237409,'Tair_daily_WFDEI'); 
+%    [mdnvect,tsvect,struct]=getWFDEIstripe(97729,'Tair_daily_WFDEI'); 
 %    figure
 %    mdnplot(mdnvect,tsvect);
-%    [mdnvect,tsvect,struct]=getWFDEIstripe(237409,'Snowf_WFDEI_CRU'); 
+%    [mdnvect,tsvect,struct]=getWFDEIstripe(97729,'Snowf_WFDEI_CRU'); 
 %    figure
 %    mdnplot(mdnvect,tsvect);
 %

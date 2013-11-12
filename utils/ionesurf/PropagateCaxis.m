@@ -37,27 +37,27 @@ switch(InputFlag)
         % Alternatively, search for the tags on the axes themselves.
         set(gca,'CLim',ThisCLim);
       %  set(gca,'YLim',ThisYLim);
-        fud=get(ThisFig,'userdata');
-        
-      %  y0=ThisYLim(2)
-      %  dely=diff(ThisYLim);
-      %  x0=mean(ThisXLim);
-        if isfield(fud,'titlehandle')
-            delete(fud.titlehandle);
-        end
-        ht=text(x0,y0+dely*0.05,fud.titlestring);
-        set(ht,'FontSize',14)
-        set(ht,'HorizontalAlignment','center');
-        
-        set(ht,'FontWeight','Bold');
-        set(ht,'tag','NSGTitleTag');
-        fud.titlehandle=ht;
-        set(ThisFig,'userdata',fud);
-        UserInterpPreference=callpersonalpreferences('texinterpreter');
-        
-        set(ht,'interp',UserInterpPreference);
-        
-        varargout{1}=ht;
+% %         fud=get(ThisFig,'userdata');
+% %         
+% %       %  y0=ThisYLim(2)
+% %       %  dely=diff(ThisYLim);
+% %       %  x0=mean(ThisXLim);
+% %         if isfield(fud,'titlehandle')
+% %             delete(fud.titlehandle);
+% %         end
+% %         ht=text(x0,y0+dely*0.05,fud.titlestring);
+% %         set(ht,'FontSize',14)
+% %         set(ht,'HorizontalAlignment','center');
+% %         
+% %         set(ht,'FontWeight','Bold');
+% %         set(ht,'tag','NSGTitleTag');
+% %         fud.titlehandle=ht;
+% %         set(ThisFig,'userdata',fud);
+% %         UserInterpPreference=callpersonalpreferences('texinterpreter');
+% %         
+% %         set(ht,'interp',UserInterpPreference);
+% %         
+% %         varargout{1}=ht;
     otherwise
         error('syntax error in PropagateLimits.m');
         

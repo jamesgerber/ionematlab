@@ -1,14 +1,11 @@
-function LogicalVector=AgriMaskLogical;
-% AGRIMASKLOGICAL -  logical array of standard (5 min) landmask
-
-persistent AgriLandMaskVector
-
-if isempty(AgriLandMaskVector)
-    SystemGlobals
-    [Long,Lat,Data]=OpenNetCDF(LANDMASK_5MIN);
-    AgriLandMaskVector=(Data==7 | Data==3);
+function varargout=helperfunction(varargin)
+% helper function to deal with capitalization issue
+persistent madewarning
+if isempty(madewarning)
+    madewarning=1;
+    disp(['calling ' lower(mfilename) ' (no caps)']);
 end
-LogicalVector=AgriLandMaskVector;
+[varargout{1:nargout}]=feval(lower(mfilename),varargin{:});
 
 
 

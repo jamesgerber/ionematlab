@@ -1,4 +1,4 @@
-function [BigMatrix] = embedmatrix(LittleMatrix,longs,lats)
+function [BigMatrix] = embedmatrix2(LittleMatrix,longs,lats)
 
 % function [BigMatrix] = embedmatrix(LittleMatrix,longs,lats)
 %
@@ -42,13 +42,20 @@ function [BigMatrix] = embedmatrix(LittleMatrix,longs,lats)
    % longgapbig=round(longgap*10000);
    % case longgapbig==833
 
+% there's  aproblem with embedmatrix ... roundoff error is screwing it 
+% up.   i'm going to let you fix it.   try to use the function 'closeto'  
+% instead of '=='
+
+   
+   
+   
 
 %% determine LittleMatrix resolution and assign BigMatrix size
 
 longgap = abs(longs(2)-longs(1));
 latgap = abs(lats(2)-lats(1));
 
-if longgap == latgap
+if closeto(longgap,latgap,.001)
     switch longgap
         case longgap == 0.5
             BigMatrix = zeros(720,360);
@@ -84,14 +91,16 @@ latTL = max(lats); % furthest north
 % get the lats and longs of BigMatrix
 [Long,Lat]=InferLongLat(BigMatrix);
 
-ii=find(Long==longTL);
-jj=find(Lat==latTL);
+[valueLong,ii]=ClosestValue(Long,longTL);
+disp(['The top left point of LittleMatrix was originally longitude ' ...
+    num2str(longTL) ' and has been mapped to longitude ' ...
+    num2str(valueLong) '.' ])
+[valueLat,jj]=ClosestValue(Lat,latTL);
+disp(['The top left point of LittleMatrix was originally latitude ' ...
+    num2str(latTL) ' and has been mapped to longitude ' ...
+    num2str(valueLat) '.' ])
 
-%%% why isn't this last step working????
-
-% Jamie, thoughts? What's best thing to do if there isn't an exact
-% match of lats or longs between BigMatrix and LittleMatrix?
-% use closest
+% make sure that there was a match for lats and longs
 if isempty(ii)==1
     error('The first longitude in your "longs" vector does not match a longitude on the standard global matrix for your LittleMatrix resolution.')
 end

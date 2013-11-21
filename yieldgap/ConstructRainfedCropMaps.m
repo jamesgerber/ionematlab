@@ -37,7 +37,7 @@ if politunitflag ==1
 end
 
 for IP = IPvec
-    for jCrop=[1 2 3 8];
+    for jCrop=[1:16];
         jCrop
         switch jCrop
             case 1
@@ -309,6 +309,7 @@ for IP = IPvec
         writenetcdf(S.Long,S.Lat,S.Data,[cropname 'irrigated' num2str(IP) ],...
             [cropname 'IRR' num2str(IP) '_' filterlabel '_' ...
             int2str(DataYear) '_5min.nc'],DAS)
+        !gzip *.nc
     end
 end
 

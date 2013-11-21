@@ -1034,7 +1034,10 @@ switch lower(plotarea)
         filename=[filename '_mexico'];
     case {'southafrica'}
         longlatbox=[15 40 -40 -20];
-        filename=[filename '_southafrica'];
+        filename=[filename '_southafrica']; 
+    case {'minnesota'}
+        longlatbox=[-75 -65 40 50];
+        filename=[filename '_minnesota'];
     case {'southeastasia'}
         longlatbox=[90 150 -15 +30];
         filename=[filename 'southeastasia'];

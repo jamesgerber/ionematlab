@@ -356,7 +356,13 @@ end
 %%
 %  Now all user input is collected.  We can start changing things in response to
 % user-supplied flags
-%
+
+
+if isequal(filename,'on')
+    filename=makesafestring(titlestring);
+end
+
+
 % is 'plotarea' specified?
 if isempty(plotarea)
     % don't change longlatbox
@@ -873,9 +879,7 @@ HideUI
 
 %% did user want to print?
 
-if isequal(filename,'on')
-    filename=makesafestring(titlestring);
-end
+
 
 
 if strcmp(categorical,'on')

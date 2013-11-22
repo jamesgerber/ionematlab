@@ -368,7 +368,13 @@ if isempty(plotarea)
     % don't change longlatbox
     PlotAllStates=0;
 else
-    [longlatbox,filename]=ModifyLongLatBox(plotarea,filename);
+    if ischar(plotarea)
+        [longlatbox,filename]=ModifyLongLatBox(plotarea,filename);
+    else
+        longlatbox=plotarea;
+        filename=[filename '_latlong' makesafestring(num2str(plotarea))];
+    end
+        
     PlotAllStates=1;
 end
 
@@ -605,6 +611,27 @@ end
 
 % now make no-data points above color map to get 'uppermap' (white)
 Data(isnan(Data))=NoDataLandVal;
+
+%% test code to do crazy things with panoply triangles
+if length(panoplytriangles)==6
+    cmap=finemap(cmap,'','');
+    
+    if sum(panoplytriangles(1:3))>0
+        % user has specified something for the left triangle
+        cmap=[panoplytriangles(1:3);panoplytriangles(1:3);cmap];
+    end
+    
+    
+    if sum(panoplytriangles(4:6))>0
+        % user has specified something for the left triangle
+        cmap=[cmap;panoplytriangles(4:6);panoplytriangles(4:6);...
+            panoplytriangles(4:6);panoplytriangles(4:6)];
+    end
+end
+
+%%
+
+
 
 
 OS.ProcessedMapData=Data;
@@ -965,6 +992,8 @@ end
 %  ModifyLongLatBox     %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [longlatbox,filename]=ModifyLongLatBox(plotarea,filename);
+
+
 
 
 switch lower(plotarea)

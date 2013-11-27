@@ -45,6 +45,22 @@ if nargin==1
     type='precip';
 end
 
+
+if length(idx)>1
+    for j=1:length(idx);
+        [mdn,tsvect(:,j),stripeno(j)]=getstripe(idx(j),type);
+    end
+    ts=tsvect;
+    return
+end
+
+        
+        
+
+
+
+
+
 persistent iivect ii
 
 if isempty(iivect)
@@ -64,8 +80,8 @@ end
 
 
 if isequal(type,'precip')
-    [md1,ts1]=getstripe(idx,'rain');
-    [md2,ts2]=getstripe(idx,'snow');
+    [md1,ts1,stripeno]=getstripe(idx,'rain');
+    [md2,ts2,stripeno]=getstripe(idx,'snow');
     mdn=md1;
     ts=ts1+ts2;
     return
@@ -93,6 +109,8 @@ switch type
     case 'snow'
         basedir=[iddstring '/Climate/reanalysis/WATCH/Snowf/stripes/'];
         FileBase='snow_pt';
+    otherwise 
+        error([' need to ask for Tair rain or snow, not ' type ]);
 end
 
 

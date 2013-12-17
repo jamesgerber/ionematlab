@@ -20,7 +20,9 @@ if nargin==1
     cmap='sixteencolors';
 end
 
-cmap=ReadTiffCmap([iddstring '/misc/colormaps/' cmap '.tiff']);
+if ischar(cmap)
+    cmap=ReadTiffCmap([iddstring '/misc/colormaps/' cmap '.tiff']);
+end
 
 cred=unique(cmap(2:end-1,:),'rows');
 

@@ -31,13 +31,25 @@ else
 end
 
 
-[s,d]=unix(['/usr/bin/svn info ' S]);
 
-AllInfo=d;
+try
+    [s,d]=unix(['/usr/bin/svn info ' S]);
+    
+    AllInfo=d;
+    
+    ii= find(d==sprintf('\n'));
+    RevLine=d(ii(5):ii(6)-1);
+catch
+    [s,d]=unix(['/opt/subversion/bin/svn info ' S]);
+    
+    AllInfo=d;
+    
+    ii= find(d==sprintf('\n'));
+    RevLine=d(ii(5):ii(6)-1);
+    
+end
 
-ii= find(d==sprintf('\n'));
-RevLine=d(ii(5):ii(6)-1);
-
+    
 Name=d((ii(1)+7):ii(2)-1);
 
 RevNo=str2num(RevLine(11:end));

@@ -18,10 +18,14 @@ function varargout=GetSVNStatus(varargin);
 
 fullpath=which(mfilename);
 disp(['!svn status ' fullpath(1:end-25)]);
+
 [s,w]=unix(['svn status ' fullpath(1:end-25)]);
 
 if s==1
-    error(['problem with subversion command.  '])
+    [s,w]=unix(['/opt/subversion/bin/svn status ' fullpath(1:end-25)]);
+    if s==1
+        error(['problem with subversion command.  '])
+    end
 end
 
 if isempty(w)

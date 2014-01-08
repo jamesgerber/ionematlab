@@ -21,7 +21,7 @@ disp(['!svn status ' fullpath(1:end-25)]);
 
 [s,w]=unix(['svn status ' fullpath(1:end-25)]);
 
-if s==1
+if s~=0
     [s,w]=unix(['/opt/subversion/bin/svn status ' fullpath(1:end-25)]);
     if s==1
         error(['problem with subversion command.  '])

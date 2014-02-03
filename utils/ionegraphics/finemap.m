@@ -63,6 +63,7 @@ function varargout=finemap(cmap,lowercolor,uppercolor)
 if nargin==0
     disp(['Here are existing colormaps.  Built-in ones OK also.'])
     ls([iddstring '/misc/colormaps/*.tiff']);
+    ls([iddstring '/misc/colormaps/*.m']);
     return
 end
 

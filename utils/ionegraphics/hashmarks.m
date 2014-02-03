@@ -29,7 +29,7 @@ function I=hashmarks(im,mask,color,space,width,dir,filename)
 
 if size(im,3)==1
     nsg(im);
-    outputfig('force','tmpim.png');
+    OutputFig('force','tmpim.png');
     %centerfigure('tmpim.png');
     im=imread('tmpim.png');
     %image(im);

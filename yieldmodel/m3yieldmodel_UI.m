@@ -228,13 +228,13 @@ for bin = 1:100
     assign.alpha = alpha;
     assign.kfloatflag = 1;
     assign.cb = cb;
-    [~] = agmgmt_elm_irrintmodel_nutoneirron_sf(0,0,assign);
-    [~] = agmgmt_elm_irrintmodel_nuttwoirron_sf(0,0,assign);
-    [~] = agmgmt_elm_irrintmodel_nutthreeirron_sf(0,0,assign);
+%     [~] = agmgmt_elm_irrintmodel_nutoneirron_sf(0,0,assign);
+%     [~] = agmgmt_elm_irrintmodel_nuttwoirron_sf(0,0,assign);
+%     [~] = agmgmt_elm_irrintmodel_nutthreeirron_sf(0,0,assign);
     [~] = agmgmt_mbm_irrintmodel_nutoneirron_sf(0,0,assign);
     [~] = agmgmt_mbm_irrintmodel_nuttwoirron_sf(0,0,assign);
     [~] = agmgmt_mbm_irrintmodel_nutthreeirron_sf(0,0,assign);
-    
+%     
     % now calculate modY according to the appropriate model (specified
     % by "numnutvars" and "i"
     

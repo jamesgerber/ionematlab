@@ -90,7 +90,8 @@ end
 grid on
 title([' All cultivated areas. ' cropname ' ' WetFlag ' Rev' Rev]);
 % fattenplot
-finemap('nmwhiteorangered_umn_leftskew2','','')
+%finemap('nmwhiteorangered_umn_leftskew2','','')
+finemap('area2','','')
 shading interp
 
 hold on

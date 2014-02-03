@@ -37,7 +37,7 @@ if politunitflag ==1
 end
 
 for IP = IPvec
-    for jCrop=[1:16];
+    for jCrop=[ 1:16 21];
         jCrop
         switch jCrop
             case 1
@@ -72,6 +72,12 @@ for IP = IPvec
                 cropname='rapeseed';
             case 16
                 cropname='groundnut';
+
+                
+            case 21
+                cropname='cotton';
+
+                
                 
         end
         

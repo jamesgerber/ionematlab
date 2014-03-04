@@ -7,6 +7,9 @@ function maketransparentoceans_noant(OldFileName,NewFileName,TextColor,AgFlag);
 %
 %        maketransparentoceans_noant(OLDFILENAME,NEWFILENAME,TEXTCOLOR);
 %
+%        maketransparentoceans_noant(OLDFILENAME,'',TEXTCOLOR);
+%
+%
 %        maketransparentoceans_noant(OLDFILENAME,NEWFILENAME,TEXTCOLOR,AGFLAG);%
 %
 %        maketransparentoceans_noant(OLDFILENAME,TEXTCOLOR);
@@ -41,6 +44,11 @@ end
 
 if nargin==1
     NewFileName=strrep(OldFileName,'.png','_alpha_to_na.png');
+end
+
+if isempty(NewFileName)
+     [WithExtension,WithoutExtension]=fixextension(OldFileName,'.png');
+    NewFileName=strrep(WithExtension,'.png','_alpha_to_na.png');
 end
 
 
@@ -160,6 +168,8 @@ if AgFlag==0
         Alpha=(~ii_background | ~ii_colorbar )& ii_ocean ; ;
         Alpha(ii_keep_triangles)=1;
       %  Alpha(ii_colorbar)=1;
+              Alpha(ii_text)=1;
+
         x=plotimage(:,:,1); x(ii_text_notriangles)=TextColor(1)*255; plotimage(:,:,1)=x;
         x=plotimage(:,:,2); x(ii_text_notriangles)=TextColor(2)*255; plotimage(:,:,2)=x;
         x=plotimage(:,:,3); x(ii_text_notriangles)=TextColor(3)*255; plotimage(:,:,3)=x;

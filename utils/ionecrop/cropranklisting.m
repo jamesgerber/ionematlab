@@ -1,3 +1,4 @@
+% script to determine a crop rank listing
 fid=fopen([iddstring 'misc/Reconcile_Monfreda_FAO_cropnames.txt'],'r');
 C = textscan(fid,'%s%s%s%s','Delimiter',tab,'HeaderLines',1);
 fclose(fid)

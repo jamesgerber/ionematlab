@@ -7,6 +7,8 @@ function maketransparentoceans(OldFileName,NewFileName,TextColor,AgFlag);
 %
 %        maketransparentoceans(OLDFILENAME,NEWFILENAME,TEXTCOLOR);
 %
+%        maketransparentoceans(OLDFILENAME,'',TEXTCOLOR);
+%
 %        maketransparentoceans(OLDFILENAME,NEWFILENAME,TEXTCOLOR,AGFLAG);%
 %
 %        maketransparentoceans(OLDFILENAME,TEXTCOLOR);
@@ -36,6 +38,10 @@ if nargin==1
     NewFileName=strrep(OldFileName,'.png','_alpha.png');
 end
 
+if isempty(NewFileName)
+    [WithExtension,WithoutExtension]=fixextension(OldFileName,'.png');
+    NewFileName=strrep(WithExtension,'.png','_alpha.png');
+end
 
 OldFileName=fixextension(OldFileName,'.png');
 

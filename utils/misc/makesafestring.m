@@ -33,6 +33,11 @@ if isequal(InString(1),' ') | isequal(InString(1),'_')
     return
 end
 
+if isequal(InString(end),' ') | isequal(InString(end),'_') | isequal(InString(end),'.')
+    OutString=MakeSafeString(InString(1:end-1));
+    return
+end
+
 persistent NoColumnNameCounter
 if isempty(NoColumnNameCounter)
     NoColumnNameCounter=0;

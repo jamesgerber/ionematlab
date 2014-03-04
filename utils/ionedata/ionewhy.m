@@ -83,7 +83,7 @@ function a = proper_noun
 switch fix(22*rand) 
     case 0,    a = 'Jon';
     case 1,    a = 'Jamie';
-    case 2,    a = 'Nathan';
+    case 2,    a = 'Moana';
     case 3,    a = 'Christine';
     case 4,    a = 'The ethanol lobby';
     case 5,    a = 'Vegetarians';
@@ -95,7 +95,7 @@ switch fix(22*rand)
     case 11,   a = 'Boy Genius';
     case 12,   a = 'Peter';
     case 13,   a = 'Kim';
-    case 14,   a = 'The other Emily';
+    case 14,   a = 'Bonnie';
     case 15,   a = 'Graham';
     case 16,   a = 'Shipeng';
     case 17,   a = 'Julia';
@@ -119,7 +119,7 @@ switch fix(6*rand)
     case 2,    a = 'global landscaper';
     case 3,    a = 'meat eater';
     case 4,    a = 'slacker';
-    case 5,    a = 'biofuels proponent';
+    case 5,    a = 'puppy kicker';
 end
 
 function a = nominative_pronoun
@@ -167,6 +167,7 @@ switch fix(7*rand)
     case 3,    a = 'smart';
     case 4,    a = 'matlab-crazed';
     case 5,    a = 'hungry';
+    case 6,    a = 'puppy-kicking';
     otherwise, a = 'good';
 end
 

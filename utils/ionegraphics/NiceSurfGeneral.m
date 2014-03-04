@@ -41,6 +41,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.Units ['']
 %   NSS.TitleString   %or NSS.Title
 %   NSS.FileName   = if 'on' will use titlestring
+%                    if 'dirname/', then will use titlestring and
+%                    place in dirname
 %   NSS.cmap
 %   NSS.LongLatBox
 %   NSS.DisplayNotes  - this will be placed on the lower left of graph
@@ -359,7 +361,19 @@ end
 
 
 if isequal(filename,'on')
-    filename=makesafestring(titlestring);
+    tstemp=titlestring
+    filename=makesafestring(tstemp);
+end
+
+if ~isempty(filename) & isequal(filename(end),filesep)
+        tstemp=titlestring
+%     if isequal(tstemp(end),' ')
+%         tstemp=tstemp(1:end-1);
+%     end
+%     if isequal(tstemp(end),'.')
+%         tstemp=titlesttstempring(1:end-1);
+%     end
+    filename=[filename makesafestring(tstemp)];
 end
 
 

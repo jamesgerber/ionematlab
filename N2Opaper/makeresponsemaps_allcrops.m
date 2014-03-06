@@ -1,33 +1,19 @@
-% 
-croplist=cropnames;
-
-croplist=croplist([1:132 134:end]);
-%croplist={'wheat','rice'};
-%croplist={'maize','wheat'}
-
-croplist{end+1}='rice_irrigated_monfredamask';
-croplist{end+1}='rice_rainfed_monfredamask';
-% croplist{end+1}='riceIRR10_politunitirrfiltered_2000';
-% croplist{end+1}='riceRF10_politunitirrfiltered_2000';
-
-%croplist=croplist(end-1:end)
+% Primary Script for N2O Analysis
 
 
-cropnumlist=1:length(croplist);
+
+% list of crops for analysis
+[croplist,cropnumlist]=N2OAnalysis_cropnames;
 extratitleinfo='';
-%extratitleinfo='onlyrice';
+MaxNApp=500;
+bins=[1:500];
+IGNORERICE=0;
 
-% 
-% 
-% croplist={'maize','wheat'};
-% croplist{end+1}='rice_irr75';
-% croplist{end+1}='rice_rf75';
-% extratitleinfo='maizewheatriceonly';
-% 
-% croplist={'maize'};
-% %croplist{end+1}='rice_irr75';
-% %croplist{end+1}='rice_rf75';
-% extratitleinfo='maizeonly';
+%% prepare to populate metavectors
+% prepare to populate metavectors - these are vectors which store some data
+% for every individual point 
+
+% need to make a map which can be connected to a value for binning.
 
 
 
@@ -40,19 +26,19 @@ countrynumbermap=SageNumberMap;
 load('customregionmap');
 continentnumbermap=customregionmap;
 
-
-
-%croplist={'maize'}
-IGNORERICE=0;
-
 metaav=[];
 metanv=[];
 metacountrynum=[];
 metacontinentnum=[];
 metacropnum=[];
+
+
 counter=1;
 clear FDS FDSv
 
+
+
+%% BLANK MATRICES TO POPULATE AS WE GO.
 
 totalarea=datablank(0);
 totalNapp=datablank(0);
@@ -71,12 +57,9 @@ totaldN2OdNresponseIPCC=datablank(0);
 
 
 
-totaltruncatedNapp=0;
+totaltruncatedNapp=0;  %this will keep track of how much N is truncated
 
-MaxNApp=500;
 
-bins=[1:500];
-%croplist={'wheat'};
 if IGNORERICE==1
     warndlg([' Ignoring rice IPCC result ']);
 end
@@ -84,17 +67,16 @@ for j=1:length(croplist)
     
     cropname=croplist{j};
     nutrient='N';
-    %model='IPCC';
 
     fertcropname=cropname;
     
-      if isequal(cropname(1:min(4,end)),'rice')
-          fertcropname='rice';
-      end
+    if isequal(cropname(1:min(4,end)),'rice')
+        fertcropname='rice';
+    end
           
     [S,existflag] = getfertdata(fertcropname,nutrient);
     
-    
+ 
     
     
     if existflag==0        
@@ -120,7 +102,6 @@ for j=1:length(croplist)
         
         Napp=S.Data(:,:,1);
         
-        %nsg(Napp,'title','N applied (maize)','caxis',[0 320]);
         ii=isfinite(Napp) & Napp < 9e9 & Napp > 0;
         
         c=getdata(cropname);
@@ -138,24 +119,21 @@ for j=1:length(croplist)
         
         ii=find(ThisCropNAppVector>MaxNApp);
         
-        totaltruncatedNapp=totaltruncatedNapp+sum( (ThisCropNAppVector(ii)-500).*cav(ii).*fmav(ii));
+        totaltruncatedNapp=totaltruncatedNapp+sum( (ThisCropNAppVector(ii)-MaxNApp).*cav(ii).*fmav(ii));
 
         
-%         if numel(ii)>1
-%             warndlg([' found largeness for ' cropname ', total applied N over ' int2str(MaxNApp) ...
-%                 ' kg/ha is ' num2str(sum( (ThisCropNAppVector(ii)-500).*cav(ii).*fmav(ii)))]);
-%         end
-%         
-        disp([' found largeness for ' cropname ', total applied N over ' int2str(MaxNApp) ...
-            ' kg/ha is ' num2str(sum( (ThisCropNAppVector(ii)-500).*cav(ii).*fmav(ii)))]);
-        ThisCropNAppVector(ii)=MaxNApp;
-        disp([' found largeness for ' cropname ', total applied N is ' num2str(sum( (ThisCropNAppVector).*cav.*fmav))]);
-    
+        if sum( (ThisCropNAppVector(ii)-MaxNApp).*cav(ii).*fmav(ii)) > 0
+            disp([' found Napp very large for ' cropname ', total applied N over ' int2str(MaxNApp) ...
+                ' kg/ha is ' num2str(sum( (ThisCropNAppVector(ii)-MaxNApp).*cav(ii).*fmav(ii)))]);
+            ThisCropNAppVector(ii)=MaxNApp;
+            disp([' found largeness for ' cropname ', total applied N is ' num2str(sum( (ThisCropNAppVector).*cav.*fmav))]);
+        end
+        
         % now figure out how much national, how much subnational
         q=c.Data(:,:,3);
 
-         iisubnational=q > 0.5 & q < 9e10 ;
-         iinational=q <=0.5   ;
+        iisubnational=q > 0.5 & q < 9e10 ;
+        iinational=q <=0.5   ;
  
         % this allows to determine how much applied above/below a
         % particular amount.
@@ -182,9 +160,6 @@ for j=1:length(croplist)
         ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRresponse',cropname)./ThisCropNAppVector;
         ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivmeanNLNRR',cropname);
       
-        
-        
-        
         totalNapp(iigood)=totalNapp(iigood)+ThisCropNAppVector.*croparea(iigood);
         totalNapp_subnational(iigood)=totalNapp_subnational(iigood)+ThisCropNAppVector_subnational.*croparea(iigood);
         totalNapp_national(iigood)=totalNapp_national(iigood)+ThisCropNAppVector_national.*croparea(iigood);
@@ -201,10 +176,10 @@ for j=1:length(croplist)
         totalN2ONLNRR(iigood)=totalN2ONLNRR(iigood)+ThisCropN2OVectorNLNRR.*croparea(iigood);
         totalN2OresponseNLNRR(iigood)=totalN2OresponseNLNRR(iigood)+ThisCropN2OresponseVectorNLNRR.*croparea(iigood);
         totaldN2OdNresponseNLNRR(iigood)=totaldN2OdNresponseNLNRR(iigood)+ThisCropdN2OdNresponseVectorNLNRR.*croparea(iigood);
-        max(max(totalN2OIPCC));
-        max(max(totalN2ONLNRR));
+       % max(max(totalN2OIPCC));
+       % max(max(totalN2ONLNRR));
         
-        ignorehistogramstuff=1;
+        ignorehistogramstuff=0;
         
         if ignorehistogramstuff==0
         %% here is code for histograms
@@ -235,6 +210,8 @@ for j=1:length(croplist)
         end
     end
 end
+
+save FDSvCropname FDSv
 %save metavectors metacountrynum metacropnum  metacontinentnum  metaav   metanv
 
 

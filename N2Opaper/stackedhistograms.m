@@ -99,13 +99,13 @@ for j=N:-1:(N-n+1);
 %    legvect{j}=[FDSv(j).cropname ' ' num2str(TotalNappsorted(j)/1e6,3)];  
 
     legendstring=getfield(FDSv(j),legendfieldname);
-        color=LegendToColor(legendstring);
+        [color,displaystring]=LegendToColor(legendstring);
 
-        legendstring=strrep(legendstring,'rice_irr75', 'irrigated rice');
-        legendstring=strrep(legendstring,'rice_rf75', 'rainfed rice');
+       % % legendstring=strrep(legendstring,'rice_irr75', 'irrigated rice');
+       % % legendstring=strrep(legendstring,'rice_rf75', 'rainfed rice');
 
 %legvect{j}=[legendstring ' ' num2str(TotalNappsorted(j)/1e6,3)];  
-legvect{j}=[sprintf('%s',legendstring) ' ' sprintf('%5.0f',TotalNappsorted(j)/1e9) ' Gt'];
+legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.0f',TotalNappsorted(j)/1e9) ' Gt'];
 
 cmap(j,:)=color;
     
@@ -154,13 +154,13 @@ for j=N:-1:(N-n+1);
     %     color=cropcolor(FDSv(j).cropname);
     %     legvect{j}=[FDSv(j).cropname ' ' num2str(TotalN20IPCCsorted(j)/1e6,3)];
     legendstring=getfield(FDSv(j),legendfieldname);
-        color=LegendToColor(legendstring);
+        [color,displaystring]=LegendToColor(legendstring);
 
    legendstring=strrep(legendstring,'rice_irr75', 'irrigated rice');
         legendstring=strrep(legendstring,'rice_rf75', 'rainfed rice');
 
     %  legvect{j}=[legendstring ' ' num2str(TotalN20IPCCsorted(j)/1e6,3)];
-    legvect{j}=[sprintf('%s',legendstring) ' ' sprintf('%5.0f',TotalN20IPCCsorted(j)/1e6) ' Mt'];
+    legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.0f',TotalN20IPCCsorted(j)/1e6) ' Mt'];
     
     cmap(j,:)=color;
     
@@ -199,7 +199,7 @@ for j=N:-1:(N-n+1);
 
      legendstring=getfield(FDSv(j),legendfieldname);
      
-         color=LegendToColor(legendstring);
+        [color,displaystring]=LegendToColor(legendstring);
 
      
    legendstring=strrep(legendstring,'rice_irr75', 'irrigated rice');
@@ -208,7 +208,7 @@ for j=N:-1:(N-n+1);
 %    color=cropcolor(FDSv(j).cropname);
 %    legvect{j}=[FDSv(j).cropname ' ' num2str(TotalN20NLNRRsorted(j)/1e6,3)];
 %     legvect{j}=[sprintf('%-10s',legendstring) ' ' sprintf('%5.0f',TotalN20NLNRRsorted(j)/1e6) ' Mt'];
-     legvect{j}=[sprintf('%s',legendstring) ' ' sprintf('%5.0f',TotalN20NLNRRsorted(j)/1e6) ' Mt'];
+     legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.0f',TotalN20NLNRRsorted(j)/1e6) ' Mt'];
     cmap(j,:)=color;
     
 end

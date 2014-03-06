@@ -42,18 +42,8 @@
 
 
 load('/ionedata/AdminBoundary2010/SageNumberCountryMap','NameList')
-
-croplist=cropnames;
-
-croplist=croplist([1:132 134:end]);
-%croplist={'wheat','rice'};
-%croplist={'maize','wheat'}
-
-croplist{end+1}='rice_irrigated';
-croplist{end+1}='rice_rainfed';
-
+[croplist,cropnumlist]=N2OAnalysis_cropnames;
 clear FDSv
-%croplist=unique(metacropnum);
 
 counter=1;
 tic
@@ -146,28 +136,11 @@ FDSvCountries=FDSv;
 
 %% now continents
 
-%a=load('/ionedata/AdminBoundary2010/Raster_NetCDF/2_States_5min/ncmat/glctry.mat')
-%length(unique(a.DS.Data))
-%
-%
-%countrylist=unique(metacropnum);
-
-
-%load('/ionedata/misc/ContinentMap.mat','NameList')
+[croplist,cropnumlist]=N2OAnalysis_cropnames;
 
 load customregionmap
 
-croplist=cropnames;
-
-croplist=croplist([1:132 134:end]);
-%croplist={'wheat','rice'};
-%croplist={'maize','wheat'}
-
-croplist{end+1}='rice_irrigated';
-croplist{end+1}='rice_rainfed';
-
 clear FDSv
-%croplist=unique(metacropnum);
 
 counter=1;
 tic

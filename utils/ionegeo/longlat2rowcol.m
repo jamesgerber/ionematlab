@@ -2,6 +2,9 @@ function [row,col,vectorindex]=longlat2rowcol(longpos,latpos,Long,Lat)
 % longlat2rowcol - convert latitude and longitude to row and column
 %
 % SYNTAX
+%     [row,col,vectorindex]=longlat2rowcol(latpos,longpos) will return the
+%     row/col associated with latpos and longpos in 4320x2160 array
+%
 %     longlat2rowcol(latpos,longpos,Data) will return the row/col
 %     associated with latpos and longpos in array Data.
 %
@@ -23,6 +26,20 @@ function [row,col,vectorindex]=longlat2rowcol(longpos,latpos,Long,Lat)
 %     S=testdata(100,50,1);
 %     [r,c]=longlat2rowcol(-180,90,S.Lat,S.Long)
 %     S.Data(r,c)
+%
+%
+%  Example:
+%
+%  
+%  x=[1 -22.4475 -50.6686; 2 -21.5364 -49.8594];
+%  millnumbers=x(:,1);
+%  latvalues=x(:,2);
+%  longvalues=x(:,3);
+%
+%  milllocation=datablank;
+%  [row,col,vectorindex]=longlat2rowcol(longvalues,latvalues);
+%  milllocation(vectorindex)=millnumbers;
+
 
 if nargin==0
     help(mfilename)

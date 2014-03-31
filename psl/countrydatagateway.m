@@ -43,7 +43,7 @@ switch lower(fieldlist{1})
         kk=strmatch(ISO3Code,data.ISO3);
         jj=intersect(ii,kk);
         
-        if isempty(jj)
+        if isempty(jj) | isempty(ISO3Code)
             disp(['found no match to data for ' UN_Name]);
             outputdata=NaN;
         else   

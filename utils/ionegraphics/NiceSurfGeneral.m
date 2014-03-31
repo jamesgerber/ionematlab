@@ -721,8 +721,8 @@ fud=get(gcf,'UserData');
 
 % let's store the cut-off values
 
-fud.NiceSurfLowerCutoff=(cmin+minstep/2);
-fud.NiceSurfUpperCutoff=(cmax-minstep/2);
+fud.NiceSurfLowerCutoff=(cmin-minstep/2);
+fud.NiceSurfUpperCutoff=(cmax+minstep/2);
 fud.QuickVersion=0;
 fud.transparent=transparent;
 

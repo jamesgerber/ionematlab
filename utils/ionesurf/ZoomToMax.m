@@ -57,7 +57,9 @@ switch(InputFlag)
         
 %        if length(unique(z))==1
         if length(unique(z(isfinite(z))))==1
-            z=get(hc(end),'CData');
+            %z=get(hc(end),'CData');
+            % switch to standard matlab convention
+            z=get(hc(end),'CData')';
         end
  
         % if this was made with nicesurf or nicesurfgeneral, then need to
@@ -86,7 +88,8 @@ switch(InputFlag)
             %makes sure that we don't sneak by with a NaN
             % this is necessary because the mapping toolbox pads the x and y
             % matrices with NaNs
-            [minval,RowIndex,ColumnIndex]=max2d(z);
+         %   [minval,RowIndex,ColumnIndex]=max2d(z);
+            [minval,ColumnIndex,RowIndex]=max2d(z);
             %   LongVal=xx(RowIndex,ColumnIndex);
             %   LatVal=yy(RowIndex,ColumnIndex);
             LongVal=UDS.Long(ColumnIndex);

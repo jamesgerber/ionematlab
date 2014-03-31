@@ -31,7 +31,7 @@ function [row,col,vectorindex]=longlat2rowcol(longpos,latpos,Long,Lat)
 %  Example:
 %
 %  
-%  x=[1 -22.4475 -50.6686; 2 -21.5364 -49.8594];
+%  x=[1 -22.4475 -50.6686; 2 -21.5364 -149.8594;];
 %  millnumbers=x(:,1);
 %  latvalues=x(:,2);
 %  longvalues=x(:,3);

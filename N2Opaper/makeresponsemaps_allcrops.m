@@ -4,9 +4,10 @@
 
 % list of crops for analysis
 [croplist,cropnumlist]=N2OAnalysis_cropnames;
+
 extratitleinfo='';
 MaxNApp=500;
-bins=[1:500];
+bins=[1:1:500];
 IGNORERICE=0;
 
 %% prepare to populate metavectors
@@ -26,11 +27,18 @@ countrynumbermap=SageNumberMap;
 load('customregionmap');
 continentnumbermap=customregionmap;
 
+
+% adding a map at the state level
+load /Library/IonE/data/AdminBoundary2010/Raster_NetCDF/2_States_5min/ncmat/glctry.mat
+statelevelmap=DS.Data;
+
+
 metaav=[];
 metanv=[];
 metacountrynum=[];
 metacontinentnum=[];
 metacropnum=[];
+metastate=[];
 
 
 counter=1;
@@ -185,7 +193,7 @@ for j=1:length(croplist)
         %% here is code for histograms
 
         
-        av=cav.*fmav;
+        av=double(cav.*fmav);
         nv=ThisCropNAppVector;
         
         edges=[0:1:501];
@@ -207,12 +215,13 @@ for j=1:length(croplist)
         metacontinentnum=[metacontinentnum ; continentnumbermap(iigood)];
         metaav=[metaav ;av];
         metanv=[metanv ; nv];
+        metastate=[metastate ; statelevelmap(iigood)];
         end
     end
 end
 
-save FDSvCropname FDSv
-%save metavectors metacountrynum metacropnum  metacontinentnum  metaav   metanv
+%save FDSvCropname FDSv
+%save metavectors metacountrynum metacropnum  metacontinentnum  metaav metanv metastate
 
 
 totaltruncatedNapp;
@@ -225,8 +234,10 @@ totalN2ONLNRR_perha=totalN2ONLNRR./totalarea;
 totalN2OresponseNLNRR_perha=totalN2OresponseNLNRR./totalarea;
 totaldN2OdNresponseNLNRR_perha=totaldN2OdNresponseNLNRR./totalarea;
 
-
+sum(metanv.*metaav)
 sumtotalNapp=sum(sum(totalNapp.*fma))
+
+
 sumtotalNapp_national=sum(sum(totalNapp_national.*fma))
 sumtotalNapp_subnational=sum(sum(totalNapp_subnational.*fma))
 
@@ -239,8 +250,7 @@ sumtotalN2OIPCCFromMaps=sum(sum(totalN2OIPCC.*fma))
 sumtotalN2ONLNRRFromMaps=sum(sum(totalN2ONLNRR.*fma))
 %%
 
-
-%%%save working_makeresponsemaps_allcrops
+save working_makeresponsemaps_allcrops
 
 %%%load working_makeresponsemaps_allcrops
 %%  make plots

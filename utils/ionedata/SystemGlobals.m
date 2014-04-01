@@ -18,19 +18,24 @@ switch username
     case {'kbrauman'}
         IoneDataDir=['/Library/IonEdata/'];
     case {'emilydombeck','carlsonk'}
-       IoneDataDir='~/Library/ionedata/';
-   case 'jsgerber'
+        IoneDataDir='~/Library/ionedata/';
+    case 'jsgerber'
         IoneDataDir=['/Library/IonE/data/'];
-case 'sunx0170'
-IoneDataDir=['~/Program/ionedata/'];
-
+    case 'sunx0170'
+        IoneDataDir=['~/Program/ionedata/'];
+        
     case 'mattj'
         IoneDataDir=['C:\Users\mattj\Documents\UMN\ionedata\'];
     case 'pcwest'
-       IoneDataDir= '~/Data/';
+        IoneDataDir= '~/Data/';
     otherwise
         IoneDataDir=['/Library/IonE/data/'];
 end
+
+if ismac==0 & isequal(getenv('username'),'engs0074')
+    IoneDataDir=['C:\GLI\MATLAB\data\'];
+end
+    
 
 if ismalthus==1
     IoneDataDir=['/Library/IonE/ionedata/'];

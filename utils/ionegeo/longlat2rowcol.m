@@ -2,13 +2,13 @@ function [row,col,vectorindex]=longlat2rowcol(longpos,latpos,Long,Lat)
 % longlat2rowcol - convert latitude and longitude to row and column
 %
 % SYNTAX
-%     [row,col,vectorindex]=longlat2rowcol(latpos,longpos) will return the
+%     [row,col,vectorindex]=longlat2rowcol(longpos,latpos) will return the
 %     row/col associated with latpos and longpos in 4320x2160 array
 %
-%     longlat2rowcol(latpos,longpos,Data) will return the row/col
+%     longlat2rowcol(longpos,latpos,Data) will return the row/col
 %     associated with latpos and longpos in array Data.
 %
-%     longlat2rowcol(latpos,longpos,Lat,Long) will return the row/col
+%     longlat2rowcol(longpos,latpos,Long,Lat) will return the row/col
 %     associated with latpos/longpos in a map of size Lat/Long or of size
 %     length(Lat)/length(Long).
 %
@@ -24,7 +24,7 @@ function [row,col,vectorindex]=longlat2rowcol(longpos,latpos,Long,Lat)
 %  should get 10800 (andorra)
 %
 %     S=testdata(100,50,1);
-%     [r,c]=longlat2rowcol(-180,90,S.Lat,S.Long)
+%     [r,c]=longlat2rowcol(-180,90,S.Long,S.Lat)
 %     S.Data(r,c)
 %
 %

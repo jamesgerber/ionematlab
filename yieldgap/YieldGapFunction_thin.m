@@ -624,10 +624,10 @@ if MakeBinWeightedYieldGapPlotFlag==1;
     WinterAddRedPlot(Long,Lat,YieldGapArray,Weight);
 end
 
-OutputStructure.Yield=Yield;
-OutputStructure.YieldGapFraction=single(YieldGapArray);
-OutputStructure.potentialyield=single(potentialyield);
-OutputStructure.ClimateMask=uint16(ClimateMask);
+OutputStructure.Yield=Yield(agrimasklogical);
+%OutputStructure.YieldGapFraction=single(YieldGapArray);
+OutputStructure.potentialyield=single(potentialyield(agrimasklogical));
+OutputStructure.ClimateMask=uint16(ClimateMask(agrimasklogical));
 OutputStructure.ClimateMaskFile=ClimateMaskFile;
 OutputStructure.Area=CultivatedArea;
 OutputStructure.cropname=cropname;
@@ -637,7 +637,7 @@ OutputStructure.GDDBaseTemp=GDDBase;
 %OutputStructure.MaxYield=Yield90;
 OutputStructure.VectorOfPotentialYields=VectorOfPotentialYields;
 OutputStructure.LogicalArrayOfGridPointsInABin=...
-    LogicalArrayOfGridPointsInABin;
+    LogicalArrayOfGridPointsInABin(agrimasklogical);
 OutputStructure.InputStructureRecord=FlagStructure;
 [RevNo,RevString,LastChangeRevNo,LCRString,AI]=GetSVNInfo(mfilename);
 RevData.CodeRevisionNo=RevNo;

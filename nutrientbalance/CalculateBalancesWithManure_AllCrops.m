@@ -217,7 +217,10 @@ else
         end
     end
     
-    
+    N.MissingNfert=MissingNfert;  
+    %i'm putting in this line knowing it could cause the code to break.
+    %MissingNfert is defined within a conditional loop ... if newNmapflag
+    %were nonzero then this would lead to a crash.
     
     
     N.NfertPerHA=AppliedNitrogenPerHA;
@@ -289,12 +292,18 @@ if skipPcalcsflag == 1
     P = 'skipped';
 else
     if newPmapflag == 0
-        disp(['Loading observed ' crop ' P2O5 application rate map.'])
+   try
+       disp(['Loading observed ' crop ' P2O5 application rate map.'])
         x=load([iddstring '/Fertilizer2000/ncmat/' crop 'P2O5apprate.mat']);
         AppliedPhosphorusPerHA=x.DS.Data(:,:,1).*P2O5toPconv;
-    end
-    %AppliedPhosphorusPerHA=datastore([...
-    %    'fert_app_ver7/'   crop '_P_ver2_25_rate_FAO_SNS_FINAL.mat']);
+   catch
+      disp(['problem loading  ' crop ' P2O5 application rate map.'])
+      AppliedPhosphorusPerHA=datablank;
+   end
+   
+   
+   end
+    
     AppliedPhosphorusPerHA(isnan(AppliedPhosphorusPerHA))=0;
     
     P.PfertPerHA=AppliedPhosphorusPerHA;
@@ -329,9 +338,15 @@ if skipKcalcsflag == 1
     K = 'skipped';
 else
     if newKmapflag == 0
+        try
         disp(['Loading observed ' crop ' K2O5 application rate map.'])
         x=load([iddstring '/Fertilizer2000/ncmat/' crop 'K2Oapprate.mat']);
         AppliedPotassiumPerHA=x.DS.Data(:,:,1).*K2OtoKconv;
+        catch
+            disp(['problem loading ' crop ' K2O5 application rate map.'])
+            AppliedPotassiumPerHA=datablank;
+            
+        end
     end
     %AppliedPotassiumPerHA=datastore([...
     %    'fert_app_ver7/'   crop '_K_ver2_25_rate_FAO_SNS_FINAL.mat']);
@@ -368,5 +383,59 @@ end
 
 return
 
+% end of function.  But here is some code to call this in a loop.
 
 
+%% code to see how much 
+%%%cn=cropnames;
+fid=fopen([iddstring 'misc/Reconcile_Monfreda_FAO_cropnames.txt'],'r');
+C = textscan(fid,'%s%s%s%s','Delimiter',tab,'HeaderLines',1);
+fclose(fid);
+
+nums_unsort=C{1};
+cn=C{2};
+runningmanureNsum_justmanure=0;
+runningmanureNsum_withNfert=0;
+runningNfertsum=0;
+
+runningmanurePsum_justmanure=0;
+runningmanurePsum_withNfert=0;
+runningPfertsum=0;
+
+for j=1:length(cn)
+    [c,n,p]=CalculateBalancesWithManure_AllCrops(cn{j});
+
+    ii=CropMaskLogical;
+    ha=n.Area(ii).*fma(ii);
+    
+    if n.MissingNfert==1
+        runningmanureNsum_justmanure=...
+            runningmanureNsum_justmanure+...
+            sum(sum(n.NmanurePerHA(ii).*ha));
+ 
+           runningmanurePsum_justmanure=...
+            runningmanurePsum_justmanure+...
+            sum(sum(p.PmanurePerHA(ii).*ha));
+
+    else
+        runningmanureNsum_withNfert=...
+            runningmanureNsum_withNfert+...
+            sum(sum(n.NmanurePerHA(ii).*ha));
+  
+        runningmanurePsum_withNfert=...
+            runningmanurePsum_withNfert+...
+            sum(sum(p.PmanurePerHA(ii).*ha));
+        
+        runningNfertsum=...
+            runningNfertsum+...
+            sum(sum(n.NfertPerHA(ii).*ha));
+
+          runningPfertsum=...
+            runningPfertsum+...
+            sum(sum(p.PfertPerHA(ii).*ha));
+
+    end   
+  
+end
+    
+    

@@ -1,7 +1,7 @@
 function ConstructIncomeFilteredCropMaps
 %  CONSTRUCTINCOMEFILTEREDCROPMAPS
 
-for CropNo=[5 7 13];
+for CropNo=[1];
     
     switch CropNo
         case 7
@@ -14,6 +14,8 @@ for CropNo=[5 7 13];
             name='millet'
         case 9
             name='sorghum'
+                    case 1
+            name='rice'
     end
     
     
@@ -27,7 +29,7 @@ for CropNo=[5 7 13];
     
     
     
-    for Income=[2];
+    for Income=[1 2 ];
         
         
         switch Income

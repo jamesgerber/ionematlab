@@ -1,4 +1,4 @@
-function OutputStructure=YieldGapFunction_CropNames(FlagStructure)
+function OutputStructure=YieldGapFunction_thin(FlagStructure)
 %% YieldGapFunction   New Yield Gap Work - J. Gerber, N. Mueller
 %
 %  SYNTAX
@@ -61,15 +61,15 @@ if numel(FS.CropNames)>1 | numel(FS.ClimateSpaceN)>1 ...
     NPercentileForMaxYield=numel(FS.PercentileForMaxYield);
     NCSR=numel(FS.ClimateSpaceRev);
     for j=1:Ncrop
-        for m=1:Nclim;           
+        for m=1:Nclim;
             for k=1:NPercentileForMaxYield
                 for n=1:NCSR;
-                FS=FlagStructure;
-                FS.CropNames=FlagStructure.CropNames(j);
-                FS.ClimateSpaceN=FlagStructure.ClimateSpaceN(m);
-                FS.PercentileForMaxYield=FlagStructure.PercentileForMaxYield(k);
-                FS.ClimateSpaceRev=FlagStructure.ClimateSpaceRev(n);
-                OutputStructure=YieldGapFunction_CropNames(FS);
+                    FS=FlagStructure;
+                    FS.CropNames=FlagStructure.CropNames(j);
+                    FS.ClimateSpaceN=FlagStructure.ClimateSpaceN(m);
+                    FS.PercentileForMaxYield=FlagStructure.PercentileForMaxYield(k);
+                    FS.ClimateSpaceRev=FlagStructure.ClimateSpaceRev(n);
+                    OutputStructure=YieldGapFunction_thin(FS);
                 end
             end
         end
@@ -81,7 +81,7 @@ end
 
 [FileName,DirName]=YieldGapFunctionFileNames_CropName(FS,OutputDirBase);
 if ~exist(DirName,'dir');
-mkdir(DirName)
+    mkdir(DirName)
 end
 
 
@@ -157,7 +157,7 @@ Rev=ClimateSpaceRev;
 switch Rev
     case 'H'
         IndividualAreaMethod='none';
-        disp(['setting IndividualAreaMethod=''none'' since Rev = ' Rev ]); 
+        disp(['setting IndividualAreaMethod=''none'' since Rev = ' Rev ]);
 end
 %%% Preliminaries
 
@@ -224,20 +224,20 @@ GDDTempstr=GDDBase;
 Nstr=int2str(N);
 switch Rev
     case {'F','H','J','I','K','L','M','N','P'}
-ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
-    WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
-
+        ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
+            WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
+        
     case {'Q','R'}
-      ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_' ...
-                    'Tmax_' GDDTmaxstr '_'   ...
-    WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
-  
+        ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_' ...
+            'Tmax_' GDDTmaxstr '_'   ...
+            WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev];
+        
         
     case 'G'
-ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
-    WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev  ... 
-    '_soilrev' csqirev];
-
+        ClimateMaskFile=['ClimateMask_' cropname '_' HeatFlag GDDTempstr '_'  ...
+            WetFlag '_' int2str(N) 'x' int2str(N) '_Rev' Rev  ...
+            '_soilrev' csqirev];
+        
     otherwise
         error
 end
@@ -252,7 +252,7 @@ if exist('BinMatrix')==0
     BinMatrix=datablank;
     BinMatrix(agrimasklogical)=BinMatrixVector;
 end
-    ClimateMask=BinMatrix;
+ClimateMask=BinMatrix;
 
 if DistributionOfAreaPlotFlag==1;
     DistributionOfAreaPlot;
@@ -315,9 +315,9 @@ for ibin=ListOfBins(:)';
             ' (' ClimateDefs{ibin} ')']);
     end
     
-%     if ibin==24
-%         dbstop(mfilename,'315')
-%     end
+    %     if ibin==24
+    %         dbstop(mfilename,'315')
+    %     end
     
     %InitializeSomeVariables
     Yield90=-1;
@@ -335,9 +335,9 @@ for ibin=ListOfBins(:)';
     
     
     if isempty(ExternalMask);
-            iiGood=(DataMaskLogical & Yield < 1e10 & isfinite(Yield));
+        iiGood=(DataMaskLogical & Yield < 1e10 & isfinite(Yield));
     else
-        if ~islogical(ExternalMask) 
+        if ~islogical(ExternalMask)
             error('ExternalMask not logical')
         end
         iiGood=(DataMaskLogical & Yield < 1e10 & isfinite(Yield) & ExternalMask);
@@ -629,7 +629,7 @@ OutputStructure.Yield=Yield(agrimasklogical);
 OutputStructure.potentialyield=single(potentialyield(agrimasklogical));
 OutputStructure.ClimateMask=uint16(ClimateMask(agrimasklogical));
 OutputStructure.ClimateMaskFile=ClimateMaskFile;
-OutputStructure.Area=CultivatedArea;
+OutputStructure.Area=CultivatedArea(agrimasklogical);
 OutputStructure.cropname=cropname;
 OutputStructure.ClimateDefs=ClimateDefs;
 OutputStructure.CDS=CDS;

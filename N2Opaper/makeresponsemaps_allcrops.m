@@ -219,8 +219,8 @@ for j=1:length(croplist)
         end
     end
 end
-
-%save FDSvCropname FDSv
+FDSvCropname=FDSv;
+save FDSvCropname FDSv FDSvCropname
 %save metavectors metacountrynum metacropnum  metacontinentnum  metaav metanv metastate
 
 

@@ -50,9 +50,16 @@ if numel(iirow)==0
         return
     end
     
-        s=findstr(crop,'_alt');
+    s=findstr(crop,'_alt');
     if numel(s)==1
         redcrop=strrep(lower(crop),'_alt','');
+        [T,Tmax]=GetGDDBaseTemp(redcrop);
+        return
+    end
+    
+    s=findstr(crop,'_sub');
+    if numel(s)==1
+        redcrop=crop(1:s-1);
         [T,Tmax]=GetGDDBaseTemp(redcrop);
         return
     end

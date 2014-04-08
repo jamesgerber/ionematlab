@@ -14,7 +14,7 @@ for CropNo=[1];
             name='millet'
         case 9
             name='sorghum'
-                    case 1
+        case 1
             name='rice'
     end
     

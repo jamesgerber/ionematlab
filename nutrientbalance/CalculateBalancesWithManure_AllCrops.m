@@ -396,11 +396,20 @@ nums_unsort=C{1};
 cn=C{2};
 runningmanureNsum_justmanure=0;
 runningmanureNsum_withNfert=0;
+
+runningtotalNsum_justmanure=0;
+runningtotalNsum_withNfert=0;
+
+
 runningNfertsum=0;
 
 runningmanurePsum_justmanure=0;
 runningmanurePsum_withNfert=0;
 runningPfertsum=0;
+
+runningtotalPsum_justmanure=0;
+runningtotalPsum_withNfert=0;
+
 
 for j=1:length(cn)
     [c,n,p]=CalculateBalancesWithManure_AllCrops(cn{j});
@@ -416,7 +425,17 @@ for j=1:length(cn)
            runningmanurePsum_justmanure=...
             runningmanurePsum_justmanure+...
             sum(sum(p.PmanurePerHA(ii).*ha));
+        
+        runningtotalNsum_justmanure=...
+            runningtotalNsum_justmanure+...
+            sum(sum(n.TotalInputNitrogen(ii).*ha));
 
+        runningtotalPsum_justmanure=...
+            runningtotalPsum_justmanure+...
+            sum(sum(p.TotalInputPhosphorus(ii).*ha));
+
+        
+        
     else
         runningmanureNsum_withNfert=...
             runningmanureNsum_withNfert+...
@@ -434,6 +453,16 @@ for j=1:length(cn)
             runningPfertsum+...
             sum(sum(p.PfertPerHA(ii).*ha));
 
+        runningtotalNsum_withNfert=...
+            runningtotalNsum_withNfert+...
+            nansum(n.Nfix(ii).*ha)+...
+            sum(sum(n.TotalInputNitrogen(ii).*ha));
+ 
+        runningtotalPsum_withNfert=...
+            runningtotalPsum_withNfert+...
+            sum(sum(p.TotalInputPhosphorus(ii).*ha));
+
+        
     end   
   
 end

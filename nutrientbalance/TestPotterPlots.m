@@ -1,7 +1,7 @@
 % produce graphs to corrobate our ability to reproduce results in Potter et
 % al.
 
-ManureBaseDir=[ iddstring '/misc/manure']);
+ManureBaseDir=[ iddstring '/misc/manure'];
 %SN=OpenGeneralNetCDF([ManureBaseDir '/Nmanure.nc']);
 SP=OpenGeneralNetCDF([ManureBaseDir '/Pmanure.nc']);
 

@@ -111,7 +111,7 @@ for N=Nspace;
                 FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
                 
-                NoBaseFileName=['/ClimateMask_' redcrop '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                NoBaseFileName=['/ClimateMask_' cropname '_' HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
             else
                 if isstr(DataYear)
@@ -123,7 +123,7 @@ for N=Nspace;
                 FileName=[SaveFileNameBaseDir '/ClimateMask_' cropname '_' yrstring  HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
                 
-                NoBaseFileName=['/ClimateMask_' redcrop '_' yrstring  HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
+                NoBaseFileName=['/ClimateMask_' cropname '_' yrstring  HeatFlag  GDDTempstr '_' WetFlag '_' int2str(N) ...
                     'x' int2str(N) '_RevP'];
             end
             
@@ -142,8 +142,8 @@ for N=Nspace;
                 % the 1 minute criterion is so that two processes working
                 % at same time don't overwrite each others tokens.
                 
-               % disp(['cheesiness.  moved 10 mins to 6 seconds'])
-                if a.bytes < 1000  &  ((now-a.datenum) > 10/(24*60))
+                disp(['cheesiness.  moved 10 mins to 6 seconds'])
+                if a.bytes < 1000  &  ((now-a.datenum) > .10/(24*60))
                     
                     warning([' overwriting ' FileName '.mat'])
                     

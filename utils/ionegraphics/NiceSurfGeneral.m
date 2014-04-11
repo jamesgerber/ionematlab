@@ -560,6 +560,13 @@ if length(coloraxis)<2
     end
     
     
+    if isempty(coloraxis)
+        disp(['Coloraxis is empty.  presumably data is all NaN. ' ...
+            'using arbitrary axis so code can continue.']);
+        coloraxis=[0 1];
+    end
+    
+    
     % make sure that coloraxis isn't really close to zero but not quite.
     % If so, then pull it down to zero.
     

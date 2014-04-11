@@ -49,8 +49,14 @@ end
 % time=netcdf.getVar(ncid,3);
 % ctry=netcdf.getVar(ncid,4);
 % ctry=double(ctry);
-
+persistent x NumList NameList UnitNames
+if isempty(x)
 x=OpenNetCDF(ADMINBOUNDARYMAP_5min);
+[NumList,NameList,UnitNames]=LoadPolitBoundary_5min;
+end
+
+
+
 ctry=x.Data;
 long=x.Long;
 lat=x.Lat;
@@ -58,7 +64,7 @@ lat=x.Lat;
 if nargin==1
     indexlist=longlist;
     %need to turn single input list of indices into a list of long and lat.
-    [long2d,lat2d]=meshgrid(lat,long);
+    [lat2d,long2d]=meshgrid(lat,long);
     
     longlist=long2d(indexlist);
     latlist=lat2d(indexlist);
@@ -67,7 +73,6 @@ end
 
 
 
-[NumList,NameList,UnitNames]=LoadPolitBoundary_5min;
 
 
 

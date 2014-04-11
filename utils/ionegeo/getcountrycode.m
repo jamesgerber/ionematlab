@@ -11,7 +11,7 @@ function ccstructure=getcountrycode(countryname);
 if s~=0
     if ~isempty( findstr(countryname,'Ivoire') )
         warndlg([' interpreting ' countryname ' as cote d''ivoire']);
-        ccstructure='CIV';
+        ccstructure=StandardCountryNames('CIV','ISO3');
         return
     else
         error([' call to grep did not work ']);
@@ -21,18 +21,19 @@ end
 if length(findstr(w,tab)) > 20
     switch countryname
         case 'Dominica'
-            ccstructure='MDA';
-        case 'Dominican Republic'
-            ccstructure='MDA';
+            ccstructure=StandardCountryNames('MDA','ISO3');
+     %   case 'Dominican Republic'
+     %       ccstructure=StandardCountryNames('DOM');
 
         case 'China'
-            ccstructure='CHN';
+            ccstructure=StandardCountryNames('CHN','ISO3');
         case 'Congo'
             warndlg([' found ''congo'' in getcountrycode.  interpreting as congo not DRC'])
-            ccstructure='COG';
+            ccstructure=StandardCountryNames('COG','ISO3');
         otherwise
     error([' found multiple matches.  boo! ']);
     end
+    return
 end
 
 ccstructure=StandardCountryNames(w(1:3),'ISO3');

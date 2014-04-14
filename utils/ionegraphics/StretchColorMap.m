@@ -30,7 +30,13 @@ if nargin<4
     center=0;
 end
 if (cmin-center)*(cmax-center) > 0
-  error([' cmin cmax the same sign.']);
+  warndlg([' cmin cmax the same sign. doing something cheesy']);
+
+  samesign=1;
+else
+      samesign=0;
+
+  
 end
 
 
@@ -66,3 +72,7 @@ else
   tmp=cmap(ii,1:3);
   newmap=[tmp; cmappos];
 end
+
+%if samesign==1
+%    newmap=3
+%end

@@ -129,6 +129,9 @@ if AttemptNums==0
                 NumVector=str2double(Contents);
                 if any(isnan(NumVector))
                     NumericFlag=0;
+                    kk=find(isnan(NumVector));
+                    disp(['attempted to interpret ' ThisName ' as numbers. ' ...
+                        'Found a problem starting in line ' int2str(kk(1))]);
                 else
                     NumericFlag=1;
                 end

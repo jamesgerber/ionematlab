@@ -11,7 +11,7 @@ function insertcopyright(filename,newroot);
 % insertcopyright('writenetcdf','codetoshare')
 
 
-[RevNo,RevString,LCRevNo,LCRevString,AllInfo]=getsvninfo(filename);
+[RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo(filename);
 
 x=which(filename);
 [PATHSTR,NAME,EXT]=fileparts(x);

@@ -57,7 +57,7 @@ switch model
         end
     case 'NLNRR'
         mu0=0.19;
-        mu1=0.0037;
+        mu1=0.00369;
         sigma0=0.72;
         sigma1=0.0025;
         tau=1.94;
@@ -70,7 +70,7 @@ switch model
         Y=exp(alpha0+alpha1.*X)+epsilon;
    case 'NLNRRmeanparameters'
         mu0=0.19;
-        mu1=0.0037;
+        mu1=0.00369;
         sigma0=0.72;
         sigma1=0.0025;
         tau=1.94;
@@ -84,7 +84,7 @@ switch model
         
     case 'NLNRRzyi'
         mu0=0.19;
-        mu1=0.0037;
+        mu1=0.00369;
         sigma0=0.72;
         sigma1=0.0025;
         tau=1.94;
@@ -99,7 +99,7 @@ switch model
   %      Y=exp(alpha0+alpha1.*X);
   case 'globalparamNLNRR'
         mu0=0.19;
-        mu1=0.0037;
+        mu1=0.00369;
         sigma0=0.72;
         sigma1=0.0025;
         tau=1.94;
@@ -151,27 +151,89 @@ switch model
     case 'meanNLNRR'
         %mean of the model
         mu0=0.19;
-        mu1=0.0037;
+        mu1=0.00369;
         sigma0=0.72;
         sigma1=0.0025;
         tau=1.94;
         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) );
 
+      case 'meanNLNRR_ricesep'
+        %mean of the model
+        switch crop
+            case 'rice'
+                Z=-1.139;
+            otherwise
+                Z=0;
+        end
+        mu0=0.24+Z;
+        mu1=0.00376;
+        sigma0=0.72;
+        sigma1=0.0025;
+        tau=1.935;
+        Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) );
+
+        
     case {'meanNLNRRzyi','meanNLNRRresponse'}
         % mean of the model but we subtract off the zero value
         mu0=0.19;
-        mu1=0.0037;
+        mu1=0.00369;
         sigma0=0.72;
         sigma1=0.0025;
         tau=1.94;
         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
           exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
 
-        
-    case 'derivmeanNLNRR'
+    case {'meanNLNRRzyi_ricesep','meanNLNRRresponse_ricesep'}
+        % mean of the model but we subtract off the zero value
+        %mean of the model
+        switch crop
+            case 'rice'
+                Z=-1.139;
+            otherwise
+                Z=0;
+        end
+        mu0=0.24+Z;
+        mu1=0.00369;
+        sigma0=0.72;
+        sigma1=0.0025;
+        tau=1.94;
+        Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
+          exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
+     
+    case 'derivmeanNLNRR_ricesep'
+        % derivative of the mean of the model
+        switch crop
+            case 'rice'
+                Z=-1.139;
+            otherwise
+                Z=0;
+        end
+        mu0=0.24+Z;
+        mu1=0.00369;
+        sigma0=0.72;
+        sigma1=0.0025;
+        tau=1.94;
+        Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) ).*...
+            ((2*(mu1+sigma1.^2*X).*(sigma1.^2))/(2*sigma1.^2) );
+  case 'derivmeanNLNRR_ricesep'
+        % derivative of the mean of the model
+        switch crop
+            case 'rice'
+                Z=-1.139;
+            otherwise
+                Z=0;
+        end
+        mu0=0.24+Z;
+        mu1=0.00369;
+        sigma0=0.72;
+        sigma1=0.0025;
+        tau=1.94;
+        Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) ).*...
+            ((2*(mu1+sigma1.^2*X).*(sigma1.^2))/(2*sigma1.^2) );
+ case 'derivmeanNLNRR'
         % derivative of the mean of the model
         mu0=0.19;
-        mu1=0.0037;
+        mu1=0.00369;
         sigma0=0.72;
         sigma1=0.0025;
         tau=1.94;
@@ -181,7 +243,7 @@ switch model
         
     case 'medianNLNRR'
         mu0=0.19;
-        mu1=0.0037;
+        mu1=0.00369;
         sigma0=0.72;
         sigma1=0.0025;
         tau=1.94;
@@ -197,7 +259,7 @@ switch model
         Y=exp(alpha0+alpha1.*X)+epsilon;
     case 'derivmedianNLNRR'
         mu0=0.19;
-        mu1=0.0037;
+        mu1=0.00369;
         sigma0=0.72;
         sigma1=0.0025;
         tau=1.94;

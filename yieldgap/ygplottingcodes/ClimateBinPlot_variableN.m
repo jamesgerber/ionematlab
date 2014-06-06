@@ -89,8 +89,11 @@ NiceSurfGeneral(a,NSS)
 Hfig=gcf;
 % turn off colorbar
 fud=get(Hfig,'userdata');
-set(fud.ColorbarHandle,'visible','off')
-
+try
+    set(fud.ColorbarHandle,'visible','off')
+catch
+    error([' problem.  probably too many figures to start with.  long story.']);
+end
 if suppressbox==0
     
     hax=axes('position',[.025 .2 .3 .3],'tag','tmpaxis');%,

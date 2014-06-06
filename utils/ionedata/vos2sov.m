@@ -41,7 +41,13 @@ for m=1:length(a)
             if TypeFlag==1
                 ThisVect{j}=getfield(S(j),ThisField);
             else
-                ThisVect(j)=getfield(S(j),ThisField);
+                tmp=getfield(S(j),ThisField);
+               % if isempty(tmp)
+                %    ThisVect(j)=0;
+                %else
+                    ThisVect(j)=tmp;
+                %end
+
             end
         end
     SOV=setfield(SOV,ThisField,ThisVect);

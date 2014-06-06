@@ -4,6 +4,9 @@ function writenetcdf(Long,Lat,Data,DataName,FileName,DataAttributeStructure,Forc
 %   SYNTAX:
 %            WriteNetCDF(Long,Lat,Data,DataName,FileName);
 %
+%            WriteNetCDF(Long,Lat,Data,'',FileName); will make DataName
+%            equal to FileName (without the directories)
+%
 %            WriteNetCDF(Long,Lat,Data,DataName,FileName,DataAttributeStructure);
 %
 %            WriteNetCDF(Long,Lat,Data,DataName,FileName, ...
@@ -159,6 +162,16 @@ LatDim = netcdf.defDim(ncid,'latitude',NLat);
 LevelDim=netcdf.defDim(ncid,'level',NLevel);
 %TimeDim=netcdf.defDim(ncid,'time',netcdf.getConstant('NC_UNLIMITED'));
 TimeDim=netcdf.defDim(ncid,'time',NTime);
+
+if isempty(DataName)
+    ii=findstr(FileName,filesep);
+    if isempty(ii)
+        DataName=strrep(FileName,'.nc','');
+    else
+        tmp=FileName((max(ii)+1):end);
+        DataName=strrep(tmp,'.nc','')
+    end
+end
 
 
 

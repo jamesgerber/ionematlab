@@ -1,4 +1,4 @@
-function I=hashmarks(im,mask,color,space,width,dir,filename)
+ifunction I=hashmarks(im,mask,color,space,width,dir,filename)
 % HASHMARKS - creates image of a map with hashmarks over a designated area
 % 
 % SYNTAX

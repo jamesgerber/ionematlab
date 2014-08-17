@@ -1,8 +1,18 @@
 function stackedhistograms(FDSv,legendfieldname,n)
 %
+%load FDSvCropname.mat
+%stackedhistograms(FDSvCropname,'cropname',9);
+%
+%load FDSvCountries.mat
 %stackedhistograms(FDSvCountries,'countryname',8)
-%stackedhistograms(FDSvCropName,'cropname',8);
+%
+%load FDSvContinents.mat	
 %stackedhistograms(FDSvContinents,'continentname',8);% 
+%
+%  load
+
+
+
 newfigs=1;
 
 if nargin==1
@@ -84,6 +94,7 @@ end
 cmap=copper(N);
 cmap=cmap(N:-1:1,:);  % reverse it.
 
+cmap=cmap*0+[.4];
 
 
 
@@ -105,7 +116,7 @@ for j=N:-1:(N-n+1);
        % % legendstring=strrep(legendstring,'rice_rf75', 'rainfed rice');
 
 %legvect{j}=[legendstring ' ' num2str(TotalNappsorted(j)/1e6,3)];  
-legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.0f',TotalNappsorted(j)/1e9) ' Gt'];
+legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.1f',TotalNappsorted(j)/1e9) ' Gt'];
 
 cmap(j,:)=color;
     
@@ -175,7 +186,7 @@ end
 h=bar(FBC,yN20IPCC_forplot_sorted'/1e9,'stacked');
 xlabel(' kg/ha ')
 ylabel(' Mt ')
-title([' Total N_2O response (IPCC method). '])
+title([' Total N_2O response (Linear method). '])
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl);
@@ -222,7 +233,7 @@ end
 h=bar(FBC,yN20NLNRR_forplot_sorted'/1e9,'stacked');
 xlabel(' kg/ha ')
 ylabel(' Mt ')
-title([' Total N_2O response (''NLNRR'' method) '])
+title([' Total N_2O response (Non-linear method) '])
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl)

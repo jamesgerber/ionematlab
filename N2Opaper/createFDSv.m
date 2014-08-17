@@ -51,7 +51,7 @@ for countryno=1:237
    % countryno=44
     NameList{countryno}
     
-    idxrice=strmatch('rice_irrigated',croplist);
+    idxrice=strmatch('rice_inundated',croplist);
     ii_irr=find(countryno==metacountrynum & metacropnum==idxrice);
     ii_rf=find(countryno==metacountrynum & metacropnum~=idxrice);
     
@@ -148,7 +148,7 @@ for countryno=1:length(NameList)
    % countryno=44
     NameList{countryno}
     
-    idxrice=strmatch('rice_irrigated',croplist);
+    idxrice=strmatch('rice_inundated',croplist);
     ii_irr=find(countryno==metacontinentnum & metacropnum==idxrice);
     ii_rf=find(countryno==metacontinentnum & metacropnum~=idxrice);
     

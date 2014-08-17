@@ -5,12 +5,12 @@
 % list of crops for analysis
 [croplist,cropnumlist]=N2OAnalysis_cropnames;
 
-%croplist={'rice_irrigated_monfredamask'};
-%cropnumlist=1;
+%croplist={'rice_noninundated','rice_inundated','maize','wheat','soybean'};
+%cropnumlist=1:5;
 
 extratitleinfo='';
-MaxNApp=500;
-bins=[1:1:500];
+MaxNApp=600;
+bins=[1:1:600];
 IGNORERICE=0;
 
 %% prepare to populate metavectors
@@ -42,6 +42,8 @@ metacountrynum=[];
 metacontinentnum=[];
 metacropnum=[];
 metastate=[];
+metaidx=[];
+metaDQ=[];
 
 
 counter=1;
@@ -95,9 +97,9 @@ for j=1:length(croplist)
     else
         
         if isequal(cropname(1:min(4,end)),'rice')
-            if isequal(cropname,'rice_irrigated_monfredamask')
+            if isequal(cropname,'rice_inundated')
                 callcropname='rice';
-            elseif isequal(cropname,'rice_rainfed_monfredamask')
+            elseif isequal(cropname,'rice_noninundated')
                 callcropname=cropname;
             else
                 warndlg('unexpected rice crop.')
@@ -112,12 +114,15 @@ for j=1:length(croplist)
         
         
         Napp=S.Data(:,:,1);
+        NappDQ=S.Data(:,:,2);
+        
         
         ii=isfinite(Napp) & Napp < 9e9 & Napp > 0;
         
         c=getdata(cropname);
         croparea=c.Data(:,:,1);
         iigood=ii & croparea < 9e9;
+        cropdataquality=c.Data(:,:,2);
         
         cav=croparea(iigood);
         ThisCropNAppVector=Napp(iigood);
@@ -165,16 +170,16 @@ for j=1:length(croplist)
         
         ThisCropN2OVectorIPCC=Nfunction(ThisCropNAppVector,'IPCC',callcropname);
         ThisCropN2OresponseVectorIPCC=Nfunction(ThisCropNAppVector,'IPCC',callcropname)./ThisCropNAppVector;
-        ThisCropdN2OdNresponseVectorIPCC=Nfunction(ThisCropNAppVector,'derivIPCC',cropname);
-%         ThisCropN2OVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRR',cropname)...
-%             -Nfunction(0,'meanNLNRR',cropname);
-%         ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRresponse',cropname)./ThisCropNAppVector;
-%         ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivmeanNLNRR',cropname);
-ThisCropN2OVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRR_ricesep',cropname)...
-            -Nfunction(0,'meanNLNRR_ricesep',cropname);
-        ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRresponse_ricesep',cropname)./ThisCropNAppVector;
-        ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivmeanNLNRR_ricesep',cropname);
-      
+        ThisCropdN2OdNresponseVectorIPCC=Nfunction(ThisCropNAppVector,'derivIPCC',callcropname);
+        %         ThisCropN2OVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRR',cropname)...
+        %             -Nfunction(0,'meanNLNRR',cropname);
+        %         ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRresponse',cropname)./ThisCropNAppVector;
+        %         ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivmeanNLNRR',cropname);
+        ThisCropN2OVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRR_ricesep',callcropname)...
+            -Nfunction(0,'meanNLNRR_ricesep',callcropname);
+        ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRresponse_ricesep',callcropname)./ThisCropNAppVector;
+        ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivmeanNLNRR_ricesep',callcropname);
+        
         totalNapp(iigood)=totalNapp(iigood)+ThisCropNAppVector.*croparea(iigood);
         totalNapp_subnational(iigood)=totalNapp_subnational(iigood)+ThisCropNAppVector_subnational.*croparea(iigood);
         totalNapp_national(iigood)=totalNapp_national(iigood)+ThisCropNAppVector_national.*croparea(iigood);
@@ -223,12 +228,14 @@ ThisCropN2OVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRR_ricesep',cropname
         metaav=[metaav ;av];
         metanv=[metanv ; nv];
         metastate=[metastate ; statelevelmap(iigood)];
+        metaidx=[metaidx ; find(iigood)];
+        metaDQ=[metaDQ ; NappDQ(iigood)];
         end
     end
 end
 FDSvCropname=FDSv;
 save FDSvCropname FDSv FDSvCropname
-%save metavectors metacountrynum metacropnum  metacontinentnum  metaav metanv metastate
+save metavectors metacountrynum metacropnum  metacontinentnum  metaav metanv metastate metaidx
 
 
 totaltruncatedNapp;
@@ -286,7 +293,7 @@ NSS.cmap='poppy';
 NSS.panoplytriangles=[0 1];
 NSS.caxis=[0 3];
 NSS.units='kg/ha';
-NSS.title=[' Total N_2O response.  IPCC method. ' extratitleinfo ' '];
+NSS.title=[' Total N_2O response.  Linear (IPCC)  model. ' extratitleinfo ' '];
 NSS.filename='TotalN2OIPCC';
 NSS.makeplotdatafile='on';
 NSS.userinterppreference='tex';
@@ -304,7 +311,7 @@ NSS.cmap='poppy';
 NSS.panoplytriangles=[0 1];
 NSS.caxis=[0 3];
 NSS.units='kg/ha';
-NSS.title=[' Total N_2O response. NLNRR method. ' extratitleinfo ' '];
+NSS.title=[' Total N_2O response. Non-linear method. ' extratitleinfo ' '];
 NSS.filename=['TotalN2ONLNRR' extratitleinfo];
 NSS.userinterppreference='tex';
 
@@ -370,8 +377,8 @@ cmap='redpurpblue';
 clear NSS
 NSS.makeplotdatafile='on';
 
-nsg(totalN2OresponseIPCC_perha,'title',[' Total N_2O response to unit change, IPCC method ' extratitleinfo ' '],'units','kg/kg','caxis',[0 .015],'filename','on','cmap',cmap);
-nsg(totalN2OresponseNLNRR_perha,'title',[' Total N_2O response to unit change, NLNRR method ' extratitleinfo ' '],'units','kg/kg','caxis',[0 .015],'filename','on','cmap',cmap);
+nsg(totalN2OresponseIPCC_perha,'title',[' Total N_2O response to unit change, linear (IPCC) method ' extratitleinfo ' '],'units','kg/kg','caxis',[0 .015],'filename','on','cmap',cmap);
+nsg(totalN2OresponseNLNRR_perha,'title',[' Total N_2O response to unit change, non-linear method ' extratitleinfo ' '],'units','kg/kg','caxis',[0 .015],'filename','on','cmap',cmap);
 
 %%
 % categorical map with different values
@@ -382,7 +389,7 @@ nsg(totalN2OresponseNLNRR_perha,'title',[' Total N_2O response to unit change, N
 clear NSS
 NSS.cmap='revred_white_blue_deep';
 %NSS.title=[' Incremental N2O response ' extratitleinfo ' '];
-NSS.title=[' Change in N_2O in response to change in N application.  NLNRR method. ' extratitleinfo ' '];
+NSS.title=[' Change in N_2O in response to change in N application.  non-linear method. ' extratitleinfo ' '];
 NSS.userinterppreference='tex'
 NSS.caxis=[0 .03];
 NSS.modifycolormap='stretch';
@@ -471,7 +478,7 @@ figure
 h=bar(FBC,yN20IPCC_forplot'/1e9,'stacked');
 xlabel(' kg/ha ')
 ylabel(' mt ')
-title([' Total N_2O response (IPCC method). '])
+title([' Total N_2O response (linear (IPCC) method). '])
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl);
@@ -480,7 +487,7 @@ figure
 h=bar(FBC,yN20NLNRR_forplot'/1e9,'stacked');
 xlabel(' kg/ha ')
 ylabel(' mt ')
-title([' Total N_2O response (''NLNRR'' method). '])
+title([' Total N_2O response (non-linear method). '])
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl);
@@ -503,7 +510,7 @@ figure
 h=bar(FBC,sum(yN20IPCC_forplot'/1e9,2),'stacked');
 xlabel(' kg/ha ')
 ylabel(' mt ')
-title([' Total N_2O response (IPCC method). ' extratitleinfo])
+title([' Total N_2O response (linear (IPCC) method). ' extratitleinfo])
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl);

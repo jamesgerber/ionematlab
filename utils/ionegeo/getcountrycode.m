@@ -6,7 +6,18 @@ function ccstructure=getcountrycode(countryname);
 % this code should not be used within functions - I doubt that this will be
 % robust.
 
-[s,w]=unix(['grep -i "' countryname '" /psldata/humangeography/admincodes/countrycodes_RevB.txt']);
+% strip out anything in parenthesis
+ii=findstr(countryname,'(');
+
+if numel(ii)>0
+    disp(['searching "' deblank(countryname(1:ii-1)) '"' ...
+       ' instead of "'  countryname '"']);
+       
+       countryname=deblank(countryname(1:ii-1));
+end
+
+
+[s,w]=unix(['grep -i "' countryname '" /psldata/humangeography/admincodes/countrycodes_RevC.txt']);
 
 if s~=0
     if ~isempty( findstr(countryname,'Ivoire') )
@@ -24,6 +35,16 @@ if length(findstr(w,tab)) > 20
             ccstructure=StandardCountryNames('MDA','ISO3');
      %   case 'Dominican Republic'
      %       ccstructure=StandardCountryNames('DOM');
+     
+        case {'Republic of Korea','Korea'}
+            ccstructure=StandardCountryNames('KOR','ISO3');
+
+        case 'India'
+            ccstructure=StandardCountryNames('IND');
+
+            
+   %     case 'Germany'
+   %         ccstructure=StandardCountryNames('DEU');
 
         case 'China'
             ccstructure=StandardCountryNames('CHN','ISO3');

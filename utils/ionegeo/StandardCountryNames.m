@@ -208,6 +208,9 @@ if length(Row)>1
         case {'SRM','serbia'}
             Row=Row(2);
             return
+        case {'KOR','kor'};
+            Row=Row(2);
+            return
         otherwise
             
             error(['found two exact matches.  problem with input files.'])

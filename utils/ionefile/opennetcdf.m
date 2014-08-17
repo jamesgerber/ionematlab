@@ -82,7 +82,12 @@ if CallUIGetfile==1
     end
     %we are going to have to call
     [filename,pathname]=uigetfile('*.nc','Pick a NetCDF file',InitialGuess);
+    
+    if isequal(filename,0)
+        error([' no file found.  ' FileName ])
+    end
     FileName=[pathname filesep filename];
+
 end
 
 %% look to see if there is a .mat file saved locally

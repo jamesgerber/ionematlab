@@ -1,4 +1,4 @@
-function maketransparentbackground(OldFileName,NewFileName,TextColor);
+function S=maketransparentbackground(OldFileName,NewFileName,TextColor);
 % maketransparentbackground - add a transparent channel around a figure
 %
 %  Example
@@ -122,3 +122,9 @@ else
     imwrite(plotimage,NewFileName,'png','Alpha',uint8(Alpha*255));
 end
 
+S.OutputMask=a;
+S.OutputMask_nocolorbar=ancb;
+S.OutputMask_pt=apt;
+S.plotimage=plotimage;
+S.background=ii_background;
+S.Alpha=Alpha;

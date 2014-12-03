@@ -14,7 +14,7 @@ function stackedhistograms(FDSv,legendfieldname,n)
 
 
 newfigs=1;
-
+morelegible=1;
 if nargin==1
     legendfieldname='cropname';
 end
@@ -116,7 +116,7 @@ for j=N:-1:(N-n+1);
        % % legendstring=strrep(legendstring,'rice_rf75', 'rainfed rice');
 
 %legvect{j}=[legendstring ' ' num2str(TotalNappsorted(j)/1e6,3)];  
-legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.1f',TotalNappsorted(j)/1e9) ' Gt'];
+legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.1f',TotalNappsorted(j)/1e9) ' Tg'];
 
 cmap(j,:)=color;
     
@@ -135,14 +135,37 @@ end
 
 h=bar(FBC,yNapp_forplot'/1e9,'stacked');
 xlabel(' kg/ha ')
-ylabel(' Gt ')
-title([' Total applied N. '])
+ylabel(' Tg ')
+title(['  Total applied N.' ])
+%titlestr=sprintf('(a) \t\t\t\t\t%s',' Total applied N. ');
+%title(titlestr)
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl);
-legend(h(N:-1:(N-n+1)),legvect(N:-1:(N-n+1)));
+hlegend=legend(h(N:-1:(N-n+1)),legvect(N:-1:(N-n+1)));
 colormap(cmap);
 grid on
+set(hlegend,'LineWidth',1.5)
+%legend boxoff  % can't get it to work so turn box off
+
+if morelegible==1;
+    hxl=get(gca,'XLabel');
+    set(hxl,'FontSize',13)
+    set(hxl,'FontWeight','bold')
+    hxl=get(gca,'YLabel');
+    set(hxl,'FontSize',13)
+    set(hxl,'FontWeight','bold')
+    hxl=get(gca,'Title');
+    set(hxl,'FontSize',15)
+    set(hxl,'FontWeight','bold')
+    set(gca,'FontSize',13)
+    ht=text(-40,16.75,' (a) ')
+    set(ht,'FontSize',15)
+    set(ht,'FontWeight','bold')
+ %   uplegend
+ %   uplegend
+end
+
 
 if newfigs==1
     OutputFig('Force',['TotalNapplied' legendfieldname ],'-r150')
@@ -171,7 +194,7 @@ for j=N:-1:(N-n+1);
         legendstring=strrep(legendstring,'rice_rf75', 'rainfed rice');
 
     %  legvect{j}=[legendstring ' ' num2str(TotalN20IPCCsorted(j)/1e6,3)];
-    legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.0f',TotalN20IPCCsorted(j)/1e6) ' Mt'];
+    legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.3f',TotalN20IPCCsorted(j)/1e9) ' Tg'];
     
     cmap(j,:)=color;
     
@@ -185,15 +208,36 @@ end
 
 h=bar(FBC,yN20IPCC_forplot_sorted'/1e9,'stacked');
 xlabel(' kg/ha ')
-ylabel(' Mt ')
+ylabel(' Tg ')
 title([' Total N_2O response (Linear method). '])
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl);
-legend(h(N:-1:(N-n+1)),legvect(N:-1:(N-n+1)));
+hlegend=legend(h(N:-1:(N-n+1)),legvect(N:-1:(N-n+1)));
 colormap(cmap);
 grid on
+set(hlegend,'LineWidth',1.5);
 
+ylims=get(gca,'YLim');
+
+if morelegible==1;
+    hxl=get(gca,'XLabel');
+    set(hxl,'FontSize',13)
+    set(hxl,'FontWeight','bold')
+    hxl=get(gca,'YLabel');
+    set(hxl,'FontSize',13)
+    set(hxl,'FontWeight','bold')
+    hxl=get(gca,'Title');
+    set(hxl,'FontSize',15)
+    set(hxl,'FontWeight','bold')
+    set(gca,'FontSize',13)
+    ht=text(-40,.1675,' (b) ')
+    set(ht,'FontSize',15)
+    set(ht,'FontWeight','bold')
+
+ %   uplegend
+ %   uplegend
+end
 if newfigs==1
 OutputFig('Force',['TotalN2OresponseIPCC' legendfieldname ],'-r150')
 end
@@ -219,12 +263,11 @@ for j=N:-1:(N-n+1);
 %    color=cropcolor(FDSv(j).cropname);
 %    legvect{j}=[FDSv(j).cropname ' ' num2str(TotalN20NLNRRsorted(j)/1e6,3)];
 %     legvect{j}=[sprintf('%-10s',legendstring) ' ' sprintf('%5.0f',TotalN20NLNRRsorted(j)/1e6) ' Mt'];
-     legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.0f',TotalN20NLNRRsorted(j)/1e6) ' Mt'];
+     legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.3f',TotalN20NLNRRsorted(j)/1e9) ' Tg'];
     cmap(j,:)=color;
     
 end
-legvect
-cmap
+
 if newfigs==1
     figure('position',[584   807   806   295]);
 else
@@ -232,14 +275,34 @@ else
 end
 h=bar(FBC,yN20NLNRR_forplot_sorted'/1e9,'stacked');
 xlabel(' kg/ha ')
-ylabel(' Mt ')
+ylabel(' Tg ')
 title([' Total N_2O response (Non-linear method) '])
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl)
-legend(h(N:-1:(N-n+1)),legvect(N:-1:(N-n+1)));
+hlegend=legend(h(N:-1:(N-n+1)),legvect(N:-1:(N-n+1)));
 colormap(cmap);
 grid on
+set(hlegend,'LineWidth',1.5)
+set(gca,'YLim',ylims)
+if morelegible==1;
+    hxl=get(gca,'XLabel');
+    set(hxl,'FontSize',13)
+    set(hxl,'FontWeight','bold')
+    hxl=get(gca,'YLabel');
+    set(hxl,'FontSize',13)
+    set(hxl,'FontWeight','bold')
+    hxl=get(gca,'Title');
+    set(hxl,'FontSize',15)
+    set(hxl,'FontWeight','bold')
+    set(gca,'FontSize',13)
+    ht=text(-40,0.1675,' (c) ')
+    set(ht,'FontSize',15)
+    set(ht,'FontWeight','bold')
+
+ %   uplegend
+ %   uplegend
+end
 if newfigs==1
     OutputFig('Force',['TotalN2OresponseLNLRR' legendfieldname ],'-r150')
 else

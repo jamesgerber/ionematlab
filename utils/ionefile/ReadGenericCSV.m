@@ -8,7 +8,7 @@ function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
 %
 %     DS=ReadGenericCSV(FileName,HeaderLines);
 %
-%     DS=ReadGenericCSV(FileName,HeaderLines,Delimiter); 
+%     DS=ReadGenericCSV(FileName,HeaderLines,Delimiter);
 %
 %     DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
 %
@@ -29,7 +29,7 @@ function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
 %   names may be messed up, but the data will be extracted.
 %
 %   This function is very sensitive to files that have unexpected cells
-%   somewhere below the first two lines.  
+%   somewhere below the first two lines.
 %
 %
 %  See Also:  csv2tabdelimited
@@ -108,11 +108,28 @@ end
 %now can read the whole thing using textscan
 
 fclose(fid);
-fid=fopen(FileName);
-C=textscan(fid,formatstring,'Delimiter',Delimiter,'HeaderLines',HeaderLines);
-fclose(fid);
 
-
+if length( find(formatstring=='%') )== (length(find(xline==Delimiter))+1)
+    
+    fid=fopen(FileName);
+    C=textscan(fid,formatstring,'Delimiter',Delimiter,'HeaderLines',HeaderLines);
+    fclose(fid);
+else
+    
+    disp([' problem with number of delimiters apparently in the file '])
+    
+    discrepancy=(length(find(xline==Delimiter))+1)-length( find(formatstring=='%') );
+    
+    for j=1:(discrepancy);
+        formatstring=[formatstring '%s'];
+    end
+    
+    fid=fopen(FileName);
+    C=textscan(fid,formatstring,'Delimiter',Delimiter,'HeaderLines',HeaderLines);
+    fclose(fid);
+    
+    
+end
 %% OK.  Now have everything.  Assemble into DS (Output Structure).
 DS=[];
 if AttemptNums==0
@@ -153,46 +170,46 @@ else
             ThisName=MakeSafeString(FieldNameStructure.Vector{j});
             Contents=C{j};
             
-%             %let's see if we can turn these values into doubles
-%             NumValue=str2double(Contents{1});
-%             if ~isnan(NumValue)
-%                 % first element is a number.  Now try to get all of them:
-%                 NumVector=str2double(Contents);
-%                 if any(isnan(NumVector))
-%                     NumericFlag=0;
-%                 else
-%                     NumericFlag=1;
-%                 end
-%             else
-%                 NumericFlag=0;
-%             end
-%             
-%             if NumericFlag==1
-%                 DS=setfield(DS,ThisName,NumVector);
-%             else
-                DS=setfield(DS,ThisName,Contents);
-%             end
+            %             %let's see if we can turn these values into doubles
+            %             NumValue=str2double(Contents{1});
+            %             if ~isnan(NumValue)
+            %                 % first element is a number.  Now try to get all of them:
+            %                 NumVector=str2double(Contents);
+            %                 if any(isnan(NumVector))
+            %                     NumericFlag=0;
+            %                 else
+            %                     NumericFlag=1;
+            %                 end
+            %             else
+            %                 NumericFlag=0;
+            %             end
+            %
+            %             if NumericFlag==1
+            %                 DS=setfield(DS,ThisName,NumVector);
+            %             else
+            DS=setfield(DS,ThisName,Contents);
+            %             end
             
         end
     end
 end
 
-    
+
 
 %% is final field the same length as the others?
 ThisName=MakeSafeString(FieldNameStructure.Vector{j});
 PrevName=MakeSafeString(FieldNameStructure.Vector{j-1});
 
 if ~isequal(length(getfield(DS,ThisName)),length(getfield(DS,PrevName)))
-
-warndlg(['Last vector not the right size.  this usually happens when the very last element of the file is a ' ...
-    'comma because the last column/row of the .csv was blank.  easiest way' ...
-    'to fix is to put an extra comma at the end.  see notes in this file' ...
-    'for some unix tricks on dealing with this.  Or, add a dummy value to the' ...
-    ' .csv']);
-%!echo "," > comma.tmp
-%!cat testdataset.csv comma.tmp > trythis.csv
-
+    
+    warndlg(['Last vector not the right size.  this usually happens when the very last element of the file is a ' ...
+        'comma because the last column/row of the .csv was blank.  easiest way' ...
+        'to fix is to put an extra comma at the end.  see notes in this file' ...
+        'for some unix tricks on dealing with this.  Or, add a dummy value to the' ...
+        ' .csv']);
+    %!echo "," > comma.tmp
+    %!cat testdataset.csv comma.tmp > trythis.csv
+    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -213,7 +230,24 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function VC=GetStrings(xline,Delimiter)
 
+% check to make sure that very last character of xline isn't Delimiter
+if isequal(xline(end),Delimiter)
+    disp(['found last line of xline is delimiter.  added code to fix Aug 2014 -jsg']);
+    
+    badcondition=isequal(xline(end),Delimiter);
+    
+    while badcondition
+        xline=xline(1:end-1);
+        badcondition=isequal(xline(end),Delimiter);
+    end
+end
+
+
 ii=find(xline==Delimiter);
+
+
+
+
 
 %stick a one on the beginning, and an N on the end.
 % cumbersome, but then we can loop into the part where we make a structure

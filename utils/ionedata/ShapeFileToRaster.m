@@ -158,5 +158,5 @@ for j=1:length(S);
     
 end % end of j loop over countries
 
-
+delete(hh)
 Raster=Matrix;

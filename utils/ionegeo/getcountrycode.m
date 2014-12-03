@@ -20,13 +20,41 @@ end
 [s,w]=unix(['grep -i "' countryname '" /psldata/humangeography/admincodes/countrycodes_RevC.txt']);
 
 if s~=0
+    
+    if isequal(countryname,'Korea, Democratic People''s Republic of');
+        ccstructure=StandardCountryNames('PRK','ISO3');
+        return
+    end
     if ~isempty( findstr(countryname,'Ivoire') )
         warndlg([' interpreting ' countryname ' as cote d''ivoire']);
         ccstructure=StandardCountryNames('CIV','ISO3');
         return
-    else
-        error([' call to grep did not work ']);
     end
+    
+    if ~isempty( findstr(countryname,'Congo') )
+        warndlg([' interpreting ' countryname ' as Democratic Rep Congo']);
+        ccstructure=StandardCountryNames('COD','ISO3');
+        return
+    end
+        
+       if ~isempty( findstr(countryname,'Iran') )
+        warndlg([' interpreting ' countryname ' as Democratic Rep Congo']);
+        ccstructure=StandardCountryNames('IRN','ISO3');
+        return
+    end
+    if ~isempty( findstr(countryname,'Venezuela') )
+        warndlg([' interpreting ' countryname ' as Venezuela']);
+        ccstructure=StandardCountryNames('VEN','ISO3');
+        return
+    end
+      if ~isempty( findstr(countryname,'China, mainland') )
+        warndlg([' interpreting ' countryname ' as China']);
+        ccstructure=StandardCountryNames('CHN','ISO3');
+        return
+    end
+
+        
+        error([' call to grep did not work for ' countryname]);
 end
 
 if length(findstr(w,tab)) > 20
@@ -40,13 +68,13 @@ if length(findstr(w,tab)) > 20
             ccstructure=StandardCountryNames('KOR','ISO3');
 
         case 'India'
-            ccstructure=StandardCountryNames('IND');
+            ccstructure=StandardCountryNames('IND','ISO3');
 
             
    %     case 'Germany'
    %         ccstructure=StandardCountryNames('DEU');
 
-        case 'China'
+        case {'China','China, mainland'}
             ccstructure=StandardCountryNames('CHN','ISO3');
         case 'Congo'
             warndlg([' found ''congo'' in getcountrycode.  interpreting as congo not DRC'])

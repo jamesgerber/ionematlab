@@ -39,8 +39,15 @@ NSS.TitleString=titlestring;
 %NiceSurfGeneral(BinMatrix,NSS)
 
 
-N=ceil(sqrt(length(unique(BinMatrix))-1))
+N1=ceil(sqrt(length(unique(BinMatrix))-1))
+N2=ceil(sqrt(max(max(BinMatrix))));
 
+if N1~=N2
+    warning('something odd about population of BinMatrix');
+    N=max(N1,N2)
+else
+    N=N2;
+end
 
 
 %% in this section, need to construct a 10x10 set of colors

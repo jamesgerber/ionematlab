@@ -10,8 +10,11 @@ function [Long,Lat,Long2,Lat2]=InferLongLat(Data)
 % [long,lat]=InferLongLat(testdata);
 
 if nargin==0
-    help(mfilename);
-    return
+   disp([' assuming 5minute grid '])
+   Data=datablank;
+    
+%    help(mfilename);
+%    return
 end
 
 [Nrow,Ncol,Level]=size(Data);

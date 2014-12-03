@@ -1062,6 +1062,9 @@ switch lower(plotarea)
     case {'argentina'}
         longlatbox=[-80 -20 -60 -20];
         filename=[filename 'argentina'];
+   case {'chaco'}
+        longlatbox=[-70 -30 -35 -15];
+        filename=[filename 'chaco'];
         %            ylim=.45;
     case {'china'}
         longlatbox=[75 120 15 60];

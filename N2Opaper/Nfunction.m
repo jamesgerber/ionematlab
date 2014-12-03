@@ -1,4 +1,4 @@
-function [Y]=Nfunction(Napplied,model,crop);
+function [Y]=Nfunction(Napplied,model,crop,varargin);
 % Nfunction
 %    [N20]=Nfunction(Napplied,model,crop);
 %    implement Philibert and IPCC models relating N application and N2O
@@ -18,7 +18,14 @@ function [Y]=Nfunction(Napplied,model,crop);
 %         'derivmeanNLNRR'
 %         'medianNLNRR'
 %         'derivmedianNLNRR'
-
+%
+%  I have added a sneaky syntax:
+%  N2O_newfunction=Nfunction(1:200,'CVmeanNLNRRresponse_ricesep','maize',.25,10000);
+%  where CV means take the N application rate and distribute the N by a
+%  gaussian distribution with CV of 0.25.   N app values are constrained to
+%  within [0,600]    10000 is the number of random values used to get the
+%  average.
+% 
 
 % The EF value of 1.25%, set in 1999 [17], was calculated from the following linear regression: 
 % Y = 0.0125 * X, where Y is the emission rate (in kg N2O-N ha
@@ -40,7 +47,34 @@ function [Y]=Nfunction(Napplied,model,crop);
 % 6  N2O emission measurements from studies on both crops and grassland [10].
 %
 X=Napplied;
+
+if isequal(model(1:2),'CV')
+    CV=varargin{1};
+
+    Nreps=varargin{2};;
+
+    
+    
+    X=X(:);
+    XX=repmat(X,1,Nreps);
+    model=model(3:end);
+    r=randn(length(X),Nreps);
+    Nrandom=XX.*(1+r*CV);
+    
+    Nrandom(Nrandom < 0)=0;
+    Nrandom(Nrandom > 600)=600;
+
+    N2O_rand=Nfunction(Nrandom,model,crop);
+
+    Y=mean(N2O_rand,2);
+    return
+end
+
+
+
 switch model
+    
+    
     case 'IPCC'
         switch crop
             case 'rice'

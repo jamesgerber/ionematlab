@@ -37,6 +37,21 @@ if nargin>0
     end
 end
 
+if nargin==2
+    
+    if isequal(FileName(end),filesep)
+        InitGuess=get(get(gca,'Title'),'String');
+        
+        if iscell(InitGuess)
+            InitGuess=InitGuess{1};
+        end
+        
+        InitGuess=[FileName makesafestring(InitGuess)];
+        MakeSafe=0;
+    end
+end
+
+
 if nargin>1
     InitGuess=FileName;
     MakeSafe=0;

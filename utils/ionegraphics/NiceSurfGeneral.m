@@ -1044,7 +1044,7 @@ switch lower(plotarea)
         filename=[filename '_africa'];
         %            ylim=.77;
     case 'midwest'
-        longlatbox=[-105 -75 25 55];
+        longlatbox=[-95 -55 25 55];
         filename=[filename '_midwest'];
         %            ylim=.32;
     case 'tropics'
@@ -1098,7 +1098,7 @@ switch lower(plotarea)
         longlatbox=[0 96 35 72];
         filename=[filename 'medit2north'];
     otherwise
-        load /Library/IonEdata/misc/gadm1_lev0
+        load /ionedata/misc/gadm1_lev0
         for j=1:length(S)
             names{j}=lower(S(j).NAME_ENGLI);
             namesISO{j}=S(j).ISO;

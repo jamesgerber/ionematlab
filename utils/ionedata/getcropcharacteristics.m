@@ -9,15 +9,25 @@ function [OS]=getcropcharacteristics(cropname);
 %  CC=getcropcharacteristics('wheat')
 %
 %  CC=getcropcharacteristics;
+%
+%  Jan, 2015 - updated to include calorie information
 
 if nargin==0 & nargout==0;help(mfilename);return;end
 
 % get crop data
-persistent C
+persistent C D
 if isempty(C)
     C=ReadGenericCSV([iddstring '/misc/cropdata.csv']);
+    D=ReadGenericCSV([iddstring '/misc/crop_kcals.csv']);
 end
 
+if ~isequal(C.CROPNAME,D.CROPNAME)
+    error([' this code written with bad assumptions about data files'])
+end
+
+C.num=D.num;
+C.kcals_per_ton_fao=D.kcals_per_ton_fao;
+C.kcals_per_ton_tilman=D.kcals_per_ton_tilman;
 
 if nargin==0
     OS=C;

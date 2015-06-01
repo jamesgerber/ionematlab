@@ -33,7 +33,6 @@ end
  
 SOV=[];
 for m=1:length(a)
-
     ThisField=a{m};
     
     if TypeFlag(m)>0
@@ -42,17 +41,17 @@ for m=1:length(a)
                 ThisVect{j}=getfield(S(j),ThisField);
             else
                 tmp=getfield(S(j),ThisField);
-               % if isempty(tmp)
+                % if isempty(tmp)
                 %    ThisVect(j)=0;
                 %else
-                    ThisVect(j)=tmp;
+                ThisVect(j)=tmp;
                 %end
-
+                
             end
         end
-    SOV=setfield(SOV,ThisField,ThisVect);
+        SOV=setfield(SOV,ThisField,ThisVect);
     end
-    end
+end
 
 
     

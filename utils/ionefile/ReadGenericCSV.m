@@ -1,4 +1,4 @@
-function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
+function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums,headerlineoverride);
 % ReadGenericCSV - Read in a CSV file - whatever is in the columns
 %
 %  Syntax
@@ -11,6 +11,8 @@ function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
 %     DS=ReadGenericCSV(FileName,HeaderLines,Delimiter);
 %
 %     DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
+%
+%     DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums,headerline);
 %
 %   ReadGenericCSV will read in a CSV file, and make a structure,
 %   where each field of the structure corresponds to one of the columns.
@@ -27,6 +29,11 @@ function DS=ReadGenericCSV(FileName,HeaderLines,Delimiter,AttemptNums);
 %   commas after the header (as determined by HeaderLines)   This
 %   way, if there are extra commas in the header, the data field
 %   names may be messed up, but the data will be extracted.
+%
+%   It is possible to override the headerline in the file with a fifth
+%   input argument.  This can serve to override the headerline in the file
+%   (HeaderLines>0), or it can be the headerline (HeaderLines==0)    [This
+%   syntax hasn't been tested carefully]
 %
 %   This function is very sensitive to files that have unexpected cells
 %   somewhere below the first two lines.
@@ -60,6 +67,16 @@ end
 headerline=fgetl(fid);
 
 headerline=FixUpHeaderline(headerline);
+
+if nargin==5
+    headerline=headerlineoverride;
+    fclose(fid);
+    fid=fopen(FileName);
+    
+    for m=1:(HeaderLines-1)
+        fgetl(fid);
+    end
+end
 
 VC=GetStrings(headerline,Delimiter);  %function below.
 FieldNameStructure.Vector=VC;
@@ -187,8 +204,14 @@ else
             %             if NumericFlag==1
             %                 DS=setfield(DS,ThisName,NumVector);
             %             else
-            DS=setfield(DS,ThisName,Contents);
-            %             end
+  try
+      DS=setfield(DS,ThisName,Contents);
+  catch
+      DS=setfield(DS,removeASCIIturds(ThisName),Contents);
+
+  end
+      
+      %             end
             
         end
     end

@@ -8,6 +8,10 @@ function FileName=OutputFig(Hfig,FileName,ResFlag,transparent)
 % OutputFig('Force','FileName','-r150')
 % OutputFig(gcf,'FileName')
 %
+% OutputFig('directoryname/') will force printing w/o querying user and put
+% the resulting .png into directory directoryname.  the code looks for the
+% '/' at the end of the name.
+%
 % EXAMPLE
 % NSG(testdata);
 % OutputFig;
@@ -15,6 +19,7 @@ if nargin==0
     Hfig=gcf;
     ForcePlots=0;
 end
+SaveDirectory='./';
 
 if nargin>0
     if ischar(Hfig)
@@ -30,7 +35,17 @@ if nargin>0
                 ForcePlots=0;
                 return
             otherwise
-                error('don''t know this argument to Hfig')
+                % if first entry is a directory name, assume 'force'and put
+                % files into directory
+                if isequal(Hfig(end),'/');
+                    SaveDirectory=Hfig;
+                    ForcePlots=1;
+                    Hfig=gcf;
+                    MakeSafe=1;
+                else
+                
+                    error('don''t know this argument to Hfig')
+                end
         end
     else
         ForcePlots=0;
@@ -62,6 +77,8 @@ else
     if iscell(InitGuess)
         InitGuess=InitGuess{1};
     end
+    
+    
     
 end
 
@@ -113,6 +130,8 @@ try
 catch
     InitGuess='Figure';
 end
+
+InitGuess=[SaveDirectory InitGuess];
 
 
 try

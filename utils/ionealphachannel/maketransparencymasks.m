@@ -105,7 +105,10 @@ NSG(ii,NSS)
 fud=get(gcf,'userdata')
 set(fud.ColorbarHandle,'XTick',[]);
 OutputFig('Force',FileName,NSS.Resolution);
+close
 
+NSG(ii,NSS)
+fud=get(gcf,'userdata')
 set(fud.ColorbarHandle,'Visible','off')
 OutputFig('Force',FileNameNCB,NSS.Resolution);
 

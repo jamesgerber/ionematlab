@@ -43,6 +43,17 @@ FDSv_orig=FDSv;
 
 N=length(FDSv);
 
+correctdistbyweight=1
+
+if correctdistbyweight==1
+    
+for j=1:N
+    Ntot=FDSv(j).totalN;
+    FDSv(j).distbyweight=FDSv(j).distbyweightedval./FDSv(j).Napp;
+end
+end
+
+
 for j=1:N
     TotalNapp(j)=sum(FDSv(j).Napp.*FDSv(j).distbyweight);
     TotalN20IPCC(j)=sum(FDSv(j).distbyweight.*FDSv(j).N2OresponseIPCC); % for sorting later

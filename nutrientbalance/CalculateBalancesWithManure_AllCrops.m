@@ -410,12 +410,26 @@ runningPfertsum=0;
 runningtotalPsum_justmanure=0;
 runningtotalPsum_withNfert=0;
 
+totaln=datablank;
+totalp=datablank;
+totalexcessn=datablank;
+totalexcessp=datablank;
+totalarea=datablank;
+
 
 for j=1:length(cn)
     [c,n,p]=CalculateBalancesWithManure_AllCrops(cn{j});
 
     ii=CropMaskLogical;
     ha=n.Area(ii).*fma(ii);
+    
+    
+    totaln=totaln+n.AppliedNitrogenPerHA.*n.Area.*fma;
+    totalexcessn=totaln+n.ExcessNitrogenPerHA.*n.Area.*fma;
+    totalp=totalp+p.AppliedPhosphorusPerHA.*n.Area.*fma;
+    totalexcessp=totalp+p.ExcessPhosphorusPerHA.*n.Area.*fma;
+
+    
     
     if n.MissingNfert==1
         runningmanureNsum_justmanure=...

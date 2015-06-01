@@ -15,7 +15,13 @@ end
 if max(area)<2
     warning(['This appears to be area fraction'])
 end   
-    
+
+iigood=isfinite(data) & isfinite(area);
+
+data=data(iigood);
+area=area(iigood);
+
+
 [dum,ii]=sort(data);
 
 sortedarea=area(ii);

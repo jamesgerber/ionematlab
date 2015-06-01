@@ -81,7 +81,7 @@ end
 
 function a = proper_noun
 switch fix(22*rand) 
-    case 0,    a = 'Jon';
+    case 0,    a = 'Xavier';
     case 1,    a = 'Jamie';
     case 2,    a = 'Moana';
     case 3,    a = 'Christine';
@@ -101,7 +101,6 @@ switch fix(22*rand)
     case 17,   a = 'Luiza';
     case 18,   a = 'Paul';
     case 19,   a = 'The Junior Scientist';
-    case 20,   a = 'Xavier';
     otherwise ,  a = 'Navin';
     end
 

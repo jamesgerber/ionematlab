@@ -97,8 +97,8 @@ switch fix(22*rand)
     case 13,   a = 'Kim';
     case 14,   a = 'Bonnie';
     case 15,   a = 'Graham';
-    case 16,   a = 'Shipeng';
-    case 17,   a = 'Julia';
+    case 16,   a = 'Mariana';
+    case 17,   a = 'Luiza';
     case 18,   a = 'Paul';
     case 19,   a = 'The Junior Scientist';
     case 20,   a = 'Xavier';

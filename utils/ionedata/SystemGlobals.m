@@ -23,7 +23,8 @@ switch username
         IoneDataDir=['/Library/IonE/data/'];
     case 'sunx0170'
         IoneDataDir=['~/Program/ionedata/'];
-        
+    case 'oggxx008'
+        IoneDataDir='~/ionedata/';
     case 'mattj'
         IoneDataDir=['C:\Users\mattj\Documents\UMN\ionedata\'];
     case 'pcwest'

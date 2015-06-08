@@ -19,7 +19,7 @@ if nargin==0
     Hfig=gcf;
     ForcePlots=0;
 end
-SaveDirectory='./';
+SaveDirectory=''; % making this blank.  before had './'.  -jsg.  June 2015.
 
 if nargin>0
     if ischar(Hfig)

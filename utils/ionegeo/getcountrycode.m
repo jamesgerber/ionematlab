@@ -17,7 +17,15 @@ if numel(ii)>0
 end
 
 
+
 [s,w]=unix(['grep -i "' countryname '" /psldata/humangeography/admincodes/countrycodes_RevD.txt']);
+    
+if s~= 0    
+
+        [s,w]=unix(['grep -i "' countryname '" ' iddstring 'misc/countrycodes_RevD.txt']);
+
+end
+
 
 if s~=0
     

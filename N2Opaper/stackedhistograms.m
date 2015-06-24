@@ -180,6 +180,7 @@ end
 
 if newfigs==1
     OutputFig('Force',['TotalNapplied' legendfieldname ],'-r150')
+    print(['TotalNapplied' legendfieldname ],'-depsc')
 end
 
 
@@ -251,6 +252,8 @@ if morelegible==1;
 end
 if newfigs==1
 OutputFig('Force',['TotalN2OresponseIPCC' legendfieldname ],'-r150')
+    print(['TotalN2OresponseIPCC' legendfieldname ],'-depsc')
+
 end
 
 %% third map.  sort by NLNRR
@@ -316,6 +319,8 @@ if morelegible==1;
 end
 if newfigs==1
     OutputFig('Force',['TotalN2OresponseLNLRR' legendfieldname ],'-r150')
+    print(['TotalN2OresponseLNLRR' legendfieldname ],'-depsc')
+    
 else
     OutputFig('Force',['N2O_threehistograms_' legendfieldname ],'-r150')
 end

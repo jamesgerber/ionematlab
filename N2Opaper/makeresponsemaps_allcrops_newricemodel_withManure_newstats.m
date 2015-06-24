@@ -177,10 +177,10 @@ for j=1:length(croplist)
         %             -Nfunction(0,'meanNLNRR',cropname);
         %         ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRresponse',cropname)./ThisCropNAppVector;
         %         ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivmeanNLNRR',cropname);
-        ThisCropN2OVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRR_ricesep',callcropname)...
-            -Nfunction(0,'meanNLNRR_ricesep',callcropname);
-        ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRresponse_ricesep',callcropname)./ThisCropNAppVector;
-        ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivmeanNLNRR_ricesep',callcropname);
+        ThisCropN2OVectorNLNRR=Nfunction(ThisCropNAppVector,'NLNRR_parammean_ricesep',callcropname)...
+            -Nfunction(0,'NLNRR_parammean_ricesep',callcropname);
+        ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'NLNRR_parammean_ricesep',callcropname)./ThisCropNAppVector;
+        ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivparammeanNLNRR_ricesep',callcropname);
         
         totalNapp(iigood)=totalNapp(iigood)+ThisCropNAppVector.*croparea(iigood);
         totalNapp_subnational(iigood)=totalNapp_subnational(iigood)+ThisCropNAppVector_subnational.*croparea(iigood);
@@ -216,7 +216,7 @@ for j=1:length(croplist)
         FDS.cropname=cropname;
         FDS.totalN=sum(M.distbyweightedval);
         FDS.N2OresponseIPCC=Nfunction(FDS.Napp,'IPCC',callcropname);
-        FDS.N2OresponseNLNRR=Nfunction(FDS.Napp,'meanNLNRRresponse_ricesep',callcropname);
+        FDS.N2OresponseNLNRR=Nfunction(FDS.Napp,'NLNRR_parammean_ricesep',callcropname);
         FDS.edges=edges;
         FDS.distbyweightedval=M.distbyweightedval;
         FDS.distbyweight=M.distbyweight;

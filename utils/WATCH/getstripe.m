@@ -1,4 +1,4 @@
-function [mdn,ts,stripeno]=getstripe(idx,type);
+function [mdn,ts,stripeno]=getstripe(idx,type,basedatadir);
 % getstripe
 %
 %   getstripe(index,type)  where
@@ -55,6 +55,9 @@ if length(idx)>1
 end
 
         
+if nargin<3
+    basedatadir=iddstring;
+end
         
 
 
@@ -101,13 +104,13 @@ stripeno=find(iivect==idx);
 
 switch type
     case 'Tair'
-        basedir=[iddstring '/Climate/reanalysis/WATCH/Tair/stripes/'];
+        basedir=[basedatadir '/Climate/reanalysis/WATCH/Tair/stripes/'];
         FileBase='Tair_WFD_pt';
     case 'rain'
-        basedir=[iddstring '/Climate/reanalysis/WATCH/Rainf/stripes/'];
+        basedir=[basedatadir '/Climate/reanalysis/WATCH/Rainf/stripes/'];
         FileBase='rain_pt';
     case 'snow'
-        basedir=[iddstring '/Climate/reanalysis/WATCH/Snowf/stripes/'];
+        basedir=[basedatadir '/Climate/reanalysis/WATCH/Snowf/stripes/'];
         FileBase='snow_pt';
     otherwise 
         error([' need to ask for Tair rain or snow, not ' type ]);

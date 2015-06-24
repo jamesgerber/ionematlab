@@ -1,4 +1,4 @@
-function [Y]=Nfunction(Napplied,model,crop,varargin);
+function [Y,YQ05,YQ95]=Nfunction(Napplied,model,crop,varargin);
 % Nfunction
 %    [N20]=Nfunction(Napplied,model,crop);
 %    implement Philibert and IPCC models relating N application and N2O
@@ -14,11 +14,13 @@ function [Y]=Nfunction(Napplied,model,crop,varargin);
 %         'LNRR'
 %         'meanLNRR'
 %         'meanNLNRR'
-%         'NLNRRzyi_ricesep'
+%         'meanNLNRRresponse'
 %         {'meanNLNRRzyi','meanNLNRRresponse'}
 %         'derivmeanNLNRR'
 %         'medianNLNRR'
 %         'derivmedianNLNRR'
+%         'NLNRR_parammean_ricesep'
+%         'derivparammeanNLNRR_ricesep'
 %
 %  I have added a sneaky syntax:
 %  N2O_newfunction=Nfunction(1:200,'CVmeanNLNRRresponse_ricesep','maize',.25,10000);
@@ -54,6 +56,11 @@ function [Y]=Nfunction(Napplied,model,crop,varargin);
 %
 %Nfunction(20,'meanNLNRRzyi_ricesep','maize')
 
+        persistent x_semian meanY_semian
+        persistent YQ05_semian dydn_rice dydn
+        persistent meanY_semian_rice YQ05_semian_rice
+        persistent YQ95_semian_rice
+        persistent YQ95_semian
 
 X=Napplied;
 
@@ -271,10 +278,15 @@ switch model
         tau=1.94;
         
         
-        epsilon=normdist(0,tau^2,X);
-        alpha0=normdist(mu0,sigma0.^2,X);
-        alpha1=normdist(mu1,sigma1.^2,X);
+       % epsilon=normdist(0,tau^2,X);
+       % alpha0=normdist(mu0,sigma0.^2,X);
+       % alpha1=normdist(mu1,sigma1.^2,X);
         
+       alpha0=randn(size(X))*sigma0+mu0;
+       alpha1=randn(size(X))*sigma1+mu1;
+       
+       
+       
         Y=exp(alpha0+alpha1.*X)-exp(alpha0);
         
          case 'NLNRRzyi_ricesep_GLOBAL'
@@ -307,7 +319,9 @@ switch model
         alpha0=ALPHA0_MINUS_MU0 + mu0;
         alpha1=ALPHA1;
         
+      %  Y=alpha1;
         Y=exp(alpha0+alpha1.*X)-exp(alpha0);
+      %  Y=exp(alpha0+alpha1.*X);
           
         
         
@@ -326,21 +340,7 @@ switch model
         tau=1.94;
         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) ).*...
             ((2*(mu1+sigma1.^2*X).*(sigma1.^2))/(2*sigma1.^2) );
-    case 'derivmeanNLNRR_ricesep'
-        % derivative of the mean of the model
-        switch crop
-            case 'rice'
-                Z=-1.139;
-            otherwise
-                Z=0;
-        end
-        mu0=0.24+Z;
-        mu1=0.00376;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) ).*...
-            ((2*(mu1+sigma1.^2*X).*(sigma1.^2))/(2*sigma1.^2) );
+    
     case 'derivmeanNLNRR'
         % derivative of the mean of the model
         mu0=0.19;
@@ -384,7 +384,84 @@ switch model
         epsilon=0;
         
         Y=alpha1.*exp(alpha0+alpha1.*X)+epsilon;
+        
+    case 'NLNRR_parammean_ricesep'
+
+
+        if isempty(x_semian)
+            load NLNRR_parammean_ricesepparams
+            load NLNRR_parammean_ricesepparams_rice
+        end
+        switch crop
+            case 'rice'
+                
+                Y=interp1(x_semian,meanY_semian_rice,X,'spline');
+                YQ05=interp1(x_semian,YQ05_semian_rice,X,'spline');
+                YQ95=interp1(x_semian,YQ95_semian_rice,X,'spline');
+            otherwise
+                Y=interp1(x_semian,meanY_semian,X,'spline');              
+                YQ05=interp1(x_semian,YQ05_semian,X,'spline');
+                YQ95=interp1(x_semian,YQ95_semian,X,'spline');
+        end
+
+        
+    case 'derivparammeanNLNRR_ricesep'
+        
+        if isempty(x_semian)
+            load NLNRR_parammean_ricesepparams
+            load NLNRR_parammean_ricesepparams_rice
+        end
+        
+        % derivative of the mean of the model
+        switch crop
+            case 'rice'              
+                Y=interp1(x_semian,dydn_rice,X,'spline');
+            otherwise
+                Y=interp1(x_semian,dydn,X,'spline');      
+        end
+        
+        
+    case 'correlatedparams_NLNRR_ricesep'
+        sigmamat=[  0.00793881 -2.11300e-05 -0.003250000
+            -0.00002113  1.63216e-07 -0.000014066
+            -0.00325000 -1.40660e-05  0.167772160];
+        
+        R=chol(sigmamat);
+        
+        mu=[0.24 0.00376 -1.139];
+        
+        N=length(X);
+        
+        z=repmat(mu,N,1)+randn(N,3)*R;
+        mu0=z(:,1);
+        mu1=z(:,2);
+        beta=z(:,3);
+        
+        sigma0=0.72;
+        sigma1=0.0025;
+        
+        switch    crop
+            case 'rice'
+                
+                for j=1:N
+                    Y(j)=newNft(mu0(j)+beta(j),sigma0,mu1(j),sigma1,X(j));
+                end
+                           
+                
+            otherwise
+                for j=1:N
+                    Y(j)=newNft(mu0(j),sigma0,mu1(j),sigma1,X(j));
+                end
+        end
+        
 end
+
+function Y=newNft(mu0,sigma0,mu1,sigma1,X);
+% determine N2O emissions averaged over site years.  
+
+
+Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
+    exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
 
 
 function y=normdist(mu,sigmasq,templatevar);

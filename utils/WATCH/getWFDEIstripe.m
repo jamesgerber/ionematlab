@@ -1,4 +1,4 @@
-function [mdn,ts,struct]=getWFDEIstripe(idx,type);
+function [mdn,ts,struct]=getWFDEIstripe(idx,type,basedatadir);
 % getWFDEIstripe - get a stripe from the WFDEI dataset
 %
 %   getWFDEIstripe(stripenumber,type)  where type can be
@@ -66,7 +66,13 @@ function [mdn,ts,struct]=getWFDEIstripe(idx,type);
 %WFDEIVar='Tair_daily_WFDEI';
 WFDEIVar=type;
 
-basedir = [iddstring 'Climate/reanalysis/WFDEI/stripes'];
+
+if nargin<3
+    basedatadir=iddstring;
+end
+       
+
+basedir = [basedatadir 'Climate/reanalysis/WFDEI/stripes'];
 
 for j=1:length(idx);
         FileName=[basedir '/' WFDEIVar '/' WFDEIVar int2str(idx(j))];

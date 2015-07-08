@@ -21,6 +21,9 @@ function [Y,YQ05,YQ95]=Nfunction(Napplied,model,crop,varargin);
 %         'derivmedianNLNRR'
 %         'NLNRR_parammean_ricesep'
 %         'derivparammeanNLNRR_ricesep'
+%         'correlatedparams_NLNRR_ricesep' - this will average over
+%         site-year variability, but use a randomly selected set of model
+%         parameters.
 %
 %  I have added a sneaky syntax:
 %  N2O_newfunction=Nfunction(1:200,'CVmeanNLNRRresponse_ricesep','maize',.25,10000);
@@ -443,15 +446,18 @@ switch model
         switch    crop
             case 'rice'
                 
-                for j=1:N
-                    Y(j)=newNft(mu0(j)+beta(j),sigma0,mu1(j),sigma1,X(j));
-                end
-                           
+                %  for j=1:N
+                %      Y(j)=newNft(mu0(j)+beta(j),sigma0,mu1(j),sigma1,X(j));
+                %  end
+                Ypar=NewNftparallel(mu0(:)+beta,sigma0(:),mu1,sigma1,X(:));
+                Y=Ypar;
                 
             otherwise
-                for j=1:N
-                    Y(j)=newNft(mu0(j),sigma0,mu1(j),sigma1,X(j));
-                end
+                %   for j=1:N
+                %       Y(j)=newNft(mu0(j),sigma0,mu1(j),sigma1,X(j));
+                %   end
+                Ypar=newNftparallel(mu0(:),sigma0,mu1(:),sigma1,X(:));
+                Y=Ypar;
         end
         
 end
@@ -463,6 +469,12 @@ function Y=newNft(mu0,sigma0,mu1,sigma1,X);
 Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
     exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
 
+function Y=newNftparallel(mu0,sigma0,mu1,sigma1,X);
+% determine N2O emissions averaged over site years.  
+
+
+Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)./(2*sigma0.^2) ).*exp( ((mu1+sigma1.^2.*X(:)).^2- mu1.^2)./(2*sigma1.^2) )- ...
+    exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) ).*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)./(2*sigma1.^2) )  ;
 
 function y=normdist(mu,sigmasq,templatevar);
 

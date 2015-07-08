@@ -954,9 +954,20 @@ if strcmp(categorical,'on')
         
         bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
         legh=legend(bb,categoryvalues,3);
-        hlegt=get(legh,'title');
-        set(hlegt,'string',units);
+        
+        [VER DATESTR] = version();
+        if str2num(DATESTR(end-3:end))<2014
+            
+            hlegt=get(legh,'title');
+            set(hlegt,'string',units);
+            
+        else
+            legh.String=units;
+        end
+        
         set(bb,'Visi','off')
+        
+        
         set(legh,'position',[0.4362 0.1938 0.3188 0.1865])
     end
 end

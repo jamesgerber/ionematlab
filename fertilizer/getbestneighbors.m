@@ -1,4 +1,4 @@
-function Neighbors=GetBestNeighbors(CountryCode,RecursionLevel,GoodCountries);
+GetBestNeighbors.mfunction Neighbors=GetBestNeighbors(CountryCode,RecursionLevel,GoodCountries);
 %GetBestNeighbors
  %sagecountryname=StandardCountryNames(countrycode,'sage3','sage3');
 

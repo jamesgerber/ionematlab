@@ -1,4 +1,4 @@
-function Svector=opengeneralnetcdf(FileName)
+function Svector=opengeneralnetcdf(FileName,ncmatdir)
 % OPENGENERALNETCDF - Open a general netcdf file
 %
 %  Syntax
@@ -8,6 +8,14 @@ function Svector=opengeneralnetcdf(FileName)
 %    The resulting structure isn't necessarily very much fun to deal with,
 %    but at least its in matlab and you can figure things out from the
 %    structures
+%
+%    Default behavior is to create an ./ncmat/ directory and put a matfile
+%    with the same name in it.  This allows you to zip up the .nc file
+%    which can save space and a lot of time.
+%
+%    S=OpenGeneralNetCDF(FileName,ncmatdir) will put the ncmat directory in
+%    ncmatdir
+%   
 %
 %
 %  See also opennetcdf writenetcdf ncdump
@@ -29,9 +37,16 @@ end
 %% look to see if there is a .mat file saved locally
 [pathstr,name,ext]=fileparts(FileName);
 
-if isempty(pathstr)
-    pathstr='.';
+if nargin==1
+
+    if isempty(pathstr)
+        pathstr='.';
+    end
+else
+    pathstr=ncmatdir;
 end
+
+
 try
     if ~exist([pathstr '/ncmat/'])
         mkdir([pathstr '/ncmat/']);

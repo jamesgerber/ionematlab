@@ -110,7 +110,7 @@ for j=1:length(croplist)
         end
         
 
-        x=getManure(callcropname,99);
+        x=getManure(callcropname);
 
         
         Nsynthetic=S.Data(:,:,1);

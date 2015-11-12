@@ -367,12 +367,18 @@ end
 
 if ~isempty(filename) & isequal(filename(end),filesep)
         tstemp=titlestring
-%     if isequal(tstemp(end),' ')
-%         tstemp=tstemp(1:end-1);
-%     end
-%     if isequal(tstemp(end),'.')
-%         tstemp=titlesttstempring(1:end-1);
-%     end
+        %     if isequal(tstemp(end),' ')
+        %         tstemp=tstemp(1:end-1);
+        %     end
+        %     if isequal(tstemp(end),'.')
+        %         tstemp=titlesttstempring(1:end-1);
+        %     end
+        
+        if iscell(tstemp)
+            tstemp=[tstemp{1} tstemp{2}];
+        end
+
+
     filename=[filename makesafestring(tstemp)];
 end
 

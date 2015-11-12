@@ -14,6 +14,11 @@ function csv2tabdelimited(inputfilename,outputfilename)
 %   where those are tabs.
 %
 %   Note that readgenericcsv has an option to read in a tab-delimited file.
+%
+%   Note also the following unix command, which will remove all instances
+%   of double quotes '"'
+%
+%     sed  's/"//g' World2000.txt > World2000nq.txt
 %    
 %
 %  See Also:  readgenericcsv

@@ -9,8 +9,8 @@
 %cropnumlist=1:5;
 
 extratitleinfo='';
-MaxNApp=600;
-bins=[1:1:600];
+MaxNApp=700;
+bins=[1:1:700];
 IGNORERICE=0;
 
 %% prepare to populate metavectors
@@ -81,6 +81,23 @@ for j=1:length(croplist)
     cropname=croplist{j};
     nutrient='N';
 
+    
+    if isequal(cropname(1:min(4,end)),'rice')
+        if isequal(cropname,'rice_inundated')
+            callcropname='rice';
+        elseif isequal(cropname,'rice_noninundated')
+            callcropname='rice';
+        else
+            warndlg('unexpected rice crop.')
+            callcropname=cropname;
+            
+        end
+    else
+        callcropname=cropname;
+    end
+        
+            
+    
     fertcropname=cropname;
     
     if isequal(cropname(1:min(4,end)),'rice')
@@ -89,37 +106,44 @@ for j=1:length(croplist)
           
     [S,existflag] = getfertdata(fertcropname,nutrient);
  
-    
-    
-    if existflag==0        
+
+    if existflag==0
+                disp(['no synethic fert for ' cropname])
+
+        % no synthetic data, but we proceed becasue there is manure applied
+        Nsynthetic=datablank;;
+        NappDQ=NaN;
+    else
+        Nsynthetic=S.Data(:,:,1);
+        NappDQ=S.Data(:,:,2);     
+    end
+    x=getManure(callcropname);
+
+ %   if existflag==0        
+    if (max(nansum(Nsynthetic(:))) +max(nansum(x.N(:))) )==0        
         disp(['no fert for ' cropname])
     else
         
-        if isequal(cropname(1:min(4,end)),'rice')
-            if isequal(cropname,'rice_inundated')
-                callcropname='rice';
-            elseif isequal(cropname,'rice_noninundated')
-                callcropname='rice';
-            else
-                warndlg('unexpected rice crop.')
-                callcropname=cropname;
 
-            end
+        
+
+
+        
+
+        legacy=1;
+        if legacy==1
+         %   warning('manure set to zero')
+            Napp=Nsynthetic+x.N;
+            ii=isfinite(Napp) & Napp < 9e9 & Napp > 0 ;
+        %    length(find(ii))
+        %    length(find(Napp>0))
         else
-            callcropname=cropname;
+            Napp=Nsynthetic+x.N;
+            ii=isfinite(Napp) & Napp < 9e9 & Napp > 0 ;
+            Napp=Nsynthetic;
+%            length(find(ii))
+%            length(find(Napp>0))
         end
-        
-
-        x=getManure(callcropname,99);
-
-        
-        Nsynthetic=S.Data(:,:,1);
-        NappDQ=S.Data(:,:,2);
-        
-        
-        Napp=Nsynthetic+x.N;
-        
-        ii=isfinite(Napp) & Napp < 9e9 & Napp > 0;
         
         c=getdata(cropname);
         croparea=c.Data(:,:,1);
@@ -210,7 +234,7 @@ for j=1:length(croplist)
         av=double(cav.*fmav);
         nv=ThisCropNAppVector;
         
-        edges=[0:1:501];
+        edges=[0:.5:700];
         FDS.Napp=(edges(2:end) + edges(1:end-1) )/2;
         M=awhist(nv,av,edges);
         FDS.cropname=cropname;
@@ -231,7 +255,7 @@ for j=1:length(croplist)
         metanv=[metanv ; nv];
         metastate=[metastate ; statelevelmap(iigood)];
         metaidx=[metaidx ; find(iigood)];
-        metaDQ=[metaDQ ; NappDQ(iigood)];
+%        metaDQ=[metaDQ ; NappDQ(iigood)];
         end
     end
 end
@@ -239,6 +263,7 @@ FDSvCropname=FDSv;
 save FDSvCropname FDSv FDSvCropname
 metaav=double(metaav);
 metanv=double(metanv);
+%save metavectors_all      metaav metanv  
 save metavectors metacountrynum metacropnum  metacontinentnum  metaav metanv metastate metaidx
 
 
@@ -432,135 +457,135 @@ nsg((totalN2OIPCC_perha-totalN2ONLNRR_perha).*totalarea,NSS);
 
 %%
 
-
-
-% total applied Napp
-
-% now histograms
-
-% first some stacked histograms from FDS
-x=FDSv(1).Napp;
-yNapp=FDSv(1).distbyweight;
-yN20IPCC=FDSv(1).distbyweight;
-yN20NLNRR=FDSv(1).distbyweight;
-for j=1:length(FDSv)
-    yNapp(j,:)=FDSv(j).distbyweightedval;
-    yN20IPCC(j,:)=FDSv(j).distbyweightedval.*FDSv(j).N2OresponseIPCC./x;
-    yN20NLNRR(j,:)=FDSv(j).distbyweightedval.*FDSv(j).N2OresponseNLNRR./x;
-end
-figure
-h=bar(x,yNapp','stacked')
-
-% now final bins
-DEL=40;
-END=300;
-FBC=[20:DEL:END]
-FBE=[1:DEL:END Inf]
-
-
-Nc = 140;  % used to be 139.  not sure why loop below crashes now.
-
-for m=1:length(FBC);
-    ii=find(x>=FBE(m) & x <=FBE(m+1));
-    meanofx(m)=mean(x(ii));
-    yNapp_forplot(1:Nc,m)=sum(yNapp(:,ii),2);
-    yN20IPCC_forplot(1:Nc,m)=sum(yN20IPCC(:,ii),2);
-    yN20NLNRR_forplot(1:Nc,m)=sum(yN20NLNRR(:,ii),2);
-end
-
-
-figure
-h=bar(FBC,yNapp_forplot'/1e9,'stacked');
-xlabel(' kg/ha ')
-ylabel(' mt ')
-title([' Total applied N. '])
-xtl=get(gca,'xticklabel')
-xtl(end,end+1)='+';
-set(gca,'xticklabel',xtl);
-
-figure
-h=bar(FBC,yN20IPCC_forplot'/1e9,'stacked');
-xlabel(' kg/ha ')
-ylabel(' mt ')
-title([' Total N_2O response (linear (IPCC) method). '])
-xtl=get(gca,'xticklabel')
-xtl(end,end+1)='+';
-set(gca,'xticklabel',xtl);
-
-figure
-h=bar(FBC,yN20NLNRR_forplot'/1e9,'stacked');
-xlabel(' kg/ha ')
-ylabel(' mt ')
-title([' Total N_2O response (non-linear method). '])
-xtl=get(gca,'xticklabel')
-xtl(end,end+1)='+';
-set(gca,'xticklabel',xtl);
-    
-%%
-% now same thing, but with a sum statement to take away colors
-figure
-h=bar(FBC,sum(yNapp_forplot'/1e9,2),'stacked');
-xlabel(' kg/ha ')
-ylabel(' mt ')
-title([' Total applied N. ' extratitleinfo])
-xtl=get(gca,'xticklabel')
-xtl(end,end+1)='+';
-set(gca,'xticklabel',xtl);
-fattenplot
-grid on
-OutputFig('Force')
-
-figure
-h=bar(FBC,sum(yN20IPCC_forplot'/1e9,2),'stacked');
-xlabel(' kg/ha ')
-ylabel(' mt ')
-title([' Total N_2O response (linear (IPCC) method). ' extratitleinfo])
-xtl=get(gca,'xticklabel')
-xtl(end,end+1)='+';
-set(gca,'xticklabel',xtl);
-fattenplot
-grid on
-OutputFig('Force')
-
-figure
-h=bar(FBC,sum(yN20NLNRR_forplot'/1e9,2),'stacked');
-xlabel(' kg/ha ')
-ylabel(' mt ')
-title([' Total N_2O response (''NLNRR'' method). ' extratitleinfo])
-xtl=get(gca,'xticklabel')
-xtl(end,end+1)='+';
-set(gca,'xticklabel',xtl);
-fattenplot
-grid on
-OutputFig('Force')
-
-%% now two scenario histogram
-figure
-w=.3;
-x=7.5
-h1=bar(FBC,sum(yN20IPCC_forplot'/1e9,2),w,'g','stacked');
-
-hold on
-h2=bar(FBC+x,sum(yN20NLNRR_forplot'/1e9,2),w,'stacked');
-
-xlabel(' kg/ha ')
-ylabel(' mt ')
-title([' Total N_2O response. ' extratitleinfo])
-legend([h1 h2],{'IPCC','NLNRR'})
-xtl=get(gca,'xticklabel')
-xtl(end,end+1)='+';
-set(gca,'xticklabel',xtl);
-fattenplot
-grid on
-
-OutputFig('Force')
-
-figure
-
-FDSvCropname=FDSv;
-
-%% now make a histogram from 
-
-
-
-
+% % % % % 
+% % % % % 
+% % % % % % total applied Napp
+% % % % % 
+% % % % % % now histograms
+% % % % % 
+% % % % % % first some stacked histograms from FDS
+% % % % % x=FDSv(1).Napp;
+% % % % % yNapp=FDSv(1).distbyweight;
+% % % % % yN20IPCC=FDSv(1).distbyweight;
+% % % % % yN20NLNRR=FDSv(1).distbyweight;
+% % % % % for j=1:length(FDSv)
+% % % % %     yNapp(j,:)=FDSv(j).distbyweightedval;
+% % % % %     yN20IPCC(j,:)=FDSv(j).distbyweightedval.*FDSv(j).N2OresponseIPCC./x;
+% % % % %     yN20NLNRR(j,:)=FDSv(j).distbyweightedval.*FDSv(j).N2OresponseNLNRR./x;
+% % % % % end
+% % % % % figure
+% % % % % h=bar(x,yNapp','stacked')
+% % % % % 
+% % % % % % now final bins
+% % % % % DEL=40;
+% % % % % END=300;
+% % % % % FBC=[20:DEL:END]
+% % % % % FBE=[1:DEL:END Inf]
+% % % % % 
+% % % % % 
+% % % % % Nc = 140;  % used to be 139.  not sure why loop below crashes now.
+% % % % % 
+% % % % % for m=1:length(FBC);
+% % % % %     ii=find(x>=FBE(m) & x <=FBE(m+1));
+% % % % %     meanofx(m)=mean(x(ii));
+% % % % %     yNapp_forplot(1:Nc,m)=sum(yNapp(:,ii),2);
+% % % % %     yN20IPCC_forplot(1:Nc,m)=sum(yN20IPCC(:,ii),2);
+% % % % %     yN20NLNRR_forplot(1:Nc,m)=sum(yN20NLNRR(:,ii),2);
+% % % % % end
+% % % % % 
+% % % % % 
+% % % % % figure
+% % % % % h=bar(FBC,yNapp_forplot'/1e9,'stacked');
+% % % % % xlabel(' kg/ha ')
+% % % % % ylabel(' mt ')
+% % % % % title([' Total applied N. '])
+% % % % % xtl=get(gca,'xticklabel')
+% % % % % xtl(end,end+1)='+';
+% % % % % set(gca,'xticklabel',xtl);
+% % % % % 
+% % % % % figure
+% % % % % h=bar(FBC,yN20IPCC_forplot'/1e9,'stacked');
+% % % % % xlabel(' kg/ha ')
+% % % % % ylabel(' mt ')
+% % % % % title([' Total N_2O response (linear (IPCC) method). '])
+% % % % % xtl=get(gca,'xticklabel')
+% % % % % xtl(end,end+1)='+';
+% % % % % set(gca,'xticklabel',xtl);
+% % % % % 
+% % % % % figure
+% % % % % h=bar(FBC,yN20NLNRR_forplot'/1e9,'stacked');
+% % % % % xlabel(' kg/ha ')
+% % % % % ylabel(' mt ')
+% % % % % title([' Total N_2O response (non-linear method). '])
+% % % % % xtl=get(gca,'xticklabel')
+% % % % % xtl(end,end+1)='+';
+% % % % % set(gca,'xticklabel',xtl);
+% % % % %     
+% % % % % %%
+% % % % % % now same thing, but with a sum statement to take away colors
+% % % % % figure
+% % % % % h=bar(FBC,sum(yNapp_forplot'/1e9,2),'stacked');
+% % % % % xlabel(' kg/ha ')
+% % % % % ylabel(' mt ')
+% % % % % title([' Total applied N. ' extratitleinfo])
+% % % % % xtl=get(gca,'xticklabel')
+% % % % % xtl(end,end+1)='+';
+% % % % % set(gca,'xticklabel',xtl);
+% % % % % fattenplot
+% % % % % grid on
+% % % % % OutputFig('Force')
+% % % % % 
+% % % % % figure
+% % % % % h=bar(FBC,sum(yN20IPCC_forplot'/1e9,2),'stacked');
+% % % % % xlabel(' kg/ha ')
+% % % % % ylabel(' mt ')
+% % % % % title([' Total N_2O response (linear (IPCC) method). ' extratitleinfo])
+% % % % % xtl=get(gca,'xticklabel')
+% % % % % xtl(end,end+1)='+';
+% % % % % set(gca,'xticklabel',xtl);
+% % % % % fattenplot
+% % % % % grid on
+% % % % % OutputFig('Force')
+% % % % % 
+% % % % % figure
+% % % % % h=bar(FBC,sum(yN20NLNRR_forplot'/1e9,2),'stacked');
+% % % % % xlabel(' kg/ha ')
+% % % % % ylabel(' mt ')
+% % % % % title([' Total N_2O response (''NLNRR'' method). ' extratitleinfo])
+% % % % % xtl=get(gca,'xticklabel')
+% % % % % xtl(end,end+1)='+';
+% % % % % set(gca,'xticklabel',xtl);
+% % % % % fattenplot
+% % % % % grid on
+% % % % % OutputFig('Force')
+% % % % % 
+% % % % % %% now two scenario histogram
+% % % % % figure
+% % % % % w=.3;
+% % % % % x=7.5
+% % % % % h1=bar(FBC,sum(yN20IPCC_forplot'/1e9,2),w,'g','stacked');
+% % % % % 
+% % % % % hold on
+% % % % % h2=bar(FBC+x,sum(yN20NLNRR_forplot'/1e9,2),w,'stacked');
+% % % % % 
+% % % % % xlabel(' kg/ha ')
+% % % % % ylabel(' mt ')
+% % % % % title([' Total N_2O response. ' extratitleinfo])
+% % % % % legend([h1 h2],{'IPCC','NLNRR'})
+% % % % % xtl=get(gca,'xticklabel')
+% % % % % xtl(end,end+1)='+';
+% % % % % set(gca,'xticklabel',xtl);
+% % % % % fattenplot
+% % % % % grid on
+% % % % % 
+% % % % % OutputFig('Force')
+% % % % % 
+% % % % % figure
+% % % % % 
+% % % % % FDSvCropname=FDSv;
+% % % % % 
+% % % % % %% now make a histogram from 
+% % % % % 
+% % % % % 
+% % % % % 
+% % % % % 

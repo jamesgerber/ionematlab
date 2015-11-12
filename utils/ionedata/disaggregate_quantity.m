@@ -14,6 +14,6 @@ function highresdata=disaggregate_quantity(loresdata,N);
 highresdata(r*N,c*N)=0;
 for j=1:N
     for m=1:N
-        highresdata(j:N:(6*r),m:N:(6*c))=loresdata/(N^2);
+        highresdata(j:N:(N*r),m:N:(N*c))=loresdata/(N^2);
     end
 end

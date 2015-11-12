@@ -81,7 +81,7 @@ try
     disp('You may need to run this from a terminal window: (or paste into matlab)');
     disp(['!git commit ' fullpath(1:end-23) ' -m "message here"']);
     disp(['!git push ' fullpath(1:end-23) ]);
-    disp([''])
+    disp([' '])
     
     disp(['!git pull ' fullpath(1:end-23)]);
     disp([' '])

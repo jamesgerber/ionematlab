@@ -22,6 +22,8 @@ LatLims=[-33.7534294901948 5.27223122051656] + DeltaLat*[-10 10];
 DeltaLon= 0.00215682882230084;
 LonLims=[-73.9932579615501 -34.7928941162324]+DeltaLon*[-20 20];
 
+
+EmbeddingRasterSize=[18095 18176]+[5 5];
 % note ... using Long as first dimension to be consistent with the GLI matlab
 % convention.
 
@@ -40,8 +42,14 @@ LonStart=find(closeto(LonVect,R.Lonlim(1),DeltaLon/1000));
 
 jj=LatStart:(LatStart+R.RasterSize(1)-1);
 ii=LonStart:(LonStart+R.RasterSize(2)-1);
+
+
+
 BrazilEmbedMatrix(ii,jj)=A(1:end,1:end);
 clear A
+
+jj=LatStart:(LatStart+EmbeddingRasterSize(1)-1);
+ii=LonStart:(LonStart+EmbeddingRasterSize(2)-1);
 
 
 % now downsample with Nskip

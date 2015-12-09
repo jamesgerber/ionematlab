@@ -17,13 +17,21 @@ function data=generatepppforclimatebin(binnumber)
 
 
 
-PPPMax=60000;
+PPPMax=300;
+
+delPPP=20;
+60000;
 
 %%%%LOAD DATA HERE%%%%%
 %load global gdp purchasing power parity
 load([iddstring '/misc/PerCapitaGDPv10.nc.mat'])
 gdp=DS(1).Data;
 
+
+%load n application
+[S,existflag] = getfertdata('maize','N');
+f=S.Data(:,:,1);
+gdp=f;
 %load climate bins
 load([iddstring '/ClimateBinAnalysis/ClimateLibrary/ClimateMask_maize_GDD8_prec_5x5_RevP.mat'])
 bin=BinMatrix;
@@ -63,7 +71,7 @@ NSGS=nsg(bin_ppp,NSS,'caxis',[0 PPPMax]);
 
 %%generate area weighted histogram
 %aw=awhist(gdp,a,1:5000:PPPMax); % Mariana - this was wrong.  next line limited to bin.
-aw=awhist(gdp(select_bin),a(select_bin),1:5000:PPPMax);
+aw=awhist(gdp(select_bin),a(select_bin),1:delPPP:PPPMax);
 figure(99)
 
 %axes(hax);
@@ -99,5 +107,5 @@ return
 %%
 for j=1:25
     generatepppforclimatebin(j)
-    pause   
+  %  pause   
 end

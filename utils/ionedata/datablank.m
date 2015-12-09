@@ -34,7 +34,7 @@ switch Res
         tmp=ones(4320,2160);
     case '1min'
         warning('warning:  this is going to be really huge');
-        tmp=ones(21600,10800)
+        tmp=ones(21600,10800);
     otherwise
         error
 end

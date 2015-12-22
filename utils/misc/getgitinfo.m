@@ -1,26 +1,27 @@
-function [GitHash,Date,Editor]=getgitinfo(vargin);
+function [GitHash,Date,Editor]=getgitinfo(varargin);
 % GetSVNInfo - get revision info from the subversion repository
 %
 %       Syntax
 %          [GitHash,Date,Editor]=getgitinfo;
-%
-%   Revision is a version number which can be used to find a version of a
-%   code.
-%
+%This code allows you to pull in the most recent commit info for the given
+%code you are working with. It will pull out the Git Hash, Last Commit Date
+%and the Author of the last commit date.
 %   Example:
 %
 %   This would go inside a processing code ...
 %
 %    DataToSave=ProcessedData;
-%    [RevNo,RevString,LastChangeRevNo,LCRString,AI]=GetSVNInfo;
-%    DAS.CodeRevisionNo=RevNo;
-%    DAS.CodeRevisionString=RevString;
-%    DAS.LastChangeRevNo=LastChangeRevNo;
+%    [GitHash,Date,Editor]=getgitinfo;
+%    DAS.GitRevisionHash=GitHash;
+%    DAS.LastChangeDate=Date;
+%    DAS.LastEditor=Editor;
 %    DAS.ProcessingDate=datestr(now);
 %    save SavedDataFile DataToSave DAS
 %
-%       See Also: GetSVNStatus
+%       See Also: getgitstatus
 %
+% MO 12/2015, Global Landscapes Initiative @ Institute on the Environment
+
 fullpath=which(mfilename);
 disp(fullpath)
 disp([fullpath(1:end-24)]);
@@ -37,30 +38,20 @@ end
 try
 
 
-    [s,d]=unix(['export TERM=ansi; /usr/local/bin/git -C ' fullpath(1:end-24) ' log --pretty=format:"%H - %cn: %cd, %s" -- ' fullpath]);
+    [s,d]=unix(['export TERM=ansi; /usr/local/bin/git -C ' fullpath(1:end-24) ' log -n 1 --pretty=format:"%h-%cn-%cd" -- ' fullpath]);
     
     AllInfo=d;
-    display([AllInfo]);
     
-    ii= find(d==sprintf('\n'));
     
-    RevLine=d(ii(5):ii(6)-1);
+    %ii= find(d==sprintf('\n'))
+   
     
 end
 
+%get commit date
+splt_by_hash=strsplit(AllInfo,'-');
+GitHash=splt_by_hash(1);
+Date=splt_by_hash(3);
+Editor=splt_by_hash(2);
+
     
-Name=d((ii(1)+7):ii(2)-1);
-
-RevNo=str2num(RevLine(11:end));
-RevString=['Revision ' RevLine(11:end) ' of ' ...
-    S];
-
-LastChangedLine=d(ii(9):ii(10)-1);
-LCRevNo=str2num(LastChangedLine(19:end));
-LCRevString=[LastChangedLine ' ' S];
-
-
-
-if nargout==0
-    disp(['Revision of ' Name ' is ' num2str(RevNo) ]);
-end

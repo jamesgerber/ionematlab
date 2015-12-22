@@ -1,5 +1,5 @@
 function [Long,Lat,Raster,Areasqkm]=ShapeFileToRaster(S,FieldName,MatrixTemplate,plotflag)
-% ShapefileToRaster - Turn a shapefile into a 5 minute matrix
+% ShapefileToRaster - Turn a shapefile into a raster
 %
 %  Syntax:
 %      [Long,Lat,RASTER]=ShapeFileToRaster(S,FIELD,MATRIXTEMPLATE,PLOTFLAG);
@@ -9,6 +9,8 @@ function [Long,Lat,Raster,Areasqkm]=ShapeFileToRaster(S,FieldName,MatrixTemplate
 %      executed on a .shp file.
 %      RASTER will be a matrix corresponding to the values of the field
 %      FIELD.
+%
+%      If MatrixTemplate is a structure with fields .lat .long and .matrix it will use those. 
 %
 %      if PLOTFLAG is 1, a plot will be made as things go alond
 %
@@ -54,9 +56,17 @@ switch nargin
         plotflag=0;
 end
 
-Matrix=0*ones(size(MatrixTemplate));
-[Long,Lat]=InferLongLat(Matrix);
 
+if isstruct(MatrixTemplate);
+    
+    Long=MatrixTemplate.long;
+    Lat=MatrixTemplate.lat;
+    Matrix=0*ones(size(MatrixTemplate.matrix));
+    MatrixTemplate=MatrixTemplate.matrix;
+else
+    Matrix=0*ones(size(MatrixTemplate));
+    [Long,Lat]=InferLongLat(Matrix);
+end
 [LatGrid,LongGrid]=meshgrid(Lat,Long);
 
 if plotflag==1

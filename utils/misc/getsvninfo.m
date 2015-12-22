@@ -45,8 +45,19 @@ catch
     AllInfo=d;
     
     ii= find(d==sprintf('\n'));
-    RevLine=d(ii(5):ii(6)-1);
-    
+    try
+        RevLine=d(ii(5):ii(6)-1);
+    catch
+        warning([' some problem inside getsvninfo. returning junk. '])
+        d
+        RevNo=-1;
+        RevString='';
+        LCRevNo=-1';
+        LCRevString='';
+        AllInfo='';
+        return
+        
+    end
 end
 
     

@@ -1,4 +1,4 @@
-function x=gygadatacoverage(filename,netcdf)
+function x=gygadatacoverage(filename,ncdf)
 %This function shows a map of GYGA data coverage, narrowed down by country
 % and climate bin. The input only requires a compiled csv of GYGA data and
 % a netcdf that shows global coverage of GYGA's 266 climate zones. Both of
@@ -13,7 +13,7 @@ countrylist=unique(country);
 binlist=unique(cz);
 
 
-x=opengeneralnetcdf(netcdf);
+x=opengeneralnetcdf(ncdf);
 all_cz=x(3).Data;
 global_binlist=unique(all_cz);
 
@@ -30,8 +30,8 @@ end
 
 
 
-coutline=countrynametooutline(country_list);
-coutline(coutline>0)=1
+coutline=countrynametooutline(countrylist);
+coutline(coutline>0)=1;
+global_cz=single(global_cz);
 global_cz=global_cz.*coutline;
 nsg(global_cz)
-

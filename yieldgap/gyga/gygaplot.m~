@@ -1,9 +1,9 @@
-function x=gygaplot(filename)
+%function x=gygaplot(filename)
 %This function will allow you to take a table from gyga and plot data
 %distribution for crop yields. This data can be found at www.yieldgap.org
 % MO 12/22/2015 Global Landscapes Initative @ Institute on the Environment.
 
-g=readgenericcsv(filename)
+%g=readgenericcsv(filename)
 
 yw=g.YW;
 yp=g.YP;

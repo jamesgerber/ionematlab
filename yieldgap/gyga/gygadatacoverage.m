@@ -30,8 +30,8 @@ end
 
 
 
-coutline=countrynametooutline(countrylist);
-coutline(coutline>0)=1;
-global_cz=single(global_cz);
-global_cz=global_cz.*coutline;
+% coutline=countrynametooutline(countrylist);
+% coutline(coutline>0)=1;
+% global_cz=single(global_cz);
+% global_cz=global_cz.*coutline;
 nsg(global_cz)

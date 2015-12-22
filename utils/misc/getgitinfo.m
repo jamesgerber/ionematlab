@@ -1,8 +1,8 @@
-function [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo(varargin);
+function [GitHash,Date,Editor]=getgitinfo(vargin);
 % GetSVNInfo - get revision info from the subversion repository
 %
 %       Syntax
-%          [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo;
+%          [GitHash,Date,Editor]=getgitinfo;
 %
 %   Revision is a version number which can be used to find a version of a
 %   code.
@@ -22,7 +22,8 @@ function [RevNo,RevString,LCRevNo,LCRevString,AllInfo]=GetSVNInfo(varargin);
 %       See Also: GetSVNStatus
 %
 fullpath=which(mfilename);
-disp([fullpath(1:end-25)]);
+disp(fullpath)
+disp([fullpath(1:end-24)]);
 
 if nargin==0
     [ST,I]=dbstack('-completenames');
@@ -34,19 +35,15 @@ end
 
 
 try
-    [s,d]=unix(['/usr/bin/git -C' fullpath(1:end-25) 'log -- ' S]);
+
+
+    [s,d]=unix(['export TERM=ansi; /usr/local/bin/git -C ' fullpath(1:end-24) ' log --pretty=format:"%H - %cn: %cd, %s" -- ' fullpath]);
     
     AllInfo=d;
+    display([AllInfo]);
     
     ii= find(d==sprintf('\n'));
     
-    RevLine=d(ii(5):ii(6)-1);
-catch
-    [s,d]=unix(['/opt/subversion/bin/svn info ' S]);
-    
-    AllInfo=d;
-    
-    ii= find(d==sprintf('\n'));
     RevLine=d(ii(5):ii(6)-1);
     
 end

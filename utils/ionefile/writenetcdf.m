@@ -98,6 +98,8 @@ switch lower(Force)
         ForceWrite=0;  %do not force writing.  Look to see if file exists.
     case 'hedge'
         ForceWrite=2;  %overwrite, but pause 5 seconds
+    case 'append'
+        ForceWrite=3;
         
 end
 
@@ -127,6 +129,20 @@ if exist(FileName,'file')==2
             disp(['About to overwrite ' FileName ])
             pause(4)
             dos(['rm ' FileName]);
+        elseif ForceWrite==3
+            disp(['About to append variable to ' FileName ])
+            a=whos('Data');
+            switch(a.class)
+                case 'int8'
+                    DataVarType='NC_INT';
+                case 'single'
+                    DataVarType='NC_FLOAT';
+                case 'double'
+                     DataVarType='double';
+                otherwise
+                        error(['can''t write this class of data in WriteNetCDF'])
+            end
+            
         else
             error(['problem in ' mfilename])
         end

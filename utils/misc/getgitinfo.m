@@ -37,8 +37,10 @@ end
 
 try
 
-
-    [s,d]=unix(['export TERM=ansi; /usr/local/bin/git -C ' fullpath(1:end-24) ' log -n 1 --pretty=format:"%h-%cn-%cd" -- ' fullpath]);
+    [s,gitlocation]=unix('which git')
+    gitlocation=gitlocation(1:end-1);  % need to remove the line return at the end
+ %   [s,d]=unix(['export TERM=ansi; /usr/local/bin/git -C ' fullpath(1:end-24) ' log -n 1 --pretty=format:"%h-%cn-%cd" -- ' fullpath]);
+    [s,d]=unix(['export TERM=ansi; ' gitlocation ' -C ' fullpath(1:end-24) ' log -n 1 --pretty=format:"%h-%cn-%cd" -- ' fullpath]);
     
     AllInfo=d;
     

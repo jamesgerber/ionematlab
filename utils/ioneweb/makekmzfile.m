@@ -67,7 +67,7 @@ KS.legendname='';
 
 
 
-ExpandStructure(MKS);
+expandstructure(MKS);
 
 TempFileName=[folderbase '/overlay.png'];
 

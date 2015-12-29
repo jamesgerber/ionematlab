@@ -1,4 +1,4 @@
-function hline=addequalslopeline(hax)
+function [hline,ll,ul]=addequalslopeline(hax)
 % addequalslopeline - add a line of unit slope to an existing plot
 %
 %  Syntax

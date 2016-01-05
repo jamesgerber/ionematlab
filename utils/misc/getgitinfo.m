@@ -20,6 +20,10 @@ function [GitHash,Date,Editor]=getgitinfo(varargin);
 %
 %       See Also: getgitstatus
 %
+%    To use hash use terminal to navigate to the matlab git folder. Type:
+%    git show <GitHash> where GitHash is the output from this code OR git
+%    log <GitHash> -p 
+%
 % MO 12/2015, Global Landscapes Initiative @ Institute on the Environment
 
 fullpath=which(mfilename);

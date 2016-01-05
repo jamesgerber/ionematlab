@@ -49,7 +49,7 @@ metaDQ=[];
 counter=1;
 clear FDS FDSv
 
-
+globalmaxvalue=0;
 
 %% BLANK MATRICES TO POPULATE AS WE GO.
 
@@ -165,11 +165,19 @@ for j=1:length(croplist)
 
         
         if sum( (ThisCropNAppVector(ii)-MaxNApp).*cav(ii).*fmav(ii)) > 0
+
+            globalmaxvalue=max(globalmaxvalue,max(ThisCropNAppVector(ii)))
+
+            
             disp([' found Napp very large for ' cropname ', total applied N over ' int2str(MaxNApp) ...
                 ' kg/ha is ' num2str(sum( (ThisCropNAppVector(ii)-MaxNApp).*cav(ii).*fmav(ii)))]);
             ThisCropNAppVector(ii)=MaxNApp;
             disp([' found largeness for ' cropname ', total applied N is ' num2str(sum( (ThisCropNAppVector).*cav.*fmav))]);
+  
+
         end
+        
+
         
         % now figure out how much national, how much subnational
         q=c.Data(:,:,3);

@@ -84,18 +84,18 @@ function a = proper_noun
 switch fix(22*rand)
 	case 0,    a = 'Xavier';
 	case 1,    a = 'Jamie';
-	case 2,    a = 'Moana';
-	case 3,    a = 'Christine';
+	case 2,    a = 'Eric';
+	case 3,    a = 'Bill';
 	case 4,    a = 'The ethanol lobby';
 	case 5,    a = 'Vegetarians';
 	case 6,    a = 'Meat eaters';
 	case 7,    a = 'Deepak';
-	case 8,    a = 'Emily';
+	case 8,    a = 'Derric';
 	case 9,    a = 'Kate';
 	case 10,   a = 'Peder';
 	case 11,   a = 'Boy Genius';
 	case 12,   a = 'Barrett';
-	case 13,   a = 'Donald Trump';
+	case 13,   a = 'Trump';
 	case 14,   a = 'Bonnie';
 	case 15,   a = 'Graham';
 	case 16,   a = 'Mariana';
@@ -104,9 +104,11 @@ switch fix(22*rand)
 	case 19,   a = 'the Scientist';
 	case 20,   a = 'Leah';
 	case 21,   a = 'Lindsey';
-	case 22,   a = 'Bernie Sanders';
-	case 23,   a = 'Hillary Clinton';
+	case 22,   a = 'Bernie';
+	case 23,   a = 'Hillary';
 	case 24,   a = 'the third reviewer';
+	case 25,   a = 'Kim';
+	case 26,   a = 'Christine';
 	otherwise ,  a = 'Navin';
 end
 

@@ -14,8 +14,8 @@ if nargin > 0
 	RandStream.setDefaultStream(RandStream('swb2712','seed',n));
 end
 switch fix(10*rand)
-	case {0 1 2 3 4},        a = special_case;
-	case {  5 6 7},  a = phrase;
+	case {0 1 2 },        a = special_case;
+	case {4 5 6 },  a = phrase;
 	otherwise,     a = sentence;
 end
 a(1) = upper(a(1));

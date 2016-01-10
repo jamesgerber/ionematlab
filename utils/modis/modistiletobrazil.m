@@ -15,7 +15,7 @@ function [values,indices,LonVect,LatVect,map,Rstructure]=modistiletobrazil(tilef
 %;
 
 %% Preliminaries
-% set up the matrix that embeds brazil
+% set up the matrix that embeds brazil.  Call this matrix the Frame.
 DeltaLat=0.00215682882230084;
 LatLims=[-33.7534294901948 5.27223122051656] + DeltaLat*[-10 10];
 
@@ -23,14 +23,18 @@ DeltaLon= 0.00215682882230084;
 LonLims=[-73.9932579615501 -34.7928941162324]+DeltaLon*[-20 20];
 
 
-EmbeddingRasterSize=[18095 18176]+[5 5];
+%FrameRasterSize=[18095 18176]+[5 5];
+FrameRasterSize=[diff(LonLims)/DeltaLon diff(LatLims)/DeltaLat];
+
+
+
 % note ... using Long as first dimension to be consistent with the GLI matlab
 % convention.
 
 LatVect=LatLims(1):DeltaLat:LatLims(end);
 LonVect=LonLims(1):DeltaLon:LonLims(end);
 
-BrazilEmbedMatrix=single(zeros(length(LonVect),length(LatVect)));
+BrazilFrameMatrix=single(zeros(length(LonVect),length(LatVect)));
 
 %%
 [A,R] = geotiffread(tilefile);
@@ -45,25 +49,30 @@ ii=LonStart:(LonStart+R.RasterSize(2)-1);
 
 
 
-BrazilEmbedMatrix(ii,jj)=A(1:end,1:end);
+BrazilFrameMatrix(ii,jj)=A(1:end,1:end);
 clear A
 
-jj=LatStart:(LatStart+EmbeddingRasterSize(1)-1);
-ii=LonStart:(LonStart+EmbeddingRasterSize(2)-1);
+
+
+%%% these two lines baffle me.  not sure why I did that.
+%jj=LatStart:(LatStart+FrameRasterSize(1)-1);
+%ii=LonStart:(LonStart+FrameRasterSize(2)-1);
 
 
 % now downsample with Nskip
+ii=1:size(BrazilFrameMatrix,1);
+jj=1:size(BrazilFrameMatrix,2);
 iiskip=ii(1:Nskip:end);
 jjskip=jj(1:Nskip:end);
 
 
 LatVect=LatVect(jjskip);
 LonVect=LonVect(iiskip);
-BrazilEmbedMatrix=BrazilEmbedMatrix(iiskip,jjskip);
+BrazilFrameMatrix=BrazilFrameMatrix(iiskip,jjskip);
 
 
-values=BrazilEmbedMatrix(:);
-map=BrazilEmbedMatrix;
+values=BrazilFrameMatrix(:);
+map=BrazilFrameMatrix;
 Rstructure=R;
 indices=[];
 

@@ -962,6 +962,7 @@ HideUI
 if strcmp(categorical,'on')
     
     if strcmp(separatecatlegend,'yes')
+        if verLessThan('matlab', '8.0.1')
         Hfig=gcf;
         Hlegendfig=figure;
         bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
@@ -978,7 +979,13 @@ if strcmp(categorical,'on')
             OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
         end
         figure(Hfig);  % make previous figure current.
-
+        else
+        warning(' NSG can''t make external legend with current version of matlab.   ')
+        warning(' simply not putting a legend.  although it''s probably an easy code fix, for now  ')
+        warning(' run with an older version of matlab to make the external legend.  ')
+        end
+        
+        
     else
         
         bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on

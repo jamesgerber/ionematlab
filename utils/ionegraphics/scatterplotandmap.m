@@ -1,8 +1,30 @@
-function [hplot,OS]=scatterplotandmap(xmap,ymap,scatterindex,differentialindex,NSS);
+function [hfig,OS]=scatterplotandmap(xmap,ymap,scatterindex,differentialindex,NSS);
 % scatterplotandmap - make a color-coded scatter plot and a map.
 %
-%scatterplotandmap(xmap,ymap,scatterindex,differentialindex,NSS);
+%  SYNTAX
+%          scatterplotandmap(xmap,ymap,scatterindex,colorcodingrule);
+%
+%      colorcoding rules include 'states' or 'slope'
+%      you can also replace colorcodingrule with your own index.  This has
+%      to be a full-sized map with integer values corresponding to how you
+%      want to color code the map / scatterplot
+% example:
+%
+% kk=countrycodetooutline('BRA');
+% tempdata=getcropdata('maize');
+% xmap=tempdata.Data(:,:,1);
+% ymap=tempdata.Data(:,:,2);
+% scatterindex=kk & xmap < 9e9 & ymap <9e9;
+% [hfig,OS]=scatterplotandmap(xmap,ymap,scatterindex,'states');
+% figure(hfig)
+% grid on
+% xlabel(' area ')
+% ylabel(' yield ');
+
+%
 %scatterplotandmap(xmap,ymap,scatterindex,'slope',NSS);
+%
+%  
 
 cmap='jet';
 
@@ -51,7 +73,7 @@ if nargin==4
                 end
                     
             case {'geo','geography','map','state','states'}
-                load /ionedata/AdminBoundary2010/Raster_NetCDF/2_States_5min/ncmat/glctry.mat
+                load([iddstring 'AdminBoundary2010/Raster_NetCDF/2_States_5min/ncmat/glctry.mat'])
                 differentialindex=datablank;
                 differentialindex(scatterindex)=DS.Data(scatterindex);
                 
@@ -84,7 +106,7 @@ scatterintegerlist=1:Ncolors;
 
 %%
 
-figure
+hfig=figure
 colorarray=finemap(cmap,'','');
 colorindices=round(linspace(1,size(colorarray,1),Ncolors));
 

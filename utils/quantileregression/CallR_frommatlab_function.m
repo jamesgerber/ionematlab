@@ -18,7 +18,7 @@ expandstructure(VarStruct)
 % ones.
 for j=1:length(modelterms)-1
     newvar=eval(modelterms{j+1});
-    newvarname=['var' int2str(j)]
+    newvarname=['var' int2str(j)];
     fileheaderline=[fileheaderline ',' newvarname];
     M=[M newvar];
 end
@@ -27,10 +27,24 @@ end
 unix('rm output.txt')
 %M=[ W X1(:) X2(:)];
 
-writefile('datafile.csv',Y,M,fileheaderline,',');
-disp(['calling R program'])
+%tic
+%writefile('datafile.csv',Y,M,fileheaderline,',');
+%toc
+
 tic
-[s,w]=unix('R CMD BATCH /Users/jsgerber/source/matlabgit/matlab/utils/quantileregression/CallQR2.R Routput.txt')
-unix('cat Routput.txt')
+BigArray=[Y M];
+save transferdatatoR.mat  -v6 BigArray
 toc
+
+disp(['calling R program'])
+% tic
+% [s,w]=unix('R CMD BATCH /Users/jsgerber/source/matlabgit/matlab/utils/quantileregression/CallQR2.R Routput.txt')
+% unix('cat Routput.txt')
+% theta=load('output.txt')
+% toc
+
+tic
+[s,w]=unix('R CMD BATCH /Users/jsgerber/source/matlabgit/matlab/utils/quantileregression/CallQR3.R Routput.txt')
+unix('cat Routput.txt')
 theta=load('output.txt')
+toc

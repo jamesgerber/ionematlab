@@ -78,7 +78,7 @@ switch Order
         M=m; % number rows in original basis
         N=n; % number cols in original basis
         
-        [n m]=ind2sub([N M],j)  % row, col in original basis
+        [n m]=ind2sub([N M],j);  % row, col in original basis
         
         mp=N-n+1 % row in new basis
         np=m;  % column in new basis

@@ -11,31 +11,32 @@ function [values,indices,LonVect,LatVect,map,Rstructure]=modistiletobrazil(tilef
 % addcoasts
 
 
+
+if nargin==1
+    Nskip=1
+end
+
+
+disp([' opening tile ' tilefile ]);
+tic
 %tilefile='pa_br_evi_250_2014353_lapig.tif';
 %;
 
 %% Preliminaries
 % set up the matrix that embeds brazil.  Call this matrix the Frame.
-DeltaLat=0.00215682882230084;
-LatLims=[-33.7534294901948 5.27223122051656] + DeltaLat*[-10 10];
+%DeltaLat=0.00215682882230084;
+%LatLims=[-33.7534294901948 5.27223122051656] + DeltaLat*[-10 10];
+%DeltaLon= 0.00215682882230084;
+%LonLims=[-73.9932579615501 -34.7928941162324]+DeltaLon*[-20 20];
 
-DeltaLon= 0.00215682882230084;
-LonLims=[-73.9932579615501 -34.7928941162324]+DeltaLon*[-20 20];
+[DeltaLon,LonLims,LonVect,DeltaLat,LatLims,LatVect,FrameRasterSize]=modisrasterconstants(Nskip);
+
 
 
 %FrameRasterSize=[18095 18176]+[5 5];
-FrameRasterSize=[diff(LonLims)/DeltaLon diff(LatLims)/DeltaLat];
-
-
-
-% note ... using Long as first dimension to be consistent with the GLI matlab
-% convention.
-
-LatVect=LatLims(1):DeltaLat:LatLims(end);
-LonVect=LonLims(1):DeltaLon:LonLims(end);
 
 BrazilFrameMatrix=single(zeros(length(LonVect),length(LatVect)));
-
+BrazilFrameMatrix=BrazilFrameMatrix-3000;
 %%
 [A,R] = geotiffread(tilefile);
 A=A.';
@@ -74,8 +75,9 @@ BrazilFrameMatrix=BrazilFrameMatrix(iiskip,jjskip);
 values=BrazilFrameMatrix(:);
 map=BrazilFrameMatrix;
 Rstructure=R;
-indices=[];
-
+indices=map;
+indices(:)=1:numel(map);
+toc
 % 
 % LatVect=linspace(R.Latlim(1),R.Latlim(2),R.RasterSize(1));
 % LonVect=linspace(R.Lonlim(1),R.Lonlim(2),R.RasterSize(2));

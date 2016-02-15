@@ -28,7 +28,7 @@ function [GitHash,Date,Editor]=getgitinfo(varargin);
 
 fullpath=which(mfilename);
 disp(fullpath)
-disp([fullpath(1:end-24)]);
+disp([fullpath(1:end-24)])
 
 if nargin==0
     [ST,I]=dbstack('-completenames');
@@ -41,12 +41,13 @@ end
 
 try
 
-    [s,gitlocation]=unix('which git')
+    [s,gitlocation]=unix('which git');
     gitlocation=gitlocation(1:end-1);  % need to remove the line return at the end
- %   [s,d]=unix(['export TERM=ansi; /usr/local/bin/git -C ' fullpath(1:end-24) ' log -n 1 --pretty=format:"%h-%cn-%cd" -- ' fullpath]);
-    [s,d]=unix(['export TERM=ansi; ' gitlocation ' -C ' fullpath(1:end-24) ' log -n 1 --pretty=format:"%h-%cn-%cd" -- ' fullpath]);
+    %[s,d]=unix(['export TERM=ansi; /usr/local/bin/git -C ' fullpath(1:end-24) ' log -n 1 --pretty=format:"%h-%cn-%cd" -- ' fullpath]);
+    [s,d]=unix(['export TERM=ansi; ' gitlocation ' -C ' fullpath(1:end-24) ' log -n 1 --pretty=format:"%H-%cn-%cd" -- ' fullpath]);
     
     AllInfo=d;
+    disp(AllInfo)
     
     
     %ii= find(d==sprintf('\n'))

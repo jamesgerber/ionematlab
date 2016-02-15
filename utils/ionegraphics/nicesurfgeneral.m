@@ -1145,7 +1145,8 @@ switch lower(plotarea)
         longlatbox=[0 96 35 72];
         filename=[filename 'medit2north'];
     otherwise
-        load /ionedata/misc/gadm1_lev0
+        load([iddstring '/misc/gadm1_lev0']);
+        
         for j=1:length(S)
             names{j}=lower(S(j).NAME_ENGLI);
             namesISO{j}=S(j).ISO;

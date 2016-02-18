@@ -33,12 +33,13 @@ switch username
         IoneDataDir=['/Library/IonE/data/'];
 end
 
-if ismac==0 & isequal(getenv('username'),'engs0074')
+if ispc==1
+    %& isequal(getenv('username'),'engs0074')
     IoneDataDir=['C:\GLI\MATLAB\data\'];
 end
     
 
-if ismalthus==1
+if ismac==1 & ismalthus==1
     IoneDataDir=['/Library/IonE/ionedata/'];
 end
 

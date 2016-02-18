@@ -87,6 +87,12 @@ if length(findstr(w,tab)) > 20
         case 'Congo'
             warndlg([' found ''congo'' in getcountrycode.  interpreting as congo not DRC'])
             ccstructure=StandardCountryNames('COG','ISO3');
+        case 'Niger'
+            display(['Interpreting as Niger, not Nigeria'])
+            ccstructure=StandardCountryNames(['Niger']);
+        case 'Nigeria'
+            display(['Interpreting as Nigeria, not Niger'])
+            ccstructure=StandardCountryNames(['NGA','ISO3']);
         otherwise
     error([' found multiple matches.  boo! ']);
     end

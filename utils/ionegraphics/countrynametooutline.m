@@ -59,7 +59,7 @@ end
 
 
 
-[UnitCodes,IDNames,UnitNames,CountryNames,CountryNumbers]=LoadPolitBoundary_5min;
+[UnitCodes,IDNames,UnitNames,CountryNames,CountryNumbers]=loadpolitboundary_5min;
 
 if nargin==0
   CountryNameList=unique(CountryNames);

@@ -3,7 +3,8 @@ function out=datablank(Val,Res)
 %
 % Syntax
 %
-%    out=datablank(VAL,RES)    RES can be '30min' or '5min' (default)
+%    out=datablank(VAL,RES)    RES can be '5min' (default) or '30min',
+%    '15min', '2.5deg', '10min','1min'
 %
 %    out=datablank(MATRIX)     will return a MATRIX size matrix of ones
 %    (this syntax is sort of stupid, but it makes the code slightly easier
@@ -23,6 +24,8 @@ end
 switch Res
     case '2.5deg'
         tmp=ones(144,72);
+    case {'.25deg','15min'}
+        tmp=ones(1440,720);
    case '30min'
         tmp=ones(720,360);
     case '10min'
@@ -31,7 +34,7 @@ switch Res
         tmp=ones(4320,2160);
     case '1min'
         warning('warning:  this is going to be really huge');
-        tmp=ones(21600,10800)
+        tmp=ones(21600,10800);
     otherwise
         error
 end

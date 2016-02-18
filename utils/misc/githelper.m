@@ -8,6 +8,11 @@ function varargout=githelper(varargin);
 %
 %
 %       See Also:
+%
+%
+%  git add
+%  git commit -m "comment here"
+%  git push
 
 
 %  jsg
@@ -23,22 +28,27 @@ try
     [s,w]=unix(['git status --porcelain']);
     
     
-    if isempty(w)
-        disp('');
-        disp(['Local changes are checked into  repository'])
-        disp(['WARNING!  SERVER MAY HAVE NEWER FILES AND YOU NEED TO UPDATE!'])
-        SVNStatus='';
-        
-        disp('You can try to paste this into matlab)');
-        disp(['!git update ' fullpath(1:end-25)]);
-        disp([' '])
-        
-        disp('Or run this from a terminal window: (no !)');
-        disp(['git update ' fullpath(1:end-25)]);
-        disp([' '])
-        
-        return
-    end
+    
+    
+    
+    
+% %     
+% %     if isempty(w)
+% %         disp('');
+% %         disp(['Local changes are a'])
+% %         disp(['WARNING!  SERVER MAY HAVE NEWER FILES AND YOU NEED TO UPDATE!'])
+% %         SVNStatus='';
+% %         
+% %         disp('You can try to paste this into matlab)');
+% %         disp(['!git update ' fullpath(1:end-25)]);
+% %         disp([' '])
+% %         
+% %         disp('Or run this from a terminal window: (no !)');
+% %         disp(['git update ' fullpath(1:end-25)]);
+% %         disp([' '])
+% %         
+% %         return
+% %     end
     
     
     disp(['output from git status command']);
@@ -47,7 +57,7 @@ try
     
     
     if length(findstr(w,'?')>0)
-        disp(['you may need to execute these lines from terminal (remove the "!"):'])
+        disp(['you may need to execute these lines from terminal '])
         
         % break out w
         ii=find(w==w(end));  %take advantage of fact that w ends with return
@@ -62,15 +72,18 @@ try
             
             ThisLine=w(iiStart(j):iiEnd(j));
             if ThisLine(1)=='?'
-                disp(['! svn add ' ThisLine(2:end)])
+                disp([' git add ' ThisLine(4:end)])
             end
         end
         disp([' '])
     end
     
     disp('You may need to run this from a terminal window: (or paste into matlab)');
-    disp(['!svn commit ' fullpath(1:end-25) ' -m "message here"']);
-    disp(['!svn update ' fullpath(1:end-25)]);
+    disp(['!git commit ' fullpath(1:end-23) ' -m "message here"']);
+    disp(['!git push ' fullpath(1:end-23) ]);
+    disp([' '])
+    
+    disp(['!git pull ' fullpath(1:end-23)]);
     disp([' '])
     
     

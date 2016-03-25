@@ -66,11 +66,16 @@ end
 
 
 Outline=(DataMaskLogical==2);  % create big logical array of zeros
+Outline=double(Outline);
 
 ii=ii(:)';
 
 a=StandardCountryNames(WBI.countrycode,'sage3');
+b=standardcountrynames(WBI.country,'sagecountry');
+
 for j=ii;
+    sagenum=a{j};
+    %display sagenum
  %   if j==82
  %       warning('fix honduras please')
  %   else    

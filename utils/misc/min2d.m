@@ -6,7 +6,7 @@ function [MinVal,RowIndex,ColumnIndex]=min2d(z)
 %
 %  SYNTAX
 %         [MinVal,RowIndex,ColumnIndex]=min2d(z);
-%         [MinVal,MatrixIndex]=max2d(z);
+%         [MinVal,MatrixIndex]=min2d(z);
 %
 %  example
 %

@@ -59,7 +59,13 @@ function [mdn,ts,struct]=getWFDEIstripe(idx,type,basedatadir);
 %    DS(j).snow=ts2;
 %    DS(j).Tair=ts3;
 %    end
-
+%
+%
+%  Here is how to make map of where the index points are
+%ii=landmasklogical(zeros(2160,1080));
+%newmap=ii*0;
+%newmap(ii)=find(ii);
+%nsg(newmap)
 
 %% code to make stripes
 
@@ -67,12 +73,18 @@ function [mdn,ts,struct]=getWFDEIstripe(idx,type,basedatadir);
 WFDEIVar=type;
 
 
-if nargin<3
-    basedatadir=iddstring;
+if nargin<3  
+    basedir=[iddstring '/Climate/reanalysis//WFDEI/stripes/'];
 end
        
+if nargin==3
+    if isempty(basedatadir)
+        basedir=[iddstring '/Climate/reanalysis//WFDEI/stripes/'];
+    else
+        basedir=basedatadir;
+    end
+end
 
-basedir = [basedatadir 'Climate/reanalysis/WFDEI/stripes'];
 
 for j=1:length(idx);
         FileName=[basedir '/' WFDEIVar '/' WFDEIVar int2str(idx(j))];

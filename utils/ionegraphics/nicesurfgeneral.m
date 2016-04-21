@@ -183,7 +183,7 @@ end
 %%% where Data can be a matrix or a structure.
 
 %take care of the cases where first argin is a vector.
-
+assignedlatlong=0;
 if min(size(arglist{1}))==1
     switch numel(arglist{1})
         case 3237023
@@ -202,6 +202,7 @@ if min(size(arglist{1}))==1
             Long=arglist{1};
             Lat=arglist{2};
             arglist=arglist(3:end);
+            assignedlatlong=1;
     end
 end
 
@@ -212,13 +213,20 @@ if isstruct(Data)
     [Long,Lat,Data,Units,DefaultTitleStr,NoDataStructure]=ExtractDataFromStructure(Data);
     %    Data(Data==MissingValue)=NaN;
 else
+    if assignedlatlong==0
     [Long,Lat]=InferLongLat(Data);
+    end
 end
 
 if (size(Data,1)~=4320||size(Data,2)~=2160)
-    [bLong,bLat]=InferLongLat(zeros(4320,2160));
-    mergedata(zeros(4320,2160),bLong,bLat,Data,Long,Lat);
+
+    disp([' jamie took out call to mergedata.m in Dec 2015 '])
+    %    [bLong,bLat]=InferLongLat(zeros(4320,2160));
+%    mergedata(zeros(4320,2160),bLong,bLat,Data,Long,Lat);
     longlatbox=[min(Long) max(Long) min(Lat) max(Lat)];
+
+
+
 end
 
 %%% the following logic is awful ... but my joint if conditional statement
@@ -367,12 +375,18 @@ end
 
 if ~isempty(filename) & isequal(filename(end),filesep)
         tstemp=titlestring
-%     if isequal(tstemp(end),' ')
-%         tstemp=tstemp(1:end-1);
-%     end
-%     if isequal(tstemp(end),'.')
-%         tstemp=titlesttstempring(1:end-1);
-%     end
+        %     if isequal(tstemp(end),' ')
+        %         tstemp=tstemp(1:end-1);
+        %     end
+        %     if isequal(tstemp(end),'.')
+        %         tstemp=titlesttstempring(1:end-1);
+        %     end
+        
+        if iscell(tstemp)
+            tstemp=[tstemp{1} tstemp{2}];
+        end
+
+
     filename=[filename makesafestring(tstemp)];
 end
 
@@ -611,13 +625,22 @@ end
 OceanVal=coloraxis(1)-minstep;
 NoDataLandVal=coloraxis(2)+minstep;
 
-%Any points off of the land mask must be set to ocean color.
-land=landmasklogical(Data);
-ii=(land==0);
-size(ii);
-size(Data);
-ii=EasyInterp2(ii,size(Data,1),size(Data,2),'nearest');
-Data(ii)=OceanVal;
+% section where points off of the land mask are set to ocean color.
+if Long(1) <= -179   
+    % This way works, but assumes that 'Data' spans the globe.
+    
+    land=landmasklogical(Data);
+    ii=(land==0);
+    size(ii);
+    size(Data);
+    ii=EasyInterp2(ii,size(Data,1),size(Data,2),'nearest');
+    Data(ii)=OceanVal;
+else
+    
+    
+end
+
+
 
 switch lower(sink)
     case {'','default','none'}
@@ -682,7 +705,13 @@ end
 %    
 %end
 
+if Long(1) <= -179   
+    % probably using inferlonglat to get here.  Let IonESurf call again.  
+
 IonESurf(Data);
+else
+    IonESurf(Long,Lat,Data);
+end
 
 %% Change projection
 
@@ -854,7 +883,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         % no mapping toolbox.  let's make things easy.
         
         axis([g1 g2 t1 t2])
-        
+        ht='';
     end
     %    ylim=(t2-t1)/100;
     %    ht=text(0,ylim,titlestring);
@@ -933,6 +962,7 @@ HideUI
 if strcmp(categorical,'on')
     
     if strcmp(separatecatlegend,'yes')
+        if verLessThan('matlab', '8.0.1')
         Hfig=gcf;
         Hlegendfig=figure;
         bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
@@ -949,7 +979,13 @@ if strcmp(categorical,'on')
             OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
         end
         figure(Hfig);  % make previous figure current.
-
+        else
+        warning(' NSG can''t make external legend with current version of matlab.   ')
+        warning(' simply not putting a legend.  although it''s probably an easy code fix, for now  ')
+        warning(' run with an older version of matlab to make the external legend.  ')
+        end
+        
+        
     else
         
         bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
@@ -1109,7 +1145,8 @@ switch lower(plotarea)
         longlatbox=[0 96 35 72];
         filename=[filename 'medit2north'];
     otherwise
-        load /ionedata/misc/gadm1_lev0
+        load([iddstring '/misc/gadm1_lev0']);
+        
         for j=1:length(S)
             names{j}=lower(S(j).NAME_ENGLI);
             namesISO{j}=S(j).ISO;

@@ -6,6 +6,7 @@ function invertplot(OldFileName,NewFileName);
 %        invertplot(OLDFILENAME,NEWFILENAME);
 %        invertplot(OLDFILENAME);
 %        invertplot all   % invert everything in current directory
+%        invertplot N   % N is a number.  invert most recent N files.
 %
 %  J. Gerber
 %  University of Minnesota
@@ -30,6 +31,28 @@ if nargin==1 & isequal(OldFileName,'all')
     end
     return
 end
+
+
+if nargin==1 & ~isempty(str2num(OldFileName))
+    N=str2num(OldFileName);
+    disp([' inverting most recent ' OldFileName ' plots '])
+    a=dir('*.png');
+    
+    [~,isort]=sort([a.datenum],'descend')
+    a=a(isort)
+    for j=1:N
+        name=a(j).name
+        N=length(name);
+        i1=max(1,N-12);
+        if ~isequal(name(i1:end),'_inverted.png')
+            invertplot(name)
+        else
+            disp([' skipping ' name]);
+        end
+    end
+    return
+end
+
 
 OldFileName=fixextension(OldFileName,'.png');
 

@@ -41,9 +41,9 @@ if ispc==1
 end
     
 
-if ismac==1 & ismalthus==1
-    IoneDataDir=['/Library/IonE/ionedata/'];
-end
+%if ismac==1 & ismalthus==1
+%    IoneDataDir=['/Library/IonE/ionedata/'];
+%end
 
 
 ADMINBOUNDARYMAP_5min    =[IoneDataDir 'AdminBoundary2010/Raster_NetCDF/2_States_5min/glctry.nc'];

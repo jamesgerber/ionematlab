@@ -29,6 +29,8 @@ switch Res
         tmp=ones(2160,1080);
     case '5min'
         tmp=ones(4320,2160);
+        case '30s'
+        tmp=ones(43200,21600);
     case '1min'
         warning('warning:  this is going to be really huge');
         tmp=ones(21600,10800)

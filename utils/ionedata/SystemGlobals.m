@@ -30,7 +30,7 @@ switch username
     case 'pcwest'
         IoneDataDir= '~/Data/';
     otherwise
-        IoneDataDir=['/Library/IonE/data/'];
+        IoneDataDir=['/ionedata/'];
 end
 
 if ismac==0 & isequal(getenv('username'),'engs0074')

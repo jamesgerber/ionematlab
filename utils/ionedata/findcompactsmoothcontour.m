@@ -1,10 +1,11 @@
-function [ContourMask,CutoffValue,NumContours,RecLevel,CS,Areas]=...
-    FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont,ExcludeMask,RecLevel)
+function [ContourMask,CutoffValue,NumContours,RecLevel,CS,DistSmooth,...
+    AreaRankedBelts,ProductionRankedBelts,AreaList,ProdValueList]=...
+    findcompactsmoothcontour(Dist,p,Lsmooth,kx,ky,MaxNumCont,ExcludeMask,RecLevel)
 %FindCompactSmoothContour - find smooth contours containing a certain fraction of a distribution
 %
 %
 %   Syntax:
-%       [ContourMask,CutoffValue,NumContours]=FindCompactSmoothContour(Dist
+%       [ContourMask,CutoffValue,NumContours,RecLevel,CS,DistSmooth,RankedBelts]=FindCompactSmoothContour(Dist
 %       ,p,Lsmooth,Xweight,Yweight,MaxNumContours,ExcludeMask)
 %
 %   Dist        - distribution
@@ -12,7 +13,7 @@ function [ContourMask,CutoffValue,NumContours,RecLevel,CS,Areas]=...
 %   kx          - filter normalization for x dimension (see example)
 %   ky          - filter normalization for y dimension
 %   MaxNumCont  - Max number of contours
-%   ExcludeMask - Mask of Dist to exclude 
+%   ExcludeMask - Mask of Dist to exclude
 %
 %
 %   This works by taking a convolution product of distribution DIST with a
@@ -27,7 +28,7 @@ function [ContourMask,CutoffValue,NumContours,RecLevel,CS,Areas]=...
 %     % load in a crop / find data quality production
 %     C=getdata('maize');
 %     Lat=C.Lat;
-%     Long=C.Long;     
+%     Long=C.Long;
 %     [Lat2d,Long2d]=meshgrid(Lat,Long);
 %
 %     kkDQ=(LandMaskLogical & C.Data(:,:,1) >0 & C.Data(:,:,1) < 9e9 ...
@@ -35,11 +36,11 @@ function [ContourMask,CutoffValue,NumContours,RecLevel,CS,Areas]=...
 %     Production=C.Data(:,:,1).*C.Data(:,:,2).*GetFiveMinGridCellAreas;
 %     kkDQ=(kkDQ & isfinite(Production));
 %     Production(~kkDQ)=0;
-%     
+%
 %     %US grain belt
-%     ii=find(Long >= -130 & Long <= -60); 
+%     ii=find(Long >= -130 & Long <= -60);
 %     jj=find( Lat >= 10 &  Lat <= 60);
-%     
+%
 %     X=Long2d(ii,jj);
 %     Y=Lat2d(ii,jj);
 %     Z=double(Production(ii,jj));
@@ -55,9 +56,9 @@ function [ContourMask,CutoffValue,NumContours,RecLevel,CS,Areas]=...
 %     ky=1./(Ykm.^2)
 %    Lsmooth_normunits=Lsmooth*(360/40000)*(12);
 
-      
- %   [Belt,CutoffValue]=FindContourGen(Z,Zblob,BeltPercentile,MaxBlobNumber);
-    
+
+%   [Belt,CutoffValue]=FindContourGen(Z,Zblob,BeltPercentile,MaxBlobNumber);
+
 %    function [ContourMask,CutoffValue,NumContours]=FindCompactSmoothContour(Dist,p,kx,ky,MaxNumCont,ExcludeMask)
 %%%[Belt,CutoffValue,NumContours]=FindCompactSmoothContour(Z,BeltPercentile,Lsmooth_normunits,1,1,MaxBlobNumber)
 
@@ -79,6 +80,8 @@ if nargin < 8
 end
 
 RecLevel
+
+Areas=[];
 
 %%  Construct a filter
 [nx,ny]=size(Dist);
@@ -113,7 +116,7 @@ DistSmooth=conv2(DistTemp,filt,'same');
 toc
 
 %% Now have a smoothed distribution.  Find a contour.
-    
+
 DistSmooth_norm=DistSmooth/max(max(DistSmooth));
 
 level=fzero(@(level) testlevel(level,Dist,DistSmooth_norm,p,ExcludeMask),.1);
@@ -136,6 +139,47 @@ end
 
 CutoffValue=level*max(max(Dist));  %need to renormalize
 
+%% did user ask for RankedBelts
+if nargout>=7
+    disp([' ranking belts by area.  This can be slow - calls inpolygon '])
+    AreaRankedBelts=ContourMask*0;
+    ProductionRankedBelts=ContourMask*0;
+    % User asked for RankedBelts
+    C=contourc(double(ContourMask),[.5 .5]);
+    CS=parse_contourc_output(C);
+    for j=1:length(CS)
+        av(j)=polyarea(CS(j).X,CS(j).Y);
+    end
+    [AreaList,polygonlist]=sort(av,'descend');
+    
+    % let's sort CS by descending Area.
+    CS=CS(polygonlist);
+    
+    [nx,ny]=size(ContourMask);
+    [X,Y]=meshgrid(1:ny,1:nx);
+    for kk=1:length(polygonlist)
+       
+        tic
+        [ii]=inpolygon(X,Y,CS(kk).X,CS(kk).Y);
+        disp('time in inpolygon')
+        toc
+        
+        AreaRankedBelts(ii)=kk;       
+        
+        ProdList(kk)=sum(Dist(ii));
+        
+    end
+    
+    
+    
+    % now let's calculate production-weighted belts
+    [ProdValueList,iiProductionRanking]=sort(ProdList,'descend');
+    
+    for jj=1:length(CS)
+        ProductionRankedBelts(AreaRankedBelts==iiProductionRanking(jj))=jj;
+    end
+    
+end
 %% how many contours?
 
 C=contourc(double(ContourMask),[.5 .5]);
@@ -182,46 +226,46 @@ if NumContours > MaxNumCont
     
     OldExcludeMask=ExcludeMask;
     ExcludeMask= ExcludeMask | ii;
-
+    
     if isequal(OldExcludeMask,ExcludeMask);
-       
-    % here is a bit to catch a special case where the old exclude mask is
-    % the same as the new exclude mask.  There can be a small little bit
-    % which doesn't get smoothed away.  If this happens, make a somewhat
-    % more Excluding ExcludeMask.  make the shape bigger ... so that it is
-    % approx Lsmooth/10  x Lsmooth / 10.  [normalize by variance of x,y]
-     
+        
+        % here is a bit to catch a special case where the old exclude mask is
+        % the same as the new exclude mask.  There can be a small little bit
+        % which doesn't get smoothed away.  If this happens, make a somewhat
+        % more Excluding ExcludeMask.  make the shape bigger ... so that it is
+        % approx Lsmooth/10  x Lsmooth / 10.  [normalize by variance of x,y]
+        
         xt=CS(k).X;
         yt=CS(k).Y;
         
         xt0=xt-mean(xt);
         yt0=yt-mean(yt);
-
+        
         xtnew=mean(xt)+(xt0)/var(xt0)*(Lsmooth/5);
         ytnew=mean(yt)+(yt0)/var(yt0)*(Lsmooth/5);
         
         
         ii1=inpolygon(X,Y,xtnew,ytnew);
         ExcludeMask= ExcludeMask | ii1 ;
-
+        
     end
     
     
     
     %    jpmax=jpmax.*(~ii);
     
-   % [ContourMask,CutoffValue]=FindContourGen(jp,jpmax,p,MaxNumContours,ExcludeMask);
-   if RecLevel < 15
-    [ContourMask,CutoffValue,NumContours,RecLevel_dummy,CS]=...
-        FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont,ExcludeMask,RecLevel+1);
-   else
-       disp(['Not going any deeper in recursion'])
-       
-       %% we are going home ... we have given up.  Now we should return the details.
-       
-       
-       
-   end
+    % [ContourMask,CutoffValue]=FindContourGen(jp,jpmax,p,MaxNumContours,ExcludeMask);
+    if RecLevel < 15
+        [ContourMask,CutoffValue,NumContours,RecLevel_dummy,CS]=...
+            FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont,ExcludeMask,RecLevel+1);
+    else
+        disp(['Not going any deeper in recursion'])
+        
+        %% we are going home ... we have given up.  Now we should return the details.
+        
+        
+        
+    end
     return
 end
 
@@ -238,9 +282,9 @@ function tlerror=testlevel(level,jp,jpmax,p,ExcludeMask)
 %    pguess=sum(jp(ii))/sum(sum(jp));
 %    tlerror=(pguess-p);
 %else
-    ii=(jpmax>level);% & ExcludeMask==0);
-    pguess=sum(jp(ii))/sum(sum(jp));
-    tlerror=(pguess-p);
+ii=(jpmax>level);% & ExcludeMask==0);
+pguess=sum(jp(ii))/sum(sum(jp));
+tlerror=(pguess-p);
 %end
 
 

@@ -4,6 +4,7 @@
 
 # first read in datafile.csv file with y,x1,x2,x3 ... etc.
 
+#setwd("/Users/jsgerber/sandbox/jsg114_yieldgapswithQR")
 
 #############
 ####Data#####

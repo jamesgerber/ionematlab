@@ -20,6 +20,7 @@ function [Y,YQ05,YQ95]=Nfunction(Napplied,model,crop,varargin);
 %         'medianNLNRR'
 %         'derivmedianNLNRR'
 %         'NLNRR_parammean_ricesep'
+%         'meanNLNRRzyi_ricesep700'    %VERSION USED FOR GCB PAPER!!!
 %         'derivparammeanNLNRR_ricesep'
 %         'correlatedparams_NLNRR_ricesep' - this will average over
 %         site-year variability, but use a randomly selected set of model
@@ -81,9 +82,14 @@ if isequal(model(1:2),'CV')
     Nrandom=XX.*(1+r*CV);
     
     Nrandom(Nrandom < 0)=0;
-    Nrandom(Nrandom > 600)=600;
+  %  Nrandom(Nrandom > 800)=800;
     
     N2O_rand=Nfunction(Nrandom,model,crop);
+    
+    % For any values that are above 700, use the EF from 700.
+    
+    ii=Nrandom>700;
+    N2O_rand(ii)=Nrandom(ii)/700.*Nfunction(700,model,crop);
     
     Y=mean(N2O_rand,2);
     return
@@ -120,112 +126,139 @@ switch model
             otherwise
                 Y=X*0+0.01;
         end
-    case 'NLNRR'
-        mu0=0.19;
-        mu1=0.00369;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        
-        
-        epsilon=normdist(0,tau^2,X);
-        alpha0=normdist(mu0,sigma0.^2,X);
-        alpha1=normdist(mu1,sigma1.^2,X);
-        
-        Y=exp(alpha0+alpha1.*X)+epsilon;
-    case 'NLNRRmeanparameters'
-        mu0=0.19;
-        mu1=0.00369;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        
-        
-        epsilon=0;
-        alpha0=mu0;
-        alpha1=mu1;
-        
-        Y=exp(alpha0+alpha1.*X)-exp(alpha0);
-        
-    case 'NLNRRzyi'
-        mu0=0.19;
-        mu1=0.00369;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        
-        
-        epsilon=normdist(0,tau^2,X);
-        alpha0=normdist(mu0,sigma0.^2,X);
-        alpha1=normdist(mu1,sigma1.^2,X);
-        
-        Y=exp(alpha0+alpha1.*X)-exp(alpha0);
-        
-        
-        
-        %      Y=exp(alpha0+alpha1.*X);
-    case 'globalparamNLNRR'
-        mu0=0.19;
-        mu1=0.00369;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        
-        
-        epsilon=normdist(0,tau^2,1);
-        alpha0=normdist(mu0,sigma0.^2,1);
-        alpha1=normdist(mu1,sigma1.^2,1);
-        
-        Y=exp(alpha0+alpha1.*X)+epsilon;
-    case 'LNRF'
-        mu0=0.99;
-        sigma0=3.16;
-        mu1=0.0130;
-        tau=2.67;
-        % page 31 of makowski paper / find parameters
-        epsilon=normdist(0,tau^2,X);
-        alpha0=normdist(mu0,sigma0.^2,X);
-        
-        Y=alpha0+mu1.*X+epsilon;
-    case 'LNRR'
-        mu0=1.04;
-        sigma0=0.7;
-        mu1=0.0117;
-        sigma1=0.0187;
-        tau=2.08;
-        % page 31 of makowski paper / find parameters
-        epsilon=normdist(0,tau^2,X);
-        alpha0=normdist(mu0,sigma0.^2,X);
-        alpha1=normdist(mu1,sigma1.^2,X);
-        
-        Y=alpha0+alpha1.*X+epsilon;
-    case 'meanLNRR'
-        mu0=1.04;
-        sigma0=0.7;
-        mu1=0.0117;
-        sigma1=0.0187;
-        tau=2.08;
-        % page 31 of makowski paper / find parameters
-        % epsilon=normdist(0,tau^2,X);
-        % alpha0=normdist(mu0,sigma0.^2,X);
-        % alpha1=normdist(mu1,sigma1.^2,X);
-        
-        alpha0=mu0;
-        alpha1=mu1;
-        epsilon=0;
-        
-        Y=alpha0+alpha1.*X+epsilon;
-    case 'meanNLNRR'
-        %mean of the model
-        mu0=0.19;
-        mu1=0.00369;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) );
-        
-    case 'meanNLNRR_ricesep'
-        %mean of the model
+%     case 'NLNRR'
+%         mu0=0.19;
+%         mu1=0.00369;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         
+%         
+%         epsilon=normdist(0,tau^2,X);
+%         alpha0=normdist(mu0,sigma0.^2,X);
+%         alpha1=normdist(mu1,sigma1.^2,X);
+%         
+%         Y=exp(alpha0+alpha1.*X)+epsilon;
+%     case 'NLNRRmeanparameters'
+%         mu0=0.19;
+%         mu1=0.00369;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         
+%         
+%         epsilon=0;
+%         alpha0=mu0;
+%         alpha1=mu1;
+%         
+%         Y=exp(alpha0+alpha1.*X)-exp(alpha0);
+%         
+%     case 'NLNRRzyi'
+%         mu0=0.19;
+%         mu1=0.00369;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         
+%         
+%         epsilon=normdist(0,tau^2,X);
+%         alpha0=normdist(mu0,sigma0.^2,X);
+%         alpha1=normdist(mu1,sigma1.^2,X);
+%         
+%         Y=exp(alpha0+alpha1.*X)-exp(alpha0);
+%         
+%         
+%         
+%         %      Y=exp(alpha0+alpha1.*X);
+%     case 'globalparamNLNRR'
+%         mu0=0.19;
+%         mu1=0.00369;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         
+%         
+%         epsilon=normdist(0,tau^2,1);
+%         alpha0=normdist(mu0,sigma0.^2,1);
+%         alpha1=normdist(mu1,sigma1.^2,1);
+%         
+%         Y=exp(alpha0+alpha1.*X)+epsilon;
+%     case 'LNRF'
+%         mu0=0.99;
+%         sigma0=3.16;
+%         mu1=0.0130;
+%         tau=2.67;
+%         % page 31 of makowski paper / find parameters
+%         epsilon=normdist(0,tau^2,X);
+%         alpha0=normdist(mu0,sigma0.^2,X);
+%         
+%         Y=alpha0+mu1.*X+epsilon;
+%     case 'LNRR'
+%         mu0=1.04;
+%         sigma0=0.7;
+%         mu1=0.0117;
+%         sigma1=0.0187;
+%         tau=2.08;
+%         % page 31 of makowski paper / find parameters
+%         epsilon=normdist(0,tau^2,X);
+%         alpha0=normdist(mu0,sigma0.^2,X);
+%         alpha1=normdist(mu1,sigma1.^2,X);
+%         
+%         Y=alpha0+alpha1.*X+epsilon;
+%     case 'meanLNRR'
+%         mu0=1.04;
+%         sigma0=0.7;
+%         mu1=0.0117;
+%         sigma1=0.0187;
+%         tau=2.08;
+%         % page 31 of makowski paper / find parameters
+%         % epsilon=normdist(0,tau^2,X);
+%         % alpha0=normdist(mu0,sigma0.^2,X);
+%         % alpha1=normdist(mu1,sigma1.^2,X);
+%         
+%         alpha0=mu0;
+%         alpha1=mu1;
+%         epsilon=0;
+%         
+%         Y=alpha0+alpha1.*X+epsilon;
+%     case 'meanNLNRR'
+%         %mean of the model
+%         mu0=0.19;
+%         mu1=0.00369;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) );
+%         
+%     case 'meanNLNRR_ricesep'
+%         %mean of the model
+%         switch crop
+%             case 'rice'
+%                 Z=-1.139;
+%             otherwise
+%                 Z=0;
+%         end
+%         mu0=0.24+Z;
+%         mu1=0.00376;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.935;
+%         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) );
+%         
+%         
+%     case {'meanNLNRRzyi','meanNLNRRresponse'}
+%         % mean of the model but we subtract off the zero value
+%         mu0=0.19;
+%         mu1=0.00369;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
+%             exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
+%         
+      case {'meanNLNRRzyi_ricesep_GCBSubmit','meanNLNRRresponse_ricesep_GCBSubmit'}
+%         % mean of the model but we subtract off the zero value
+%         %mean of the model
         switch crop
             case 'rice'
                 Z=-1.139;
@@ -236,164 +269,301 @@ switch model
         mu1=0.00376;
         sigma0=0.72;
         sigma1=0.0025;
-        tau=1.935;
-        Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) );
-        
-        
-    case {'meanNLNRRzyi','meanNLNRRresponse'}
-        % mean of the model but we subtract off the zero value
-        mu0=0.19;
-        mu1=0.00369;
-        sigma0=0.72;
-        sigma1=0.0025;
         tau=1.94;
+          Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
+       exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
+% % 
+
+%         %mean of the model
+% %        case {'meanNLNRRzyi_ricesep','meanNLNRRresponse_ricesep'}
+% %        switch crop
+% %             case 'rice'
+% %                 Z=-1.0780975;
+% %             otherwise
+% %                 Z=0;
+% %         end
+% %         mu0=0.3400364+Z;
+% %         mu1=0.0031001;
+% %         sigma0=0.7142285;
+% %         sigma1=0.002054274;
+% %          Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
+% %              exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
+% % 
+   
+     case {'meanNLNRRzyi_ricesep500philibertsig72'}
+     mu=[0.2404356 0.0037637 -1.1387809];
+  
+     sigma0=0.72;
+     sigma1=0.002450415;
+
+       
+        switch crop
+            case 'rice'
+                Z=mu(3);
+            otherwise
+                Z=0;
+        end
+        
+        mu0=mu(1)+Z;
+        mu1=mu(2);
+
+         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
+             exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
+
+              case {'meanNLNRRzyi_ricesep500philibert'}
+     mu=[0.2404356 0.0037637 -1.1387809];
+  
+     sigma0=0.6961457 ;
+     sigma1=0.002450415;
+
+       
+        switch crop
+            case 'rice'
+                Z=mu(3);
+            otherwise
+                Z=0;
+        end
+        
+        mu0=mu(1)+Z;
+        mu1=mu(2);
+
+         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
+             exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
+
+         
+              case {'meanNLNRRzyi_ricesep500','meanNLNRRresponse_ricesep500'}
+     mu=[0.2063760 0.0039503 -1.0048088];
+  
+     sigma0=0.6775408;
+     sigma1=0.002046277;
+
+       
+        switch crop
+            case 'rice'
+                Z=mu(3);
+            otherwise
+                Z=0;
+        end
+        
+        mu0=mu(1)+Z;
+        mu1=mu(2);
+
+         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
+             exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
+
+         
+    case {'meanNLNRRzyi_ricesep700','meanNLNRRresponse_ricesep700'}
+     mu=[0.3033216 0.0033885 -0.9718765];
+  
+     sigma0=0.7066093;
+     sigma1=0.001950911;
+
+       
+        switch crop
+            case 'rice'
+                Z=mu(3);
+            otherwise
+                Z=0;
+        end
+        
+        mu0=mu(1)+Z;
+        mu1=mu(2);
+
+         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
+             exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
+
+     case 'derivmeanNLNRR_ricesep700'
+     mu=[0.3033216 0.0033885 -0.9718765];
+  
+     sigma0=0.7066093;
+     sigma1=0.001950911;
+
+       
+        switch crop
+            case 'rice'
+                Z=mu(3);
+            otherwise
+                Z=0;
+        end
+        
+        mu0=mu(1)+Z;
+        mu1=mu(2);
+         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) ).*...
+             ((2*(mu1+sigma1.^2*X).*(sigma1.^2))/(2*sigma1.^2) );
+
+
+    case {'meanNLNRRzyi_ricesep800','meanNLNRRresponse_ricesep800'}
+        mu=[ ];
+        
+        switch crop
+            case 'rice'
+                Z=mu(3);
+            otherwise
+                Z=0;
+        end
+        
+        mu0=mu(1)+Z;
+        mu1=mu(2);
+        sigma0=0.7106919;
+        sigma1=0.001986826;
         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
             exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
+
+ 
+          case {'meanNLNRRzyi_philibertplosone','meanNLNRRzyi_philibertplosone'}
+        mu=[0.19 0.0037 ];
         
-    case {'meanNLNRRzyi_ricesep','meanNLNRRresponse_ricesep'}
-        % mean of the model but we subtract off the zero value
-        %mean of the model
         switch crop
             case 'rice'
-                Z=-1.139;
+                Z=0;
             otherwise
                 Z=0;
         end
-        mu0=0.24+Z;
-        mu1=0.00376;
+        
+        mu0=mu(1)+Z;
+        mu1=mu(2);
         sigma0=0.72;
         sigma1=0.0025;
-        tau=1.94;
         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) )- ...
             exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*0).^2- mu1.^2)/(2*sigma1.^2) )  ;
-        
-    case 'NLNRRzyi_ricesep'
-        switch crop
-            case 'rice'
-                Z=-1.139;
-            otherwise
-                Z=0;
-        end
-        mu0=0.24+Z;
-        mu1=0.00376;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        
-        
-       % epsilon=normdist(0,tau^2,X);
-       % alpha0=normdist(mu0,sigma0.^2,X);
-       % alpha1=normdist(mu1,sigma1.^2,X);
-        
-       alpha0=randn(size(X))*sigma0+mu0;
-       alpha1=randn(size(X))*sigma1+mu1;
-       
-       
-       
-        Y=exp(alpha0+alpha1.*X)-exp(alpha0);
-        
-         case 'NLNRRzyi_ricesep_GLOBAL'
-        switch crop
-            case 'rice'
-                Z=-1.139;
-            otherwise
-                Z=0;
-        end
-        mu0=0.24+Z;
-        mu1=0.00376;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        
-        
-        %epsilon=normdist(0,tau^2,X);
-        %alpha0=normdist(mu0,sigma0.^2,X);
-        %alpha1=normdist(mu1,sigma1.^2,X);
 
-        global HOLDRANDOMVARS  ALPHA0_MINUS_MU0 ALPHA1
+        
+        
+         
+         %  
 
-        if isempty(HOLDRANDOMVARS)
-        
-        ALPHA1=mu1+sigma1*randn;
-        ALPHA0_MINUS_MU0=sigma0*randn;
-        
-        end
-        
-        alpha0=ALPHA0_MINUS_MU0 + mu0;
-        alpha1=ALPHA1;
-        
-      %  Y=alpha1;
-        Y=exp(alpha0+alpha1.*X)-exp(alpha0);
-      %  Y=exp(alpha0+alpha1.*X);
-          
-        
-        
-    case 'derivmeanNLNRR_ricesep'
-        % derivative of the mean of the model
-        switch crop
-            case 'rice'
-                Z=-1.139;
-            otherwise
-                Z=0;
-        end
-        mu0=0.24+Z;
-        mu1=0.00376;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) ).*...
-            ((2*(mu1+sigma1.^2*X).*(sigma1.^2))/(2*sigma1.^2) );
-    
-    case 'derivmeanNLNRR'
-        % derivative of the mean of the model
-        mu0=0.19;
-        mu1=0.00369;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) ).*...
-            ((2*(mu1+sigma1.^2*X).*(sigma1.^2))/(2*sigma1.^2) );
-        
-        
-    case 'medianNLNRR'
-        mu0=0.19;
-        mu1=0.00369;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        
-        % epsilon=normdist(0,tau^2,X);
-        % alpha0=normdist(mu0,sigma0.^2,X);
-        % alpha1=normdist(mu1,sigma1.^2,X);
-        
-        alpha0=mu0;
-        alpha1=mu1;
-        epsilon=0;
-        
-        Y=exp(alpha0+alpha1.*X)+epsilon;
-    case 'derivmedianNLNRR'
-        mu0=0.19;
-        mu1=0.00369;
-        sigma0=0.72;
-        sigma1=0.0025;
-        tau=1.94;
-        
-        % epsilon=normdist(0,tau^2,X);
-        % alpha0=normdist(mu0,sigma0.^2,X);
-        % alpha1=normdist(mu1,sigma1.^2,X);
-        
-        alpha0=mu0;
-        alpha1=mu1;
-        epsilon=0;
-        
-        Y=alpha1.*exp(alpha0+alpha1.*X)+epsilon;
-        
+%mu=[  ];
+
+%sigma0=;
+%sigma1=;
+
+%     case 'NLNRRzyi_ricesep'
+%         switch crop
+%             case 'rice'
+%                 Z=-1.139;
+%             otherwise
+%                 Z=0;
+%         end
+%         mu0=0.24+Z;
+%         mu1=0.00376;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         
+%         
+%        % epsilon=normdist(0,tau^2,X);
+%        % alpha0=normdist(mu0,sigma0.^2,X);
+%        % alpha1=normdist(mu1,sigma1.^2,X);
+%         
+%        alpha0=randn(size(X))*sigma0+mu0;
+%        alpha1=randn(size(X))*sigma1+mu1;
+%        
+%        
+%        
+%         Y=exp(alpha0+alpha1.*X)-exp(alpha0);
+%         
+%          case 'NLNRRzyi_ricesep_GLOBAL'
+%         switch crop
+%             case 'rice'
+%                 Z=-1.139;
+%             otherwise
+%                 Z=0;
+%         end
+%         mu0=0.24+Z;
+%         mu1=0.00376;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         
+%         
+%         %epsilon=normdist(0,tau^2,X);
+%         %alpha0=normdist(mu0,sigma0.^2,X);
+%         %alpha1=normdist(mu1,sigma1.^2,X);
+% 
+%         global HOLDRANDOMVARS  ALPHA0_MINUS_MU0 ALPHA1
+% 
+%         if isempty(HOLDRANDOMVARS)
+%         
+%         ALPHA1=mu1+sigma1*randn;
+%         ALPHA0_MINUS_MU0=sigma0*randn;
+%         
+%         end
+%         
+%         alpha0=ALPHA0_MINUS_MU0 + mu0;
+%         alpha1=ALPHA1;
+%         
+%       %  Y=alpha1;
+%         Y=exp(alpha0+alpha1.*X)-exp(alpha0);
+%       %  Y=exp(alpha0+alpha1.*X);
+%           
+%         
+%         
+%     case 'derivmeanNLNRR_ricesep'
+%         % derivative of the mean of the model
+%         switch crop
+%             case 'rice'
+%                 Z=-1.139;
+%             otherwise
+%                 Z=0;
+%         end
+%         mu0=0.24+Z;
+%         mu1=0.00376;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) ).*...
+%             ((2*(mu1+sigma1.^2*X).*(sigma1.^2))/(2*sigma1.^2) );
+%     
+%     case 'derivmeanNLNRR'
+%         % derivative of the mean of the model
+%         mu0=0.19;
+%         mu1=0.00369;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         Y=exp(  ( (mu0+sigma0.^2*1).^2- mu0.^2)/(2*sigma0.^2) )*exp( ((mu1+sigma1.^2*X).^2- mu1.^2)/(2*sigma1.^2) ).*...
+%             ((2*(mu1+sigma1.^2*X).*(sigma1.^2))/(2*sigma1.^2) );
+%         
+%         
+%     case 'medianNLNRR'
+%         mu0=0.19;
+%         mu1=0.00369;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         
+%         % epsilon=normdist(0,tau^2,X);
+%         % alpha0=normdist(mu0,sigma0.^2,X);
+%         % alpha1=normdist(mu1,sigma1.^2,X);
+%         
+%         alpha0=mu0;
+%         alpha1=mu1;
+%         epsilon=0;
+%         
+%         Y=exp(alpha0+alpha1.*X)+epsilon;
+%     case 'derivmedianNLNRR'
+%         mu0=0.19;
+%         mu1=0.00369;
+%         sigma0=0.72;
+%         sigma1=0.0025;
+%         tau=1.94;
+%         
+%         % epsilon=normdist(0,tau^2,X);
+%         % alpha0=normdist(mu0,sigma0.^2,X);
+%         % alpha1=normdist(mu1,sigma1.^2,X);
+%         
+%         alpha0=mu0;
+%         alpha1=mu1;
+%         epsilon=0;
+%         
+%         Y=alpha1.*exp(alpha0+alpha1.*X)+epsilon;
+%         
     case 'NLNRR_parammean_ricesep'
 
 
         if isempty(x_semian)
-            load NLNRR_parammean_ricesepparams
-            load NLNRR_parammean_ricesepparams_rice
+            load /Users/jsgerber/source/matlabgit/matlab/N2Opaper/NLNRR_parammean_ricesepparams
+            load /Users/jsgerber/source/matlabgit/matlab/N2Opaper/NLNRR_parammean_ricesepparams_rice
         end
         switch crop
             case 'rice'
@@ -407,6 +577,28 @@ switch model
                 YQ95=interp1(x_semian,YQ95_semian,X,'spline');
         end
 
+        
+    case 'NLNRR_parammean_ricesep_GCBSubmit'
+
+
+
+        if isempty(x_semian)
+            load /Users/jsgerber/sandbox/jsg070_N2Omodelling/jsg070b_WithManurenewstats/statistics/NLNRR_parammean_ricesepparams
+            load /Users/jsgerber/sandbox/jsg070_N2Omodelling/jsg070b_WithManurenewstats/statistics/NLNRR_parammean_ricesepparams_rice
+        end
+        switch crop
+            case 'rice'
+                
+                Y=interp1(x_semian,meanY_semian_rice,X,'spline');
+                YQ05=interp1(x_semian,YQ05_semian_rice,X,'spline');
+                YQ95=interp1(x_semian,YQ95_semian_rice,X,'spline');
+            otherwise
+                Y=interp1(x_semian,meanY_semian,X,'spline');              
+                YQ05=interp1(x_semian,YQ05_semian,X,'spline');
+                YQ95=interp1(x_semian,YQ95_semian,X,'spline');
+        end
+
+        
         
     case 'derivparammeanNLNRR_ricesep'
         
@@ -424,24 +616,29 @@ switch model
         end
         
         
-    case 'correlatedparams_NLNRR_ricesep'
-        sigmamat=[  0.00793881 -2.11300e-05 -0.003250000
-            -0.00002113  1.63216e-07 -0.000014066
-            -0.00325000 -1.40660e-05  0.167772160];
-        
+    case 'correlatedparams_NLNRR_ricesep700'
+
+sigmamat=[0.005723625 -1.260516e-05 -0.001436962
+    -1.260516e-05 8.980901e-08 -7.550001e-06
+    -0.001436962 -7.550001e-06 0.0703605];
+   
+
+    mu=[0.3033216 0.0033885 -0.9718765];
+    sigma0=0.7066093;
+    sigma1=0.001950911;
+   
+   
         R=chol(sigmamat);
         
-        mu=[0.24 0.00376 -1.139];
-        
+
         N=length(X);
         
         z=repmat(mu,N,1)+randn(N,3)*R;
         mu0=z(:,1);
         mu1=z(:,2);
-        beta=z(:,3);
-        
-        sigma0=0.72;
-        sigma1=0.0025;
+        %     beta=z(:,3);
+        beta=mu(3);
+
         
         switch    crop
             case 'rice'
@@ -449,7 +646,7 @@ switch model
                 %  for j=1:N
                 %      Y(j)=newNft(mu0(j)+beta(j),sigma0,mu1(j),sigma1,X(j));
                 %  end
-                Ypar=NewNftparallel(mu0(:)+beta,sigma0(:),mu1,sigma1,X(:));
+                Ypar=newNftparallel(mu0(:)+beta,sigma0(:),mu1,sigma1,X(:));
                 Y=Ypar;
                 
             otherwise

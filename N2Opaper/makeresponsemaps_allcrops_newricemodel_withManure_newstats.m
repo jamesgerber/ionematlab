@@ -209,10 +209,10 @@ for j=1:length(croplist)
         %             -Nfunction(0,'meanNLNRR',cropname);
         %         ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRresponse',cropname)./ThisCropNAppVector;
         %         ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivmeanNLNRR',cropname);
-        ThisCropN2OVectorNLNRR=Nfunction(ThisCropNAppVector,'NLNRR_parammean_ricesep',callcropname)...
-            -Nfunction(0,'NLNRR_parammean_ricesep',callcropname);
-        ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'NLNRR_parammean_ricesep',callcropname)./ThisCropNAppVector;
-        ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivparammeanNLNRR_ricesep',callcropname);
+        ThisCropN2OVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRzyi_ricesep700',callcropname)...
+            -Nfunction(0,'meanNLNRRzyi_ricesep700',callcropname);
+        ThisCropN2OresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'meanNLNRRzyi_ricesep700',callcropname)./ThisCropNAppVector;
+        ThisCropdN2OdNresponseVectorNLNRR=Nfunction(ThisCropNAppVector,'derivmeanNLNRR_ricesep700',callcropname);
         
         totalNapp(iigood)=totalNapp(iigood)+ThisCropNAppVector.*croparea(iigood);
         totalNapp_subnational(iigood)=totalNapp_subnational(iigood)+ThisCropNAppVector_subnational.*croparea(iigood);
@@ -248,7 +248,7 @@ for j=1:length(croplist)
         FDS.cropname=cropname;
         FDS.totalN=sum(M.distbyweightedval);
         FDS.N2OresponseIPCC=Nfunction(FDS.Napp,'IPCC',callcropname);
-        FDS.N2OresponseNLNRR=Nfunction(FDS.Napp,'NLNRR_parammean_ricesep',callcropname);
+        FDS.N2OresponseNLNRR=Nfunction(FDS.Napp,'meanNLNRRzyi_ricesep700',callcropname);
         FDS.edges=edges;
         FDS.distbyweightedval=M.distbyweightedval;
         FDS.distbyweight=M.distbyweight;
@@ -319,18 +319,19 @@ clear NSS
 NSS.cmap='eggplant';
 NSS.panoplytriangles=[0 1];
 NSS.caxis=[0 300];
-NSS.units='kg/ha';
+NSS.units='kg N ha^{-1}';
 NSS.makeplotdatafile='on';
-nsg(totalNapp_perha,NSS,'title',['Total applied N ' extratitleinfo ' '],'filename','on')
+nsg(totalNapp_perha,NSS,'filename',['Total applied N ' extratitleinfo ' '])
+%nsg(totalNapp_perha,NSS,'title',['Total applied N ' extratitleinfo ' '],'filename','on')
 
 %%
 
 clear NSS
 NSS.cmap='poppy';
 NSS.panoplytriangles=[0 1];
-NSS.caxis=[0 3];
-NSS.units='kg/ha';
-NSS.title=[' Total N_2O response.  Linear (IPCC)  model. ' extratitleinfo ' '];
+NSS.caxis=[0 2.5];
+NSS.units='kg N_20-N ha^{-1}';
+%NSS.title=[' Total N_2O response.  Linear (IPCC)  model. ' extratitleinfo ' '];
 NSS.filename='TotalN2OIPCC';
 NSS.makeplotdatafile='on';
 NSS.userinterppreference='tex';
@@ -346,9 +347,9 @@ NSS.makeplotdatafile='on';
 
 NSS.cmap='poppy';
 NSS.panoplytriangles=[0 1];
-NSS.caxis=[0 3];
-NSS.units='kg/ha';
-NSS.title=[' Total N_2O response. Non-linear method. ' extratitleinfo ' '];
+NSS.caxis=[0 2.5];
+NSS.units='kg N_2O-N ha^{-1}';
+NSS.title=[' Total N_2O response. NLNRR_{700} model '];
 NSS.filename=['TotalN2ONLNRR' extratitleinfo];
 NSS.userinterppreference='tex';
 
@@ -426,12 +427,12 @@ nsg(totalN2OresponseNLNRR_perha,'title',[' Total N_2O response to unit change, n
 clear NSS
 NSS.cmap='revred_white_blue_deep';
 %NSS.title=[' Incremental N2O response ' extratitleinfo ' '];
-NSS.title=[' Change in N_2O in response to change in N application.  non-linear method. ' extratitleinfo ' '];
+NSS.title=[' Change in N_2O in response to change in N application.  NLNRR _{700} model. ' extratitleinfo ' '];
 NSS.userinterppreference='tex'
-NSS.caxis=[0 .03];
+NSS.caxis=[0.005 .025];
 NSS.modifycolormap='stretch';
 NSS.stretchcolormapcentervalue=0.01;
-NSS.units='kg/kg';
+NSS.units='kg N_2O-N kg^{-1} ';
 NSS.filename=['dN2OdN_emissionschange_NLNRR' extratitleinfo];
 NSS.panoplytriangles=[0 1];
 NSS.makeplotdatafile='on';
@@ -455,10 +456,12 @@ nsg(totaldN2OdNresponseNLNRR_perha,NSS);
 clear NSS
 NSS.cmap='dark_orange_white_purple_deep';
 NSS.title=[' N_2O emissions difference:   IPCC model - NLNRR model'  ' '];
-NSS.caxis=[-1 0.25];
+NSS.caxis=[-0.05 0.2];
 NSS.modifycolormap='stretch';
 NSS.stretchcolormapcentervalue=0;
-NSS.units='kg';
+NSS.units='kg N_2O-N/ha';
+    NSS.userinterppreference='tex'
+
 NSS.filename='absdifference_N2O_emissionschange';
 NSS.panoplytriangles=[1 1];
 nsg((totalN2OIPCC_perha-totalN2ONLNRR_perha).*totalarea,NSS);

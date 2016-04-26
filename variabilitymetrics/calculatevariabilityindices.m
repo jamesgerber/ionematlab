@@ -5,11 +5,11 @@
 
 ver='O';   % set a version number
 
-
+extraargs=[];
 
 
 % pick a region   'agland','landmask','pasture','cropland','iowa'
-mask='iowa';
+mask='landmask';
 
 % pick an index and associated variables.  This has to be a function which
 % is on the matlab path, which returns a structure M which contains the
@@ -31,10 +31,22 @@ mask='iowa';
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %  getintraannualcv     %
 %%%%%%%%%%%%%%%%%%%%%%%%%
-metricfunctionhandle=@getintraannualcv;
+% metricfunctionhandle=@getintraannualcv;
+% %metricfunctionextraarguments={'maize'};  % just an example
+% rst=[1 1 0 ];  % rain, snow, temperature.
+% yrvect=[1979:2012];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%  getKDD     %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+metricfunctionhandle=@getKDD;
 %metricfunctionextraarguments={'maize'};  % just an example
-rst=[1 1 0 ];  % rain, snow, temperature.
+rst=[0 0 1];  % rain, snow, temperature.
 yrvect=[1979:2012];
+Tcrit=32;
+extraargs{1}=Tcrit;
+
+
 
 %% extra things
 croplist={'maize'} ; % (in case an index requires a crop)
@@ -123,7 +135,7 @@ for j=1:length(pointslist)
             [mdn,Snowf]=getWFDEIstripe(thisindex,'Snowf_daily_WFDEI_CRU',basedatadir);
         end
         if rst(3)==1
-            [mdn,Tair]=getWFDEIstripe(thisindex,'Tair_daily_WFDEI_CRU',basedatadir);
+            [mdn,Tair]=getWFDEIstripe(thisindex,'Tair_WFDEI',basedatadir);
         end
         
     catch
@@ -135,10 +147,19 @@ for j=1:length(pointslist)
     
     
     for jyr=1:length(yrvect);
-        M=feval(metricfunctionhandle,mdn, Rainf, Snowf, Tair, yrvect(jyr));
+        if isempty(extraargs)
+            M=feval(metricfunctionhandle,mdn, Rainf, Snowf, Tair, yrvect(jyr));
+        else
+            M=feval(metricfunctionhandle,mdn, Rainf, Snowf, Tair, yrvect(jyr),extraargs);
+        end
         Mcount(jyr,j)=M.metricvalue;
     end
 end
+%
+%mean value of the metric
+map=datablank(NaN,'30min');
+map(pointslist)=mean(Mcount,1);
+nsg(map)
 
 
 % now make a map of metric in the first year
@@ -163,9 +184,29 @@ if length(yrvect)>1
     trendmap(pointslist)=(MC2-MC1);
     clear NSS
     NSS.title=[' Change in ' M.description ];
-    %  NSS.filename='figures/';
+      NSS.filename='figures/';
     NSS.resolution='-r450';
     NSS.modifycolormap='stretch';
     NSS.stretchcolormapcentervalue=0;
     nsg(trendmap,NSS)
+    
+    %%
+    trendmap(pointslist)=MC2./MC1;
+    MC1map=datablank(NaN,'30min');
+    MC1map(pointslist)=MC1;
+     clear NSS
+    NSS.title=[' Percent change in ' M.description ];
+      NSS.filename='figures/';
+    NSS.resolution='-r450';
+    NSS.modifycolormap='stretch';
+    NSS.stretchcolormapcentervalue=0;
+    NSS.units='%';
+    NSS.caxis=[-10 10];
+    NSS.logicalinclude=logical(aggregate_rate(cropmasklogical,6));
+    
+    nsg(trendmap,NSS)
+    
+    
+    
+    
 end

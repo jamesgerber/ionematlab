@@ -34,7 +34,7 @@ unix('rm output.txt')
 tic
 BigArray=[Y M];
 save transferdatatoR.mat  -v6 BigArray
-toc
+toc;
 
 disp(['calling R program'])
 % tic
@@ -44,7 +44,7 @@ disp(['calling R program'])
 % toc
 
 tic
-[s,w]=unix('R CMD BATCH /Users/jsgerber/source/matlabgit/matlab/utils/quantileregression/CallQR3.R Routput.txt')
+[s,w]=unix('R CMD BATCH /Users/jsgerber/source/matlabgit/matlab/utils/quantileregression/CallQR3.R Routput.txt');
 unix('cat Routput.txt')
-theta=load('output.txt')
+theta=load('output.txt');
 toc

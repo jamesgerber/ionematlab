@@ -134,13 +134,21 @@ if length( find(formatstring=='%') )== (length(find(xline==Delimiter))+1)
 else
     
     disp([' problem with number of delimiters apparently in the file '])
+  
+    legacy=1
+    if legacy==1
+        discrepancy=(length(find(xline==Delimiter))+1)-length( find(formatstring=='%') );
     
-    discrepancy=(length(find(xline==Delimiter))+1)-length( find(formatstring=='%') );
-    
-    for j=1:(discrepancy);
-        formatstring=[formatstring '%s'];
-    end
-    
+        for j=1:(discrepancy);
+            formatstring=[formatstring '%s'];
+        end
+    else
+        formatstring='';
+
+        for j=1:length(find(headerline==Delimiter))+1
+            formatstring=[formatstring '%s'];
+        end
+    end    
     fid=fopen(FileName);
     C=textscan(fid,formatstring,'Delimiter',Delimiter,'HeaderLines',HeaderLines);
     fclose(fid);

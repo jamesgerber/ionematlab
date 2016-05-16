@@ -2,6 +2,10 @@ function [M]=getinterannualcv(mdn,rain,snow,Tair,yr,varargin);
 % Compute internnual cv of precipitation
 
 
+if isnan(mdn)
+   M.metricvalue=NaN;
+   return
+end
 % assume mdn the same on every call
 
 persistent monthvect yearvect
@@ -11,17 +15,25 @@ if isempty(monthvect)
     yearvect=str2num(datestr(mdn,10));
 
 end
+
+
 %%
 Nyears=length(unique(yearvect));
 yearlist=unique(yearvect);
 
-
-ii=find(yearvect==yr);
-
-precipvect=(rain(ii))+sum(snow(ii));
+% 
+% ii=find(yearvect==yr);
+% % daily precipvect
+% precipvect=(rain(ii))+snow(ii);
     
-% this probably doesn't make much sense ... better perhaps to do monthly or
-% weekely
+
+%% monthly precipvect
+for m=1:12
+jj=find(yearvect==yr & monthvect==m);
+precipvect(m)=sum(rain(jj)+snow(jj));
+end
+
+%%
 
 meanprecip=mean(precipvect);
 stdprecip=std(precipvect);

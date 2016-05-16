@@ -16,6 +16,10 @@ if max(area)<2
     warning(['This appears to be area fraction'])
 end   
 
+if p>=1
+    error([' this code uses fractional percent '])
+end
+
 iigood=isfinite(data) & isfinite(area);
 
 data=data(iigood);

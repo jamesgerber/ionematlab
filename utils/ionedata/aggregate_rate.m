@@ -4,8 +4,9 @@ function small=aggregate_rate(big,N,nanflag)
 % aggregate_rate(big,N) - where big is a 2D matrix and N is a scalar,
 % returns the big reduced in size by a factor of N.
 %
-% aggregate_rate(big,N,nanflag) if nanflag is 1, will ignore nan values
-% when aggregating.  Default is zero.
+% aggregate_rate(big,N,nanflag) if nanflag is 1, will ignore values
+% present in the first element of the matrix BIG when aggregating.  (it 
+% replaces with zero and then weights accordingly).  Default is zero.
 %
 %
 %  example
@@ -33,6 +34,7 @@ if nanflag==0
 end
 
 % if we are here, it can only be because nanflag=1
+big(big==big(1))=nan;
 
 correctionfactor=aggregate_rate(isfinite(big),N,0);
 

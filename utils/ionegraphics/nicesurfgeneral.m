@@ -600,6 +600,7 @@ OS.Data=Data;
 temp=Data*NaN;
 if strcmp(categorical,'on')
     coloraxis=[1,length(categoryvalues)];
+    
     for ii=1:length(categoryranges)
         cur=categoryranges{ii};
         temp(Data>=cur(1)&Data<cur(2))=ii;

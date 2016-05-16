@@ -15,14 +15,12 @@ for j=1:length(a);
     
     x=getfield(S(1),a{j});
     
-    if numel(x) > 1
+    if ischar(x)==1
+        TypeFlag(j)=1;
+    elseif numel(x) > 1
         TypeFlag(j)=0;
     else
-        if ischar(x)==1
-            TypeFlag(j)=1;
-        else
-            TypeFlag(j)=2;
-        end
+        TypeFlag(j)=2;
     end
 end
 
@@ -34,10 +32,10 @@ end
 SOV=[];
 for m=1:length(a)
     ThisField=a{m};
-    
+    clear ThisVect
     if TypeFlag(m)>0
         for j=1:length(S)
-            if TypeFlag==1
+            if TypeFlag(m)==1
                 ThisVect{j}=getfield(S(j),ThisField);
             else
                 tmp=getfield(S(j),ThisField);

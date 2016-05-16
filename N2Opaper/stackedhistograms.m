@@ -127,7 +127,8 @@ for j=N:-1:(N-n+1);
        % % legendstring=strrep(legendstring,'rice_rf75', 'rainfed rice');
 
 %legvect{j}=[legendstring ' ' num2str(TotalNappsorted(j)/1e6,3)];  
-legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.1f',TotalNappsorted(j)/1e9) ' Tg'];
+%legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.1f',TotalNappsorted(j)/1e9) ' Tg'];
+legvect{j}=[sprintf('%s',displaystring) ' ' twosigfigs(TotalNappsorted(j)/1e9) ' Tg'];
 
 cmap(j,:)=color;
     
@@ -145,9 +146,9 @@ end
 
 
 h=bar(FBC,yNapp_forplot'/1e9,'stacked');
-xlabel(' kg/ha ')
+xlabel(' kg N ha^{-1} ')
 ylabel(' Tg ')
-title(['  Total applied N.' ])
+title([' (a) Total applied N  ' ])
 %titlestr=sprintf('(a) \t\t\t\t\t%s',' Total applied N. ');
 %title(titlestr)
 xtl=get(gca,'xticklabel')
@@ -170,9 +171,9 @@ if morelegible==1;
     set(hxl,'FontSize',15)
     set(hxl,'FontWeight','bold')
     set(gca,'FontSize',13)
-    ht=text(-40,16.75,' (a) ')
-    set(ht,'FontSize',15)
-    set(ht,'FontWeight','bold')
+  %  ht=text(-40,16.75,' (a) ')
+  %  set(ht,'FontSize',15)
+  %  set(ht,'FontWeight','bold')
  %   uplegend
  %   uplegend
 end
@@ -207,6 +208,7 @@ for j=N:-1:(N-n+1);
 
     %  legvect{j}=[legendstring ' ' num2str(TotalN20IPCCsorted(j)/1e6,3)];
     legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.3f',TotalN20IPCCsorted(j)/1e9) ' Tg'];
+  %  legvect{j}=[sprintf('%s',displaystring) ' ' twosigfigs(TotalN20IPCCsorted(j)/1e9) ' Tg'];
     
     cmap(j,:)=color;
     
@@ -219,9 +221,9 @@ else
 end
 
 h=bar(FBC,yN20IPCC_forplot_sorted'/1e9,'stacked');
-xlabel(' kg/ha ')
+xlabel(' kg N ha^{-1} ')
 ylabel(' Tg ')
-title([' Total N_2O response (Linear method). '])
+title([' (b) Total N_2O response (Linear model)  '])
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl);
@@ -243,9 +245,9 @@ if morelegible==1;
     set(hxl,'FontSize',15)
     set(hxl,'FontWeight','bold')
     set(gca,'FontSize',13)
-    ht=text(-40,.1675,' (b) ')
-    set(ht,'FontSize',15)
-    set(ht,'FontWeight','bold')
+ %   ht=text(-40,.1675,' (b) ')
+ %   set(ht,'FontSize',15)
+ %   set(ht,'FontWeight','bold')
 
  %   uplegend
  %   uplegend
@@ -278,6 +280,7 @@ for j=N:-1:(N-n+1);
 %    legvect{j}=[FDSv(j).cropname ' ' num2str(TotalN20NLNRRsorted(j)/1e6,3)];
 %     legvect{j}=[sprintf('%-10s',legendstring) ' ' sprintf('%5.0f',TotalN20NLNRRsorted(j)/1e6) ' Mt'];
      legvect{j}=[sprintf('%s',displaystring) ' ' sprintf('%5.3f',TotalN20NLNRRsorted(j)/1e9) ' Tg'];
+  %   legvect{j}=[sprintf('%s',displaystring) ' ' twosigfigs(TotalN20NLNRRsorted(j)/1e9) ' Tg'];
     cmap(j,:)=color;
     
 end
@@ -288,9 +291,9 @@ else
     hsp(3)=subplot(3,1,3)
 end
 h=bar(FBC,yN20NLNRR_forplot_sorted'/1e9,'stacked');
-xlabel(' kg/ha ')
+xlabel(' kg N ha^{-1} ')
 ylabel(' Tg ')
-title([' Total N_2O response (Non-linear method) '])
+title([' (c) Total N_2O response (NLNRR_{700} method)  '])
 xtl=get(gca,'xticklabel')
 xtl(end,end+1)='+';
 set(gca,'xticklabel',xtl)
@@ -310,9 +313,9 @@ if morelegible==1;
     set(hxl,'FontSize',15)
     set(hxl,'FontWeight','bold')
     set(gca,'FontSize',13)
-    ht=text(-40,0.1675,' (c) ')
-    set(ht,'FontSize',15)
-    set(ht,'FontWeight','bold')
+  %  ht=text(-40,0.1675,' (c) ')
+  %  set(ht,'FontSize',15)
+  %  set(ht,'FontWeight','bold')
 
  %   uplegend
  %   uplegend

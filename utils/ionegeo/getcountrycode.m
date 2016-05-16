@@ -84,15 +84,51 @@ if length(findstr(w,tab)) > 20
 
         case {'China','China, mainland'}
             ccstructure=StandardCountryNames('CHN','ISO3');
-        case 'Congo'
-            warndlg([' found ''congo'' in getcountrycode.  interpreting as congo not DRC'])
+        case 'Republic of Congo'
+            %warndlg(['Unable to interpret Congo, please clarify which country.'])
             ccstructure=StandardCountryNames('COG','ISO3');
+        case 'Democratic Republic of the Congo'
+            ccstructure=StandardCountryNames('COD','ISO3');
+            
         case 'Niger'
             display(['Interpreting as Niger, not Nigeria'])
             ccstructure=StandardCountryNames(['Niger']);
         case 'Nigeria'
             display(['Interpreting as Nigeria, not Niger'])
             ccstructure=StandardCountryNames(['NGA','ISO3']);
+        case 'Georgia'
+            display(['Interpreting as Georgia not South Georgia'])
+            ccstructure=StandardCountryNames(['Georgia']);
+        case 'Guinea'
+            display(['Interpreting as Guinea'])
+            ccstructure=StandardCountryNames('GIN','ISO3');
+        case 'Luxembourg'
+            %display(['Interpreting as Luxembourg'])
+            ccstructure=StandardCountryNames('LUX','ISO3');
+        case 'Mali'
+            %display(['Interpreting as Luxembourg'])
+            ccstructure=StandardCountryNames('MLI','ISO3');
+        case 'Montenegro'
+            %display(['Interpreting as Luxembourg'])
+            ccstructure=StandardCountryNames('MNE','ISO3');
+        case 'Netherlands'
+            %display(['Interpreting as Luxembourg'])
+            ccstructure=StandardCountryNames('NLD','ISO3');
+        case 'Oman'
+            %display(['Interpreting as Luxembourg'])
+            ccstructure=StandardCountryNames('OMN','ISO3');
+        case 'Samoa'
+            %display(['Interpreting as Luxembourg'])
+            ccstructure=StandardCountryNames('WSM','ISO3');
+        case 'Serbia'
+            %display(['Interpreting as Luxembourg'])
+            ccstructure=StandardCountryNames('SRB','ISO3');
+        case 'Sudan'
+            %display(['Interpreting as Luxembourg'])
+            ccstructure=StandardCountryNames('SDN','ISO3');
+        case 'United States'
+            %display(['Interpreting as Luxembourg'])
+            ccstructure=StandardCountryNames('USA','ISO3');
         otherwise
     error([' found multiple matches.  boo! ']);
     end

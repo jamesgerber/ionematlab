@@ -52,18 +52,18 @@ function MakeKMZFile(MKS)
 %
 %  See Also  makelegend makekml
 
-lores=0;
-cmap='revsummer';
-coloraxis=[0 100];
-BaseTransparency=0.5;
-kmzfilenamebase='test';
+% lores=0;
+% cmap='revsummer';
+% coloraxis=[0 100];
+% BaseTransparency=0.5;
+% kmzfilenamebase='test';
 folderbase='./kmlfolder';
-KS.header1='filetext';
-KS.description1='desc 1';
-KS.header2='';
-KS.description2='';
-KS.logoname='';
-KS.legendname='';
+% KS.header1='filetext';
+% KS.description1='desc 1';
+% KS.header2='';
+% KS.description2='';
+% KS.logoname='';
+% KS.legendname='';
 
 
 

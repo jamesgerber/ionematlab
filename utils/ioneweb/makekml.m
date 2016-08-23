@@ -20,15 +20,15 @@ function makekml(KS)
 %
 %  See Also makekmzfile makelegend
 folderbase='./kmlfolder';
-header1='header 1';
-description1='desc 1';
+% header1='header 1';
+% description1='desc 1';
 header2='';
 description2='';
 overlayname='overlay.png';
 logoname='';
 legendname='';
 
-ExpandStructure(KS)
+expandstructure(KS);
 
 
 

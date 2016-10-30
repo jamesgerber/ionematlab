@@ -1,4 +1,4 @@
-function [M]=getinterannualcv(mdn,rain,snow,Tair,yrvect,varargin);
+function [M]=getinterannualcv(mdn,rain,snow,yrvect,varargin);
 % Compute internnual cv of precipitation
 
 if length(yrvect)>1

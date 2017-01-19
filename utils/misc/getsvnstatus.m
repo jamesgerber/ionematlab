@@ -17,12 +17,12 @@ function varargout=GetSVNStatus(varargin);
 %  IonE - Jan 2010
 
 fullpath=which(mfilename);
-disp(['!svn status ' fullpath(1:end-25)]);
+disp(['!/usr/bin/svn status ' fullpath(1:end-25)]);
 
-[s,w]=unix(['svn status ' fullpath(1:end-25)]);
+[s,w]=unix(['/usr/bin/svn status ' fullpath(1:end-25)]);
 
 if s~=0
-    [s,w]=unix(['/opt/subversion/bin/svn status ' fullpath(1:end-25)]);
+    [s,w]=unix(['/usr/bin/svnsvn status ' fullpath(1:end-25)]);
     if s==1
         error(['problem with subversion command.  '])
     end
@@ -35,11 +35,11 @@ if isempty(w)
     SVNStatus='';
     
     disp('You can try to paste this into matlab)');
-    disp(['!svn update ' fullpath(1:end-25)]);
+    disp(['!/usr/bin/svn update ' fullpath(1:end-25)]);
     disp([' '])
     
     disp('Or run this from a terminal window: (no !)');
-    disp(['svn update ' fullpath(1:end-25)]);
+    disp(['/usr/bin/svn update ' fullpath(1:end-25)]);
     disp([' '])
 
     return
@@ -81,8 +81,8 @@ if length(findstr(w,'?')>0)
 end
 
 disp('You may need to run this from a terminal window: (or paste into matlab)');
-disp(['!svn commit ' fullpath(1:end-25) ' -m "message here"']);
-disp(['!svn update ' fullpath(1:end-25)]);
+disp(['!/usr/bin/svn commit ' fullpath(1:end-25) ' -m "message here"']);
+disp(['!/usr/bin/svn update ' fullpath(1:end-25)]);
 disp([' '])
 
 

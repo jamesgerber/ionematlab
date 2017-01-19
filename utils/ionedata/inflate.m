@@ -14,9 +14,16 @@ end
 
 matrix=datablank(background);
 
-switch length(vector);
+switch numel(vector);
     case 2069588
         matrix(agrimasklogical)=vector;
+    case 3237023
+        matrix(landmasklogical)=vector;
+    case 9331200
+        
+        % seems like a vector was passed in
+        matrix=vector;  
+
     otherwise
         error('don''t know how to inflate this vector')
 end

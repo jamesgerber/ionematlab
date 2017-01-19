@@ -77,5 +77,15 @@ switch nargout
         tmp=S.Data(:,:,2);
         tmp(~ii)=NaN;
         varargout{3}=tmp;
+       case 4
         
+        varargout{1}=S;
+        ii=GoodDataIndices(S);
+        tmp=S.Data(:,:,1);
+        tmp(~ii)=NaN;
+        varargout{2}=tmp;
+        tmp=S.Data(:,:,2);
+        tmp(~ii)=NaN;
+        varargout{3}=tmp;     
+        varargout{4}=ii;
 end

@@ -1,18 +1,32 @@
-function y=evalmodel(b,modelterms,XS);
+function  [y,ybyterm]=evalqrmodel(b,modelterms,XS);
 %evalQRmodel - evaluate quantile regression model
+%
+%  y=evalqrmodel(b,modelterms,XS);
+%  [y,ybyterm]=evalqrmodel(b,modelterms,XS);
 %
 %XS must contain field X1 
 % modelterms must 'eval' out to a matlab expression
+%
+%
 
 expandstructure(XS);
 
+ybyterm=struct;
+
 try
-y=X1*0;
+    y=X1*0;
 catch
-   error([' didn''t find field field for pre-allocating.  maybe update code']);
+    error([' didn''t find field field for pre-allocating.  maybe update code']);
 end
 for j=1:length(modelterms)
     xtemp=eval(modelterms{j});
     y=y+xtemp*b(j);
+    
+    thisterm=strrep(makesafestring(modelterms{j}),'^','');
+    thisterm=strrep(thisterm,'ones(size(X1))','intercept');
+    thisterm=strrep(thisterm,'(','');
+    thisterm=strrep(thisterm,')','');
+    ybyterm=setfield(ybyterm,thisterm,xtemp*b(j));
+    
 end
 

@@ -10,7 +10,7 @@ function true=closeto(x,x1,tol)
 %
 
 if nargin==2
-   tol=x1*1e-7;
+   tol=abs(x1)*1e-7;
 end
 
 true = (x>=x1-tol & x<=x1+tol);

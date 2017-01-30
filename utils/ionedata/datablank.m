@@ -26,6 +26,8 @@ switch Res
         tmp=ones(144,72);
     case {'.25deg','15min'}
         tmp=ones(1440,720);
+    case {'1deg','60min'}
+        tmp=ones(360,180);
    case '30min'
         tmp=ones(720,360);
     case '10min'
@@ -40,7 +42,7 @@ switch Res
         warning('warning:  this is going to be really huge');
         tmp=ones(21600,10800);
     otherwise
-        error
+        error('Don''t know this resolution')
 end
 
 if numel(Val)>1

@@ -71,8 +71,8 @@ if length(thetatemp)==3*N
     theta_lowerbd=thetatemp(N+1:2*N);
     theta_upperbd=thetatemp(2*N+1:3*N);
 else
-    theta_lowerbd=NaN;
-    theta_upperbd=NaN;
+    theta_lowerbd=theta*NaN;
+    theta_upperbd=theta*NaN;
 end
  
 toc

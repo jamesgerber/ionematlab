@@ -33,6 +33,8 @@ eval(parse(text=paste("var",as.character(j-2),"<-data2[,j]",sep="")))
 ####Tested quantiles####
 library("quantreg")
 
+if (Ncols==3)
+Fit.i<-rq(Yield~var1,tau=tt,weight=W,ci=TRUE)
 if (Ncols==4)
 Fit.i<-rq(Yield~var1+var2,tau=tt,weight=W,ci=TRUE)
 if (Ncols==5)

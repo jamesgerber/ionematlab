@@ -28,8 +28,12 @@ OldFileName=fixextension(OldFileName,'.png');
 
 plotimage=imread(OldFileName);
 
+KeepText=0;
+
 if nargin==1
     NewFileName=strrep(OldFileName,'.png','_alpha_tb.png');
+    TextColor=[1 1 1]; % jg added this line Jan 2017
+    KeepText=1;
 end
 
 
@@ -40,7 +44,6 @@ VerNo=ver(1)
 vs=['ver' VerNo '_'];  % ' vs '
 
 
-KeepText=0;
 if ~ischar(NewFileName)
     TextColor=NewFileName;
     NewFileName=strrep(OldFileName,'.png','_alpha_tb');

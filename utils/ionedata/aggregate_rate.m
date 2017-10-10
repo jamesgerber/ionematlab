@@ -1,45 +1,83 @@
 function small=aggregate_rate(big,N,nanflag)        
-%aggregate_rate - aggregate rate data down to a coarser scale
+%aggregate_rate - aggregate quantity data down to a coarser scale
 %
-% aggregate_rate(big,N) - where big is a 2D matrix and N is a scalar,
-% returns the big reduced in size by a factor of N.
+% Syntax:
+%   aggregate_rate(bigmatrix,N)
 %
-% aggregate_rate(big,N,nanflag) if nanflag is 1, will ignore values
-% present in the first element of the matrix BIG when aggregating.  (it 
-% replaces with zero and then weights accordingly).  Default is zero.
+%   aggregate_rate(bigmatrix,N,'NANFLAG')
+%    where 'NANFLAG' can be 
+%     'hidden' or 'average' - NaN values will be treated as 'missing' data
+%     and replaced with the average value of the non-nan values found at
+%     the smallest level of aggregation.
+%     'sum'  - NaN values will be treated as zero
+%     'kill' - any NaN values at the highst resolution will lead to a NaN
+%     values for the associated aggregated cell. 
+%     'mode'  - replace with modal value.  i dont' know how this would work
+%     with NAN ... could work around by replacing nan with a value that
+%     doesn't appear in the matrix and then doing 'mode'
 %
 %
-%  example
-% big=repmat([ 1 0; .5 .5],3,3);
-% small=aggregate_rate(big,3);
-% big=repmat([ 2 0; NaN 1],2,2);
-% small=aggregate_rate(big,2);
-% big=repmat([ 2 0; NaN 1],2,2);
-% small=aggregate_rate(big,2,1);
+% EXAMPLE
+%   A=testdata;
+%   B=aggregate_rate(A,5);
+%
+% [  1 1 1 
+%  NaN 1 1       ->   "hidden"  ->  [1]
+%  NaN 1 1]  
+%
+% [  1 1 1 
+%  NaN 1 1       ->   "sum"  ->  [0.7777778]
+%  NaN 1 1]  
+%
+% [  1 1 1 
+%  NaN 1 1       ->   "kill"  ->  [NaN]
+%  NaN 1 1]  
+%
+% [  1 1 1 
+%    2 1 1       ->   "mode"  ->  [1]
+%    2 1 1] 
+%
+%
+% See also:  aggregate_quantity
 
 if nargin==2
-    nanflag=0;
+    nanflag='kill';
 end
 
-if nanflag==0
-    small=zeros(size(big)/N);
-    for m=1:N
-        for k=1:N
-            small(:,:)=small(:,:)+big(m:N:end,k:N:end);
+switch lower(nanflag)
+    case 'kill'
+        small=zeros(size(big)/N);
+        for m=1:N
+            for k=1:N
+                small(:,:)=small(:,:)+big(m:N:end,k:N:end);
+            end
         end
-    end
-    
-    small=small/N^2;   % this line assures that rate stays the same
-    return
+        small=small/N^2;
+    case {'hidden','average'}
+        correctionfactor=aggregate_rate(isfinite(big),N,'kill');
+        big(isnan(big))=0;
+        x=aggregate_quantity(big,N,'kill');
+        small=x./correctionfactor/N^2;
+    case {'sum'}
+        big(isnan(big))=0;
+        small=aggregate_rate(big,N,'kill');
+    case {'mode'}
+        temp=zeros([size(big)/N N.^2]);
+        c=0;
+        for m=1:N
+            for k=1:N
+                c=c+1;
+                temp(:,:,c)=big(m:N:end,k:N:end);
+            end
+        end
+        small=mode(temp,3);
+        %  small=small/N^2;
+        
+        
+        
+    otherwise
+        error(' syntax of aggregate_quantity has been changed ');
 end
+  
 
-% if we are here, it can only be because nanflag=1
-big(big==big(1))=nan;
 
-correctionfactor=aggregate_rate(isfinite(big),N,0);
-
-big(isnan(big))=0;
-
-x=aggregate_rate(big,N,0);
-
-small=x./correctionfactor;

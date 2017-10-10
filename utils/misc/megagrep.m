@@ -64,11 +64,25 @@ char(ListOfDirsToSearch)
 
 
 for j=1:length(ListOfDirsToSearch);
-   cd(ListOfDirsToSearch{j});
+    
+    nextdir=ListOfDirsToSearch{j};
+    
+    if isequal(nextdir(1),'.')
+    cd(wd)
+    try
+        cd(nextdir)
+    catch
+        disp(['couldn''t find directory ' nextdir ' from ' wd ]);
+    end
+    else
+        cd(nextdir);
+   
+    end
    disp('');
    disp(pwd);
    disp(['! ' dosargs  ]);
    eval(['! ' dosargs  ]);
+   
 end
 
 cd(wd);

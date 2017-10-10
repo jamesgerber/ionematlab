@@ -1,4 +1,4 @@
-function [Long,Lat,Raster,Areasqkm]=ShapeFileToRaster(S,FieldName,MatrixTemplate,plotflag)
+function [Long,Lat,Raster,Areasqkm]=ShapeFileToRaster(S,FieldName,MatrixTemplate,plotflag,namelist)
 % ShapefileToRaster - Turn a shapefile into a raster
 %
 %  Syntax:
@@ -13,6 +13,10 @@ function [Long,Lat,Raster,Areasqkm]=ShapeFileToRaster(S,FieldName,MatrixTemplate
 %      If MatrixTemplate is a structure with fields .lat .long and .matrix it will use those. 
 %
 %      if PLOTFLAG is 1, a plot will be made as things go alond
+%
+%      [Long,Lat,RASTER]=ShapeFileToRaster(S,FIELD,MATRIXTEMPLATE,PLOTFLAG,UNITNAMES);
+%      will print out UNITNAMES at each step.  Useful for figuring out
+%      which regions taking too long.
 %
 %      Possible problems:
 %      * Not all shaperead commands result in an X,Y that are in lat/long.
@@ -79,6 +83,11 @@ end
 hh=waitbar(0,'working ... ')
 for j=1:length(S);
     
+    if nargin==5
+        j
+        char(namelist{j})
+    end
+
     % if int(j/length(
     waitbar(j/length(S),hh);
     %end
@@ -94,7 +103,7 @@ for j=1:length(S);
     
     kk=find(isnan(xx));
     if length(kk)==1
-        error('This S vector isn''t quite working out ... ')
+        error('This S vector isn''t quite working out ... expect more NANs')
     end
     
     %    disp(['Working on ' S(j).ID '(' num2str(j) ' out of ' num2str(length(S)) ...

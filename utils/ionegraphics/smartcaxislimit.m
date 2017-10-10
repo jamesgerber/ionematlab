@@ -33,7 +33,7 @@ function a=RoundUp(x);
 %from 2-5 -> round to next 0.5
 %from 5-10 -> round to next 1
 
-y=log10(x)
+y=log10(x);
 
 n=floor(y);
 

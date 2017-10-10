@@ -60,8 +60,14 @@ disp(['calling R program']);
 % toc
 
 tic
-[s,w]=unix('R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
-%unix('cat Routput.txt')
+[s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
+
+if s~=0
+w
+unix('cat Routput.txt')
+end
+
+
 N=length(modelterms);
 thetatemp=load('output.txt');
 theta=thetatemp(1:N);

@@ -4,8 +4,14 @@ function  [y,ybyterm]=evalqrmodel(b,modelterms,XS);
 %  y=evalqrmodel(b,modelterms,XS);
 %  [y,ybyterm]=evalqrmodel(b,modelterms,XS);
 %
-%XS must contain field X1 
-% modelterms must 'eval' out to a matlab expression
+%  b          1xN vector 
+%  modelterms 1xN cell array, each component must 'eval' as a matlab expression
+%  XS         structure of 1xM vectors, usually named X1, X2, etc.
+%
+%    modelterms must be comprised of components such that eval(modelterms{j}) is a
+%    valid matlab expression.   
+%    XS must contain field X1 
+%     
 %
 %
 

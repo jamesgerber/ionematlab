@@ -1,4 +1,4 @@
-function [theta,theta_lowerbd,theta_upperbd,AIC] =...
+function [theta,theta_lowerbd,theta_upperbd,AIC,BIC] =...
     CallR_frommatlab_function(Y,W,VarStruct,modelterms,tauvalues,iikeep);
 % Y - Nx1 column of yields
 % W - column of weights
@@ -26,7 +26,10 @@ expandstructure(VarStruct);
 % constructing this for call to R.  but R call doesn't want the column of
 % ones.
 for j=1:length(modelterms)-1
-    newvar=eval(modelterms{j+1});
+    newvar=eval(modelterms{j+1}); 
+    if numel(find(~isfinite(newvar))) == numel(newvar)
+        error(['all nan variable in ' mfilename]);
+    end
     newvarname=['var' int2str(j)];
     fileheaderline=[fileheaderline ',' newvarname];
     M=[M newvar];
@@ -73,6 +76,12 @@ thetatemp=load('output.txt');
 theta=thetatemp(1:N);
 
 AIC=load('AICValue.txt');
+
+numdata=log(length(find(isfinite(Y))));
+
+BIC=AIC-2*N+2*numdata;  
+
+%BIC=load('BICValue.txt');
 if length(thetatemp)==3*N
     theta_lowerbd=thetatemp(N+1:2*N);
     theta_upperbd=thetatemp(2*N+1:3*N);

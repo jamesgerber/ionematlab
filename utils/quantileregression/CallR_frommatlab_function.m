@@ -63,7 +63,13 @@ disp(['calling R program']);
 % toc
 
 tic
+
+if ismalthus
+    [s,w]=unix('/usr/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
+
+else
 [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
+end
 
 if s~=0
 w

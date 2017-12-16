@@ -1,4 +1,4 @@
-function patchhandles=addpanoplytriangle(triangleflagvector, map)
+function [patchhandles,haxnew]=addpanoplytriangle(triangleflagvector, map)
 % ADDPANOPLYTRIANGLE - add triangles to either side of the colorbar
 % indicating the color representing values above or below the colorbar
 % limits.
@@ -72,4 +72,5 @@ end
 ZeroXlim(0,1)
 ZeroYlim(0,1)
 
-patchhandles=[h(1) h(2) haxnew];
+%patchhandles=[h(1) h(2) haxnew];
+patchhandles=[h(1) h(2)];

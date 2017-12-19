@@ -131,7 +131,9 @@ set(hfig,'Tag','IonEFigure');
 % Establish a UserDataStructure
 
 
-meshmflag=1;
+disp([' jamie changed the ''meshmflag'' deep within ionesurf.  it fixed something...'])
+disp([' but might be slow, or broke something else ... '])
+meshmflag=0;
 
 if CanMap==0
     h=surface(RedLong,RedLat,double(RedData.')*0-1,double(RedData.'));
@@ -196,7 +198,7 @@ else
       NumPointsPerDegree=12*numel(RedLat)/2160;
    %     NumPointsPerDegree=1/(RedLat(2)-RedLat(1));
         R=[NumPointsPerDegree,90,-180];
-        h=meshm(double(RedData.'),R,[50 100],-1);
+        h=meshm(double(RedData.'),R,[50 180],-1);
     end
     shading flat;
 end  

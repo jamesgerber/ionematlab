@@ -135,6 +135,8 @@ if exist(FileName,'file')==2
             switch(a.class)
                 case 'int8'
                     DataVarType='NC_INT';
+               case 'int16'
+                    DataVarType='NC_SHORT';
                 case 'single'
                     DataVarType='NC_FLOAT';
                 case 'double'
@@ -157,6 +159,8 @@ switch(a.class)
         DataVarType='NC_INT';
     case 'single'
         DataVarType='NC_FLOAT';
+    case 'int16'
+        DataVarType='NC_SHORT';
     case 'double'
         DataVarType='double';
     otherwise

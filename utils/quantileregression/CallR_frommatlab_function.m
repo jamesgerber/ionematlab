@@ -1,5 +1,5 @@
 function [theta,theta_lowerbd,theta_upperbd,AIC,BIC] =...
-    CallR_frommatlab_function(Y,W,VarStruct,modelterms,tauvalues,iikeep);
+    CallR_frommatlab_function(Y,W,VarStruct,modelterms,tauvalues,iikeep,alphavalue);
 % Y - Nx1 column of yields
 % W - column of weights
 % VarStruct - structure of variables which will be put into the workspace
@@ -14,6 +14,10 @@ end
 
 if nargin < 6
     iikeep=1:length(Y);
+end
+
+if nargin < 7
+    alphavalue=0.1;
 end
 % this function is an embarassing disaster - step through in debugger to
 % see what it does.

@@ -30,7 +30,9 @@ for (j in 3:Ncols)
 eval(parse(text=paste("var",as.character(j-2),"<-data2[,j]",sep="")))
 }
                    
-aa=0.01
+alphaval<-newdata$alphavalue
+
+aa=alphaval[1,1]
 ####Tested quantiles####
 library("quantreg")
 

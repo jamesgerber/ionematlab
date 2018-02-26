@@ -56,7 +56,7 @@ BigArray=BigArray(iikeep,:);
 
 
 
-save transferdatatoR.mat  -v6 BigArray tauvalues
+save transferdatatoR.mat  -v6 BigArray tauvalues alphavalue
 toc;
 
 disp(['calling R program']);

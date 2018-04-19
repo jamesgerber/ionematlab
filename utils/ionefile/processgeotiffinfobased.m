@@ -1,11 +1,11 @@
-function [long,lat,raster,R,info]=processgeotiff(filename,longlatfilename);
-% processgeotiff - load geotiff, put into GLI standard format
-%  [long,lat,raster,R,info]=processgeotiff(filename);
+function [long,lat,raster,R,info]=processgeotiffinfobased(filename,longlatfilename);
+% processgeotiffinfobased - load geotiff, put into GLI standard format
+%  [long,lat,raster,R,info]=processgeotiffinfobased(filename);
 %
 % %example
 %
 %filename='~/Downloads/imageToDriveExample.tif';
-%[long,lat,raster,R,info]=processgeotiff(filename);
+%[long,lat,raster,R,info]=processgeotiffinfobased(filename);
 
 [A,R]=geotiffread(filename);
 [a,r]=geotiffread(longlatfilename);
@@ -44,6 +44,5 @@ R=R;
 % % 
 % % %raster=A';
 % % 
-
 
 

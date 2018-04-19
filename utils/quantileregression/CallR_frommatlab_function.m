@@ -32,7 +32,7 @@ expandstructure(VarStruct);
 for j=1:length(modelterms)-1
     newvar=eval(modelterms{j+1}); 
     if numel(find(~isfinite(newvar))) == numel(newvar)
-        error(['all nan variable in ' mfilename]);
+        error(['no finite variables in ' mfilename]);
     end
     newvarname=['var' int2str(j)];
     fileheaderline=[fileheaderline ',' newvarname];
@@ -72,7 +72,7 @@ if ismalthus
     [s,w]=unix('/usr/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
 
 else
-[s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
+    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
 end
 
 if s~=0

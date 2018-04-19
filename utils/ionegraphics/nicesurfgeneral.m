@@ -862,7 +862,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
     
     if fud.MapToolboxFig==1
         
-        trustmatlab=1;
+        trustmatlab=0;
         if newplotareamethod==0
             if trustmatlab==1
                 
@@ -879,7 +879,8 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
         else
             %setm(fud.DataAxisHandle,'Origin',...
             %    [(t1+t2)/2 (g1+g2)/2 0])
-            ht= PropagateLimits('Import',gcf, [g1 g2]*pi/180, [t1 t2]*pi/180)
+            ht= PropagateLimits('PlotAreaHack',gcf, [g1 g2], [t1 t2])
+ %           ht= PropagateLimits('Import',gcf, [g1 g2]*pi/180, [t1 t2]*pi/180)
             
             
         end
@@ -1073,6 +1074,8 @@ switch lower(plotarea)
     case 'world'
         longlatbox=[-180 180 -90 90];
         %            ylim=pi/2;
+    case 'latinamerica'
+        longlatbox=[-110 -20 -60 30];
     case 'europe'
         longlatbox=[-15 65 30 80];
         filename=[filename '_europe'];
@@ -1143,6 +1146,9 @@ switch lower(plotarea)
     case {'minnesota'}
         longlatbox=[-75 -65 40 50];
         filename=[filename '_minnesota'];
+    case {'iowa'}
+        longlatbox=[-75 -65 35 45];
+        filename=[filename '_iowa'];
     case {'southeastasia'}
         longlatbox=[90 150 -15 +30];
         filename=[filename 'southeastasia'];

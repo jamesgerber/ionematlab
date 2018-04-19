@@ -107,9 +107,16 @@ switch(InputFlag)
             DeltaLong=10.0;
             DeltaLat=5.5;
      %   end
+     adhocfactor=(180-abs(LongVal))/180;  % 1 to 0
+     adhocfactor=(adhocfactor*0.5)+.5;  
+     % scaling because there is a strange relationship between how I set
+     % the longitude and what gets plotted (or maybe ScaleToDegrees is just
+     % off and I only notice for longitude)    
+     
+     % adhocfactor should scale from 1 with LongVal=0 to 0.5 at LongVal=180
         
       %  axis(UDS.DataAxisHandle,[LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]);
-      axis(UDS.DataAxisHandle,[LongVal-DeltaLong LongVal+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]./UDS.ScaleToDegrees);
+      axis(UDS.DataAxisHandle,[LongVal*adhocfactor-DeltaLong LongVal*adhocfactor+DeltaLong LatVal-DeltaLat LatVal+DeltaLat]./UDS.ScaleToDegrees);
   
         
         %        [CountryNumber,CountryName]=GetCountry5min(LongVal*UDS.ScaleToDegrees,LatVal*UDS.ScaleToDegrees);

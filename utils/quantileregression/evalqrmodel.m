@@ -29,6 +29,7 @@ for j=1:length(modelterms)
     y=y+xtemp*b(j);
     
     thisterm=strrep(makesafestring(modelterms{j}),'^','');
+ 
     thisterm=strrep(thisterm,'ones(size(X1))','intercept');
     thisterm=strrep(thisterm,'(','');
     thisterm=strrep(thisterm,')','');

@@ -54,20 +54,30 @@ clear S
 % Scale irrigated fraction by AEI19XX/AEI2000
 %
 % Apply irrigated fraction to v8.01 time series of crop data.
-%dataver='v1210smoothed';
-%yrvect=[1975:5:2005 2008];
-dataver='v1210annual';
-yrvect=1970:2010;
+croplist={'wheat'}
+dataver='v1210smoothed';
+yrvect=[1975:5:2005 2008];
+%dataver='v1210annual';
+%yrvect=1970:2010;
+
+dataver='v1203smoothed';
+yrvect=2012;
+croplist={'sugarcane'};
+
+%dataver='v1202smoothed';
+%yrvect=2012;
+%croplist={'maize','sugarcane','oilpalm','soybean'}
+
 
 %dataver='v801smoothed';
 %yrvect=[1975:5:2005];
 %dataver='v1210smoothed';
 %yrvect=[1975:5:2005 2008];
 % maize
-croplist={'wheat','maize','rice','soybean','wheat','rice','soybean','maize'};
-croplist={'wheat','maize','rice','soybean','wheat','rice','soybean','maize'};
+%croplist={'wheat','maize','rice','soybean','wheat','rice','soybean','maize'};
+%croplist={'wheat','maize','rice','soybean','wheat','rice','soybean','maize'};
 %
-for jcrop=[2:4];
+for jcrop=[1];
     if jcrop>4
         dataver='v1210smoothed';
         yrvect=[1975:5:2005 2008];
@@ -421,7 +431,7 @@ for jcrop=[2:4];
         awWC.awSRAD=[awWC.awSRAD tmpawSRAD_wc(1:j)];
         awWC.awVAPR=[awWC.awVAPR tmpawVAPR_wc(1:j)];
         awWC.awPCI=[awWC.awPCI tmpawPCI_wc(1:j)];
-        awWC.awBIO6=[awWC.awBIO6 tmpawPCI_wc(1:j)];
+        awWC.awBIO6=[awWC.awBIO6 tmpawBIO6_wc(1:j)];
         % CRU - annual / clim
         
         awCRU.c.awGDDTb=[awCRU.c.awGDDTb  tmpawgddTb_c_cru(1:j)];
@@ -567,11 +577,11 @@ for jcrop=[2:4];
     %     S.awpc4=awpc4;
     %     S.awpc5=awpc5;
     
-    if jcrop>4
+ %   if jcrop>4
         save(['./QRDataTables/' cropname dataver 'DataTablesRev20multiyr'],'S','unitwasgood','adminmap','politicalunitlist','IDS','IDSGatewayNameBase','-v7.3')
-    else
+ %   else
         save(['./QRDataTables/' cropname dataver 'DataTablesRev21'],'S','unitwasgood','adminmap','politicalunitlist','IDS','IDSGatewayNameBase','-v7.3')
-    end
+  %  end
 end
 % Rev notes:  rev 11 and 12 ... included the slope data
 % Rev 13 included ISRIC soils data

@@ -425,7 +425,7 @@ for j=1:length(cn)
     
     
     totaln=totaln+n.AppliedNitrogenPerHA.*n.Area.*fma;
-    totalexcessn=totaln+n.ExcessNitrogenPerHA.*n.Area.*fma;
+    totalexcessn=totalexcessn+n.ExcessNitrogenPerHA.*n.Area.*fma;
     totalp=totalp+p.AppliedPhosphorusPerHA.*n.Area.*fma;
     totalexcessp=totalp+p.ExcessPhosphorusPerHA.*n.Area.*fma;
 

@@ -131,10 +131,16 @@ set(hfig,'Tag','IonEFigure');
 % Establish a UserDataStructure
 
 
-disp([' jamie changed the ''meshmflag'' deep within ionesurf.  it fixed something...'])
-disp([' but might be slow, or broke something else ... '])
-meshmflag=0;
-
+%disp([' jamie changed the ''meshmflag'' deep within ionesurf.  it fixed something...'])
+%disp([' but might be slow, or broke something else ... '])
+if numel(RedData)~=9331200
+    
+    
+    meshmflag=0;
+else
+    meshmflag=1;
+end
+    
 if CanMap==0
     h=surface(RedLong,RedLat,double(RedData.')*0-1,double(RedData.'));
 %    set(gca,'Position',[0.1800    0.1100    0.6750    0.8150],'EdgeColor','none');

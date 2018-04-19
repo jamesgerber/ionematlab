@@ -73,7 +73,7 @@ plotimage=imread(OldFileName);
 
 NewFileName=fixextension(NewFileName,'.png');
 ii_white=(plotimage(:,:,1)>=254 & plotimage(:,:,2) >=254 & plotimage(:,:,3)>=254);
-ii_black=(plotimage(:,:,1)<=02 & plotimage(:,:,2) <=02 & plotimage(:,:,3)<=02);
+ii_black=(plotimage(:,:,1)<=38 & plotimage(:,:,2) <=38 & plotimage(:,:,3)<=38);
 
 newplotimage=plotimage;
 

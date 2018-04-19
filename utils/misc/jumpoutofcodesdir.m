@@ -10,3 +10,10 @@ if strmatch(a(end-4:end),'codes')==1
     % we are in codes directory
     evalin('caller','cd ..');
 end
+
+
+% now re-writing - latest versions of matlab won't let me have ./codes on
+% the path
+
+
+[s,w]=unix(['which ' mfilename]);

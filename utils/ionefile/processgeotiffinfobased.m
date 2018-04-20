@@ -1,11 +1,11 @@
 function [long,lat,raster,R,info]=processgeotiffinfobased(filename,longlatfilename);
 % processgeotiffinfobased - load geotiff, put into GLI standard format
-%  [long,lat,raster,R,info]=processgeotiffinfobased(filename);
+%  [long,lat,raster,R,info]=processgeotiffinfobased(filename,longlatfilename);
 %
 % %example
 %
 %filename='~/Downloads/imageToDriveExample.tif';
-%[long,lat,raster,R,info]=processgeotiffinfobased(filename);
+%[long,lat,raster,R,info]=processgeotiffinfobased(filename,longlatfilename);
 
 [A,R]=geotiffread(filename);
 [a,r]=geotiffread(longlatfilename);
@@ -17,7 +17,7 @@ lat=a(:,1,2);
 
 
 if ~isequal(r,R)
-    error([' failed the very stringent test on lat/long the same in ' mfilename]);
+    error([' failed test on lat/long the same in ' mfilename]);
 end
 raster=permute(A,[2,1,3]);
 R=R;

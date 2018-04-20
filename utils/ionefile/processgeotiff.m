@@ -22,7 +22,7 @@ DeltaLat=R.CellExtentInLatitude;
 % command, then take it away is is so that we are consistent with where we
 % are relative to the pixel center
 long=linspace(LonLims(1),LonLims(2),size(A,2)+1);
-lat=linspace(LatLims(1),LatLims(2),size(A,1))+1;
+lat=linspace(LatLims(1),LatLims(2),size(A,1)+1);
 long=long(1:end-1);
 lat=lat(1:end-1);
 

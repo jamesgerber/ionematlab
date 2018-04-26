@@ -26,6 +26,8 @@ lat=linspace(LatLims(1),LatLims(2),size(A,1)+1);
 long=long(1:end-1);
 lat=lat(1:end-1);
 
+lat=lat(end:-1:1);  % need to reverse lat.  i sure hope this doesn't break things.
+
 %raster=A';
 raster=permute(A,[2,1,3]);
 R=R;

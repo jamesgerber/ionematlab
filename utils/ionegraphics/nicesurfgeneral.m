@@ -220,6 +220,14 @@ else
     end
 end
 
+% code to make sure that everything is the right size
+if ~isequal([numel(Long) numel(Lat)],size(Data))
+    
+    error( 'dimensions of Long and Lat don''t agree with raster' )
+else
+ [numel(Long) numel(Lat)],size(Data)   
+end
+
 if (size(Data,1)~=4320||size(Data,2)~=2160)
     
     disp([' jamie took out call to mergedata.m in Dec 2015 '])

@@ -78,6 +78,7 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.NewPlotAreaMethod='0'
 %   NSS.font
 %   NSS.statewidth=.2;
+%   NSS.statewidth=[countrylinewidth R G B statelinewidth R G B] ( 8 element vector)
 %   NSS.userinterppreference='tex'
 %   NSS.FrameLimitsVector=[-180 180 -90 90];
 %   NSS.FrameOff=

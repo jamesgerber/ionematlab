@@ -98,17 +98,43 @@ catch
 end
 
 %if CanMap==0
-if ~ismap(gca)
-    hp=plot(States.long+longoff,States.lat+latoff);
-    set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
-    hq=plot(Countries.long+longoff,Countries.lat+longoff,'k');
-    set(hq,'linewidth',LineWidth)
+
+if numel(LineWidth)==1
+    
+    
+    if ~ismap(gca)
+        hp=plot(States.long+longoff,States.lat+latoff);
+        set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
+        hq=plot(Countries.long+longoff,Countries.lat+longoff,'k');
+        set(hq,'linewidth',LineWidth)
+    else
+        hp=plotm(States.lat+latoff,States.long+longoff,'k');
+        set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
+        hq=plotm(Countries.lat+latoff,Countries.long+longoff,'k');
+        set(hq,'linewidth',LineWidth);
+    end
 else
-    hp=plotm(States.lat+latoff,States.long+longoff,'k');
-    set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
-    hq=plotm(Countries.lat+latoff,Countries.long+longoff,'k');
-    set(hq,'linewidth',LineWidth);
+    disp(' hacked multi-element linewidth argument');
+    
+    if ~ismap(gca)
+        hp=plot(States.long+longoff,States.lat+latoff);
+        set(hp,'linewidth',LineWidth(5),'Color',LineWidth(6:8));
+        hq=plot(Countries.long+longoff,Countries.lat+longoff,'k');
+        set(hq,'linewidth',LineWidth(1),'Color',LineWidth(2:4));
+    else
+        hp=plotm(States.lat+latoff,States.long+longoff,'k');
+        set(hp,'linewidth',LineWidth(5),'Color',LineWidth(6:8));
+        hq=plotm(Countries.lat+latoff,Countries.long+longoff,'k');
+        set(hq,'linewidth',LineWidth(1),'Color',LineWidth(2:4));
+    end
+    
+    
+    
+    
+    
 end
+
+
 set(gcf,'renderer','zbuffer');
 
 if holdstatus==0

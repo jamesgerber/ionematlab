@@ -104,7 +104,7 @@ ii=(fx>max(fx)/1e6);
 jj=(fy>max(fy)/1e6);
 
 filt=(fy(jj)*fx(ii))'; %need to transpose so I can continue with my not-matlab-standard interp of row/col
-
+filt=filt/sum(filt);
 
 %% Where ExcludeMask is 1, set Dist to zero.
 DistTemp=Dist;
@@ -112,7 +112,13 @@ DistTemp(ExcludeMask)=0;
 
 %% perform smoothing
 tic
+
+if length(find(isnan(DistTemp)))>1
+    %nanconv, AUTHOR: Benjamin Kraus (bkraus@bu.edu, ben@benkraus.com)
+DistSmooth=nanconv(DistTemp,filt,'same');
+else
 DistSmooth=conv2(DistTemp,filt,'same');
+end
 toc
 
 %% Now have a smoothed distribution.  Find a contour.

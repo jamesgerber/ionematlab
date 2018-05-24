@@ -22,7 +22,7 @@ switch username
     case {'emilydombeck','carlsonk'}
         IoneDataDir='~/Library/ionedata/';
     case 'jsgerber'
-        IoneDataDir=['/Library/IonE/data/'];
+        IoneDataDir=['/ionedata/'];
     case 'sunx0170'
         IoneDataDir=['~/Program/ionedata/'];
     case 'oggxx008'
@@ -41,9 +41,9 @@ if ispc==1
 end
     
 
-%if ismac==1 & ismalthus==1
-%    IoneDataDir=['/Library/IonE/ionedata/'];
-%end
+if ismac==1 & ismalthus==1
+   IoneDataDir=['/ionedata/'];
+end
 
 
 ADMINBOUNDARYMAP_5min    =[IoneDataDir 'AdminBoundary2010/Raster_NetCDF/2_States_5min/glctry.nc'];

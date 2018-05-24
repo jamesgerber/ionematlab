@@ -106,7 +106,7 @@ switch whichtest
         
         
         Fstatistic=RSS./(p-1)./s2;
-        
+        clear RSS
         disp(['determing probability']);
         tic
          p=fpvallocal(Fstatistic,(p-1)*ones(size(Fstatistic)),nu*ones(size(Fstatistic)));
@@ -115,8 +115,10 @@ switch whichtest
         % now to get Rsq ...
         r=flatarray-Y;  % y - yhat
         normr=sqrt(sum(r.^2,1));
-        
+                clear r
+
         SSE=normr.^2;
+        clear normr
         
         % TSS - like RSS but replace yhat (Y) with y (flatarray)
         TSS= sum((flatarray-repmat(mean(flatarray,1),nt,1) ).^2);
@@ -127,7 +129,9 @@ switch whichtest
         
      %   Flookupvals=linspace(min(Fstatistic),max(Fstatistic),10000);
         
+     if nargout==5
         sig=p<0.05;
+     end
         
   
         

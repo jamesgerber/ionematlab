@@ -1,7 +1,9 @@
 function unprocessgeotiff(raster,R,filename);
 % unprocessgeotiff - save raster into GLI standard format to geotiffformat
-%  [long,lat,raster,R,info]=processgeotiff(filename);
+% unprocessgeotiff(raster,R,filename);
 %
+%  see also processgeotiff.m, globalarray2geotiff.m
+
 
 
 A=permute(raster,[2,1,3]);  % this unpermutes

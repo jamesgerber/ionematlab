@@ -20,24 +20,15 @@ function newhashmarks(mapfilename,maskfilename,newfilename,color,space,width,dir
 %                 space       - spacing for hashmarks
 %                 width       - width of hashmarks
 %                 dir         - direction of hashmarks
-%
+%Recommended resolution at least: 600
 %
 %   Example
 %
 % ii=countrycodetooutline('USA');
 % jj=ones(size(ii))+double(ii);
-% %
-% clear NSS
-% NSS.categorical='on';
-% NSS.categoryranges=[1 2];
-% NSS.categoryvalues={' not USA',' USA ' };
-% NSS.filename='testhashmarks.png';
-% %    NSS.colormap={'b','lime'};
-% NSS.separatecatlegend='yes';
-% NSS.categoryspecialcolormap=[1 0 0];
-% NSS.categoryspeciallegend={' ice cream sandwiches '};
-% OS=nsg(jj,NSS)
-% OS2=nsg(ii==1,'filename','testmask.png','cbarvisible','off','cmap',[0 0 0;0 0 0;0 0 0; 1 0 0]);
+%
+% OS=nsg(landmasklogical,'filename','testhashmarks.png','resolution','-r600')
+% OS2=nsg(ii==1,'filename','testmask.png','cbarvisible','off','cmap',[0 0 0;0 0 0;0 0 0; 1 0 0],'resolution','-r600');
 % newhashmarks(OS.ActualFileName,OS2.ActualFileName)%,newfilename,color,space,width,dir);
 
 im=imread(fixextension(mapfilename,'.png'));
@@ -63,29 +54,68 @@ if (nargin<7)
 end
 tol=maxval(mask)/32;
 
-c1=255;
+c1=255;   % this is red
 c2=0;
 c3=0;
 
-% alternate approach:  construct an image of hashmarks.
+legacy=0;
 
-iimask=mask(:,:,1)==c1 & mask(:,:,2)==c2 & mask(:,:,3)==c3;
-
-hashmarkimage=zeros(size(im));
-
-
-
-
-for i=1:size(im,1)
-    for j=1:size(im,2)
-        if (closeto(mask(i,j,1),c1,tol)&&closeto(mask(i,j,2),c2,tol)&&closeto(mask(i,j,3),c3,tol))
-            if closeto(0,mod(i*sin(dir*pi/2)+j*cos(dir*pi/2),space),width)
-                im(i,j,1)=color(1);
-                im(i,j,2)=color(2);
-                im(i,j,3)=color(3);
+if legacy==1
+    tic
+    for i=1:size(im,1)
+        for j=1:size(im,2)
+            % Checks if mask band values are close to 255,0,0 tolerance
+            % allows values to differ
+            %if(closeto(mask(i,j),[c1,c2,c3],tol))
+             if (closeto(mask(i,j,1),c1,tol) && closeto(mask(i,j,2),c2,tol) && closeto(mask(i,j,3),c3,tol))
+                %if closeto(0,mod(i*sin(dir*pi/2)+j*cos(dir*pi/2),space),width)
+                if closeto(0,mod(j,space),width)
+                    im(i,j,1)=color(1);
+                    im(i,j,2)=color(2);
+                    im(i,j,3)=color(3);
+                end
             end
         end
     end
+    toc
+else
+    %% sam will make this fast
+    % alternate approach:  construct an image of hashmarks.  In other
+    % words, make an array 
+    tic
+    iimask=mask(:,:,1)==c1 & mask(:,:,2)==c2 & mask(:,:,3)==c3;
+    
+        
+    tempi = 1:size(im,2);
+    tempj = (1:size(im,1))';
+    tempi = repmat(tempi,size(im,1),1);
+    tempj = repmat(tempj,1,size(im,2));
+    
+   
+   hashmark = closeto(0, mod(tempi*sin(dir*pi/2)+tempj*cos(dir*pi/2), space),width);
+   %hashmark = closeto(mod(tempi, space) + mod(tempj, space), 0, width);
+   
+   
+   redMask = closeto(mask(:,:,1),c1,tol) & closeto(mask(:,:,2),c2,tol) & closeto(mask(:,:,3),c3,tol);
+   hashmark = redMask & hashmark;
+   
+   
+   iichangetohashmark=hashmark;
+
+   for mm=1:3
+       tempimlayer=im(:,:,mm);
+       tempimlayer(iichangetohashmark)=color(mm);
+       im(:,:,mm)=tempimlayer;
+   end
+   
+   toc
+
+    
 end
+
+
+
+
+
 
 imwrite(im,newfilename);

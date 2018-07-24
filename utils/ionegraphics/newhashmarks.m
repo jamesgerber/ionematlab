@@ -1,8 +1,44 @@
 function newhashmarks(mapfilename,maskfilename,newfilename,color,space,width,dir);
 % newhashmarks - put hashmarks on a .png file
 %
+% SYNTAX:  newhashmarks(mapimagefilename,maskfilename)
 %
-
+%
+%      where mapimagefilename  = name of a file with a map in .png format
+%            maskimagefilename = name of a file with a mask in .png format
+%
+%            whereever the map image = red ( [1 0 0 ] in RGB values), the
+%            mask image will be covered with hashmarks.  output will go to
+%            "mapimagefilename_hash.png"
+%
+%     additional options
+%
+%        newhashmarks(mapfilename,maskfilename,newfilename,color,space,width,dir);
+%
+%                 newfilename - output name for file
+%                 color       - color for hashmarks
+%                 space       - spacing for hashmarks
+%                 width       - width of hashmarks
+%                 dir         - direction of hashmarks
+%
+%
+%   Example
+%
+% ii=countrycodetooutline('USA');
+% jj=ones(size(ii))+double(ii);
+% %
+% clear NSS
+% NSS.categorical='on';
+% NSS.categoryranges=[1 2];
+% NSS.categoryvalues={' not USA',' USA ' };
+% NSS.filename='testhashmarks.png';
+% %    NSS.colormap={'b','lime'};
+% NSS.separatecatlegend='yes';
+% NSS.categoryspecialcolormap=[1 0 0];
+% NSS.categoryspeciallegend={' ice cream sandwiches '};
+% OS=nsg(jj,NSS)
+% OS2=nsg(ii==1,'filename','testmask.png','cbarvisible','off','cmap',[0 0 0;0 0 0;0 0 0; 1 0 0]);
+% newhashmarks(OS.ActualFileName,OS2.ActualFileName)%,newfilename,color,space,width,dir);
 
 im=imread(fixextension(mapfilename,'.png'));
 mask=imread(fixextension(maskfilename,'.png'));

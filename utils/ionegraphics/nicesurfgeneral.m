@@ -129,6 +129,8 @@ function OS=NiceSurfGeneral(varargin);
 %   NSS.categorical='on';
 %   NSS.categoryranges={[0 4],[4 6],[6 8],[8 20]}
 %   NSS.cmap={'lime',[0 .3 .8],'b','magenta'};
+%   NSS.categoryspecialcolormap={'lime',[0 .3 .8],'b','magenta',[1 0 0]};
+%   NSS.categoryspeciallegend={'lime',[0 .3 .8],'b','magenta',[1 0 0]};
 %   NiceSurfGeneral(Yield,NSS);
 %  %or%
 %   NSS.categoryvalues={'[0 4]','[4 6]','[6 8]','[8 20]'}
@@ -172,7 +174,7 @@ if nargin==1
     
     
 else
-    showuiattheend=0;
+    showuiattheend=1;
 end
 
 
@@ -284,7 +286,8 @@ ListOfProperties={
     'eastcolorbar','makeplotdatafile','panoplytriangles','projection'...
     'cbarvisible','transparent','textcolor','newplotareamethod','font',...
     'statewidth','gridcolor','userinterppreference','maxnumfigs','framelimitsvector',...
-    'sink','modifycolormap','stretchcolormapcentervalue'};
+    'sink','modifycolormap','stretchcolormapcentervalue','categoryspecialcolormap',...
+    'categoryspeciallegend'};
 ListOfProperties=unique(ListOfProperties);
 
 %% set defaults for these properties
@@ -310,6 +313,8 @@ FrameLimitsVector=[-180 180 -90 90];
 sink='none';
 modifycolormap='none';
 stretchcolormapcentervalue=0;
+categoryspecialcolormap='';
+categoryspeciallegend='';
 %   NSS.modifycolormap='stretch';
 
 % new Joanne colors - now set in personalpreferencestemplate
@@ -341,9 +346,10 @@ textcolor=[0 0 0];
 %%now pull property values out of structure
 
 
-if strcmp(categorical,'on')
-    cmap=EasyInterp2(cmap,3,length(categoryvalues));
-end
+% jg commenting on July 2018
+%if strcmp(categorical,'on')
+%    cmap=EasyInterp2(cmap,3,length(categoryvalues));
+%end
 
 a=fieldnames(NSS);
 
@@ -419,7 +425,16 @@ end
 
 % was cmap a cell array?
 if iscell(cmap)
+    cmaptemp=cmap;
     cmap=ExpandCellCmap(cmap);
+
+    cmaptemp(end+1)={[1 0 0]};
+    cmapwithred=ExpandCellCmap(cmaptemp);
+    
+     cmaptemp(end)={[1 1 1]};
+     cmapwithwhite=ExpandCellCmap(cmaptemp);
+    
+
 end
 
 % if categoryranges is a set of integers, then special case.  build
@@ -998,6 +1013,94 @@ if strcmp(categorical,'on')
             warning(' NSG can''t make external legend with current version of matlab.   ')
             warning(' simply not putting a legend.  although it''s probably an easy code fix, for now  ')
             warning(' run with an older version of matlab to make the external legend.  ')
+
+             Hfig=gcf;
+            Hlegendfig=figure;
+            bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+            colormap(OS.cmap_final(2:end-1,:));
+            %need to skip first/last value because those are the ocean/no data colors
+            
+            Hfig2=figure;
+            hax=axes;
+            legh=legend(hax,bb,categoryvalues);
+            set(hax,'visible','off');
+            figure(Hfig)
+%uplegend
+%uplegend
+       %     hlegt=get(legh,'title');
+       %     set(hlegt,'string',units);
+%delete(Hlegendfig)
+
+if ~isempty(filename)
+         %       OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+
+                uplegend;uplegend;
+                OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_ulul'],resolution);
+
+end
+
+if ~isempty(categoryspeciallegend)
+    % hack code ... make a separate legend version with 
+%note - need to have an argument to nsg with the legend text
+         %    Hfig=gcf;
+            Hlegendfig=figure;
+            bb = bar(rand(length(categoryvalues)+1,length(categoryvalues)+1),'stacked'); hold on
+            
+            
+            colormap(cmapwithred);
+            %need to skip first/last value because those are the ocean/no data colors
+            
+            categoryvalues(end+1)=categoryspeciallegend;
+            drawnow
+            
+            Hfig2=figure;
+            hax=axes;
+            legh=legend(hax,bb,categoryvalues);
+            drawnow
+            set(hax,'visible','off');
+      %      OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
+            uplegend
+            uplegend   
+            uplegend
+            uplegend
+            drawnow
+            OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred_ulul'],resolution);
+  %% now make one with white.
+        %  Hfig=gcf;
+            Hlegendfig=figure;
+            bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+            
+            
+            colormap(cmapwithwhite);
+            %need to skip first/last value because those are the ocean/no data colors
+            
+          %  categoryvalues(end+1)=categoryspeciallegend;
+            drawnow
+            Hfig2=figure;
+            hax=axes;
+            drawnow
+            legh=legend(hax,bb,categoryvalues);
+            set(hax,'visible','off');
+      %      OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
+            uplegend
+            uplegend
+            uplegend
+            uplegend
+            drawnow
+            OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withwhite_ulul'],resolution);
+           
+       figure(Hfig)     
+            
+end
+
+
+%%
+
+
+figure(Hfig);  % make previous figure current.
+      
+        
+        
         end
         
         

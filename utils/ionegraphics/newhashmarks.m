@@ -1,4 +1,4 @@
-function newhashmarks(mapfilename,maskfilename,newfilename,color,space,width,dir);
+function outputfilename=newhashmarks(mapfilename,maskfilename,newfilename,color,space,width,dir);
 % newhashmarks - put hashmarks on a .png file
 %
 % SYNTAX:  newhashmarks(mapimagefilename,maskfilename)
@@ -20,16 +20,20 @@ function newhashmarks(mapfilename,maskfilename,newfilename,color,space,width,dir
 %                 space       - spacing for hashmarks
 %                 width       - width of hashmarks
 %                 dir         - direction of hashmarks
-%Recommended resolution at least: 600
+%  Recommended resolution at least: 600
+%  OK to pass in empty arrays to get defaults
 %
-%   Example
+%   Example:
 %
 % ii=countrycodetooutline('USA');
 % jj=ones(size(ii))+double(ii);
 %
 % OS=nsg(landmasklogical,'filename','testhashmarks.png','resolution','-r600')
 % OS2=nsg(ii==1,'filename','testmask.png','cbarvisible','off','cmap',[0 0 0;0 0 0;0 0 0; 1 0 0],'resolution','-r600');
-% newhashmarks(OS.ActualFileName,OS2.ActualFileName)%,newfilename,color,space,width,dir);
+% newhashmarks(OS.ActualFileName,OS2.ActualFileName,'testfigwithhashmarks1.png')%,newfilename,color,space,width,dir);
+% newhashmarks('testfigwithhashmarks1.png',OS2.ActualFileName,'testfigwithhashmarks2.png',[],[],[],-.5)%,newfilename,color,space,width,dir);
+
+
 
 im=imread(fixextension(mapfilename,'.png'));
 mask=imread(fixextension(maskfilename,'.png'));
@@ -38,20 +42,46 @@ mask=imread(fixextension(maskfilename,'.png'));
 if nargin<3
     mapfilename=fixextension(mapfilename,'.png');
     newfilename=strrep(mapfilename,'.png','_hash.png');
+else
+    newfilename=fixextension(newfilename,'.png');
 end
+
+
 
 if (nargin<4)
     color=[0.0,0.0,0.0];
 end
+
 if (nargin<5)
     space=size(im,2)/200;
 end
+
 if (nargin<6)
     width=space/10;
 end
 if (nargin<7)
     dir=.5;
 end
+
+% these might all be blank if user passed in defaults
+
+if isempty(color)
+        color=[0.0,0.0,0.0];
+end
+
+if isempty(space)
+    space=size(im,2)/200;
+end
+
+if isempty(width)
+    width=space/10;
+end
+
+if isempty(dir)
+    dir=0.5;
+end
+
+
 tol=maxval(mask)/32;
 
 c1=255;   % this is red
@@ -79,9 +109,7 @@ if legacy==1
     end
     toc
 else
-    %% sam will make this fast
-    % alternate approach:  construct an image of hashmarks.  In other
-    % words, make an array 
+
     tic
     iimask=mask(:,:,1)==c1 & mask(:,:,2)==c2 & mask(:,:,3)==c3;
     
@@ -119,3 +147,7 @@ end
 
 
 imwrite(im,newfilename);
+
+if nargout==1
+    outputfilename=newfilename;
+end

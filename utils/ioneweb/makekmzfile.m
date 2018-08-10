@@ -1,6 +1,5 @@
 function MakeKMZFile(MKS)
-%
-%  Make a KMZ file
+%  MakeKMZFile Make a KMZ file
 %
 %  this takes as an argument MKS
 %

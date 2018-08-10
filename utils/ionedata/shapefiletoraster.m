@@ -60,6 +60,10 @@ switch nargin
         plotflag=0;
 end
 
+if nargout==1
+    error(' called with only 1 arg ... you probably don''t mean that ... its longitude ');
+end
+
 
 if isstruct(MatrixTemplate);
     

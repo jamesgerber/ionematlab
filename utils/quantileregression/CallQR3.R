@@ -5,7 +5,7 @@
 # first read in datafile.csv file with y,x1,x2,x3 ... etc.
 
 #setwd("/Users/jsgerber/sandbox/jsg131_yieldgapsovertime_withQR_and_bins")
-#setwd("/Users/jsgerber/sandbox/jsg131_clean_ygot")
+#  setwd("/Users/jsgerber/sandbox/jsg131_clean_ygot")
 
 #############
 ####Data#####

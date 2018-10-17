@@ -43,12 +43,12 @@ end
 
 
 if length(XBinEdges)==1
-  [N,XBinEdges]=hist(X,XBinEdges);
+  [N,XBinEdges]=histcounts(X,XBinEdges);
   XBinEdges(end+1)=XBinEdges(end)+ (XBinEdges(end)-XBinEdges(end-1));
 end
 
 if length(YBinEdges)==1
-  [N,YBinEdges]=hist(Y,YBinEdges);
+  [N,YBinEdges]=histcounts(Y,YBinEdges);
   YBinEdges(end+1)=YBinEdges(end)+ (YBinEdges(end)-YBinEdges(end-1));
 end
 

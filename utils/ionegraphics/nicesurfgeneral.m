@@ -734,10 +734,22 @@ end
 %
 %end
 
+
+if numel(Long)==4320 & numel(Lat)<2160
+   warning('cheesy fix to a bug involving plotting 4320x(<2160)')
+    Long=Long(15:end);
+    Data=Data(15:end,:);
+end
+
+
 if Long(1) <= -179
     % probably using inferlonglat to get here.  Let IonESurf call again.
+
+    warning(' Sep, 2018 ... jamie fixing nsg ... not sure why but it was ignoring a passed in long/lat')
     
-    IonESurf(Data);
+   % IonESurf(Data); old code
+       IonESurf(Long,Lat,Data);
+
 else
     IonESurf(Long,Lat,Data);
 end
@@ -961,11 +973,15 @@ set(hcbtitle,'Color',textcolor);
 
 %% add panoply triangles
 if sum(panoplytriangles) > 0
-    pthandles=addpanoplytriangle(panoplytriangles, cmap)
+    [pthandles, ptaxeshandle]=addpanoplytriangle(panoplytriangles, cmap)
 else
     pthandles=[-1 -1];
+    ptaxeshandle=nan;
 end
-
+fud=get(gcf,'UserData');
+fud.panoplytrianglehandlepatches=pthandles;
+fud.panoplytriangleaxeshandle=ptaxeshandle;
+set(gcf,'UserData',fud);
 
 
 %% Was there text for an archival statement on the plot?
@@ -1132,6 +1148,7 @@ end
 OS.Data=single(OS.Data);
 OS.cmap=cmap;
 OS.panoplytrianglehandlepatches=pthandles;
+OS.panoplytriangleaxeshandle=ptaxeshandle;
 
 
 if ~isempty(filename)

@@ -1,4 +1,4 @@
-function varargout=IonESurf(Long,Lat,Data,Units,TitleStr);
+function varargout=IonESurf(Long,Lat,Data,Units,TitleStr,hfig);
 % IonESurf - Make a surface plot consistent with IONE standards
 %
 % SYNTAX
@@ -106,7 +106,13 @@ RedData=Data;
 RedLat=RedLat(end:-1:1);
 RedData=RedData(:,end:-1:1);
 
-hfig=figure;
+%global Externalhfig
+%hfig=Externalhfig;
+if ~exist('hfig');
+    hfig=figure;
+else
+    figure(hfig);
+end
 
 zoom(hfig,'on');
 % calculate place to put figure

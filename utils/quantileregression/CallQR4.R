@@ -2,6 +2,8 @@
 # Jamie code to carry out quantile regression using quantreg package in R. 
 # this reads in datafile.csv, which must evaulate to an array whose first column is Yield and whose second column is weights.  The next N columns are sent in as variables to the QR analysis.
 
+# R4 - covariance matrix
+
 # first read in datafile.csv file with y,x1,x2,x3 ... etc.
 
 #setwd("/Users/jsgerber/sandbox/jsg131_yieldgapsovertime_withQR_and_bins")
@@ -89,7 +91,7 @@ write(BICValue,file='BICValue.txt',ncolumns=1);
 
 x <- summary.rq(Fit.i,se="nid", covariance=TRUE)
 covmatrix <- x$cov
-write(covmatrix,'covmatrix.txt')
+write(covmatrix,'covmatrix.txt',ncolumns=1)
 
 
 

@@ -1,4 +1,4 @@
-function [theta,theta_lowerbd,theta_upperbd,AIC,BIC] =...
+function [theta,theta_lowerbd,theta_upperbd,AIC,BIC,covmatrix] =...
     CallR_frommatlab_function(Y,W,VarStruct,modelterms,tauvalues,iikeep,alphavalue);
 % Y - Nx1 column of yields
 % W - column of weights
@@ -69,10 +69,10 @@ disp(['calling R program']);
 tic
 
 if ismalthus
-    [s,w]=unix('/usr/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
+    [s,w]=unix('/usr/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR4.R Routput.txt');
 
 else
-    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
+    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR4.R Routput.txt');
 end
 
 if s~=0
@@ -100,4 +100,8 @@ else
     theta_upperbd=theta*NaN;
 end
  
+cm=load('covmatrix.txt');
+
+covmatrix=reshape(cm,sqrt(numel(cm)),sqrt(numel(cm)))
+
 toc

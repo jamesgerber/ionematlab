@@ -1,65 +1,93 @@
 function correctRaster = Felipe(raster)
-% Felipe - takes a raster of the earth in 4320x2160 so it is output to
-% thinsurf correctly
+% Felipe - takes a raster of the earth and makes sure it is the correct
+% orientation for thinsurf to display it correctly
 % 
 %
 % Examples:  
+% If the code is working correctly the 8 thinsurf results should all come
+% out the same, the tests use the 5min and 10min landmasklogical maps
 %
-% x = landmasklogical
-% xbad1 = flip(x)     %%% Upside down map
-% xbad2 = fliplr(x)   %%% Flipped Map
-% xbad3 = flip(xbad2) %%% Map that is flipped and upsidedown
+% x = landmasklogical();
+% xbad1 = flip(x);     %%% Upside down map
+% xbad2 = fliplr(x);   %%% Flipped Map
+% xbad3 = flip(xbad2); %%% Map that is flipped and upsidedown
+% thinsurf(Felipe(x));
+% thinsurf(Felipe(xbad1))
+% thinsurf(Felipe(xbad2))
+% thinsurf(Felipe(xbad3))
+% 
+% x = landmasklogical(ones(2160, 1080));
+% xbad1 = flip(x);     %%% Upside down map
+% xbad2 = fliplr(x);   %%% Flipped Map
+% xbad3 = flip(xbad2); %%% Map that is flipped and upsidedown
 % thinsurf(Felipe(x))
 % thinsurf(Felipe(xbad1))
 % thinsurf(Felipe(xbad2))
 % thinsurf(Felipe(xbad3))
-%
+
+% Written by Sam Stiffman
+% Last Edited 1/7/2019
+
+
+%%%%%% Constants do not change %%%%%%
+
+RASTER_10_MINUTES = ones(2160, 1080);
+FLIPPED_ONE_DEGREE_SIZE = [180 360];
+ONE_DEGREE_SIZE = [360 180];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 rasterSize = size(raster);
 resolution = detectResolution(raster);
 oneDegreeSize = rasterSize * resolution;
 %Raster must be a raster of the earth 
-assert(isequal(oneDegreeSize, [360 180]) || isequal(oneDegreeSize, [180 360]));
+assert(isequal(oneDegreeSize, ONE_DEGREE_SIZE) || isequal(oneDegreeSize, FLIPPED_ONE_DEGREE_SIZE));
 
-%if its up or down flip it sideways
+%if its up or down transpose the matrix
 if rasterSize(2) > rasterSize(1)
-    raster = raster'; 
+    raster = raster.'; 
 end
 
 %See what value water is in the map since long lat 0,0 is always water 
 waterValue = raster(end/2, end/2);
-% make water 0
+
+% make water 0 all over the map if it is not already
 if waterValue ~= 0
     indexesOfWater = raster == waterValue;
-    tempRaster = raster .* ~indexesOfWater;
+    tempRaster = raster(~indexesOfWater);
 else
     tempRaster=raster;
 end
 
 % To figure out what orientation match the map with a logical earth map at
 % each orientation and see which one matches best
-correctLogical = ~landmasklogical;
+% The way this works is the landmaskLogical will 0 out any value that
+% matches with the map we are working with, this will mean the array with
+% the minimum amount of values will be the best match
+correctLogical = ~landmasklogical(RASTER_10_MINUTES);
 
-% If resolution is not the same as the landmask logical needs to be scaled
-if resolution ~= 5/60
-    imresize(correctLogical, resolution/(5/60));
+% If resolution is not the resolution of the raster the landmask logical needs to be scaled
+if rasterSize ~= size(correctLogical)
+    correctLogical = imresize(correctLogical, size(raster));
+    disp(size(correctLogical))
 end
     upsideDown = fliplr(correctLogical);
     flippedUpsidedown = flip(upsideDown);
     flippedNormal = flip(correctLogical);
     
-    % Temporary matrices to see how many values are left
+    % Temporary matrices to see how many values are left when compared to
+    % the landmask map
     % CO -> correct orientation, UD -> upsidedown, FCO -> Flipped CO map,
     % FUD -> flipped UD map 
-    CO = tempRaster .* correctLogical;
-    UD = tempRaster .* upsideDown;
-    FCO = tempRaster .* flippedNormal;
-    FUD = tempRaster .* flippedUpsidedown;
-    % S prefix is a sum of all non-0 values
-    SCO = sum(sum(CO .* (CO > 0)));
-    SUD = sum(sum(UD .* (UD > 0)));
-    SFCO = sum(sum(FCO .* (FCO > 0)));
-    SFUD = sum(sum(FUD .* (FUD > 0)));
+    CO = tempRaster(correctLogical);
+    UD = tempRaster(upsideDown);
+    FCO = tempRaster(flippedNormal);
+    FUD = tempRaster(flippedUpsidedown);
+    % S prefix is a sum of all matching values 
+    SCO = sum(CO);
+    SUD = sum(UD);
+    SFCO = sum(FCO);
+    SFUD = sum(FUD);
     
     arrayOfSums = [SCO SUD SFCO SFUD];
    
@@ -79,45 +107,50 @@ end
 
 function resolution = detectResolution(raster)
 
+%%%% Constants do not modify %%%%%
+RESOLUTION_5_MIN = 1/12;
+FIVE_MINUTE_SIZE = [2160 4320];
+FLIPPED_FIVE_MINUTE_SIZE = [4320 2160]; 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 rasterSize = size(raster);
-FiveMinuteResolution = [2160 4320];
-flippedFiveMinuteResolution = [4320 2160]; 
+
 
 % Correct orientation of the earth
 if rasterSize(2) > rasterSize(1)
-    rasterMod5Minutes = mod(rasterSize, FiveMinuteResolution);
-    fiveMinutesModRaster = mod(FiveMinuteResolution, rasterSize);
+    rasterMod5Minutes = mod(rasterSize, FIVE_MINUTE_SIZE);
+    fiveMinutesModRaster = mod(FIVE_MINUTE_SIZE, rasterSize);
     
     %Check if they are multiples
     if ~rasterMod5Minutes
-        scalingFactor = rasterSize ./ FiveMinuteResolution;
+        scalingFactor = rasterSize ./ FIVE_MINUTE_SIZE;
         scalingFactor = scalingFactor(1);
     elseif ~fiveMinutesModRaster
-        scalingFactor = FiveMinuteResolution ./ rasterSize;
+        scalingFactor = FIVE_MINUTE_SIZE ./ rasterSize;
         scalingFactor = scalingFactor(1);
     else
-        error('MATLAB:arguments:InconsistentDataType', ['Raster must have dimensions that are an integer multiple of [2160 4320] current dimensions: ' num2str(rasterSize)]);
+        error('MATLAB:arguments:InconsistentDataType', ['Raster must have dimensions that are an integer multiple of 2160x4320 current dimensions: ' num2str(rasterSize)]);
     end
 % Incorrect orientation of the earth
 elseif rasterSize(1) > rasterSize(2)
     
-    rasterMod5Minutes = mod(rasterSize, flippedFiveMinuteResolution);
-    fiveMinutesModRaster = mod(flippedFiveMinuteResolution, rasterSize);
+    rasterMod5Minutes = mod(rasterSize, FLIPPED_FIVE_MINUTE_SIZE);
+    fiveMinutesModRaster = mod(FLIPPED_FIVE_MINUTE_SIZE, rasterSize);
     
     if ~rasterMod5Minutes
-        scalingFactor = rasterSize ./ flippedFiveMinuteResolution;
+        scalingFactor = rasterSize ./ FLIPPED_FIVE_MINUTE_SIZE;
         scalingFactor = scalingFactor(1);
     elseif ~fiveMinutesModRaster
-        scalingFactor = flippedFiveMinuteResolution ./ rasterSize;
+        scalingFactor = FLIPPED_FIVE_MINUTE_SIZE ./ rasterSize;
         scalingFactor = scalingFactor(1);
     else
-        error('MATLAB:arguments:InconsistentDataType', ['Raster must have dimensions that are an integer multiple of [2160 4320] current dimensions: ' num2str(rasterSize)]);
+        error('MATLAB:arguments:InconsistentDataType', ['Raster must have dimensions that are an integer multiple of 2160x4320 current dimensions: ' num2str(rasterSize)]);
     end
 else
     error('MATLAB:arguments:InconsistentDataType', 'Raster not map of Earth');
 end    
 
-resolution = (5/60)*scalingFactor;
+resolution = RESOLUTION_5_MIN*scalingFactor;
 end
 
 

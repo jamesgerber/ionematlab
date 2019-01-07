@@ -1,4 +1,4 @@
-function [WithExtension,WithoutExtension]=FixExtension(name,ext);
+function [WithExtension,WithoutExtension]=FixExtension(name,ext)
 % FIXEXTENSION - regularize a filename
 %
 % Syntax:
@@ -16,6 +16,9 @@ if nargin <2
     return
 end
 
+%%% changes the name and extension into character arrays
+name = char(name);
+ext = char(ext);
 
 %% remove '.' from extension
 

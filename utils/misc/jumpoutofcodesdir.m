@@ -17,5 +17,6 @@ function jumpoutofcodesdir
 % 
 % 
 % [s,w]=unix(['which ' mfilename]);
-
+%evalin('caller','which(mfilename)')
+%evalin('base','which(mfilename)')
 cd /Users/jsgerber/sandbox/jsg131_clean_ygot

@@ -1,4 +1,4 @@
-function outputfilename=newhashmarks(mapfilename,maskfilename,newfilename,color,space,width,dir)
+function outputfilename=newhashmarks(mapfilename,maskfilename,newfilename,color,space,width,dir,offset)
 % newhashmarks - put hashmarks on a .png file
 %
 % SYNTAX:  newhashmarks(mapimagefilename,maskfilename)
@@ -24,6 +24,8 @@ function outputfilename=newhashmarks(mapfilename,maskfilename,newfilename,color,
 %                 width       - width of hashmarks
 %                 dir         - direction of hashmarks in degrees where 0
 %                               is horizontal and 90 is vertical
+%                 offset      - offset (so that parallel stripes don't
+%                               overlap)
 %              
 %  Recommended resolution at least: 600
 %  OK to pass in empty arrays to get defaults
@@ -81,6 +83,10 @@ if nargin<7 || isempty(dir)
     dir=135;
 end
 
+if nargin<8 || isempty(offset)
+    offset=0;
+end
+
 
 %Tolerance for determining if the color matches red
 tol=maxval(mask)/32;
@@ -120,8 +126,8 @@ else
     tempj = repmat(tempj,1,size(im,2));
     
    
-    hashmark = closeto(0, mod(tempi*sind(dir(1))+tempj*cosd(dir(1)), space),width);
-    % hashmark = closeto(mod(tempi, space) + mod(tempj, space), 0, width);
+%    hashmark = closeto(0, mod(tempi*sind(dir(1))+tempj*cosd(dir(1)), space),width);
+    hashmark = closeto(0, mod(tempi*sind(dir(1))+tempj*cosd(dir(1))+offset, space),width);
    
     % Makes a mask where the values on the map match the color red
     redMask = closeto(mask(:,:,1),c1,tol) & closeto(mask(:,:,2),c2,tol) & closeto(mask(:,:,3),c3,tol);
@@ -136,7 +142,7 @@ else
     % the actual map
     for mm=1:3
       tempimlayer=im(:,:,mm);
-      tempimlayer(iichangetohashmark)=color(mm);
+      tempimlayer(iichangetohashmark)=floor(color(mm)*255);
       im(:,:,mm)=tempimlayer;
     end
     

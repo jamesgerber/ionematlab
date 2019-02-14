@@ -202,6 +202,11 @@ if min(size(arglist{1}))==1
             x=datablank(NaN);
             x(cropmasklogical)=arglist{1};
             arglist{1}=x;
+        case 2069588
+            %agrimasklogical
+            x=datablank(NaN);
+            x(agrimasklogical)=arglist{1};
+            arglist{1}=x;
         otherwise
             %assume long/lat
             Long=arglist{1};

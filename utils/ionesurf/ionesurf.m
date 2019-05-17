@@ -157,9 +157,15 @@ if meshmflag==1
     % tag 'meshmflagwarning' and if yes, then don't do another one of
     % these.  if you megagrep 'tag' you'll find example code of where I do
     % something similar- but not sure if that works with latest version.
-    hwarn=warndlg('meshmflag=1 ... this means that print -depsc will fail.  but faster than meshmflag=0')
-    set(hwarn,'tag','meshmflagwarning')
-end
+    
+   % this is an attempt - but it doesn't work under matlab 2016   
+    
+%     h=findobj('tag','meshmflagwarning')
+%     if length(h)==0
+%         hwarn=warndlg('meshmflag=1 ... this means that print -depsc will fail.  but faster than meshmflag=0')
+%         set(hwarn,'tag','meshmflagwarning')
+%     end
+ end
 
     
     

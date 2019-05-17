@@ -219,11 +219,14 @@ end
 
 %WFDEIVar='Tair_daily_WFDEI';
 c={'Tair_daily_WFDEI','Rainf_WFDEI_CRU','Tair_WFDEI','Snowf_WFDEI_CRU'};
+c={'Tair_WFDEI'};
 
 for kk=1
     WFDEIVar=c{kk}
-    S=OpenGeneralNetCDF([iddstring 'Climate/reanalysis/WFDEI/WFDEI-elevation.nc']);
-    x=S(end).Data(:,end:-1:1);
+   % S=OpenGeneralNetCDF([iddstring 'Climate/reanalysis/WFDEI/WFDEI-elevation.nc']);
+   
+   
+   x=S(end).Data(:,end:-1:1);
     goodpoints=find(x < 1e10);
     
     basedir = [iddstring 'Climate/reanalysis/WFDEI/stripes'];

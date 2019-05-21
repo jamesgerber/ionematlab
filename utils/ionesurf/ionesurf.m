@@ -147,7 +147,7 @@ set(hfig,'Tag','IonEFigure');
 
 
 if numel(RedData)~=9331200      
-    meshmflag=1;
+    meshmflag=0;
 else
     meshmflag=1;
 end

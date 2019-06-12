@@ -6,7 +6,8 @@ function [long,lat,raster,R,info]=processgeotiff(filename);
 %
 %filename='~/Downloads/imageToDriveExample.tif';
 %[long,lat,raster,R,info]=processgeotiff(filename);
-
+%
+% see also aggregate_to_5min
 
 [A,R]=geotiffread(filename);
 

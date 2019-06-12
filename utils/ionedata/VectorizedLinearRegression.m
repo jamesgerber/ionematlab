@@ -1,4 +1,4 @@
-function [x0,x1,Rsq,p,sig]=VectorizedLinearRegression(t,flatarray);
+function [x0,x1,Rsq,p,sig,SSE]=VectorizedLinearRegression(t,flatarray);
 % VectorizedLinearRegression - vectorized linear regression
 %
 % SYNTAX
@@ -10,6 +10,7 @@ function [x0,x1,Rsq,p,sig]=VectorizedLinearRegression(t,flatarray);
 %          Rsq a 1xn vector of Rsquared values
 %          p   a 1xn vector of p values
 %          sig   1xn vector 0 if not significant, 1 if p<0.05
+%          SSE   1xn vector of sum of squared error
 %
 %
 %
@@ -49,7 +50,7 @@ end
 
 
 
-whichtest='tstatistic'
+whichtest='tstatistic';
 
 switch whichtest
     case 'bootstrap'
@@ -74,7 +75,7 @@ switch whichtest
         % now using notation of SanterEtAl, JGR2000
         b=(Y(end,:)-Y(1,:))/(t(end)-t(1));  % array of slopes
         
-        nt=size(flatarray,1)
+        nt=size(flatarray,1);
       %  t=1:nt;
       %  tbar=mean(t);
         
@@ -107,10 +108,10 @@ switch whichtest
         
         Fstatistic=RSS./(p-1)./s2;
         clear RSS
-        disp(['determing probability']);
-        tic
+      %  disp(['determing probability']);
+   %     tic
          p=fpvallocal(Fstatistic,(p-1)*ones(size(Fstatistic)),nu*ones(size(Fstatistic)));
-        toc
+   %     toc
 
         % now to get Rsq ...
         r=flatarray-Y;  % y - yhat
@@ -129,10 +130,13 @@ switch whichtest
         
      %   Flookupvals=linspace(min(Fstatistic),max(Fstatistic),10000);
         
-     if nargout==5
+     
+     
+     if nargout>=5
         sig=p<0.05;
      end
-        
+     
+     
   
         
 end

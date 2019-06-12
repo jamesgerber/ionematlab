@@ -104,7 +104,7 @@ ii=(fx>max(fx)/1e6);
 jj=(fy>max(fy)/1e6);
 
 filt=(fy(jj)*fx(ii))'; %need to transpose so I can continue with my not-matlab-standard interp of row/col
-filt=filt/sum(filt);
+filt=filt./sum(filt(:));
 
 %% Where ExcludeMask is 1, set Dist to zero.
 DistTemp=Dist;

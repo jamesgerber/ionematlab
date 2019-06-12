@@ -1,4 +1,4 @@
-function maketransparentoceans_noant(OldFileName,NewFileName,TextColor,AgFlag,nssname);
+function filenameout=maketransparentoceans_generic_noant(OldFileName,NewFileName,TextColor,AgFlag,nssname);
 % maketransparentoceans_noant - add a transparent channel around landmass
 %
 %  Example
@@ -95,11 +95,11 @@ approxdpi2012=1200*size(a,1)/6334;
 res=['size' num2str(size(a,1)) '_' num2str(size(a,2))];
 
 
-FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '.png'];
-FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png'];
-FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
-FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
-FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '.png'];
+FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '_' nssname '.png'];
+FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '_' nssname '.png'];
+FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '_' nssname '.png'];
+FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '_' nssname '.png'];
+FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '_' nssname '.png'];
 
 try
     a=imread(FileName);
@@ -195,7 +195,7 @@ else
         finalwrite(plotimage,NewFileName,'png','Alpha',uint8(Alpha*255));
     end
 end
-
+filenameout=NewFileName;
 return
 
 function finalwrite(plotimage,NewFileName,type,alphaname,Alphavar);

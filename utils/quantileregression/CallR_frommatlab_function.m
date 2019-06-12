@@ -1,4 +1,4 @@
-function [theta,theta_lowerbd,theta_upperbd,AIC,BIC] =...
+function [theta,theta_lowerbd,theta_upperbd,AIC,BIC,covmatrix] =...
     CallR_frommatlab_function(Y,W,VarStruct,modelterms,tauvalues,iikeep,alphavalue);
 % Y - Nx1 column of yields
 % W - column of weights
@@ -7,6 +7,9 @@ function [theta,theta_lowerbd,theta_upperbd,AIC,BIC] =...
 % modelterms - these will 'eval' to the variable names that R will look for
 % tauvalues - values for QR
 % iikeep = indices to keep.  Should have same length as Y
+
+
+
 
 if nargin <5
     tauvalues=0.95
@@ -18,6 +21,10 @@ end
 
 if nargin < 7
     alphavalue=0.1;
+end
+
+if numel(iikeep) ~=numel(Y)
+    error
 end
 % this function is an embarassing disaster - step through in debugger to
 % see what it does.
@@ -40,7 +47,7 @@ for j=1:length(modelterms)-1
 end
 
 
-unix('rm output.txt')
+unix('rm output.txt');
 unix('rm AICValue.txt');
 %M=[ W X1(:) X2(:)];
 
@@ -57,9 +64,9 @@ BigArray=BigArray(iikeep,:);
 
 
 save transferdatatoR.mat  -v6 BigArray tauvalues alphavalue
-toc;
+%toc;
 
-disp(['calling R program']);
+%disp(['calling R program']);
 % tic
 % [s,w]=unix('R CMD BATCH /Users/jsgerber/source/matlabgit/matlab/utils/quantileregression/CallQR2.R Routput.txt')
 % unix('cat Routput.txt')
@@ -69,10 +76,10 @@ disp(['calling R program']);
 tic
 
 if ismalthus
-    [s,w]=unix('/usr/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
+    [s,w]=unix('/usr/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR4.R Routput.txt');
 
 else
-    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR3.R Routput.txt');
+    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR4.R Routput.txt');
 end
 
 if s~=0
@@ -100,4 +107,8 @@ else
     theta_upperbd=theta*NaN;
 end
  
-toc
+cm=load('covmatrix.txt');
+
+covmatrix=reshape(cm,sqrt(numel(cm)),sqrt(numel(cm)));
+
+%toc;

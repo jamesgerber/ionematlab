@@ -3,7 +3,7 @@ function isoscar = isoscar()
 %   Checks the computers IP address and if it executes a successful grep of
 %   the hardware adress it returns true
 if(~strcmp(computer, 'MACI64'))
-    isoscar = False;
+    isoscar = false;
 else
     [~,ip] = system('ifconfig -a | grep "ether 00:3e:e1:c6:33:c2"');
 

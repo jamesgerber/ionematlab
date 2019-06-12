@@ -44,7 +44,7 @@ switch numel(DataTemplate)
         try
             [Long,Lat,Data]=aOpenNetCDF(LANDMASK_30MIN);
         catch
-            warning([' didn''t find LANDMASK_30MIN.  downsampling 5min landmask. '])
+            warning(' didn''t find LANDMASK_30MIN.  downsampling 5min landmask. ')
             lml=LandMaskLogical;
             Data=lml(1:6:end,1:6:end);
         end
@@ -61,9 +61,9 @@ switch numel(DataTemplate)
 %         LogicalVector=(data>=0.5);
         
     otherwise
-        warning(['don''t have a landmask at this size.  trying ...'])
+        warning('don''t have a landmask at this size.  trying ...')
         lml=EasyInterp2(LandMaskLogical,size(DataTemplate,1),size(DataTemplate,2),'nearest');
-        LogicalVector=lml>0.5;
+        LogicalVector=lml>0.5; 
 end
 
 

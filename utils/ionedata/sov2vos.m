@@ -6,7 +6,7 @@ function VOS=sov2vos(DS,ii)
 % function returns a vector of structures S, where the length of S equals
 % the length of the fields of DS.
 %
-% SOV2VOS(DS,ii) - DS is a single structure made up of several vectors.  This
+% SOV2VOS(DS,indexlist) - DS is a single structure made up of several vectors.  This
 % syntax will only consider the indices ii of the vectors in DS
 %
 %
@@ -14,7 +14,9 @@ function VOS=sov2vos(DS,ii)
 
 a=fieldnames(DS);
 
-
+if islogical(ii)
+    ii=find(ii);
+end
 
 for j=1:length(a);
     
@@ -27,6 +29,10 @@ for j=1:length(a);
             TypeFlag(j)=2;
         case 'cell'
             TypeFlag(j)=3;
+        case 'logical'
+            TypeFlag(j)=4;
+        otherwise
+            class(x)
     end
 end
 
@@ -41,7 +47,7 @@ for mcount=1:length(ii);
     for j=1:length(a);
         
         switch TypeFlag(j)
-            case 1
+            case {1,4}
                 y=getfield(DS,a{j});
                 S=setfield(S,a{j},y(m));
             case {2,3}

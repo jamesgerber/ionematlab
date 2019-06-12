@@ -139,13 +139,36 @@ set(hfig,'Tag','IonEFigure');
 
 %disp([' jamie changed the ''meshmflag'' deep within ionesurf.  it fixed something...'])
 %disp([' but might be slow, or broke something else ... '])
-if numel(RedData)~=9331200
-    
-    
+
+
+% if this value is "1" things are faster ... but then print -depsc
+% fails/crashes
+
+
+
+if numel(RedData)~=9331200      
     meshmflag=0;
 else
     meshmflag=1;
 end
+
+if meshmflag==1
+    % Sam Stiffman - can you put in code to see if any figures have the
+    % tag 'meshmflagwarning' and if yes, then don't do another one of
+    % these.  if you megagrep 'tag' you'll find example code of where I do
+    % something similar- but not sure if that works with latest version.
+    
+   % this is an attempt - but it doesn't work under matlab 2016   
+    
+%     h=findobj('tag','meshmflagwarning')
+%     if length(h)==0
+%         hwarn=warndlg('meshmflag=1 ... this means that print -depsc will fail.  but faster than meshmflag=0')
+%         set(hwarn,'tag','meshmflagwarning')
+%     end
+ end
+
+    
+    
     
 if CanMap==0
     h=surface(RedLong,RedLat,double(RedData.')*0-1,double(RedData.'));

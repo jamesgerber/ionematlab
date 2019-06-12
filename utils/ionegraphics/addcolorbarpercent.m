@@ -9,8 +9,10 @@ if nargin==0;
   Handle=gcf;
 end
 
-if fix(Handle)==Handle
-  % Handle is an integer ... must be figure handle.  Assume it is an
+%if fix(Handle)==Handle   % this must be Matlab2012b or something.
+if fix(get(Handle,'Number'))==get(Handle,'Number');
+
+% Handle is an integer ... must be figure handle.  Assume it is an
   % IonEFigure and look for colorbar accordingly.
   fud=get(Handle,'UserData');
   cbh=fud.ColorbarHandle;
@@ -25,6 +27,7 @@ N=size(xtl,1);
 C=size(xtl,2);
 for j=1:N;
   xtlcell{j}=xtl(j,:);
+  xtlcell_V2015{j}=char(xtl(j,:));
 end
 
 
@@ -36,8 +39,11 @@ for j=1:length(xtlcell);
 end
 
 %set(cbh,'XTickLabel',xtlcell);
-xtlnew= strvcat(xtlcell);
-set(cbh,'XTickLabel',xtlnew);
+%xtlnew= strvcat(xtlcell);   %matlat 2012b
+%set(cbh,'XTickLabel',xtlnew);  %matlab 2012b
+
+set(cbh,'TickLabels',xtlcell_V2015)
+
 set(cbh,'XTickMode','manual')
  %%% following is a lame attempt to write my own strvcat
 %%FormatString=['%-' int2str(C+1) 's'];

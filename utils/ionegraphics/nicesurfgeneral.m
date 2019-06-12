@@ -1,4 +1,4 @@
-function OS=NiceSurfGeneral(varargin);
+function OS=NiceSurfGeneral(varargin)
 % NICESURFGENERAL - uberplotting program
 %
 %
@@ -371,7 +371,7 @@ for j=1:length(a)
     % ARE NOT LOWERCASE AND THERE'S NO GOOD WAY TO TELL WHICH ARE
 end
 
-if isequal(plotflag,'off') & nargout==0  %if nargout ~= 0, need to keep going so as to define OSS
+if isequal(plotflag,'off') && nargout==0  %if nargout ~= 0, need to keep going so as to define OSS
     if showuiattheend ==1
         showui
     end
@@ -1177,7 +1177,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  ModifyLongLatBox     %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [longlatbox,filename]=ModifyLongLatBox(plotarea,filename);
+function [longlatbox,filename]=ModifyLongLatBox(plotarea,filename)
 
 
 

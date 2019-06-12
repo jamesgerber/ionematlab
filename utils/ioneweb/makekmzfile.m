@@ -5,19 +5,19 @@ function MakeKMZFile(MKS)
 %  this takes as an argument MKS
 %
 %
-%MKS.Data=Data;
-%MKS.cmap='revsummer';
-%MKS.coloraxis=[0 100];
-%MKS.BaseTransparency=0.5;
-%MKS.folderbase='./kmlfolder'
-%MKS.kmzfilenamebase='test'
-%MKS.lores=0;
-%MKS.KS.header1='filetext'
-%MKS.KS.description1='desc 1'
-%MKS.KS.header2=''
-%MKS.KS.description2=''
-%MKS.KS.logoname='';
-%MKS.KS.legendname='';
+% MKS.Data=Data;
+% MKS.cmap='revsummer';
+% MKS.coloraxis=[0 100];
+% MKS.BaseTransparency=0.5;
+% MKS.folderbase='./kmlfolder'
+% MKS.kmzfilenamebase='test'
+% MKS.lores=0;
+% MKS.KS.header1='filetext'
+% MKS.KS.description1='desc 1'
+% MKS.KS.header2=''
+% MKS.KS.description2=''
+% MKS.KS.logoname='';
+% MKS.KS.legendname='';
 %
 %
 %

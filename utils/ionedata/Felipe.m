@@ -25,7 +25,7 @@ function correctRaster = Felipe(raster)
 % thinsurf(Felipe(xbad1))
 % thinsurf(Felipe(xbad2))
 % thinsurf(Felipe(xbad3))
-
+%
 % Written by Sam Stiffman
 % Last Edited 1/7/2019
 
@@ -41,6 +41,7 @@ ONE_DEGREE_SIZE = [360 180];
 rasterSize = size(raster);
 resolution = detectResolution(raster);
 oneDegreeSize = rasterSize * resolution;
+
 %Raster must be a raster of the earth 
 assert(isequal(oneDegreeSize, ONE_DEGREE_SIZE) || isequal(oneDegreeSize, FLIPPED_ONE_DEGREE_SIZE));
 
@@ -54,7 +55,7 @@ waterValue = raster(end/2, end/2);
 
 % make water 0 all over the map if it is not already
 if waterValue ~= 0
-    indexesOfWater = raster == waterValue;
+    indexesOfWater = (raster == waterValue);
     tempRaster = raster(~indexesOfWater);
 else
     tempRaster=raster;
@@ -78,7 +79,9 @@ end
     
     % Temporary matrices to see how many values are left when compared to
     % the landmask map
-    % CO -> correct orientation, UD -> upsidedown, FCO -> Flipped CO map,
+    % CO -> correct orientation
+    % UD -> upsidedown
+    % FCO -> Flipped CO map,
     % FUD -> flipped UD map 
     CO = tempRaster(correctLogical);
     UD = tempRaster(upsideDown);

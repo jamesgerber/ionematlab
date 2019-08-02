@@ -45,7 +45,7 @@ if nargout==1
 end
 
 
-if nargout==1 & nargin==1
+if nargout==1 && nargin==1
     Longout=NineSecGridCellAreasha(indices);
 end
 return

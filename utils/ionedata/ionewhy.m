@@ -43,7 +43,7 @@ switch fix(19*rand)
 	case 11,  a = 'so Christine doesn''t crush you.';
 	case 12,  a = 'because deepak is too #&^##ing lazy to use subversion';
 	case 13,  a = 'because deepak is too #&^##ing lazy to use subversion';
-	case 14,   a = 'Huzzah!';
+	case 14,  a = 'Huzzah!';
 	case 15,  a= 'because of the French';
 	otherwise,a = 'dedos al frente!!!!!!';
 end

@@ -4,9 +4,15 @@ function globalarray2geotiff(raster,filename, varargin)
 % If the longitude latitude arrays are not inputted (varargs)
 % Raster must be a raster of the earth
 %
+<<<<<<< .mine
+%  Syntax 
+%
+||||||| .r1552
+=======
 %
 %
 %
+>>>>>>> .r1565
 
 % Written by Sam Stiffman
 % Last Edited 1/7/2019
@@ -18,6 +24,7 @@ rows = size(raster, 1);
 columns = size(raster, 2);
 rasterSize = [rows, columns];
 
+defaultSize = [4320 2160 ];
 if nargin == 2
  
  % We can see which is bigger the raster or 5 minute model We can also see

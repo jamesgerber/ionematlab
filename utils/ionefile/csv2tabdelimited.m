@@ -19,7 +19,10 @@ function csv2tabdelimited(inputfilename,outputfilename)
 %   of double quotes '"'
 %
 %     sed  's/"//g' World2000.txt > World2000nq.txt
-%    
+%
+%     if the .txt file contains strange characters, then try this:
+%     LC_CTYPE=C sed  's/"//g' World2000.txt > World2000nq.txt
+%
 %
 %  See Also:  readgenericcsv
 

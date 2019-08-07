@@ -2,9 +2,11 @@ function output = memoryLeft
 %MEMORYLEFT Aproximates remaining RAM
 %   memory left checks the operating system and uses different methods for
 %   different operating systems
-% For Windows uses the built in memory command and truncates output 
-% For MAC uses the bash top command and uses grep -> sed to determine how
-% format output
+% For Windows uses the built in matlab memory function and truncates output 
+% For MAC uses the bash top command and uses grep -> sed to format output
+%
+% Author: Sam Stiffman
+% Date: 6/17/2019
 
 if(strcmp(computer, 'PCWIN64'))
     output = truncate(memory.MaxPossibleArrayBytes);

@@ -1037,7 +1037,7 @@ if strcmp(categorical,'on')
             colormap(OS.cmap_final(2:end-1,:));
             %need to skip first/last value because those are the ocean/no data colors
             
-            legh=legend(bb,categoryvalues,3);
+            legh=legend(bb,categoryvalues,'Location','SouthWest');
             hlegt=get(legh,'title');
             set(hlegt,'string',units);
             set(bb,'Visi','off')
@@ -1145,7 +1145,7 @@ figure(Hfig);  % make previous figure current.
     else
         
         bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
-        legh=legend(bb,categoryvalues,3);
+        legh=legend(bb,categoryvalues,'Location','SouthWest');
         
         [VER DATESTR] = version();
         if str2num(DATESTR(end-3:end))<2014

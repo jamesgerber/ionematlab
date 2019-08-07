@@ -2,6 +2,10 @@ function isoscar = isoscar()
 %ISOSCAR Determines if the running computer is Oscar
 %   Checks the computers IP address and if it executes a successful grep of
 %   the hardware adress it returns true
+%
+% Author: Sam Stiffman
+% Date: 6/17/2019
+
 if(~strcmp(computer, 'MACI64'))
     isoscar = false;
 else

@@ -629,7 +629,7 @@ hideui
 
 if strcmp(categorical,'on')
     bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
-    legh=legend(bb,categoryvalues,3);
+    legh=legend(bb,categoryvalues,'Location','SouthWest');
     hlegt=get(legh,'title');
     set(hlegt,'string',units);
     set(bb,'Visi','off')

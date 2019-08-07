@@ -1,4 +1,4 @@
-function [si]=si(xx);
+function [si]=si(xx)
 % SI - compute Sine Integral
 %           /x
 %  si(x) =  |  sin(t)/t dt
@@ -20,26 +20,26 @@ if x==0
   si(mm)=0;
 elseif x<3
   temp=0;
-  for j=1:2:14;
+  for j=1:2:14
   temp=temp+ x.^j/(j*prod(1:j))*(-1)^((j-1)/2);
-  end;
+  end
   si(mm)=temp;
 elseif x> 12
 
  t1=0;
  t2=0;
- for j=0:12;
+ for j=0:12
   t1=t1+(-1)^j*gamma(2*j+1)/x^(2*j);
   t2=t2+(-1)^j*gamma(2*j+2)/x^(2*j);
- end;
+ end
  si(mm)=pi/2-(cos(x)/x*t1+sin(x)/x^2*t2);
-else ;  %  x between 3, 10
+else   %  x between 3, 10
   %si(3)=1.848652528...
-  temp=1.848652528 + quad8(inline('sin(t)./t'),3,x,1e-6);
+  temp=1.848652528 + quad8(@(t)(sin(t)./t),3,x,1e-6);
   si(mm)=temp;
-end;
+end
 
-end;
+end
 
 
 

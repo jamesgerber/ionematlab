@@ -1,15 +1,12 @@
-function globalarray2geotiff(raster,filename, varargin)
+function globalarray2geotiff(raster,filename)
 % globalarray2geotiff - converts a raster into a geotiff file  
 % 
 % If the longitude latitude arrays are not inputted (varargs)
 % Raster must be a raster of the earth
 %
 %
-%
-%
-
 % Written by Sam Stiffman
-% Last Edited 1/7/2019
+% Last Edited 7/7/2019
 
 
  

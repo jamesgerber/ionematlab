@@ -14,9 +14,8 @@ function VOS=sov2vos(DS,ii)
 
 a=fieldnames(DS);
 
-if islogical(ii)
-    ii=find(ii);
-end
+
+
 
 for j=1:length(a);
     
@@ -41,6 +40,9 @@ if nargin==1
     ii=1:length(x);
 end
 
+if islogical(ii)
+    ii=find(ii);
+end
 for mcount=1:length(ii);
     m=ii(mcount);
     S=[];

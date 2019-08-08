@@ -6,10 +6,7 @@ function globalarray2geotiff(raster,filename)
 %
 
 % Written by Sam Stiffman
-% Last Edited 7/7/2019
-
-rows = size(raster, 1);
-columns = size(raster, 2);
+% Last Edited 7/8/2019
 
  latlim = [-90 90];
  lonlim = [-180 180];

@@ -66,7 +66,7 @@ for row = 1:size(filesWeNeed,1)
         else
             NS = 'S';
         end
-        currLong = baseLong+10*(column-1);
+        currLong = baseLong+10*(column-2);
         if currLong >= 0
             EW = 'E';
         else

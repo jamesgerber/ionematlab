@@ -6,8 +6,12 @@ function [Long,Lat,Long2,Lat2]=InferLongLat(Data)
 %
 % [Long,Lat,Long2,Lat2]=InferLongLat(Data)
 %
+% Data can also be a 2-element num rows / num columns
+%
 % EXAMPLE
-% [long,lat]=InferLongLat(testdata);
+% [long,lat]=InferLongLat(datablank);
+% [long,lat]=InferLongLat([4320 2160]);
+%
 
 if nargin==0
    disp([' assuming 5minute grid '])
@@ -17,7 +21,16 @@ if nargin==0
 %    return
 end
 
-[Nrow,Ncol,Level]=size(Data);
+if numel(Data)>2
+
+    [Nrow,Ncol,Level]=size(Data);
+else
+    Nrow=Data(1);
+    Ncol=Data(2);
+    if~isequal(Nrow,Ncol*2)
+        error(['Nrows must be double Ncols'])
+    end
+end
 
 %the next two lines are a lazy way to get Long to take on the
 %values of the centers of the bins

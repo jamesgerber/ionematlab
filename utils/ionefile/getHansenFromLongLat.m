@@ -60,13 +60,13 @@ raster = [];
 for row = 1:size(filesWeNeed,1)
     rasterRow = [];
     for column = 1:size(filesWeNeed,2)
-        currLat = baseLat+10*(row-1);
+        currLat = baseLat+10*(row-2);
         if currLat >= 0
             NS = 'N';
         else
             NS = 'S';
         end
-        currLong = baseLong+10*(column-2);
+        currLong = baseLong+10*(column-1);
         if currLong >= 0
             EW = 'E';
         else

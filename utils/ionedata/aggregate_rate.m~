@@ -1,4 +1,4 @@
-function [small,modecount]=aggregate_rate(big,N,nanflag)        
+function small=aggregate_rate(big,N,nanflag)        
 %aggregate_rate - aggregate quantity data down to a coarser scale
 %
 % Syntax:
@@ -90,8 +90,8 @@ switch lower(nanflag)
                 temp(:,:,c)=big(m:N:end,k:N:end);
             end
         end
-        [small,modecount]=mode(temp,3);
-
+        small=mode(temp,3);
+        %  small=small/N^2;
         
         
         

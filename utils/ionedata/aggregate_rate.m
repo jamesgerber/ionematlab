@@ -48,13 +48,12 @@ if rem(x(1),N)==0 & rem(x(2),N)==0
     % don't need to change anything
 else
     % need to tack some extra stuff onto end of big so that accelerated
-    % methods below will still wrok (i.e. parsing into columns, squares,
-    % etc.)
-    
-    
+    % methods below will still work (i.e. parsing into columns, squares,
+    % etc.)    
+    warning([ 'Expanding size of input matrix in ' mfilename ' to allow ' ...
+        'integer aggregation.  This may lead to issues at boundaries']);
     newr=N*ceil(x(1)/N);
     newc=N*ceil(x(2)/N);
-    
     big(newr,newc)=0;
 end
     
@@ -90,8 +89,12 @@ switch lower(nanflag)
                 temp(:,:,c)=big(m:N:end,k:N:end);
             end
         end
-        [small,modecount]=mode(temp,3);
-
+        
+        if nargout==1
+            [small,modecount]=mode(temp,3);          
+        else
+            [small,modecount]=mode(temp,3);
+        end
         
         
         

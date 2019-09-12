@@ -7,8 +7,22 @@ function [long,lat,raster,R,info]=processgeotiffinfobased(filename,longlatfilena
 %filename='~/Downloads/imageToDriveExample.tif';
 %[long,lat,raster,R,info]=processgeotiffinfobased(filename,longlatfilename);
 
-[A,r]=geotiffread(filename);
-[a,R]=geotiffread(longlatfilename);
+
+info=geotiffinfo(filename);
+
+[A]=geotiffread(filename);
+a=A';
+
+
+% let's make lon/lat so del has to be positive. then goes from min to max
+dellon=abs((info.CornerCoords.Lon(2)-info.CornerCoords.Lon(1))/size(a,1));
+dellat=abs((info.CornerCoords.Lat(4)-info.CornerCoords.Lat(1))/size(a,2));
+
+long=(min(info.CornerCoords.Lon)+dellon/2):dellon:max(info.CornerCoords.Lon);
+lat=(min(info.CornerCoords.Lat)+dellat/2):dellat:max(info.CornerCoords.Lat);
+
+
+%[a,R]=geotiffread(longlatfilename);
 
 
 

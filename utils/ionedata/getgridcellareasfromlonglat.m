@@ -30,5 +30,5 @@ GridAreaAtEquator=xequator*yequator*1e2; %1e2 is sq km to ha
 %
 
 
-GridCellAreasha=GridAreaAtEquator*single(ones(size(longvals(:))))*single(cosd(latvals(:).'));
+GridCellAreasha=GridAreaAtEquator*single(ones(size(long(:))))*single(cosd(lat(:).'));
 

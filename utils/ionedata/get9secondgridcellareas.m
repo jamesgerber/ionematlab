@@ -1,10 +1,12 @@
-function [Longout,Latout,NineSecGridCellAreasha]=get9secondgridcellareas(indices);
+function [Longout,Latout,NineSecGridCellAreasha]=get9secondgridcellareas(varargin);
 % Get9secondGridCellAreas determine area in centered grids that are 5min x 5min
 %
 %  Syntax
 %      [Long,Lat,FiveMinGridCellAreas]=Get9secondGridCellAreas;
 %
 %      FiveMinGridCellAreas=GetFiveMinGridCellAreas;
+%
+%      FiveMinGridCellAreas=GetFiveMinGridCellAreas(long,lat);
 %
 %
 %      FiveMinGridCellAreas=GetFiveMinGridCellAreas(ii);  will return the
@@ -34,6 +36,15 @@ EarthCircumference=6371*2*pi;  %source: wikipedia
 
 NineSecGridAreaAtEquator=single(EarthCircumference.^2/(129600)^2*1e2); %1e2 is sq km to ha
 %
+
+if nargout==1 && nargin==2
+    longvals=varargin{1};
+    latvals=varargin{2};
+    Longout=NineSecGridAreaAtEquator*single(ones(size(longvals(:))))*single(cosd(latvals(:).'));
+return
+end
+
+
 NineSecGridCellAreasha=NineSecGridAreaAtEquator*single(ones(size(Long)))*single(cosd(Lat.'));
 
 
@@ -46,6 +57,9 @@ end
 
 
 if nargout==1 && nargin==1
-    Longout=NineSecGridCellAreasha(indices);
+    indices=varargin{1};
+    Longout=NineSecGridCellAreasha(indices);    
 end
+
+
 return

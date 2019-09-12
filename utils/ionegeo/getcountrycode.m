@@ -107,6 +107,7 @@ if length(findstr(w,tab)) > 20
             
             
         otherwise
+            w
     error([' found multiple matches.  boo! ']);
     end
     return

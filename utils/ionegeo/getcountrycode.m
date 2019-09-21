@@ -44,8 +44,8 @@ if s~=0
         ccstructure=StandardCountryNames('COD','ISO3');
         return
     end
-        
-       if ~isempty( findstr(countryname,'Iran') )
+    
+    if ~isempty( findstr(countryname,'Iran') )
         warndlg([' interpreting ' countryname ' as Democratic Rep Congo']);
         ccstructure=StandardCountryNames('IRN','ISO3');
         return
@@ -55,13 +55,18 @@ if s~=0
         ccstructure=StandardCountryNames('VEN','ISO3');
         return
     end
-      if ~isempty( findstr(countryname,'China, mainland') )
+    if ~isempty( findstr(countryname,'China, mainland') )
         warndlg([' interpreting ' countryname ' as China']);
         ccstructure=StandardCountryNames('CHN','ISO3');
         return
     end
-
-        
+     if ~isempty( findstr(countryname,'Georgia') )
+        warndlg([' interpreting ' countryname ' as Georgia the country']);
+        ccstructure=StandardCountryNames('GEO','ISO3');
+        return
+    end
+   
+    
         error([' call to grep did not work for ' countryname]);
 end
 

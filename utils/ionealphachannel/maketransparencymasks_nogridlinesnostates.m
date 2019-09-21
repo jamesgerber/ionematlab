@@ -1,4 +1,4 @@
-function maketransparencymasks_nogridlines(res)
+function maketransparencymasks_nogridlinesnostates(res)
 % maketransparencymasks - make masks of figure areas to make transparent
 %
 %   This function makes some necessary masks to allow us to make
@@ -12,11 +12,11 @@ function maketransparencymasks_nogridlines(res)
 %  This can be called automatically by maketransparentoceans, or you can
 %  call it from the commandline without arguments
 if nargin==0
-   maketransparencymasks('r150');
-   maketransparencymasks('r300');
-   maketransparencymasks('r400');
-   maketransparencymasks('r500');
-   maketransparencymasks('r600');
+   maketransparencymasks_nogridlinesnostates('r150');
+   maketransparencymasks_nogridlinesnostates('r300');
+   maketransparencymasks_nogridlinesnostates('r400');
+   maketransparencymasks_nogridlinesnostates('r500');
+   maketransparencymasks_nogridlinesnostates('r600');
   % maketransparencymasks('r1200');
    return
 end
@@ -78,13 +78,13 @@ end
         ver=version;
         VerNo=ver(1)
         vs=['ver' VerNo '_'];  % ' vs '
-        FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '.png'];
-        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png'];
-        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
-        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
-        FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '.png'];  % panoply triangles
-        FileNamePTL=[iddstring '/misc/mask/OutputMask_PTL_' res '.png'];  % panoply triangles
-        FileNamePTR=[iddstring '/misc/mask/OutputMask_PTR_' res '.png'];  % panoply triangles
+        FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res 'nogridnostates.png'];
+        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res 'nogridnostates.png'];
+        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res 'nogridnostates.png'];
+        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res 'nogridnostates.png'];
+        FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res 'nogridnostates.png'];  % panoply triangles
+        FileNamePTL=[iddstring '/misc/mask/OutputMask_PTL_' res 'nogridnostates.png'];  % panoply triangles
+        FileNamePTR=[iddstring '/misc/mask/OutputMask_PTR_' res 'nogridnostates.png'];  % panoply triangles
 
         
 
@@ -99,8 +99,8 @@ end
     
 % Figure that is white everywhere
 NSS.cmap=0*ones(size(colormap));
-
-
+NSS.plotstates='off';
+NSS.longlatlines='off';
 NSG(ii,NSS)
 fud=get(gcf,'userdata')
 set(fud.ColorbarHandle,'XTick',[]);

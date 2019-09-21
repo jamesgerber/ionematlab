@@ -43,12 +43,13 @@ if nargin<4
 end
 
 if nargin==1
-    NewFileName=strrep(OldFileName,'.png','_alpha_to_na.png');
+    NewFileName=strrep(OldFileName,'.png','_alpha_to_na_nogridnostates.png');
 end
+
 
 if isempty(NewFileName)
      [WithExtension,WithoutExtension]=fixextension(OldFileName,'.png');
-    NewFileName=strrep(WithExtension,'.png','_alpha_to_na.png');
+    NewFileName=strrep(WithExtension,'.png','_alpha_to_na_nogridnostates.png');
 end
 
 
@@ -59,14 +60,14 @@ plotimage=imread(OldFileName);
 KeepText=0;
 if ~ischar(NewFileName)
     TextColor=NewFileName;
-    NewFileName=strrep(OldFileName,'.png','_alpha_to_na');
+    NewFileName=strrep(OldFileName,'.png','_alpha_to_na_nogridnostates');
     NewFileName=[makesafestring(NewFileName) '.png']
     NewFileName=fixextension(NewFileName,'.png');
     KeepText=1;
 end
 
 if nargin==1 | isempty(NewFileName)
-    NewFileName=strrep(OldFileName,'.png','_alpha_to_na');
+    NewFileName=strrep(OldFileName,'.png','_alpha_to_na_nogridnostates');
     NewFileName=fixextension(NewFileName,'.png');
     %   NewFileName=[makesafestring(NewFileName) '.png']
 else
@@ -95,11 +96,11 @@ approxdpi2012=1200*size(a,1)/6334;
 res=['size' num2str(size(a,1)) '_' num2str(size(a,2))];
 
 
-FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '_nogridnostates.png'];
-FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '_nogridnostates.png'];
-FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '_nogridnostates.png'];
-FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '_nogridnostates.png'];
-FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '_nogridnostates.png'];
+FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res 'nogridnostates.png'];
+FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res 'nogridnostates.png'];
+FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res 'nogridnostates.png'];
+FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res 'nogridnostates.png'];
+FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res 'nogridnostates.png'];
 
 try
     a=imread(FileName);

@@ -109,6 +109,7 @@ function OS=NiceSurfGeneral(varargin)
 %   NSS.colorbarpercent='off';
 %   NSS.projection='';
 %   NSS.projection='hatano';
+%   NSS.colorbarfontsize=12;
 %
 %
 %   NSS.modifycolormap='stretch';
@@ -229,12 +230,12 @@ else
     end
 end
 
-if numel(Data) > 1e8
+if numel(Data) > 2e7
    
 
-    Nresample= ceil(numel(Data)/1e8);
-    if numel(Data) < 4e9
-        warning([' more than 1e8 points resampling. Nresample=' int2str(Nresample)]);
+    Nresample= ceil(numel(Data)/2e7);
+    if Nresample > 1
+        warning([' more than 2e7 points resampling. Nresample=' int2str(Nresample)]);
     end
     disp(['resampling'])
     Long=Long(1:Nresample:end);
@@ -308,7 +309,7 @@ ListOfProperties={
     'cbarvisible','transparent','textcolor','newplotareamethod','font',...
     'statewidth','gridcolor','userinterppreference','maxnumfigs','framelimitsvector',...
     'sink','modifycolormap','stretchcolormapcentervalue','categoryspecialcolormap',...
-    'categoryspeciallegend'};
+    'categoryspeciallegend','colorbarfontsize','colorbarunitsfontsize'};
 ListOfProperties=unique(ListOfProperties);
 
 %% set defaults for these properties
@@ -336,6 +337,9 @@ modifycolormap='none';
 stretchcolormapcentervalue=0;
 categoryspecialcolormap='';
 categoryspeciallegend='';
+colorbarfontsize=9;
+colorbarunitsfontsize=12;
+
 %   NSS.modifycolormap='stretch';
 
 % new Joanne colors - now set in personalpreferencestemplate
@@ -872,7 +876,7 @@ else
         set(fud.ColorbarHandle,'Location','East');
         set(fud.ColorbarHandle,'Position',[0.9218 0.2237 0.0357 0.6500]);
     else
-        error(' haven''t yet implemented this unless mappingoff')
+      %  error(' haven''t yet implemented this unless mappingoff')
         delx= 0.7558;
         x0= 1/2*(1-delx);
         set(fud.ColorbarHandle,'Position',[x0 0.10 delx 0.02568],'XColor',textcolor,'YColor',textcolor)
@@ -982,9 +986,10 @@ if (~isempty(font))
 end
 set(ht,'Color',textcolor)
 
+set(fud.ColorbarHandle,'fontsize',colorbarfontsize);
 hcbtitle=get(fud.ColorbarHandle,'Title');
 set(hcbtitle,'string',[' ' units ' '])
-set(hcbtitle,'fontsize',12);
+set(hcbtitle,'fontsize',colorbarunitsfontsize); 
 set(hcbtitle,'fontweight','bold');
 if (~isempty(font))
     set(hcbtitle,'FontName',font);

@@ -12,12 +12,12 @@ function maketransparencymasks_nogridlines(res)
 %  This can be called automatically by maketransparentoceans, or you can
 %  call it from the commandline without arguments
 if nargin==0
-   maketransparencymasks('r150');
-   maketransparencymasks('r300');
-   maketransparencymasks('r400');
-   maketransparencymasks('r500');
-   maketransparencymasks('r600');
-  % maketransparencymasks('r1200');
+   maketransparencymasks_nogridlines('r150');
+   maketransparencymasks_nogridlines('r300');
+   maketransparencymasks_nogridlines('r400');
+   maketransparencymasks_nogridlines('r500');
+   maketransparencymasks_nogridlines('r600');
+  % maketransparencymasks_nogridlines('r1200');
    return
 end
 ii=datablank;
@@ -78,13 +78,13 @@ end
         ver=version;
         VerNo=ver(1)
         vs=['ver' VerNo '_'];  % ' vs '
-        FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res '.png'];
-        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res '.png'];
-        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res '.png'];
-        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res '.png'];
-        FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res '.png'];  % panoply triangles
-        FileNamePTL=[iddstring '/misc/mask/OutputMask_PTL_' res '.png'];  % panoply triangles
-        FileNamePTR=[iddstring '/misc/mask/OutputMask_PTR_' res '.png'];  % panoply triangles
+        FileName=[iddstring '/misc/mask/OutputMask_colorbar_' res 'nogrid.png'];
+        FileNameNCB=[iddstring '/misc/mask/OutputMask_nocolorbar_' res 'nogrid.png'];
+        FileNameOceans=[iddstring '/misc/mask/OutputMask_oceans_' res 'nogrid.png'];
+        FileNameAgriMask=[iddstring '/misc/mask/OutputMask_agrimask_' res 'nogrid.png'];
+        FileNamePT=[iddstring '/misc/mask/OutputMask_PT_' res 'nogrid.png'];  % panoply triangles
+        FileNamePTL=[iddstring '/misc/mask/OutputMask_PTL_' res 'nogrid.png'];  % panoply triangles
+        FileNamePTR=[iddstring '/misc/mask/OutputMask_PTR_' res 'nogrid.png'];  % panoply triangles
 
         
 

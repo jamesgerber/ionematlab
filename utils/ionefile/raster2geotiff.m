@@ -19,38 +19,40 @@ delLong=[min(long) max(long)];
 % % testlong=min(long):extentLongCell:max(long);
 % % testlat=min(lat):extentLatCell:max(lat);
 
-R = georefcells(delLat,delLong,extentLatCell,extentLongCell);
+R=georefcells(delLat,delLong,[NLat NLong],'ColumnsStartFrom','North')
 
-if ~isequal(R.RasterSize,size(A))
-    
-    
-    
-    
-    RS=R.RasterSize;
-    AS=size(A);
-    
-    disp([' fiddling '])
-    
-    
-    if RS(2) < AS(2)
-        delLong=[min(long) max(long)]*(1-1e-6);
-    elseif RS(2) > AS(2)
-        delLong=[min(long) max(long)]*(1+1e-6);
-        
-    end
-    
-    if RS(1) < AS(1)
-        delLat=[min(lat) max(lat)]*(1-1e-6);
-    elseif RS(1) > AS(1)
-        delLat=[min(lat) max(lat)]*(1+1e-6);
-        
-    end
-    
-    
-    R = georefcells(delLat,delLong,extentLatCell,extentLongCell);
-    
-    
-end
+% R = georefcells(delLat,delLong,extentLatCell,extentLongCell);
+% 
+% if ~isequal(R.RasterSize,size(A))
+%     
+%     
+%     
+%     
+%     RS=R.RasterSize;
+%     AS=size(A);
+%     
+%     disp([' fiddling '])
+%     
+%     
+%     if RS(2) < AS(2)
+%         delLong=[min(long) max(long)]*(1-1e-5);
+%     elseif RS(2) > AS(2)
+%         delLong=[min(long) max(long)]*(1+1e-5);
+%         
+%     end
+%     
+%     if RS(1) < AS(1)
+%         delLat=[min(lat) max(lat)]*(1-1e-5);
+%     elseif RS(1) > AS(1)
+%         delLat=[min(lat) max(lat)]*(1+1e-5);
+%         
+%     end
+%     
+%     
+%     R = georefcells(delLat,delLong,extentLatCell,extentLongCell);
+%     
+%     
+% end
 
 geotiffwrite(filename,A,R);
 

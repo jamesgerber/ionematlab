@@ -79,7 +79,7 @@ if ismalthus
     [s,w]=unix('/usr/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR4.R Routput.txt');
 
 else
-    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR4.R Routput.txt');
+    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/utils/quantileregression/CallQR4.R Routput.txt');
 end
 
 if s~=0

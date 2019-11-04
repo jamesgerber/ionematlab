@@ -1,5 +1,6 @@
 function [theta,X,Y,W] =...
     callWeightedQR(Y,W,VarStruct,modelterms,tauvalues,iikeep,alphavalue);
+% callWeightedQR(Y,W,VarStruct,modelterms,tauvalues,iikeep,alphavalue)
 % Y - Nx1 column of yields
 % W - column of weights
 % VarStruct - structure of variables which will be put into the workspace

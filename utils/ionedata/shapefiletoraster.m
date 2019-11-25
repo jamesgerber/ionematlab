@@ -80,7 +80,7 @@ end
 if plotflag==1
     figure(11)
     clf
-    axis([-180 180 -90 90])
+    axis([min(Long) max(Long) min(Lat) max(Lat)])
     hold on
 end
 
@@ -92,6 +92,7 @@ for j=1:length(S);
         char(namelist{j})
     end
 
+    S(j)
     % if int(j/length(
     waitbar(j/length(S),hh);
     %end
@@ -117,7 +118,8 @@ for j=1:length(S);
     
     ii=find(LongGrid > nanmin(xx)-.1 & LongGrid < nanmax(xx)+.1 & ...
         LatGrid > nanmin(yy)-.1 & LatGrid < nanmax(yy)+.1);
-    
+    jj=(LongGrid > nanmin(xx)-.1 & LongGrid < nanmax(xx)+.1 & ...
+        LatGrid > nanmin(yy)-.1 & LatGrid < nanmax(yy)+.1);
     AreaAdditionSpace=0;
     for k=2:length(kk);%
         

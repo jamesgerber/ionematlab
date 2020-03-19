@@ -43,6 +43,8 @@ function [Long,Lat,Raster,Areasqkm]=ShapeFileToRaster(S,FieldName,MatrixTemplate
 %   template=datablank(0,'30min');
 %
 %   [Long,Lat,Raster]=ShapeFileToRaster(NS,'NumericalField',template,0);
+%
+%   see also
 
 switch nargin
     case 0
@@ -92,7 +94,7 @@ for j=1:length(S);
         char(namelist{j})
     end
 
-    S(j)
+    S(j);
     % if int(j/length(
     waitbar(j/length(S),hh);
     %end
@@ -155,6 +157,7 @@ for j=1:length(S);
         
         
         if plotflag==1
+            IN=IN|ON;
             LogicalPlotMatrix(ii)=LogicalPlotMatrix(ii) | IN;
             PlotMatrix(ii)=IN;
             PlotMatrix(ii(find(IN==0)))=NaN;
@@ -163,11 +166,11 @@ for j=1:length(S);
             figure(11)
             hold on
             tmp=double(LogicalPlotMatrix);
-            tmp(find(tmp==0))=NaN;
+            tmp(find(tmp==0))=0;
             surface(Long(iiLong),Lat(iiLat),tmp(iiLong,iiLat).');
             hold on
             drawnow
-            shading flat
+   %         shading flat
         end
     end  % end of k loop over regions within each country
     % end of country loop

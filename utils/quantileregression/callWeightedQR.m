@@ -50,6 +50,15 @@ end
 %X=M(:,2:9);
 X=M;
 X(:,1)=1;
-theta=weightedQR(X,Y,tauvalues,W);
+
+%theta=weightedQR(X,Y,tauvalues,W);
+
+% Let's remove any terms with W = 0 ... it can only confuse the numerical
+% results ...
+
+ii=W~=0;
+theta=weightedQR(double(X(ii,:)),Y(ii),tauvalues,double(W(ii)));
+
+%theta=weightedQR(single(X(ii,:)),single(Y(ii)),single(tauvalues),single(W(ii)));
 
 

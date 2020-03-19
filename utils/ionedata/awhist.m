@@ -16,6 +16,14 @@ function [S]=awhist(val,weight,edges);
 % S=awhist(val,weight,[0:10:100])
 % 
 
+if numel(edges)==1
+    N=100;
+    del=(max(val)-min(val))/2;
+    edges=linspace(min(val)-del/2,max(val)+del/2,N+1);
+end
+
+
+
 iibin=val*0+weight*0;   % lazy way to initialize this and check that val and weight are same size
 
 

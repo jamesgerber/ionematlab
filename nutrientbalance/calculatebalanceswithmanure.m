@@ -202,16 +202,17 @@ else
         disp(['Loading observed ' crop ' N application rate map.'])
         try
             x=load([iddstring '/Fertilizer2000/ncmat/' crop 'Napprate.mat']);
+            AppliedNitrogenPerHA=x.DS.Data(:,:,1);
+
         catch
             disp(['problem with ' crop 'Napprate.mat']);
             C=-1;
             N.ExcessNitrogenPerHA_x_Area=NaN;
             P.ExcessPhosphorusPerHA_x_Area=NaN;
             ExtraInfo.ManureDataVersion='na';
-
-            return
+            AppliedNitrogenPerHA=datablank;
+          %  return
         end
-        AppliedNitrogenPerHA=x.DS.Data(:,:,1);
     end
     
     AppliedNitrogenPerHA(isnan(AppliedNitrogenPerHA))=0;
@@ -288,9 +289,13 @@ if skipPcalcsflag == 1
 else
     if newPmapflag == 0
         disp(['Loading observed ' crop ' P2O5 application rate map.'])
-        x=load([iddstring '/Fertilizer2000/ncmat/' crop 'P2O5apprate.mat']);
-        AppliedPhosphorusPerHA=x.DS.Data(:,:,1).*P2O5toPconv;
-    end
+        try
+            x=load([iddstring '/Fertilizer2000/ncmat/' crop 'P2O5apprate.mat']);
+            AppliedPhosphorusPerHA=x.DS.Data(:,:,1).*P2O5toPconv;
+        catch
+            AppliedPhosphorusPerHA=datablank;
+        end
+        end
     %AppliedPhosphorusPerHA=datastore([...
     %    'fert_app_ver7/'   crop '_P_ver2_25_rate_FAO_SNS_FINAL.mat']);
     AppliedPhosphorusPerHA(isnan(AppliedPhosphorusPerHA))=0;
@@ -328,8 +333,12 @@ if skipKcalcsflag == 1
 else
     if newKmapflag == 0
         disp(['Loading observed ' crop ' K2O5 application rate map.'])
-        x=load([iddstring '/Fertilizer2000/ncmat/' crop 'K2Oapprate.mat']);
-        AppliedPotassiumPerHA=x.DS.Data(:,:,1).*K2OtoKconv;
+        try
+            x=load([iddstring '/Fertilizer2000/ncmat/' crop 'K2Oapprate.mat']);
+            AppliedPotassiumPerHA=x.DS.Data(:,:,1).*K2OtoKconv;
+        catch
+            AppliedPotassiumPerHA=datablank;
+        end
     end
     %AppliedPotassiumPerHA=datastore([...
     %    'fert_app_ver7/'   crop '_K_ver2_25_rate_FAO_SNS_FINAL.mat']);

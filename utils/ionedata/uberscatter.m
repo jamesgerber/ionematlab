@@ -4,6 +4,9 @@ function [Hfig,h221,h222]= uberscatter(x,y,w,Hfig);
 %x=1:4000;
 %y=x*.03+randn(size(x))*30;
 %uberscatter(x,y)
+%uberscatter(x,y,w)
+%uberscatter(x,y,w,Hfig)
+
 %
 Nmax=50000;
 

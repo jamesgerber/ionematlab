@@ -1,4 +1,4 @@
-function cl=tencrops
+function cl=tencrops(varargin)
 % TENCROPS - get the names of the sixteen main crops
 %
 % SYNTAX
@@ -14,3 +14,7 @@ cl={'barley',...
 'soybean',...
 'sugarcane',...
 'wheat'};
+
+if nargin==1
+    cl=cl{varargin{1}};
+end

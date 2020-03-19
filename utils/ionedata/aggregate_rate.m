@@ -41,6 +41,16 @@ function [small,modecount]=aggregate_rate(big,N,nanflag)
 % See also:  aggregate_quantity
 
 
+% special case ... if big is a row or column vector, want to expand with
+% repmat.  Then can still do box stuff down below (very fast)
+if size(big,1)==1  
+    big=repmat(big,N,1);
+elseif size(big,2)==1
+    big=repmat(big,1,N);
+end
+
+
+
 % may need to make big a tiny bit bigger
 
 x=size(big);

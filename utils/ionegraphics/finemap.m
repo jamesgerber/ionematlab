@@ -19,6 +19,10 @@ function varargout=finemap(cmap,lowercolor,uppercolor)
 %
 %   Other colormaps include
 %  'DesertToGreen2'
+%  
+%   A hack is colormap 'randomX' where X is log10 of the number of digits
+%   to use in the colormap.  if X larger than 4, colorbar is gray.
+%
 %
 %  This code will look in ../Library/IonE/data/misc/Colormaps
 %    Also some colormpas that Jon wrote:
@@ -57,6 +61,7 @@ function varargout=finemap(cmap,lowercolor,uppercolor)
 %    summer     - Shades of green and yellow color map.
 %
 %
+%
 %  EXAMPLE
 %   finemap(jet,'aqua','black');
 
@@ -91,13 +96,16 @@ if nargin~=3
     uppercolor=callpersonalpreferences('nodatacolor');;
 end
 
+
+Nsteps=2048;
+
 ReverseMapFlag=0;
 if ~isnumeric(cmap)
     if strmatch(cmap(1:3),'rev');
         cmap=cmap(4:end);
         ReverseMapFlag=1;
     end
-    cmap=StringToMap(cmap);
+    [cmap,Nsteps]=StringToMap(cmap);
     if ReverseMapFlag==1
         cmap=cmap(end:-1:1,:);
     end
@@ -164,7 +172,7 @@ end
 
 map=cmap;
 
-InterpStep=length(map)/2048; % somewhat arbitrary ...
+InterpStep=length(map)/Nsteps; % somewhat arbitrary ...
 
 x=1:length(map);
 xx=1:InterpStep:x(end);
@@ -193,7 +201,10 @@ end
 %%%%%%%%%%%%%%%
 % StringToMap %
 %%%%%%%%%%%%%%%
-function cmap=StringToMap(str);
+function [cmap,Nsteps]=StringToMap(str);
+
+
+Nsteps=2048;
 
 try
     cmap=ReadTiffCmap([iddstring '/misc/colormaps/' str '.tiff']);
@@ -201,7 +212,26 @@ try
     
 catch
     try
-        
+        switch str
+            
+            case {'random','random1','random2','random3','random4','random5',...
+                    'random6','random7','random8','random9'}
+                
+                if isequal(str,'random')
+                    str='random3' % default
+                end
+                
+                Ncmap=10^(str2num(str(end)));
+                
+                cmap=rand(Ncmap,3);
+            Nsteps=Ncmap;    
+                
+                
+            otherwise
+                
+                
+                
+                
         % now it is probably something like 'jet'
         % need to get the colormap without having matlab change it around.
         % so, get the current one, open a figure, let that get screwed up,
@@ -226,7 +256,7 @@ catch
             colormap(tempmap);
             
         end
-        
+        end
         
     catch
         

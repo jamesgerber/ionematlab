@@ -124,9 +124,9 @@ if suppressbox==0
     ZeroYlim(0,N+1);
     
     set(gca,'visib','off')
-    hx=text(N/2+1,0.06125,xtext);
+    hx=text(double(N)/2+1,0.06125,xtext);
     set(hx,'FontSize',12,'HorizontalAlignment','Center');
-    hy=text(0.06125,N/2+1,ytext);
+    hy=text(0.06125,double(N)/2+1,ytext);
     set(hy,'FontSize',12,'HorizontalAlignment','Center','Rotation',90);
     
     if suppressbox==1
@@ -159,9 +159,9 @@ ZeroYlim(0,N+1);
 set(gca,'visib','off')
 if suppressbox==0
     
-    hx=text(N/2+1,0.06125,xtext);
+    hx=text(double(N)/2+1,0.06125,xtext);
     set(hx,'FontSize',30,'HorizontalAlignment','Center');
-    hy=text(0.06125,N/2+1,ytext);
+    hy=text(0.06125,double(N)/2+1,ytext);
     set(hy,'FontSize',30,'HorizontalAlignment','Center','Rotation',90);
 else
     disp('not putting x y labels on stand-alone legend because suppressbox=1')

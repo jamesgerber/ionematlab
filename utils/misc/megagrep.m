@@ -53,7 +53,8 @@ ii=find(PathList==pathsep);
 
 for j=1:length(ii)-1
    ThisPath=PathList(  (ii(j)+1) : (ii(j+1))-1 );
-   if ~contains(ThisPath,'toolbox')
+   %if ~contains(ThisPath,'toolbox')  % crashes earlier versions ...
+   if isempty(findstr('toolbox',ThisPath))
       ListOfDirsToSearch{end+1}=ThisPath;   
    %look to see if there is a private directory
       if exist(fullfile(ThisPath,'private',''),'dir')

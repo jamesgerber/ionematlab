@@ -74,6 +74,28 @@ end
 T=num2str(C.GDD_Base_Temp(iirow));
 
 
+% override this for a few key crops.
+
+switch crop
+    case 'sugarcane'
+        T='12';
+    case 'oilpalm'
+        T='20';
+    case 'sorghum'
+        T='10';
+    case 'rapeseed'
+        T='5';
+    case 'barley'
+        T='0';
+    case 'cassava'
+        T='13';
+end
+        
+        
+
+
+
+
 if nargout==2
     switch crop
         case 'maize'

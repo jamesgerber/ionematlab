@@ -40,7 +40,8 @@ end
 
 switch lower(nanflag)
     case 'kill'
-        small=zeros(size(big)/N);
+        classname=class(big);
+        small=zeros(size(big)/N,classname);
         for m=1:N
             for k=1:N
                 small(:,:)=small(:,:)+big(m:N:end,k:N:end);

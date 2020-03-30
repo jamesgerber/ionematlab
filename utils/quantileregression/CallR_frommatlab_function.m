@@ -7,9 +7,36 @@ function [theta,theta_lowerbd,theta_upperbd,AIC,BIC,covmatrix] =...
 % modelterms - these will 'eval' to the variable names that R will look for
 % tauvalues - values for QR
 % iikeep = indices to keep.  Should have same length as Y
+% alphavalue
+% saveinputvaluesflag - 0 (default) does nothing >0  saves a copy of inputs
+% with saveinputvalueflag in name
 
 
+global saveinputvaluesflag
 
+
+if ~isempty(saveinputvaluesflag)
+    
+    
+    if exist(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '_output' '.mat'])==2
+        load(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '_output' '.mat'],'theta','theta_lowerbd','theta_upperbd','AIC','BIC','covmatrix')
+        return
+    else
+        
+        if exist(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '.mat'])==0
+            % calling to set up the analysis (probably from laptop)
+            save(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '.mat'],'Y','W','VarStruct','modelterms','tauvalues','iikeep','alphavalue','saveinputvaluesflag')
+            crash
+            return
+        else
+            load(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '.mat'],'Y','W','VarStruct','modelterms','tauvalues','iikeep','alphavalue','saveinputvaluesflag')
+        end
+    end
+    
+end
+
+    
+    
 
 if nargin <5
     tauvalues=0.95

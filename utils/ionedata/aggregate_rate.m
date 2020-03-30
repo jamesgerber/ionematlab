@@ -1,4 +1,4 @@
-function [small,modecount]=aggregate_rate(big,N,nanflag)        
+function [small,modecount]=aggregate_rate(big,N,nanflag,smallclass)        
 %aggregate_rate - aggregate quantity data down to a coarser scale
 %
 % Syntax:
@@ -72,9 +72,13 @@ if nargin==2
     nanflag='kill';
 end
 
+if nargin<4
+    smallclass='double';
+end
+
 switch lower(nanflag)
     case 'kill'
-        small=zeros(size(big)/N);
+        small=zeros(size(big)/N,smallclass);
         for m=1:N
             for k=1:N
                 small(:,:)=small(:,:)+big(m:N:end,k:N:end);
@@ -91,7 +95,7 @@ switch lower(nanflag)
         small=aggregate_rate(big,N,'kill');
     case {'mode'}
         
-        temp=zeros([ceil(size(big)/N) N.^2]);
+        temp=zeros([ceil(size(big)/N) N.^2],smallclass);
         c=0;
         for m=1:N
             for k=1:N
@@ -106,6 +110,41 @@ switch lower(nanflag)
             [small,modecount]=mode(temp,3);
         end
         
+       case {'limitedmode'}
+        % perform a mode, but don't allow nan (or 255 for uint8)
+        
+        temp=zeros([ceil(size(big)/N) N.^2],smallclass);
+        c=0;
+        for m=1:N
+            for k=1:N
+                c=c+1;
+                temp(:,:,c)=big(m:N:end,k:N:end);
+            end
+        end
+        
+        % now ... need to make sure that anything nan (or 255 
+        
+        switch class(temp)
+            case 'uint8'
+                ii=temp==255;
+                temp16=uint16(temp);
+                % tricky step:  add integer values instead of 255.  Then the
+                % mode will return a nan-mode.
+                integerlist=mod(1:numel(find(ii)),65535);
+                integerlist=uint16(integerlist);
+                temp16(ii)=temp16(ii)+integerlist.';
+        
+                
+                [small,modecount]=mode(temp16,3);
+                
+                small=uint8(small);  % collapse anything greater than 255 down to 255 ... still represents nan
+                
+            otherwise
+           error('still need to program in limitedmode for this class')     
+        end
+                
+                
+  
         
         
     otherwise

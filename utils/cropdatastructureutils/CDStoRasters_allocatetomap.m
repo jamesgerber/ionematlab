@@ -65,8 +65,9 @@ for jyrs=1:numel(years)
                 
                 iiPU=CDS.deepakindices;
                  deepakindexmap(CDS.deepakindices)=m;
+                 if nargout>3
                 CDSindexmap(CDS.iiPU)=m;
-               
+                 end
                 
                 % areamap(CDS.iiPU)=CDS.data.area(idx);
                 yieldmap(iiPU)=CDS.data.yield(idx);

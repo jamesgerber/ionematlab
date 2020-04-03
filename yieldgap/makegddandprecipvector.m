@@ -109,8 +109,8 @@ TempVect=tmeanvect(:,CalendarFirstMonthIndex)*FirstMonthFraction+...
     tmeanvect(:,CalendarSecondMonthIndex)*SecondMonthFraction;
   
   
-PrecVect=precvect(:,CalendarFirstMonthIndex)*FirstMonthFraction+...
-    precvect(:,CalendarSecondMonthIndex)*SecondMonthFraction;
+PrecVect=precvect(:,CalendarFirstMonthIndex)*FirstMonthFraction/NumDaysInMonth(CalendarFirstMonthIndex)+...
+    precvect(:,CalendarSecondMonthIndex)*SecondMonthFraction/NumDaysInMonth(CalendarSecondMonthIndex);
 
 %   GDDContribution=max(TemperatureMatrix-Tmin,zeromatrix);
 %   LogicalGDDContribution=GDDContribution>0;
@@ -143,4 +143,3 @@ PrecWhenGDD(ii)=MissingValue;
 GSLMatrix(landmasklogical)=GSLVect;
 GSL=GSLMatrix;
 GSL(ii)=MissingValue;
-

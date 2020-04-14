@@ -91,10 +91,11 @@ write(AICValue,file='AICValue.txt',ncolumns=1);
 write(BICValue,file='BICValue.txt',ncolumns=1);
 
 
+if (methodstr=="br") {
 x <- summary.rq(Fit.i,se="nid", covariance=TRUE)
 covmatrix <- x$cov
 write(covmatrix,'covmatrix.txt',ncolumns=1)
-
+}
 
 
 

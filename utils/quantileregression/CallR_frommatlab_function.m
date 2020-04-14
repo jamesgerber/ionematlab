@@ -1,5 +1,5 @@
 function [theta,theta_lowerbd,theta_upperbd,AIC,BIC,covmatrix] =...
-    CallR_frommatlab_function(Y,W,VarStruct,modelterms,tauvalues,iikeep,alphavalue);
+    CallR_frommatlab_function(Y,W,VarStruct,modelterms,tauvalues,iikeep,alphavalue,saveinputvaluesflag,algorithmflag);
 % Y - Nx1 column of yields
 % W - column of weights
 % VarStruct - structure of variables which will be put into the workspace
@@ -12,10 +12,17 @@ function [theta,theta_lowerbd,theta_upperbd,AIC,BIC,covmatrix] =...
 % with saveinputvalueflag in name
 
 
-global saveinputvaluesflag
+if nargin<8
+    saveinputvaluesflag=0;
+end
+
+if nargin<9
+    algorithmflag=0;
+end
 
 
-if ~isempty(saveinputvaluesflag)
+
+if saveinputvaluesflag>0
     
     
     if exist(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '_output' '.mat'])==2
@@ -76,6 +83,21 @@ end
 
 unix('rm output.txt');
 unix('rm AICValue.txt');
+
+
+% adding some terms for individual country terms
+
+a=fieldnames(VarStruct);
+countrynums=getfield(VarStruct,a{end});
+
+countries=unique(countrynums);
+for j=1:numel(countries);
+    C=countries(j);
+    iiC=countrynums==C;
+    coveragetest(iiC)=1;
+   M(iiC,end+1)=1;   
+end
+
 %M=[ W X1(:) X2(:)];
 
 %tic
@@ -90,7 +112,7 @@ BigArray=BigArray(iikeep,:);
 
 
 
-save transferdatatoR.mat  -v6 BigArray tauvalues alphavalue
+save transferdatatoR.mat  -v6 BigArray tauvalues alphavalue algorithmflag
 %toc;
 
 %disp(['calling R program']);
@@ -103,12 +125,12 @@ save transferdatatoR.mat  -v6 BigArray tauvalues alphavalue
 tic
 
 if ismalthus
-    [s,w]=unix('/usr/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR4.R Routput.txt');
+    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/trunk/utils/quantileregression/CallQR5.R Routput.txt');
 
 else
-    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/utils/quantileregression/CallQR4.R Routput.txt');
+    [s,w]=unix('/usr/local/bin/R CMD BATCH /Users/jsgerber/source/matlab/utils/quantileregression/CallQR5.R Routput.txt');
 end
-
+toc
 if s~=0
 w
 unix('cat Routput.txt')
@@ -134,8 +156,11 @@ else
     theta_upperbd=theta*NaN;
 end
  
-cm=load('covmatrix.txt');
+if algorithmflag==0
+    cm=load('covmatrix.txt');
 
-covmatrix=reshape(cm,sqrt(numel(cm)),sqrt(numel(cm)));
-
+    covmatrix=reshape(cm,sqrt(numel(cm)),sqrt(numel(cm)));
+else
+    covmatrix=nan;
+end
 %toc;

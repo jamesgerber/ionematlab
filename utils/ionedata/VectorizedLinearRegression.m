@@ -1,8 +1,8 @@
-function [x0,x1,Rsq,p,sig,SSE]=VectorizedLinearRegression(t,flatarray);
+function [x0,x1,Rsq,p,sig,SSE,linfit]=VectorizedLinearRegression(t,flatarray);
 % VectorizedLinearRegression - vectorized linear regression
 %
 % SYNTAX
-%          [x0,x1,Rsq,p]=VectorizedLinearRegression(flatarray);
+%          [x0,x1,Rsq,p,sig,SSE,linfit]=VectorizedLinearRegression(flatarray);
 %          flatarray is an mxn array of points which represents n time
 %          series 
 %          x0  a 1xn vector of intercepts
@@ -11,7 +11,7 @@ function [x0,x1,Rsq,p,sig,SSE]=VectorizedLinearRegression(t,flatarray);
 %          p   a 1xn vector of p values
 %          sig   1xn vector 0 if not significant, 1 if p<0.05
 %          SSE   1xn vector of sum of squared error
-%
+%          linfit  mxn array with the linear fits 
 %
 %
 %     Example:
@@ -136,6 +136,9 @@ switch whichtest
         sig=p<0.05;
      end
      
+     if nargout>=7
+         linfit=Y;
+     end
      
   
         

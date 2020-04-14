@@ -41,12 +41,27 @@ library("quantreg")
 
 #method options:
 #
-# default "br"
-#  "larger problems"  Frisch-Newton   "fn"
-#  "pfn" with pre-processing
-#  "sfn"  if sparseness
+# default "br"  methodsflag=0
+#  "larger problems"  Frisch-Newton   "fn" methodsflag=1
+#  "pfn" with pre-processing methodsflag=2
+#  "sfn"  if sparseness  methodsflag=3
 
+
+methodsflag<-newdata$algorithmflag
+
+
+if (methodsflag==0)
 methodstr<-"br"
+
+if (methodsflag==1)
+methodstr<-"fn"
+
+if (methodsflag==2)
+methodstr<-"pfn"
+
+if (methodsflag==3)
+methodstr<-"sfn"
+
 
 if (methodstr=="br") {
 

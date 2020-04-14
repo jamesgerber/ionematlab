@@ -129,7 +129,7 @@ fclose(fid);
 if length( find(formatstring=='%') )== (length(find(xline==Delimiter))+1)
     
     fid=fopen(FileName);
-    C=textscan(fid,formatstring,'Delimiter',Delimiter,'HeaderLines',HeaderLines);
+    C=textscan(fid,formatstring,'Delimiter',Delimiter,'HeaderLines',HeaderLines,'EmptyValue',NaN);
     fclose(fid);
 else
     
@@ -150,7 +150,7 @@ else
         end
     end    
     fid=fopen(FileName);
-    C=textscan(fid,formatstring,'Delimiter',Delimiter,'HeaderLines',HeaderLines);
+    C=textscan(fid,formatstring,'Delimiter',Delimiter,'HeaderLines',HeaderLines,'EmptyValue',NaN);
     fclose(fid);
     
     

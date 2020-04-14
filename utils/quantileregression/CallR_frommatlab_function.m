@@ -1,5 +1,5 @@
 function [theta,theta_lowerbd,theta_upperbd,AIC,BIC,covmatrix] =...
-    CallR_frommatlab_function(Y,W,VarStruct,modelterms,tauvalues,iikeep,alphavalue);
+    CallR_frommatlab_function(Y,W,VarStruct,modelterms,tauvalues,iikeep,alphavalue,saveinputvaluesflag);
 % Y - Nx1 column of yields
 % W - column of weights
 % VarStruct - structure of variables which will be put into the workspace
@@ -12,24 +12,34 @@ function [theta,theta_lowerbd,theta_upperbd,AIC,BIC,covmatrix] =...
 % with saveinputvalueflag in name
 
 
-global saveinputvaluesflag
+%global saveinputvaluesflag
+
+if nargin<8
+    saveinputvaluesflag=[];
+end
 
 
 if ~isempty(saveinputvaluesflag)
     
     
-    if exist(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '_output' '.mat'])==2
-        load(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '_output' '.mat'],'theta','theta_lowerbd','theta_upperbd','AIC','BIC','covmatrix')
+    if exist(['./callRfrommatlab_flag' int2str(saveinputvaluesflag) '_output' '.mat'])==2
+        load(['./callRfrommatlab_flag' int2str(saveinputvaluesflag) '_output' '.mat'],'theta','theta_lowerbd','theta_upperbd','AIC','BIC','covmatrix')
         return
     else
         
         if exist(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '.mat'])==0
             % calling to set up the analysis (probably from laptop)
             save(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '.mat'],'Y','W','VarStruct','modelterms','tauvalues','iikeep','alphavalue','saveinputvaluesflag')
-            crash
-            return
+theta=nan;
+theta_lowerbd=nan;
+theta_upperbd=nan;
+AIC=nan;
+BIC=nan;
+covmatrix=nan;
+return
         else
-            load(['../callRfrommatlab_flag' int2str(saveinputvaluesflag) '.mat'],'Y','W','VarStruct','modelterms','tauvalues','iikeep','alphavalue','saveinputvaluesflag')
+            disp('loading some stuff, proceeding ... ')
+            load(['./callRfrommatlab_flag' int2str(saveinputvaluesflag) '.mat'],'Y','W','VarStruct','modelterms','tauvalues','iikeep','alphavalue','saveinputvaluesflag')
         end
     end
     
@@ -139,3 +149,7 @@ cm=load('covmatrix.txt');
 covmatrix=reshape(cm,sqrt(numel(cm)),sqrt(numel(cm)));
 
 %toc;
+if ~isempty(saveinputvaluesflag)
+
+save(['./callRfrommatlab_flag' int2str(saveinputvaluesflag) '_output' '.mat'],'theta','theta_lowerbd','theta_upperbd','AIC','BIC','covmatrix')
+end

@@ -39,3 +39,7 @@ normcumarea=tmp/max(tmp);
 
 x=sorteddata(j);
 
+
+%if ~isfinite(x)
+%    warning(['non-finite value here in ' mfilename])
+%end

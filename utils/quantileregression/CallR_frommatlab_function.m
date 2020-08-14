@@ -94,16 +94,16 @@ unix('rm AICValue.txt');
 
 % adding some terms for individual country terms
 
-a=fieldnames(VarStruct);
-countrynums=getfield(VarStruct,a{end});
-
-countries=unique(countrynums);
-for j=1:numel(countries);
-    C=countries(j);
-    iiC=countrynums==C;
-    coveragetest(iiC)=1;
-   M(iiC,end+1)=1;   
-end
+% a=fieldnames(VarStruct);
+% countrynums=getfield(VarStruct,a{end});
+% 
+% countries=unique(countrynums);
+% for j=1:numel(countries);
+%     C=countries(j);
+%     iiC=countrynums==C;
+%     coveragetest(iiC)=1;
+%    M(iiC,end+1)=1;   
+% end
 
 %M=[ W X1(:) X2(:)];
 

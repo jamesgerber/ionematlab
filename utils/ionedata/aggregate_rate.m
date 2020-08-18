@@ -16,6 +16,8 @@ function [small,modecount]=aggregate_rate(big,N,nanflag,smallclass)
 %     with NAN ... could work around by replacing nan with a value that
 %     doesn't appear in the matrix and then doing 'mode'
 %
+%   aggregate_rate(bigmatrix,N,'NANFLAG',smallclass)
+%     where smallclass is the class of the resulting vector
 %
 % EXAMPLE
 %   A=testdata;

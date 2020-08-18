@@ -1,6 +1,8 @@
 function [NewLat,NewLong,B]=aggregate_rate_lowmemory(Lat,Long,A,Nsteps,N,aggregationmode,newclass);
 %aggregate_rate_lowmemory - call aggregate_rate in small chunks.
-
+%
+% [NewLat,NewLong,SmallMatrix]=aggregate_rate_lowmemory(Lat,Long,BigMatrix,Nsteps,N,aggregationmode,newclass);
+% 
 if nargin<7
     newclass=class(A);
 end
@@ -71,7 +73,7 @@ else
 end
 disp(['reassembling each of  ' int2str(Nsteps) 'x' int2str(Nsteps)]);
 
-B=zeros(Nr/N,Nc/N,'uint8');
+B=zeros(Nr/N,Nc/N,newclass);
 
 % now assemble aggregated matrix
 for j=1:numel(iirowstepsagg)-1;

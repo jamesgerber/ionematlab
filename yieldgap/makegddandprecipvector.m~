@@ -72,29 +72,24 @@ if numel(size(tmean))==4
     PrecWhenGDDVect =zeromatrix(landmasklogical);
     GSLVect         =zeromatrix(landmasklogical);
     
-    
-    
-
-tmeanvect=zeros(numel(find(landmasklogical)),12);
-precvect=zeros(numel(find(landmasklogical)),12);
-for m=1:12
-templayer=tmean(:,:,1,m);
-tmeanvect(:,m)=templayer(landmasklogical);
-templayer=prec(:,:,1,m);
-precvect(:,m)=templayer(landmasklogical);
-end
 else
     GDDVect=zeros(size(tmean(:,1)));
     PrecWhenGDDVect=zeros(size(tmean(:,1)));
     GSLVect=zeros(size(tmean(:,1)));
-    
-    tmeanvect=tmean;
-    precvect=prec;
 end
 
 NumDaysInMonth=[31 28 31 30 31 30 31 31 30 31 30 31];
 
-
+%
+%
+% tmeanvect=zeros(numel(find(landmasklogical)),12);
+% precvect=zeros(numel(find(landmasklogical)),12);
+% for m=1:12
+% templayer=tmean(:,:,1,m);
+% tmeanvect(:,m)=templayer(landmasklogical);
+% templayer=prec(:,:,1,m);
+% precvect(:,m)=templayer(landmasklogical);
+% end
 
 for Day=DayVector;
     % express each day as a linear superposition of two months.
@@ -134,7 +129,7 @@ for Day=DayVector;
     %   GSLMatrix=GSLMatrix+LogicalGDDContribution;
     GDDContribution=max(TempVect-Tmin,0);
     LogicalGDDContribution=GDDContribution>0;
-    PrecWhenGDDContribution=double(PrecVect).*double(LogicalGDDContribution);
+    PrecWhenGDDContribution=PrecVect.*double(LogicalGDDContribution);
     %maximize agains zeromatrix to assure that we only add positive contributions
     GDDVect=GDDVect+GDDContribution;
     PrecWhenGDDVect=PrecWhenGDDVect+PrecWhenGDDContribution;
@@ -162,10 +157,6 @@ GSL=GSLMatrix;
 GSL(ii)=MissingValue;
 else
     
-    GDD=GDDVect;
-    GSL=GSLVect;
-    PrecWhenGDD=PrecWhenGDDVect;
-end
     
     
 end

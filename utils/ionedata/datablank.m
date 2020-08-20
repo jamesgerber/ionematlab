@@ -36,12 +36,12 @@ switch Res
         tmp=ones(4320,2160);
     case {'3min','.05deg'}
         tmp=ones(7200,3600);
-        case '30s'
+    case {'30s','30sec'}
         tmp=ones(43200,21600);
     case '1min'
         warning('warning:  this is going to be really huge');
         tmp=ones(21600,10800);
-    otherwise
+     otherwise
         error('Don''t know this resolution')
 end
 

@@ -19,8 +19,12 @@ delLong=[min(long) max(long)];
 % % testlong=min(long):extentLongCell:max(long);
 % % testlat=min(lat):extentLatCell:max(lat);
 
-R=georefcells(delLat,delLong,[NLat NLong],'ColumnsStartFrom','North')
 
+if lat(1) < lat(end)
+    R=georefcells(delLat,delLong,[NLat NLong],'ColumnsStartFrom','South')
+else
+    R=georefcells(delLat,delLong,[NLat NLong],'ColumnsStartFrom','North')
+end
 % R = georefcells(delLat,delLong,extentLatCell,extentLongCell);
 % 
 % if ~isequal(R.RasterSize,size(A))

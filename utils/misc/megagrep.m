@@ -17,7 +17,7 @@ function megagrep(varargin)
 %          megagrep -i CertainVariable *.m    executes "grep -i CertainVariable *.m" 
 % 
 %  EXAMPLE        
-%          megagrep(' ''Maximum Generator Force'' ','*.m')
+%         megagrep('grep function *.m | grep struct')
 %
 %
 % REMARKS

@@ -45,10 +45,14 @@ function [small,modecount]=aggregate_rate(big,N,nanflag,smallclass)
 
 % special case ... if big is a row or column vector, want to expand with
 % repmat.  Then can still do box stuff down below (very fast)
+
+roworcolumn=0;
 if size(big,1)==1  
     big=repmat(big,N,1);
+    roworcolumn=1;
 elseif size(big,2)==1
     big=repmat(big,1,N);
+    roworcolumn=1;
 end
 
 
@@ -154,4 +158,11 @@ switch lower(nanflag)
 end
   
 
+if roworcolumn==1;
+disp(['since this was a row or column vector, correcting for zeros at end']);
+
+small(end)=2*small(end-1)-small(end-2);
+
+
+end
 

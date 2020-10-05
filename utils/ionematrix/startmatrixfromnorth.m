@@ -5,6 +5,10 @@ function [long,latnew,matrixnew]=startmatrixfromnorth(long,lat,matrix);
 %
 %   identity operator if already in this format
 
+if nargin==0
+    help(mfilename)
+    return
+end
 
 if numel(long) ~=size(matrix,1)
     warning('matrix not in row-longitude format')

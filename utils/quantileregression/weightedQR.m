@@ -7,8 +7,8 @@ function b=weightedQR(X, Y, p, w)
 %  w = vector of weights
 
 u=w*numel(w)/sum(w);
-b=rqlocal(double(X),Y,p,u);
-
+b=rqlocal(double(X),Y,p,u)
+%b=qregressMatlabWeighted(Y,X,p,w)
 
 function b = rqlocal(X, y, p, u)
 % Construct the dual problem of quantile regression
@@ -21,17 +21,20 @@ function b = rqlocal(X, y, p, u)
 a = (1 - p) .* u;
 b = -lp_fnm(X', -y', X' * a, u, a)';
 
-% A=X';
-% c=-y';
-% b=X' * a;
-% u=u;
-% x=a;
-% b=-lp_fnm(A,c,b,u,x);
-
-
-%f=y;
-%A=X;
-%blinprog=linprog(b,A,f)
+debugstuff=0
+if debugstuff==1
+    A=X';
+    c=-y';
+    b=X' * a;
+    u=u;
+    x=a;
+    % b=-lp_fnm(A,c,b,u,x);
+    
+    
+    f=y;
+    A=X;
+    x=linprog(f',X,b',X,X'*a)
+end
 
 function y = lp_fnm(A, c, b, u, x)
 % Solve a linear program by the interior point method:
@@ -60,14 +63,16 @@ max_it = 500;
 s = u - x;
 y = (A' \  c')';
 r = c - y * A;
-r = r + 0.001 * (r == 0);    % PE 2004
+r = r + 0.000001 * (r == 0);    % PE 2004
+%r = r + 0.001 * (r == 0);    % PE 2004
 z = r .* (r > 0);
 w = z - r;
 gap = c * x - y * b + w * u;
 
 % Start iterations
 it = 0;
-while (gap) > small & it < max_it
+while abs(gap) > small & it < max_it
+%while (gap) > small & it < max_it
     it = it + 1;
     
     %   Compute affine step
@@ -134,6 +139,8 @@ while (gap) > small & it < max_it
     gap = c * x - y * b + w * u;
     %disp(gap);
 end
+
+'place for a dbstop';
 
 function b = bound(x, dx)
 % Fill vector with allowed step lengths

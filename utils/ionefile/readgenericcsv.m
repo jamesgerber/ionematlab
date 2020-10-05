@@ -237,10 +237,25 @@ if ~isequal(length(getfield(DS,ThisName)),length(getfield(DS,PrevName)))
         'comma because the last column/row of the .csv was blank.  easiest way' ...
         'to fix is to put an extra comma at the end.  see notes in this file' ...
         'for some unix tricks on dealing with this.  Or, add a dummy value to the' ...
-        ' .csv']);
-    %!echo "," > comma.tmp
-    %!cat testdataset.csv comma.tmp > trythis.csv
-    
+        ' .csv    For now, going to fix it.']);
+        %!echo "," > comma.tmp
+        %!cat testdataset.csv comma.tmp > trythis.csv
+        
+        lastfield=getfield(DS,ThisName)
+        prevfield=getfield(DS,PrevName);
+        
+        if isnumeric(lastfield)
+            warning([' adding Nan to last element of ' ThisName ]);
+            lastfield(numel(prevfeld))=nan;
+        elseif iscell(lastfield)
+            warning([' adding {''} to last element of ' ThisName ]);
+            lastfield(numel(prevfield))={''};
+        else
+            error(' didn''t know I could have this kind of field here')
+        end
+        
+        DS=setfield(DS,ThisName,lastfield);
+        
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

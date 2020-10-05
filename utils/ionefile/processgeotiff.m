@@ -22,12 +22,12 @@ DeltaLat=R.CellExtentInLatitude;
 % define long, lat vector.  trick with extra element in the linspace
 % command, then take it away is is so that we are consistent with where we
 % are relative to the pixel center
-long=linspace(LonLims(1),LonLims(2),size(A,2)+1);
-lat=linspace(LatLims(1),LatLims(2),size(A,1)+1);
-long=long(1:end-1);
-lat=lat(1:end-1);
+long=linspace(LonLims(1)+DeltaLon/2,LonLims(2)-DeltaLon/2,size(A,2));
+lat=linspace(LatLims(1)+DeltaLat/2,LatLims(2)-DeltaLon/2,size(A,1));
 
-lat=lat(end:-1:1);  % need to reverse lat.  i sure hope this doesn't break things.
+if isequal(R.ColumnsStartFrom,'north');
+    lat=lat(end:-1:1);  % need to reverse lat.  i sure hope this doesn't break things.
+end
 
 %raster=A';
 raster=permute(A,[2,1,3]);

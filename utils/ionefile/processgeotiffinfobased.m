@@ -1,11 +1,11 @@
 function [long,lat,raster,info]=processgeotiffinfobased(filename);
 % processgeotiffinfobased - load geotiff, put into GLI standard format
-%  [long,lat,raster,R,info]=processgeotiffinfobased(filename,longlatfilename);
+%  [long,lat,raster,info]=processgeotiffinfobased(filename,longlatfilename);
 %
 % %example
 %
 %filename='~/Downloads/imageToDriveExample.tif';
-%[long,lat,raster,R,info]=processgeotiffinfobased(filename,longlatfilename);
+%[long,lat,raster,info]=processgeotiffinfobased(filename,longlatfilename);
 
 
 if nargout<4
@@ -30,6 +30,7 @@ lat=(min(info.CornerCoords.Lat)+dellat/2):dellat:max(info.CornerCoords.Lat);
 %[a,R]=geotiffread(longlatfilename);
 
 raster=a;
+
 
 
 

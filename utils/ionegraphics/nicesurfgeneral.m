@@ -569,6 +569,15 @@ Data=double(Data);
 if isequal(lower(modifycolormap),'stretch');
     % ok ... user wants to stretch colormap.
     
+    
+    if isempty(coloraxis)
+        coloraxis=[nanmin(Data(:)) nanmax(Data(:))];
+        if isnan(prod(coloraxis))
+            coloraxis=[0 1];
+        end
+    end
+    
+    
     if length(coloraxis)<2
         
         coloraxis= quantilesforcoloraxis(coloraxis,Data,stretchcolormapcentervalue);
@@ -1311,6 +1320,9 @@ switch lower(plotarea)
     case {'medit2north'}
         longlatbox=[0 96 35 72];
         filename=[filename 'medit2north'];
+    case {'MENA','mena'}
+              longlatbox=[-30 60 20 45];
+              filename=[filename '_MENA'];
     otherwise
         load([iddstring '/misc/gadm1_lev0']);
         

@@ -1,4 +1,4 @@
-function globalarray2geotiff(raster,filename)
+function filename=globalarray2geotiff(raster,filename)
 % globalarray2geotiff - converts a raster into a geotiff file  
 % 
 %  globalarray2geotiff(raster,filename);

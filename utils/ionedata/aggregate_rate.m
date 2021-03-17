@@ -39,6 +39,9 @@ function [small,modecount]=aggregate_rate(big,N,nanflag,smallclass)
 %    2 1 1       ->   "mode"  ->  [1]
 %    2 1 1] 
 %
+% [  1 1 1 
+%    2 1 1       ->   "max"  ->  [2]
+%    2 1 1] 
 %
 % See also:  aggregate_quantity
 
@@ -114,6 +117,24 @@ switch lower(nanflag)
             [small,modecount]=mode(temp,3);          
         else
             [small,modecount]=mode(temp,3);
+        end
+        
+        
+            case {'max'}
+        
+        temp=zeros([ceil(size(big)/N) N.^2],smallclass);
+        c=0;
+        for m=1:N
+            for k=1:N
+                c=c+1;
+                temp(:,:,c)=big(m:N:end,k:N:end);
+            end
+        end
+        
+        if nargout==1
+            [small,modecount]=max(temp,[],3);          
+        else
+            [small,modecount]=max(temp,[],3);
         end
         
        case {'limitedmode'}

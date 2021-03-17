@@ -186,7 +186,7 @@ if AttemptNums==0
             else
                 DS=setfield(DS,ThisName,Contents);
             end
-            
+            origfieldnames{j}=ThisName;
         end
     end
 else

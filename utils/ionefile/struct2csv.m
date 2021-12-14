@@ -42,7 +42,7 @@ try
     
     %
     fclose(fid)
-    dlmwrite(filename,M,'-append','delimiter',dlm)
+    dlmwrite(filename,M,'-append','delimiter',dlm,'precision','%f')
 
 catch
     disp(['numeric approach didn''t work, trying to output with strings.  very slow.'])

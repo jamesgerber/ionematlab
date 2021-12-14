@@ -1,10 +1,21 @@
-function whiteToalpha(OldFileName,NewFileName);
-% WhiteToAlpha - replace white with full transparency, non-white with 1/2
+function whiteToalpha(OldFileName,NewFileName,defaultAlpha);
+% WhiteToAlpha - replace white with full transparency
 %
 %  Example
 %
-%   WhiteToAlpha(OLDFILENAME,NEWFILENAME);
+%   WhiteToAlpha(OLDFILENAME,NEWFILENAME,DEFAULTALPHA);
 %
+% if newfilename not given, it will be blahblah_alpha.png
+% 
+%  optional 3rd argument estables a transparency value for non-white pixels
+%  
+%  white pixels are those with color >=254 in every channel
+%
+
+if nargin<3
+    defaultAlpha=0;
+end
+
 
 OldFileName=fixextension(OldFileName,'.png');
 
@@ -20,6 +31,6 @@ a=plotimage;
 ii=(a(:,:,1)>=254 & a(:,:,2) >=254 & a(:,:,3)>=254);
 
 
-Alpha=~ii+0.5*ii;
+Alpha=~ii + defaultAlpha*ii;
 
 imwrite(plotimage,NewFileName,'png','Alpha',double(Alpha));%,'Background',ones(size(Alpha)));

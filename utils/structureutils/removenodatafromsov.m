@@ -27,6 +27,11 @@ for j=1:numel(a);
     
     numbad(j)=numel(find(baddata));
     
+    if numbad(j)
+        % possible place for breakpoint
+        5;
+    end
+    
     if verboseflag==1
        fprintf(1,'%10d bad indices in field %s\n',numbad(j),a{j});        
     end

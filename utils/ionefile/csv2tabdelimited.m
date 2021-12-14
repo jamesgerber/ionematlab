@@ -18,7 +18,7 @@ function csv2tabdelimited(inputfilename,outputfilename)
 %   Note also the following unix command, which will remove all instances
 %   of double quotes '"'
 %
-%     sed  's/"//g' World2000.txt > World2000nq.txt
+%     sed  's/"//g' beetox_I_cdl_reclass.20210407.csv > beetox_I_cdl_reclass.20210407_noquotes.csv
 %
 %     if the .txt file contains strange characters, then try this:
 %     LC_CTYPE=C sed  's/"//g' World2000.txt > World2000nq.txt

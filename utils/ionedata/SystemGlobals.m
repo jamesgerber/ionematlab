@@ -22,7 +22,7 @@ switch username
     case {'emilydombeck','carlsonk'}
         IoneDataDir='~/Library/ionedata/';
     case 'jsgerber'
-        IoneDataDir=['/ionedata/'];
+        IoneDataDir=['~/Public/ionedata/'];
     case 'sunx0170'
         IoneDataDir=['~/Program/ionedata/'];
     case 'oggxx008'

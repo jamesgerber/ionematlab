@@ -1,8 +1,9 @@
-function names=cropnames(j)
+function [names,FAOnames]=cropnames(j)
 % CROPNAMES - get a list of all Monfreda crop names
 %
 % SYNTAX
 % names=cropnames - set name to a one-column cell array of all Monfreda
+% [names,FAOnames]=cropnames - set name to a one-column cell array of all Monfreda
 % crop names
 % name=cropnames(j) - get the crop name at index j
 
@@ -17,13 +18,18 @@ group_unsort=C{4};
 
 ii=strmatch('coir',mnames);
 mnames=mnames([1:ii-1   ii+1:length(mnames)]);
+faonames_unsort=faonames_unsort([1:ii-1   ii+1:length(faonames_unsort)]);
 ii=strmatch('gums',mnames);
 mnames=mnames([1:ii-1   ii+1:length(mnames)]);
+faonames_unsort=faonames_unsort([1:ii-1   ii+1:length(faonames_unsort)]);
 ii=strmatch('popcorn',mnames);
 mnames=mnames([1:ii-1   ii+1:length(mnames)]);
+faonames_unsort=faonames_unsort([1:ii-1   ii+1:length(faonames_unsort)]);
 
 names=mnames;
+FAOnames=faonames_unsort;
 
 if nargin==1
     names=names(j);
+    FAOnames=FAOnames(j);
 end

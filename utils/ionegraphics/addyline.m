@@ -1,6 +1,8 @@
 function h=addyline(xval,linesty);
 % addyline add a line parallel to y-axis on current figure
-
+%
+% see also addVertical
+%
 ylims=get(gca,'YLim')
 
 holdstate=ishold;

@@ -13,7 +13,7 @@ if ~isequal(length(area),length(data))
 end
 
 if max(area)<2
-    warning(['This appears to be area fraction'])
+   % warning(['This appears to be area fraction'])
 end   
 
 if p>=1

@@ -2,6 +2,14 @@ function hfig=quicksurface(x,y,c);
 % quicksurface - surface plot, undersample, rotate data matrix if necessary
 
 
+if nargin==1
+    [m,n]=size(x);
+    c=x;
+    x=1:m;
+    y=1:n;
+end
+
+
 Ndata=numel(c);
 
 % let's say max size = 1e6;

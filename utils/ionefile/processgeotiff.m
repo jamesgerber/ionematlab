@@ -11,11 +11,22 @@ function [long,lat,raster,R,info]=processgeotiff(filename);
 
 [A,R]=geotiffread(filename);
 
-
-LonLims=R.LongitudeLimits;
-LatLims=R.LatitudeLimits;
-DeltaLon=R.CellExtentInLongitude
-DeltaLat=R.CellExtentInLatitude;
+%if isfield(R,'LongitudeLimits');
+try
+    
+    LonLims=R.LongitudeLimits;
+    LatLims=R.LatitudeLimits;
+    DeltaLon=R.CellExtentInLongitude
+    DeltaLat=R.CellExtentInLatitude;
+    
+catch
+    LonLims=R.XWorldLimits;
+    LatLims=R.YWorldLimits;
+    DeltaLon=R.CellExtentInWorldX
+    DeltaLat=R.CellExtentInWorldY;
+    
+    
+end
 %diff(LonLims)/size(A,2)
 
 

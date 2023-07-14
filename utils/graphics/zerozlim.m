@@ -35,6 +35,6 @@ else
     end
 end
 
-xv=get(h,'zylim');
+xv=get(h,'zlim');
 set(h,'zlim',xv.*[0 1]);
 

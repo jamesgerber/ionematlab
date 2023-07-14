@@ -25,8 +25,12 @@ IsValidData=(CropMaskLogical & XXX < 1e15 & isfinite(XXX) & Area>eps & isfinite(
     XXX > -8e8 & YYY > -8e8 );
 
 W=Area(IsValidData); %Weight is the area, but only for these points.
-[jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(XXX(IsValidData),YYY(IsValidData),Nsurface,Nsurface,W);
-
+legacyhist=1
+if legacyhist==0
+    [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist(XXX(IsValidData),YYY(IsValidData),Nsurface,Nsurface,W);
+else
+    [jp,xbins,ybins,XBinEdges,YBinEdges]=GenerateJointDist_legacyhist(XXX(IsValidData),YYY(IsValidData),Nsurface,Nsurface,W);    
+end
 %jpmax=monotonicdistribution(jp);
 
 p=0.95;
@@ -52,10 +56,13 @@ ky=ky*10;
 
 
 
+% changing this Jan 2022 (dear god ... ) because RevP doesn't work
 
-
+%[ContourMask,CutoffValue,NumContours,RecLevel,CS]=...
+%    FindCompactSmoothContourRevP(Dist,p,Lsmooth,kx,ky,MaxNumCont);
 [ContourMask,CutoffValue,NumContours,RecLevel,CS]=...
-    FindCompactSmoothContourRevP(Dist,p,Lsmooth,kx,ky,MaxNumCont);
+    FindCompactSmoothContour(Dist,p,Lsmooth,kx,ky,MaxNumCont);
+
 
 
 

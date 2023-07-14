@@ -8,8 +8,8 @@ function x=AreaWeightedPercentile(area,data,p);
 %    AreaWeightedPercentile(fma,testdata,50)
 %
 
-if ~isequal(length(area),length(data))
-    error('unequal vector lengths');
+if ~isequal(size(area),size(data))
+    error('unequal vector sizes');
 end
 
 if max(area)<2

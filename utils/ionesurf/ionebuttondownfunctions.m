@@ -46,6 +46,9 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function PointSummaryButtonDownCallback(src,event)
 
+geo0=load([iddstring '/AdminBoundary2020/gadm36_level0raster5minVer0.mat']);
+geo1=load([iddstring '/AdminBoundary2020/gadm36_level1raster5minVer0.mat']);
+
 if strcmp(get(src,'SelectionType'),'normal')
     
     UDS=get(gcbf,'UserData');
@@ -65,7 +68,6 @@ if strcmp(get(src,'SelectionType'),'normal')
     if ~isempty(ii)
         CountryName=CountryName(1:(ii(1)-1));
     end
-
      z=UDS.Data;
      
      [ix,iy]=LatLong2RowCol(y,x,z);
@@ -74,6 +76,19 @@ if strcmp(get(src,'SelectionType'),'normal')
      disp(['iy=' int2str(iy)])
      disp(['vectorindex=' int2str(sub2ind(size(z),ix,iy))]);     
 
+     
+     % now GADM information
+     igadm0=geo0.raster0(ix,iy);
+     if igadm0==0
+         gadm0name='ocean';
+         gadm0='XXX';
+     else
+         gadm0name=geo0.namelist0{igadm0};
+         gadm0=geo0.gadm0codes{igadm0};
+     end
+     disp(['gadm0 = ' gadm0name ' ' gadm0]);
+     
+     
      %%% now set text in the console
      % first delete old text
      h=findobj('Tag','IonEConsoleText');

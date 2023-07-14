@@ -34,6 +34,8 @@ switch Res
         tmp=ones(2160,1080);
     case '5min'
         tmp=ones(4320,2160);
+    case '2.5min'
+        tmp=ones(2*4320,2*2160);
     case {'3min','.05deg'}
         tmp=ones(7200,3600);
     case {'30s','30sec'}

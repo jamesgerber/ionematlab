@@ -22,6 +22,10 @@ if nargin==2
     w=ones(size(y));
 end
 
+if nargin==3
+    error('does not have weights correct in here')
+end
+
 x=x(:);
 y=y(:);
 w=w(:);

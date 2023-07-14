@@ -20,11 +20,11 @@ function linecolor=getlinecolor(j,cmap,Nsteps);
 
 if nargin==1
     cmap='sixteencolors';
-    Nsteps=16;
+    Nsteps=15;
 end
 
 if nargin==2
-    Nsteps=16;
+    Nsteps=15;
 end
 %if ischar(cmap)
 %    cmap=ReadTiffCmap([iddstring '/misc/colormaps/' cmap '.tiff']);

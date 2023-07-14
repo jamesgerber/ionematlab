@@ -13,7 +13,7 @@ function S=CombineStructure(S1,S2,AFieldName)
 a1=fieldnames(S1);
 a2=fieldnames(S2);
 
-if ~isequal(a1,a2)
+if ~isequal(unique(a1),unique(a2))
    error([' fieldnames not equal'])
    
 end

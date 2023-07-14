@@ -231,8 +231,8 @@ else
 end
 
 if numel(Data) > 2e7
-   
-
+    
+    
     Nresample= ceil(numel(Data)/2e7);
     if Nresample > 1
         warning([' more than 2e7 points resampling. Nresample=' int2str(Nresample)]);
@@ -241,7 +241,7 @@ if numel(Data) > 2e7
     Long=Long(1:Nresample:end);
     Lat=Lat(1:Nresample:end);
     Data=Data(1:Nresample:end,1:Nresample:end);
-
+    
 end
 
 
@@ -250,7 +250,7 @@ if ~isequal([numel(Long) numel(Lat)],size(Data))
     
     error( 'dimensions of Long and Lat don''t agree with raster' )
 else
- [numel(Long) numel(Lat)],size(Data)   
+    [numel(Long) numel(Lat)],size(Data)
 end
 
 if (size(Data,1)~=4320||size(Data,2)~=2160)
@@ -453,14 +453,14 @@ end
 if iscell(cmap)
     cmaptemp=cmap;
     cmap=ExpandCellCmap(cmap);
-
+    
     cmaptemp(end+1)={[1 0 0]};
     cmapwithred=ExpandCellCmap(cmaptemp);
     
-     cmaptemp(end)={[1 1 1]};
-     cmapwithwhite=ExpandCellCmap(cmaptemp);
+    cmaptemp(end)={[1 1 1]};
+    cmapwithwhite=ExpandCellCmap(cmaptemp);
     
-
+    
 end
 
 % if categoryranges is a set of integers, then special case.  build
@@ -771,7 +771,7 @@ end
 
 
 if numel(Long)==4320 & numel(Lat)<2160
-   warning('cheesy fix to a bug involving plotting 4320x(<2160)')
+    warning('cheesy fix to a bug involving plotting 4320x(<2160)')
     Long=Long(15:end);
     Data=Data(15:end,:);
 end
@@ -779,12 +779,12 @@ end
 
 if Long(1) <= -179
     % probably using inferlonglat to get here.  Let IonESurf call again.
-
+    
     warning(' Sep, 2018 ... jamie fixing nsg ... not sure why but it was ignoring a passed in long/lat')
     
-   % IonESurf(Data); old code
-       IonESurf(Long,Lat,Data);
-
+    % IonESurf(Data); old code
+    IonESurf(Long,Lat,Data);
+    
 else
     IonESurf(Long,Lat,Data);
 end
@@ -885,7 +885,7 @@ else
         set(fud.ColorbarHandle,'Location','East');
         set(fud.ColorbarHandle,'Position',[0.9218 0.2237 0.0357 0.6500]);
     else
-      %  error(' haven''t yet implemented this unless mappingoff')
+        %  error(' haven''t yet implemented this unless mappingoff')
         delx= 0.7558;
         x0= 1/2*(1-delx);
         set(fud.ColorbarHandle,'Position',[x0 0.10 delx 0.02568],'XColor',textcolor,'YColor',textcolor)
@@ -951,7 +951,7 @@ if ~isequal(longlatbox,[-180 180 -90 90]) & ~isempty(longlatbox)
             %setm(fud.DataAxisHandle,'Origin',...
             %    [(t1+t2)/2 (g1+g2)/2 0])
             ht= PropagateLimits('PlotAreaHack',gcf, [g1 g2], [t1 t2])
- %           ht= PropagateLimits('Import',gcf, [g1 g2]*pi/180, [t1 t2]*pi/180)
+            %           ht= PropagateLimits('Import',gcf, [g1 g2]*pi/180, [t1 t2]*pi/180)
             
             
         end
@@ -998,7 +998,7 @@ set(ht,'Color',textcolor)
 set(fud.ColorbarHandle,'fontsize',colorbarfontsize);
 hcbtitle=get(fud.ColorbarHandle,'Title');
 set(hcbtitle,'string',[' ' units ' '])
-set(hcbtitle,'fontsize',colorbarunitsfontsize); 
+set(hcbtitle,'fontsize',colorbarunitsfontsize);
 set(hcbtitle,'fontweight','bold');
 if (~isempty(font))
     set(hcbtitle,'FontName',font);
@@ -1044,115 +1044,161 @@ HideUI
 if strcmp(categorical,'on')
     
     if strcmp(separatecatlegend,'yes')
-        if verLessThan('matlab', '8.0.1')
-            Hfig=gcf;
-            Hlegendfig=figure;
-            bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
-            colormap(OS.cmap_final(2:end-1,:));
-            %need to skip first/last value because those are the ocean/no data colors
+        % new code bec everything completely broke with update to new
+        % computer / new OS / matlab2019 . (i.e. haven't used in a several
+        % updates, not sure when stopped working)
+        
+        Hfig=gcf;
+        Hlegendfig=figure;
+        
+        N=length(categoryvalues);
+        
+        thiscmap=OS.cmap_final(2:end-1,:)
+        %need to skip first/last value because those are the ocean/no data colors
+        Ncmap=size(thiscmap,1)
+        for j=1:N
             
-            legh=legend(bb,categoryvalues,'Location','SouthWest');
-            hlegt=get(legh,'title');
-            set(hlegt,'string',units);
-            set(bb,'Visi','off')
-            set(gca,'Visible','off','Position',[.13 .11 .45 .25])
-            set(Hlegendfig,'position',[442   457   260   240])
-            if ~isempty(filename)
-                OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+            m=ceil( (j-0.5)/N*Ncmap);
+            thiscolor=thiscmap(m,:)
+            bb=bar(5,.001)
+            zeroylim(0,1)
+            zeroxlim(0,10)
+            
+            if length(cmap)>40
+                % traditional colorbar, pull out colors.
+                set(bb,'FaceColor',thiscolor)
+            else
+                set(bb,'FaceColor',NSS.cmap{j})
             end
-            figure(Hfig);  % make previous figure current.
+            hold on
+        end
+        legh=legend(categoryvalues,'Location','northoutside');
+        hlegt=get(legh,'title');
+        set(hlegt,'string',units);
+        %          set(gca,'Visi','off')
+        set(gca,'Visible','off','Position',[.13 .11 .45 .25])
+ %       set(Hlegendfig,'position',[442   457   260   240])
+        uplegend;
+        uplegend;
+        uplegend;
+        uplegend;
+        if ~isempty(filename)
+            OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+                close(Hlegendfig)
+
+        end
+        figure(Hfig);  % make previous figure current.
+        
+        
+        if verLessThan('matlab', '8.0.1')
+            %             Hfig=gcf;
+            %             Hlegendfig=figure;
+            %             colormap(OS.cmap_final(2:end-1,:));
+            %             bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+            %             %need to skip first/last value because those are the ocean/no data colors
+            %
+            %             legh=legend(bb,categoryvalues,'Location','SouthWest');
+            %             hlegt=get(legh,'title');
+            %             set(hlegt,'string',units);
+            %             set(bb,'Visi','off')
+            %             set(gca,'Visible','off','Position',[.13 .11 .45 .25])
+            %             set(Hlegendfig,'position',[442   457   260   240])
+            %             if ~isempty(filename)
+            %                 OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+            %             end
+            %             figure(Hfig);  % make previous figure current.
         else
-            warning(' NSG can''t make external legend with current version of matlab.   ')
-            warning(' simply not putting a legend.  although it''s probably an easy code fix, for now  ')
-            warning(' run with an older version of matlab to make the external legend.  ')
-
-             Hfig=gcf;
-            Hlegendfig=figure;
-            bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
-            colormap(OS.cmap_final(2:end-1,:));
-            %need to skip first/last value because those are the ocean/no data colors
+            %             warning(' NSG can''t make external legend with current version of matlab.   ')
+            %             warning(' simply not putting a legend.  although it''s probably an easy code fix, for now  ')
+            %             warning(' run with an older version of matlab to make the external legend.  ')
+            %
+            %             Hfig=gcf;
+            %             Hlegendfig=figure;
+            %             bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+            %             colormap(OS.cmap_final(2:end-1,:));
+            %             %need to skip first/last value because those are the ocean/no data colors
+            %
+            %             Hfig2=figure;
+            %             hax=axes;
+            %             legh=legend(hax,bb,categoryvalues);
+            %             set(hax,'visible','off');
+            %             figure(Hfig)
+            %             %uplegend
+            %             %uplegend
+            %             %     hlegt=get(legh,'title');
+            %             %     set(hlegt,'string',units);
+            %             %delete(Hlegendfig)
+            %
+            %             if ~isempty(filename)
+            %                 %       OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+            %
+            %                 uplegend;uplegend;
+            %                 OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_ulul'],resolution);
+            %
+            %             end
+            %
+            %             if ~isempty(categoryspeciallegend)
+            %                 % hack code ... make a separate legend version with
+            %                 %note - need to have an argument to nsg with the legend text
+            %                 %    Hfig=gcf;
+            %                 Hlegendfig=figure;
+            %                 bb = bar(rand(length(categoryvalues)+1,length(categoryvalues)+1),'stacked'); hold on
+            %
+            %
+            %                 colormap(cmapwithred);
+            %                 %need to skip first/last value because those are the ocean/no data colors
+            %
+            %                 categoryvalues(end+1)=categoryspeciallegend;
+            %                 drawnow
+            %
+            %                 Hfig2=figure;
+            %                 hax=axes;
+            %                 legh=legend(hax,bb,categoryvalues);
+            %                 drawnow
+            %                 set(hax,'visible','off');
+            %                 %      OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
+            %                 uplegend
+            %                 uplegend
+            %                 uplegend
+            %                 uplegend
+            %                 drawnow
+            %                 OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred_ulul'],resolution);
+            %                 %% now make one with white.
+            %                 %  Hfig=gcf;
+            %                 Hlegendfig=figure;
+            %                 bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+            %
+            %
+            %                 colormap(cmapwithwhite);
+            %                 %need to skip first/last value because those are the ocean/no data colors
+            %
+            %                 %  categoryvalues(end+1)=categoryspeciallegend;
+            %                 drawnow
+            %                 Hfig2=figure;
+            %                 hax=axes;
+            %                 drawnow
+            %                 legh=legend(hax,bb,categoryvalues);
+            %                 set(hax,'visible','off');
+            %                 %      OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
+            %                 uplegend
+            %                 uplegend
+            %                 uplegend
+            %                 uplegend
+            %                 drawnow
+            %                 OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withwhite_ulul'],resolution);
+            %
+            %                 figure(Hfig)
+            %
+            %             end
+            %
             
-            Hfig2=figure;
-            hax=axes;
-            legh=legend(hax,bb,categoryvalues);
-            set(hax,'visible','off');
-            figure(Hfig)
-%uplegend
-%uplegend
-       %     hlegt=get(legh,'title');
-       %     set(hlegt,'string',units);
-%delete(Hlegendfig)
-
-if ~isempty(filename)
-         %       OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
-
-                uplegend;uplegend;
-                OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_ulul'],resolution);
-
-end
-
-if ~isempty(categoryspeciallegend)
-    % hack code ... make a separate legend version with 
-%note - need to have an argument to nsg with the legend text
-         %    Hfig=gcf;
-            Hlegendfig=figure;
-            bb = bar(rand(length(categoryvalues)+1,length(categoryvalues)+1),'stacked'); hold on
+            %%
             
             
-            colormap(cmapwithred);
-            %need to skip first/last value because those are the ocean/no data colors
-            
-            categoryvalues(end+1)=categoryspeciallegend;
-            drawnow
-            
-            Hfig2=figure;
-            hax=axes;
-            legh=legend(hax,bb,categoryvalues);
-            drawnow
-            set(hax,'visible','off');
-      %      OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
-            uplegend
-            uplegend   
-            uplegend
-            uplegend
-            drawnow
-            OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred_ulul'],resolution);
-  %% now make one with white.
-        %  Hfig=gcf;
-            Hlegendfig=figure;
-            bb = bar(rand(length(categoryvalues),length(categoryvalues)),'stacked'); hold on
+            figure(Hfig);  % make previous figure current.
             
             
-            colormap(cmapwithwhite);
-            %need to skip first/last value because those are the ocean/no data colors
             
-          %  categoryvalues(end+1)=categoryspeciallegend;
-            drawnow
-            Hfig2=figure;
-            hax=axes;
-            drawnow
-            legh=legend(hax,bb,categoryvalues);
-            set(hax,'visible','off');
-      %      OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
-            uplegend
-            uplegend
-            uplegend
-            uplegend
-            drawnow
-            OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withwhite_ulul'],resolution);
-           
-       figure(Hfig)     
-            
-end
-
-
-%%
-
-
-figure(Hfig);  % make previous figure current.
-      
-        
-        
         end
         
         
@@ -1321,8 +1367,8 @@ switch lower(plotarea)
         longlatbox=[0 96 35 72];
         filename=[filename 'medit2north'];
     case {'MENA','mena'}
-              longlatbox=[-30 60 20 45];
-              filename=[filename '_MENA'];
+        longlatbox=[-30 60 20 45];
+        filename=[filename '_MENA'];
     otherwise
         load([iddstring '/misc/gadm1_lev0']);
         
@@ -1359,7 +1405,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CorrectCallingSyntax     %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%
+
 function NSS=CorrectCallingSyntax(NSS)
 % in case user used wrong calling syntax, correct
 
@@ -1471,7 +1517,7 @@ switch f
             x=sort(tmpabove,'ascend');
             if isempty(x)
                 disp([' center value outside of data range '])
-                    
+                
                 
                 xmax=max(tmp);
             else
@@ -1480,10 +1526,10 @@ switch f
             
             if length(tmpbelow)>2
                 x=sort(tmpbelow,'descend');
-
+                
                 xmin=x(floor(length(x)*f));
-                else
-               xmin=centervalue;
+            else
+                xmin=centervalue;
             end
             coloraxis=[xmin xmax];
             

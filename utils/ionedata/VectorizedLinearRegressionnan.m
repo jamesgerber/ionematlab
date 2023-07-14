@@ -22,7 +22,9 @@ function [x0,x1,Rsq,p,sig,SSE,linfit]=VectorizedLinearRegression(t,flatarray);
 %     flatarray(:,j)=flatarray(:,j)+linspace(0,j/50,Nt).';
 % end
 % 
-% [x0,x1,Rsq,p]=VectorizedLinearRegression(flatarray);
+% flatarray(10,:)=nan;
+%
+% [x0,x1,Rsq,p]=VectorizedLinearRegressionnan(flatarray);
 % %now regress each one for comparison
 % 
 % for j=1:10;
@@ -41,10 +43,6 @@ function [x0,x1,Rsq,p,sig,SSE,linfit]=VectorizedLinearRegression(t,flatarray);
 % subplot(223),plot(1:10,Rsq(1:10),1:10,Rsqa(1:10),'o')
 % subplot(224),plot(1:10,p(1:10),1:10,pa(1:10),'o')
 
-if nargin==0
-    help(mfilename)
-    return
-end
 
 
 if nargin==1
@@ -72,7 +70,7 @@ switch whichtest
     case 'tstatistic'
         
         % find the lines
-        da=detrend(flatarray);  % da is now the detrended version of the array
+        da=detrend_nan(flatarray);  % da is now the detrended version of the array
         Y=flatarray-da;   % Y is an array of the best-fit lines
         
         
@@ -85,7 +83,7 @@ switch whichtest
         
         e=da;
         
-        se=sqrt( (1/(nt-2).*sum(e.^2) ));
+        se=sqrt( (1/(nt-2).*nansum(e.^2) ));
         
       %  sb=se./sqrt( sum(( t-tbar).^2));
         
@@ -107,7 +105,8 @@ switch whichtest
        % RSS=norm(Y(:,1)-mean(flatarray(:,1),1))^2;
         
         % now vectorized
-        RSS= sum((Y-repmat(mean(flatarray,1),nt,1) ).^2);
+  %      RSS= sum((Y-repmat(mean(flatarray,1),nt,1) ).^2);
+        RSS= nansum((Y-repmat(nanmean(flatarray,1),nt,1) ).^2);
         
         
         Fstatistic=RSS./(p-1)./s2;
@@ -119,14 +118,14 @@ switch whichtest
 
         % now to get Rsq ...
         r=flatarray-Y;  % y - yhat
-        normr=sqrt(sum(r.^2,1));
+        normr=sqrt(nansum(r.^2,1));
                 clear r
 
         SSE=normr.^2;
         clear normr
         
         % TSS - like RSS but replace yhat (Y) with y (flatarray)
-        TSS= sum((flatarray-repmat(mean(flatarray,1),nt,1) ).^2);
+        TSS= nansum((flatarray-repmat(nanmean(flatarray,1),nt,1) ).^2);
 
         
         Rsq=1-SSE./TSS;

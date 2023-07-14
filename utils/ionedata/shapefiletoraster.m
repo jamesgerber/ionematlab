@@ -44,7 +44,7 @@ function [Long,Lat,Raster,Areasqkm]=ShapeFileToRaster(S,FieldName,MatrixTemplate
 %
 %   [Long,Lat,Raster]=ShapeFileToRaster(NS,'NumericalField',template,0);
 %
-%   see also
+%   see also movePointsToGridCorners
 
 switch nargin
     case 0

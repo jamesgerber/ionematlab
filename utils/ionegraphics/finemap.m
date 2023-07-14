@@ -19,7 +19,7 @@ function varargout=finemap(cmap,lowercolor,uppercolor)
 %
 %   Other colormaps include
 %  'DesertToGreen2'
-%  
+%
 %   A hack is colormap 'randomX' where X is log10 of the number of digits
 %   to use in the colormap.  if X larger than 4, colorbar is gray.
 %
@@ -224,7 +224,7 @@ catch
                 Ncmap=10^(str2num(str(end)));
                 
                 cmap=rand(Ncmap,3);
-            Nsteps=Ncmap;    
+                Nsteps=Ncmap;
                 
                 
             otherwise
@@ -232,36 +232,48 @@ catch
                 
                 
                 
-        % now it is probably something like 'jet'
-        % need to get the colormap without having matlab change it around.
-        % so, get the current one, open a figure, let that get screwed up,
-        % erase the figure, reset the current colormap
-        
-        numfigs=length(allchild(0));
-        addpath([iddstring 'misc/colormaps'],'-end')
-        
-        if numfigs==0
-            % no figures exist.  so need to make a figure to
-            tempfig=figure;
-            cmap=colormap(str);
-            delete(tempfig);
-            
-            
-            
-        else
-            tempmap=colormap;
-            tempfig=figure;
-            cmap=colormap(str);
-            delete(tempfig);
-            colormap(tempmap);
-            
+                % now it is probably something like 'jet'
+                % need to get the colormap without having matlab change it around.
+                % so, get the current one, open a figure, let that get screwed up,
+                % erase the figure, reset the current colormap
+                
+                numfigs=length(allchild(0));
+                addpath([iddstring 'misc/colormaps'],'-end')
+                
+                if numfigs==0
+                    % no figures exist.  so need to make a figure to
+                    tempfig=figure;
+                    cmap=colormap(str);
+                    delete(tempfig);
+                    
+                    
+                    
+                else
+                    tempmap=colormap;
+                    tempfig=figure;
+                    cmap=colormap(str);
+                    delete(tempfig);
+                    colormap(tempmap);
+                    
+                end
         end
-        end
+        
+        
+        
+        
+        
         
     catch
         
-        
+        % maybe it's an m-file
+       try
+           %tempfig=figure;
+           cmap=eval(str);
+           close
+           %delete(tempfig);
+       catch
         error([' don''t know this colormap: ' str])
+       end
     end
 end
 

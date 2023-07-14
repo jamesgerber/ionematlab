@@ -16,5 +16,13 @@ cl={'barley',...
 'wheat'};
 
 if nargin==1
-    cl=cl{varargin{1}};
+
+    x=varargin{1};
+    if numel(x)>1
+        
+        cl=cl(x);
+    else
+        cl=cl{varargin{1}};
+    end
 end
+

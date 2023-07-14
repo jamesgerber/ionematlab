@@ -22,35 +22,52 @@ else
 end
 
 
+%% old code jamie commenting out for first edit in many years - no idea how this broke
+
+% % % 
+% % % xtl=get(cbh,'XTickLabel');
+% % % N=size(xtl,1);
+% % % C=size(xtl,2);
+% % % for j=1:N;
+% % %   xtlcell{j}=xtl(j,:);
+% % %   xtlcell_V2015{j}=char(xtl(j,:));
+% % % end
+% % % 
+% % % 
+% % % 
+% % % for j=1:length(xtlcell);
+% % %     tmp=xtlcell{j};
+% % %     tmp=strrep(tmp,' ','');
+% % %     xtlcell{j}=[tmp '%'];
+% % % end
+% % % 
+% % % %set(cbh,'XTickLabel',xtlcell);
+% % % %xtlnew= strvcat(xtlcell);   %matlat 2012b
+% % % %set(cbh,'XTickLabel',xtlnew);  %matlab 2012b
+% % % 
+% % % set(cbh,'TickLabels',xtlcell_V2015)
+% % % 
+% % % set(cbh,'XTickMode','manual')
+% % %  %%% following is a lame attempt to write my own strvcat
+% % % %%FormatString=['%-' int2str(C+1) 's'];
+% % % %%for j=1:length(xtlcell)
+% % % %%xtlnew(N,(1:C+1))=sprintf(FormatString,xtlcell{j})
+% % % %%end
+% % % 
+
+%% new code jamie inserting for first edit in many years - no idea how this broke
 xtl=get(cbh,'XTickLabel');
 N=size(xtl,1);
 C=size(xtl,2);
 for j=1:N;
   xtlcell{j}=xtl(j,:);
-  xtlcell_V2015{j}=char(xtl(j,:));
+  tmp=char(xtl(j,:))
+  xtlcell_V2015{j}=[tmp '%']
 end
 
-
-
-for j=1:length(xtlcell);
-    tmp=xtlcell{j};
-    tmp=strrep(tmp,' ','');
-    xtlcell{j}=[tmp '%'];
-end
-
-%set(cbh,'XTickLabel',xtlcell);
-%xtlnew= strvcat(xtlcell);   %matlat 2012b
-%set(cbh,'XTickLabel',xtlnew);  %matlab 2012b
 
 set(cbh,'TickLabels',xtlcell_V2015)
-
 set(cbh,'XTickMode','manual')
- %%% following is a lame attempt to write my own strvcat
-%%FormatString=['%-' int2str(C+1) 's'];
-%%for j=1:length(xtlcell)
-%%xtlnew(N,(1:C+1))=sprintf(FormatString,xtlcell{j})
-%%end
-
 
 
 

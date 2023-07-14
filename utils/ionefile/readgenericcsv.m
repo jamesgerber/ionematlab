@@ -61,10 +61,14 @@ end
 fid=fopen(FileName);
 
 for m=1:(HeaderLines-1)
-    fgetl(fid);
+    x=fgetl(fid);
+    fprintf(1,'%s\n',x);
 end
 
 headerline=fgetl(fid);
+
+disp(['****** here is the headerline: ******'])
+    fprintf(1,'%s\n',headerline);
 
 headerline=FixUpHeaderline(headerline);
 
@@ -74,7 +78,7 @@ if nargin==5
     fid=fopen(FileName);
     
     for m=1:(HeaderLines-1)
-        fgetl(fid);
+       x= fgetl(fid);
     end
 end
 
@@ -161,7 +165,7 @@ if AttemptNums==0
     
     for j=1:length(C)
         if ~isempty(FieldNameStructure.Vector{j})
-            ThisName=MakeSafeString(FieldNameStructure.Vector{j});
+            ThisName=makesafestring(FieldNameStructure.Vector{j});
             Contents=C{j};
             
             %let's see if we can turn these values into doubles
@@ -181,6 +185,11 @@ if AttemptNums==0
                 NumericFlag=0;
             end
             
+            try
+                % deal with this problem: "﻿" at beginning of .csv files
+                ThisName=removeasciiturds(ThisName);
+            end
+            
             if NumericFlag==1
                 DS=setfield(DS,ThisName,NumVector);
             else
@@ -192,7 +201,7 @@ if AttemptNums==0
 else
     for j=1:length(C)
         if ~isempty(FieldNameStructure.Vector{j})
-            ThisName=MakeSafeString(FieldNameStructure.Vector{j});
+            ThisName=makesafestring(FieldNameStructure.Vector{j});
             Contents=C{j};
             
             %             %let's see if we can turn these values into doubles
@@ -228,8 +237,8 @@ end
 
 
 %% is final field the same length as the others?
-ThisName=MakeSafeString(FieldNameStructure.Vector{j});
-PrevName=MakeSafeString(FieldNameStructure.Vector{j-1});
+ThisName=makesafestring(FieldNameStructure.Vector{j});
+PrevName=makesafestring(FieldNameStructure.Vector{j-1});
 
 if ~isequal(length(getfield(DS,ThisName)),length(getfield(DS,PrevName)))
     

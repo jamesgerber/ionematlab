@@ -73,6 +73,22 @@ if exist(FileName,'file') & exist(MatFileName,'file');
     else
         OutOfDate=0;
     end
+    
+    
+    % check to make sure it isn't an empty file (which takes place if
+    % previous call was to something >2GB
+    
+    if isequal(amat.bytes,128)
+        warning([' inside ' mfilename ])
+        disp(' found a mat file, but its suspiciously small, reloading .nc')
+        disp(' typically this means that the variable >2GB and didn''t get saved')
+    
+        % setting this flag to 1 will force reloading .nc
+        OutOfDate=1;
+    end
+    
+    
+    
 else
     OutOfDate=0;
     

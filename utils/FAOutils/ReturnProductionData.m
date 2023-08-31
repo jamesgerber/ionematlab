@@ -18,8 +18,9 @@ if isempty(a)
 %     a=CPD;
 %     cd(wd)
 % verstring='March18_2021_RevE';
+DPD=DataProductsDir;
 
-    x=load('~/DataProducts/ext/FAOstat/Production_Crops_Livestock_E_All_Data_(Normalized)/justcropproductiondata.mat');
+    x=load([DPD '/ext/FAOstat/Production_Crops_Livestock_E_All_Data_(Normalized)/justcropproductiondata.mat']);
     a=x.c;
     
 end

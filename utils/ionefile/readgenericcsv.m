@@ -188,6 +188,7 @@ if AttemptNums==0
             try
                 % deal with this problem: "﻿" at beginning of .csv files
                 ThisName=removeasciiturds(ThisName);
+            ThisName=makesafestring(ThisName); % sometimes leaves blanks up front   
             end
             
             if NumericFlag==1

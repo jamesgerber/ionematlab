@@ -16,13 +16,13 @@ try
     
     LonLims=R.LongitudeLimits;
     LatLims=R.LatitudeLimits;
-    DeltaLon=R.CellExtentInLongitude
+    DeltaLon=R.CellExtentInLongitude;
     DeltaLat=R.CellExtentInLatitude;
     
 catch
     LonLims=R.XWorldLimits;
     LatLims=R.YWorldLimits;
-    DeltaLon=R.CellExtentInWorldX
+    DeltaLon=R.CellExtentInWorldX;
     DeltaLat=R.CellExtentInWorldY;
     
     

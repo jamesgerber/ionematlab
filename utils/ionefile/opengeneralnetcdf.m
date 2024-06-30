@@ -80,7 +80,7 @@ if exist(FileName,'file') & exist(MatFileName,'file');
     
     if isequal(amat.bytes,128)
         warning([' inside ' mfilename ])
-        disp(' found a mat file, but its suspiciously small, reloading .nc')
+        disp(' found a mat file, but it is suspiciously small, reloading .nc')
         disp(' typically this means that the variable >2GB and didn''t get saved')
     
         % setting this flag to 1 will force reloading .nc

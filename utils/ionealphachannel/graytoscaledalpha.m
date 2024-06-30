@@ -1,5 +1,5 @@
 function graytoscaledalpha(OldFileName,NewFileName,ScaleFileName);
-% GrayToScaledAlpha - render a figure proportionally transparent 
+% graytoscaledalpha - render a figure proportionally transparent 
 %
 %  Syntax
 %
@@ -74,7 +74,7 @@ OSS=NiceSurfGeneral(C.Data*100, NSS,'filename','croplandgray','cmap','revgray');
 MakeGlobalOverlay(OSS.ProcessedMapData,OSS.cmap_final,OSS.coloraxis,'cropland_gray',1.0,4320,2160);
 
 %% use the gray one to scale the transparency of the colorone
-GrayToScaledAlpha('cropland.png','cropland_alpha.png','cropland_gray.png')
+graytoscaledalpha('cropland.png','cropland_alpha.png','cropland_gray.png')
 
 
 %% same thing, now with Pasture
@@ -93,7 +93,7 @@ OSS=NiceSurfGeneral(P.Data*100, NSS,'filename','pasturegray','cmap','revgray');
 MakeGlobalOverlay(OSS.ProcessedMapData,OSS.cmap_final,OSS.coloraxis,'pasture_gray',1.0,4320,2160);
 
 %% use the gray one to scale the transparency of the colorone
-GrayToScaledAlpha('pasture.png','pasture_alpha.png','pasture_gray.png')
+graytoscaledalpha('pasture.png','pasture_alpha.png','pasture_gray.png')
 
 % % % 
 % % % %MakeSMMOverlay(OSS,'pasture_layer')

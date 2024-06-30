@@ -68,6 +68,13 @@ end
 
 
 switch cropname
+
+
+    case 'groundnut'
+        FAOCropName='Groundnuts, excluding shelled';
+        
+    case 'cotton'
+        FAOCropName='Seed cotton, unginned';
     
     case 'oilpalm'
         

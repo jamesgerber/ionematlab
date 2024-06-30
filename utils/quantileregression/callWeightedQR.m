@@ -57,7 +57,7 @@ X(:,1)=1;
 % results ...
 
 ii=W~=0;
-theta=weightedQR(double(X(ii,:)),Y(ii),tauvalues,double(W(ii)));
+theta=weightedQR(double(X(ii,:)),double(Y(ii)),tauvalues,double(W(ii)));
 
 %theta=weightedQR(single(X(ii,:)),single(Y(ii)),single(tauvalues),single(W(ii)));
 

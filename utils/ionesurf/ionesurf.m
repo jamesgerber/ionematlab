@@ -222,7 +222,7 @@ else
 
     hm=axesm('robinson','Frame','On');
 
-    hpatch=findobj(allchild(hm),'type','patch')
+    hpatch=findobj(allchild(hm),'type','patch');
     sz=get(hpatch,'Vertices');
 %    set(hpatch,'FaceVertexCData',repmat([1 1 1],400,1))
     set(hpatch,'FaceVertexCData',ones(size(sz)));

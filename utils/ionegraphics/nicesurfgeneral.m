@@ -110,6 +110,7 @@ function OS=NiceSurfGeneral(varargin)
 %   NSS.projection='';
 %   NSS.projection='hatano';
 %   NSS.colorbarfontsize=12;
+%   NSS.titleoffsetXY=[0 0];
 %
 %
 %   NSS.modifycolormap='stretch';
@@ -250,7 +251,7 @@ if ~isequal([numel(Long) numel(Lat)],size(Data))
     
     error( 'dimensions of Long and Lat don''t agree with raster' )
 else
-    [numel(Long) numel(Lat)],size(Data)
+    %[numel(Long) numel(Lat)];size(Data);
 end
 
 if (size(Data,1)~=4320||size(Data,2)~=2160)
@@ -309,7 +310,9 @@ ListOfProperties={
     'cbarvisible','transparent','textcolor','newplotareamethod','font',...
     'statewidth','gridcolor','userinterppreference','maxnumfigs','framelimitsvector',...
     'sink','modifycolormap','stretchcolormapcentervalue','categoryspecialcolormap',...
-    'categoryspeciallegend','colorbarfontsize','colorbarunitsfontsize'};
+    'categoryspeciallegend','colorbarfontsize','colorbarunitsfontsize',...
+    'titlefont','titlefontsize','titleoffsetXY','colorbarfontweight',...
+    'titleverticalalignment'};
 ListOfProperties=unique(ListOfProperties);
 
 %% set defaults for these properties
@@ -339,6 +342,10 @@ categoryspecialcolormap='';
 categoryspeciallegend='';
 colorbarfontsize=9;
 colorbarunitsfontsize=12;
+titlefontsize=14;
+titleverticalalignment='';
+colorbarfontweight='bold';
+%unitfontsize=12;
 
 %   NSS.modifycolormap='stretch';
 
@@ -368,6 +375,7 @@ categoryvalues={};
 transparent=0;
 maxnumpoints=5e7;
 font='';
+titlefont='';
 textcolor=[0 0 0];
 %%now pull property values out of structure
 
@@ -697,8 +705,10 @@ if Long(1) <= -179
     ii=(land==0);
     size(ii);
     size(Data);
-    ii=EasyInterp2(ii,size(Data,1),size(Data,2),'nearest');
-    Data(ii)=OceanVal;
+   if ~isoctave
+       ii=EasyInterp2(ii,size(Data,1),size(Data,2),'nearest');
+   end
+   Data(ii)=OceanVal;
 else
     
     
@@ -712,7 +722,11 @@ switch lower(sink)
     case {'nonagplaces'}
         mm=AgriMaskLogical;
         mm=~mm;
-        ii=EasyInterp2(mm,size(Data,1),size(Data,2),'nearest');
+        if ~isoctave
+            ii=EasyInterp2(mm,size(Data,1),size(Data,2),'nearest');
+        else
+            ii=mm;
+        end
         Data(ii)=OceanVal;
 end
 
@@ -780,7 +794,7 @@ end
 if Long(1) <= -179
     % probably using inferlonglat to get here.  Let IonESurf call again.
     
-    warning(' Sep, 2018 ... jamie fixing nsg ... not sure why but it was ignoring a passed in long/lat')
+%    warning(' Sep, 2018 ... jamie fixing nsg ... not sure why but it was ignoring a passed in long/lat')
     
     % IonESurf(Data); old code
     IonESurf(Long,Lat,Data);
@@ -823,6 +837,9 @@ switch(lower(plotstates))
         AddStates(statewidth,gcf,'gadm1');
     case {'agplaces'}
         AddStates(statewidth,gcf,'AgPlaces');
+    case {'countrieslight','lightcountries'}
+        AddStates(statewidth,gcf,'countrieslight');
+
         
     otherwise
         error(['have not yet implemented this in AddStates'])
@@ -866,7 +883,9 @@ OS.colorbarhandle=fud.ColorbarHandle;
 %set(fud.ColorbarHandle,'Position',[0.1811+.1 0.08 0.6758-.2 0.0568])
 drawnow
 
-
+if (~isempty(font))
+    set(fud.ColorbarStringHandle,'FontName',font);
+end
 if isequal(eastcolorbar,'off')
     if fud.MapToolboxFig==0
         set(fud.ColorbarHandle,'Position',[0.0071+.1    0.0822+.02    0.9893-.2    0.0658-.02]);
@@ -987,19 +1006,23 @@ set(fud.DataAxisHandle,'Visible','off');%again to make it current
 %
 
 set(ht,'HorizontalAlignment','center');
-set(ht,'FontSize',14)
+set(ht,'FontSize',titlefontsize)
 set(ht,'FontWeight','Bold')
 set(ht,'tag','NSGTitleTag')
-if (~isempty(font))
-    set(ht,'FontName',font);
+if (~isempty(titlefont))
+    set(ht,'FontName',titlefont);
 end
 set(ht,'Color',textcolor)
+if ~isempty(titleverticalalignment)
+    set(ht,'VerticalAlignment',titleverticalalignment);
+end
 
 set(fud.ColorbarHandle,'fontsize',colorbarfontsize);
 hcbtitle=get(fud.ColorbarHandle,'Title');
 set(hcbtitle,'string',[' ' units ' '])
 set(hcbtitle,'fontsize',colorbarunitsfontsize);
-set(hcbtitle,'fontweight','bold');
+set(hcbtitle,'fontweight',colorbarfontweight);
+
 if (~isempty(font))
     set(hcbtitle,'FontName',font);
 end
@@ -1066,9 +1089,9 @@ if strcmp(categorical,'on')
             
             if length(cmap)>40
                 % traditional colorbar, pull out colors.
-                set(bb,'FaceColor',thiscolor)
+                set(bb,'FaceColor',thiscolor);
             else
-                set(bb,'FaceColor',NSS.cmap{j})
+                set(bb,'FaceColor',NSS.cmap{j});
             end
             hold on
         end
@@ -1077,6 +1100,12 @@ if strcmp(categorical,'on')
         set(hlegt,'string',units);
         %          set(gca,'Visi','off')
         set(gca,'Visible','off','Position',[.13 .11 .45 .25])
+        if ~isempty(font)
+            set(hlegt,'FontName',font);
+        end
+        if ~isempty(colorbarfontweight)
+            set(hlegt,'FontWeight',colorbarfontweight);
+        end
  %       set(Hlegendfig,'position',[442   457   260   240])
         uplegend;
         uplegend;
@@ -1084,7 +1113,7 @@ if strcmp(categorical,'on')
         uplegend;
         if ~isempty(filename)
             OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
-                close(Hlegendfig)
+            %    close(Hlegendfig)
 
         end
         figure(Hfig);  % make previous figure current.
@@ -1236,7 +1265,7 @@ OS.panoplytriangleaxeshandle=ptaxeshandle;
 if ~isempty(filename)
     ActualFileName=OutputFig('Force',filename,resolution);
     OS.ActualFileName=ActualFileName;
-    FN=fixextension(ActualFileName,'.png')
+    FN=fixextension(ActualFileName,'.png');
     %save to disk
     if isequal(makeplotdatafile,'yes') | isequal(makeplotdatafile,'on')
         if (isstr(cmap))
@@ -1521,13 +1550,19 @@ switch f
                 
                 xmax=max(tmp);
             else
-                xmax=x(floor( length(x)*f));
+
+                x=x(x>centervalue);
+                xmax=quantile(x,f);
+
+               % xmax=x(floor( length(x)*f));
             end
             
             if length(tmpbelow)>2
-                x=sort(tmpbelow,'descend');
-                
-                xmin=x(floor(length(x)*f));
+                %x=sort(tmpbelow,'descend');
+                x=tmpbelow;
+                x=x(x<centervalue);
+                %xmin=x(floor(length(x)*f));
+                xmin=quantile(x,1-f);
             else
                 xmin=centervalue;
             end

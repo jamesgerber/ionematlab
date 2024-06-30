@@ -1,4 +1,4 @@
-function Integer=ASCII2Integer(str);
+function Integer=ascii2integer(str);
 % ASCII2Integer - turn a string into a unique integer. 
 %
 %   Syntax
@@ -42,6 +42,12 @@ HexExpression='a';  %make sure it is a character, otherwise the following
 
 for j=1:length(str)
     ii=findstr(str(j),LookupVector);
+
+    if isempty(ii)
+        % here's some super weird case that arose only when I updated to R2022b
+        % there's something that looks like a space but has ascii value 65279
+        ii=65279; 
+    end
     HexVal=dec2hex(ii);
     HexExpression([2*j-1 2*j])=HexVal(1:2);
 end

@@ -69,6 +69,7 @@ end
 
 
 iiNaN=find(isnan(Data)|(Data<=0));
+iiNaN=find(isnan(Data));
 
 Alpha=ones(size(Data))*BaseTransparency;
 
@@ -92,7 +93,7 @@ scaled(scaled<0)=0;
 
 %loop to scale to colormap
 for j=1:3
-  imagearray(:,:,j)=ScaleColors(scaled,cmap(:,j));
+  imagearray(:,:,j)=scalecolors(scaled,cmap(:,j));
 end
 
 % loop to scale NaNs to white [doesn't really matter: will make

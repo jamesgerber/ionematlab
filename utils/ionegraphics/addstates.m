@@ -44,6 +44,9 @@ if nargin<4
     longoff=0;
 end
 
+StateColor=[.1 .1 .1]*6;
+CountryColor=[.1 .1 .1]*0;
+
 switch lower(AllStates)
     case {'bric','bricnafta'}
         AllStatesFlag=0;
@@ -53,6 +56,10 @@ switch lower(AllStates)
         AllStatesFlag=2;
     case {'agplaces'};
         AllStatesFlag=3;
+    case {'countrieslight','lightcountries'}
+        AllStatesFlag=2;
+        CountryColor=[.1 .1 .1]*5;
+
 end
 
 
@@ -104,14 +111,14 @@ if numel(LineWidth)==1
     
     if ~ismap(gca)
         hp=plot(States.long+longoff,States.lat+latoff);
-        set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
+        set(hp,'linewidth',LineWidth,'Color',StateColor);
         hq=plot(Countries.long+longoff,Countries.lat+longoff,'k');
-        set(hq,'linewidth',LineWidth)
+        set(hq,'linewidth',LineWidth,'Color',CountryColor)
     else
         hp=plotm(States.lat+latoff,States.long+longoff,'k');
-        set(hp,'linewidth',LineWidth,'Color',[.1 .1 .1]*6);
+        set(hp,'linewidth',LineWidth,'Color',StateColor);
         hq=plotm(Countries.lat+latoff,Countries.long+longoff,'k');
-        set(hq,'linewidth',LineWidth);
+        set(hq,'linewidth',LineWidth,'Color',CountryColor);
     end
 else
     disp(' hacked multi-element linewidth argument');

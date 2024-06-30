@@ -8,7 +8,7 @@ function [long,lat,raster,info]=processgeotiffinfobased(filename);
 %[long,lat,raster,info]=processgeotiffinfobased(filename,longlatfilename);
 
 
-if nargout<4
+if nargout<3
     warning('need at least 3 args out for this to be useful (long,lat,raster)');
 end
 

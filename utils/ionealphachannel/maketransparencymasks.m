@@ -17,7 +17,7 @@ if nargin==0
    maketransparencymasks('r400');
    maketransparencymasks('r500');
    maketransparencymasks('r600');
-  % maketransparencymasks('r1200');
+   maketransparencymasks('r1200');
    return
 end
 ii=datablank;

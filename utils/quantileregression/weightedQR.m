@@ -21,7 +21,7 @@ function b = rqlocal(X, y, p, u)
 a = (1 - p) .* u;
 b = -lp_fnm(X', -y', X' * a, u, a)';
 
-debugstuff=0
+debugstuff=0;
 if debugstuff==1
     A=X';
     c=-y';

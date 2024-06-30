@@ -9,7 +9,7 @@ function SOV=vos2sov(S)
 % See also sov2vos
 
 
-a=fieldnames(S)
+a=fieldnames(S);
 
 for j=1:length(a);
     

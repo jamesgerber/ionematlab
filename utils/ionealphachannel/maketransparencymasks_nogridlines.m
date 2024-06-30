@@ -17,7 +17,7 @@ if nargin==0
    maketransparencymasks_nogridlines('r400');
    maketransparencymasks_nogridlines('r500');
    maketransparencymasks_nogridlines('r600');
-  % maketransparencymasks_nogridlines('r1200');
+   maketransparencymasks_nogridlines('r1200');
    return
 end
 ii=datablank;

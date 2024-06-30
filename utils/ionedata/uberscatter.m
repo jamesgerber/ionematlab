@@ -1,4 +1,4 @@
-function [Hfig,h221,h222]= uberscatter(x,y,w,Hfig,xlabelstring,ylabelstring);
+function [Hfig,h221,h222,Rsq,slope]= uberscatter(x,y,w,Hfig,xlabelstring,ylabelstring);
 % uberscatter - make scatter and density plots and show regression line
 %
 %  SYNTAX
@@ -9,6 +9,7 @@ function [Hfig,h221,h222]= uberscatter(x,y,w,Hfig,xlabelstring,ylabelstring);
 %uberscatter(x,y)
 %uberscatter(x,y,w)
 %uberscatter(x,y,w,Hfig)
+ %  [Hfig,h221,h222,Rsq,slope]= uberscatter(x,y,w,Hfig,xlabelstring,ylabelstring);
 
 %
 Nmax=50000;
@@ -74,7 +75,7 @@ X=[ones(size(x)) x];
 
 Rsq=STATS(1);
 
-h223=subplot(223)
+h223=subplot(223);
 xpl=[min(x) max(x)];
 plot(x,y,'.',x,x*B(2)+ B(1))
 xlabel(xlabelstring)
@@ -86,6 +87,6 @@ text(.1,.1,[' Rsq = ' num2str(Rsq)]);
 text(.1,.3,[' slope = ' num2str(B(2)) ' (' num2str(BINT(2,1)) ',' num2str(BINT(2,2)) ')']);
 text(.1,.5,[' intercept = ' num2str(B(1)) ' (' num2str(BINT(1,1)) ',' num2str(BINT(1,2)) ')']);
 
-
-mdl=fitlm(x,y,'Weights',w)
+slope=B(2);
+mdl=fitlm(x,y,'Weights',w);
 %d=display(mdl)

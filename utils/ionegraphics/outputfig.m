@@ -157,19 +157,19 @@ drawnow;
 
 disp(['Saving ' FileName]);
 
-try
+% try
 print(SaveFileType,ResFlag,FileName);
-catch
-   disp(['problem with ' FileName ]);
-   disp([' trying to fix ... assuming some characters dont belong']);
-   
-   ii=findstr(FileName,'/')
-   
-   if length(ii)>1
-       FileName(ii(2:end))='_';
-   end
-    
-end
+% catch
+%    disp(['problem with ' FileName ]);
+%    disp([' trying to fix ... assuming some characters dont belong']);
+% 
+%    ii=findstr(FileName,'/')
+% 
+%    if length(ii)>1
+%        FileName(ii(2:end))='_';
+%    end
+% 
+% end
     
 set(Hfig,'PaperPositionMode',ppm);
 

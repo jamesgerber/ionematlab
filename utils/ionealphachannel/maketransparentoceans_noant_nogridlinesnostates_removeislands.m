@@ -148,6 +148,30 @@ ii_keep_triangles=ii_text & ii_triangles;
 ii_colorbar=ii_colorbar & ~ii_keep_triangles;
 
 
+% there might not be a colorbar ... check. 
+colorbarpoints=find(ii_colorbar==0);
+
+% let's look in a
+for j=1:3
+    x=b(:,:,j);
+    smallbit(:,:,j)=x(colorbarpoints);
+    modalcolors(j)=mode(x(colorbarpoints));
+    meancolors(j)=mean(x(colorbarpoints));
+end
+
+if numel(unique(meancolors))==1
+    'no colorbar'
+
+    ii_colorbar=logical(ones(size(ii_colorbar)));
+
+else
+    'colorbar'
+end
+    
+
+
+
+
 ii_ocean=(aocean(:,:,1)==255 & aocean(:,:,2) ==255 & aocean(:,:,3)==255);
 
 ii_ag=(aagrimask(:,:,1)==255 & aagrimask(:,:,2) ==255 & aagrimask(:,:,3)==255);

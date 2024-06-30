@@ -4,7 +4,8 @@ function b=subsetofstructureofvectors(a,iikeep,stringfields)
 % SYNTAX
 % b = subsetofstructureofvectors(a,ii) - create copy of a with vectors sampled at
 % indices ii
-% ignores fields of length 1
+% ignores fields of length 1 or length 9331200 (5 min raster) or 3237023
+% (landmasklogical)
 %
 % b = subsetofstructureofvectors(a,ii,stringfields)  will attempt to turn
 % all fields that ARE NOT contained in 'stringfields' into numbers
@@ -39,7 +40,18 @@ if tryStr2double==0
         thisfield=fields{j};
         thisdata=getfield(a,thisfield);
         
-        b=setfield(b,thisfield,thisdata(iikeep));
+        
+        if numel(thisdata)==1
+            b=setfield(b,thisfield,thisdata);
+        elseif numel(thisdata)==9331200
+            b=setfield(b,thisfield,thisdata);
+        elseif numel(thisdata)==3237023
+            b=setfield(b,thisfield,thisdata);
+        else
+
+        
+            b=setfield(b,thisfield,thisdata(iikeep));
+        end
     end
 else
     b=struct;
@@ -50,6 +62,10 @@ else
         thisdata=getfield(a,thisfield);
         
         if numel(thisdata)==1
+            b=setfield(b,thisfield,thisdata);
+        elseif numel(thisdata)==9331200
+            b=setfield(b,thisfield,thisdata);
+        elseif numel(thisdata)==3237023
             b=setfield(b,thisfield,thisdata);
         else
             

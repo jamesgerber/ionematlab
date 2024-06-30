@@ -7,6 +7,12 @@ function ccstructure=getcountrycode(countryname);
 % robust.
 
 % strip out anything in parenthesis
+
+if nargout==0
+    help(mfilename)
+    return
+end
+
 ii=findstr(countryname,'(');
 
 if numel(ii)>0

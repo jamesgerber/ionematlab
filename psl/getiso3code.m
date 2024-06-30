@@ -1,6 +1,10 @@
 function [ISO3,UN_Name]=GetISO3Code(code,codeID,countrycodes);
 % GetISO3Code - turn user-supplied code, codeID into ISO3 code
 
+if nargin==0
+    help(mfilename)
+    return
+end
 
 switch lower(codeID)
     case {'faostatcode','faostat_country_code'}

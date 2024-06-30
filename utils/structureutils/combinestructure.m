@@ -18,20 +18,31 @@ if ~isequal(unique(a1),unique(a2))
    
 end
 
+if nargin==2
+    AFieldName=a1{1};
+end
+
 temp=getfield(S2,AFieldName);
 
 N=length(temp);
 
-
 for j=1:length(a1)
-
    
    t1=getfield(S1,a1{j});
    t2=getfield(S2,a1{j});   
+
+   iscol=iscolumn(t1);
+
+
    if length(t2)==N
       t1=t1(:);
       t2=t2(:);
       t=[t1 ; t2];
+
+      if ~iscol
+          t=t.';
+      end
+
       S1=setfield(S1,a1{j},t);
    end
 end

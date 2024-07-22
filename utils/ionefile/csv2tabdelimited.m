@@ -36,7 +36,7 @@ end
 fid=fopen(inputfilename,'r');
 fidout=fopen(outputfilename,'w');
 x=fgetl(fid)
-
+c=1;
 while x~=-1
 ii=find(x==',');
 jj=find(x=='"');
@@ -56,7 +56,7 @@ xtmp(find(putbacktocommas))=',';
 
 fprintf(fidout,'%s\n',xtmp);
 x=fgetl(fid);
-
+c=c+1;
 end
 fclose(fid)
 fclose(fidout)

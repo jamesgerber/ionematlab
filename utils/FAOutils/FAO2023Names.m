@@ -8,7 +8,7 @@ if isempty(oldcodes)
     wd=pwd;
     cd ~/DataProducts/ext/FAOstat/Production/
     CPD=ReadProductionData;
-    cd(pwd);
+    cd(wd);
     
     
     oldcodes=unique(CPD.Item_Code);

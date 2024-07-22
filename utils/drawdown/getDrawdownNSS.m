@@ -12,3 +12,10 @@ NSS.titlefontsize=24;
 NSS.colorbarunitsfontsize=12;
 NSS.titleverticalalignment='cap';
 NSS.colorbarfontweight='normal';
+
+
+disp([' OS=nsg(   ,NSS) ']);
+
+
+disp(['maketransparentoceans_noant_nogridlinesnostates_removeislands' ...
+    '(''temp.png'',''       .png '',[1 1 1],1);'])

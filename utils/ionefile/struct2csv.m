@@ -8,6 +8,13 @@ function struct2csv(filename,a,dlm);
 %   all fields of a must be numeric.
 %   now works for numeric or cell fields - although it's rpetty slow.
 
+if nargin==0
+    help(mfilename)
+    return
+end
+
+
+
 if nargin==2
     dlm=',';
 end

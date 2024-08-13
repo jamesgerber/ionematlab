@@ -50,6 +50,13 @@ if nargin==0 & nargout==0
     return
 end
 
+switch Input
+    case 'Viet Nam'
+        Input='Vietnam';
+    case '"Korea, Republic of"'
+        Input='Korea';
+end
+
 
     
 persistent C

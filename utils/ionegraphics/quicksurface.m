@@ -1,6 +1,11 @@
 function hfig=quicksurface(x,y,c);
 % quicksurface - surface plot, undersample, rotate data matrix if necessary
 
+if nargin==0
+    help(mfilename)
+    return
+end
+
 
 if nargin==1
     [m,n]=size(x);

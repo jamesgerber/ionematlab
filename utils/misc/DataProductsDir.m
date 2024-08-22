@@ -19,8 +19,17 @@ switch name(1:10)
         switch name
             case 'jsgerber'
                 DPD='/Users/jsgerber/DataProducts/';
+            case 'samst'
+                DPD = 'E:/DataProducts/';
             otherwise
-                error
+                name=getenv('USERNAME');
+                switch name
+                    case 'samst'
+                        DPD = 'E:\DataProducts\';
+                    otherwise 
+                        error
+                end
+                
 
         end
 

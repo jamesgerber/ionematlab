@@ -7,6 +7,8 @@ function excel(filename,numfiles)
 % Syntax
 %  excel filename
 %
+%  excel 1   (will open file with latest timestamp)
+%
 %  excel dirname 2 (will open 2 files with latest datestamp)
 %
 %  This function is very brittle - doesn't check to assure that files it
@@ -20,6 +22,8 @@ if nargin==0
 end
 
 if nargin==1
+   % if isequal(nargin,'1')
+        
     numfiles=1;
 else
     numfiles=str2num(numfiles);
@@ -41,9 +45,7 @@ if isequal(filename(end),filesep)
     unix(['open -a /Applications/''Microsoft Excel.app''/ ' filename]);
     end
 else
-    
-        unix(['open -a /Applications/''Microsoft Excel.app''/ ' filename]);
-
+    unix(['open -a /Applications/''Microsoft Excel.app''/ ' filename]);
 end
 
    

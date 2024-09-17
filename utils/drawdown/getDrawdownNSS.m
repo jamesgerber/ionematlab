@@ -18,4 +18,4 @@ disp([' OS=nsg(   ,NSS) ']);
 
 
 disp(['maketransparentoceans_noant_nogridlinesnostates_removeislands' ...
-    '(''temp.png'',''       .png '',[1 1 1],1);'])
+    '(''temp.png'',''       .png'',[1 1 1],1);'])

@@ -1,8 +1,10 @@
-function Outline=getoecdincomeoutlineWithYear(incomelevel,year)
+function [Outline,CountryList]=getoecdincomeoutlineWithYear(incomelevel,year)
 % getOECDincomeoutline - get outlines of OECD income levels
 %
 %   Syntax
 %     Outline=getOECDincomeoutline('high');
+%     [Outline,ISOList]=getoecdincomeoutlineWithYear('high',2017); returns list of
+%     countries (ISO codes)
 %
 %  These are the levels
 %   'High income: OECD'
@@ -28,7 +30,8 @@ function Outline=getoecdincomeoutlineWithYear(incomelevel,year)
 %path = [iddstring 'misc/wbiclass.csv'];
 %WBI = ReadGenericCSV(path);
 
-a=readgenericcsv('/Users/jsgerber/sandbox/jsg169bb_ygot_IndYears/SocialCategories/WB/WB_OECDIncomeGroupsnq.txt',2,tab);
+%a=readgenericcsv('/Users/jsgerber/sandbox/jsg169bb_ygot_IndYears/SocialCategories/WB/WB_OECDIncomeGroupsnq.txt',2,tab);
+a=readgenericcsv('~/DataProducts/ext/WorldBankData/IncomeGroups/WB_OECDIncomeGroupsnq.txt',2,tab);
 
 if nargin==1
     year=2000;
@@ -74,22 +77,23 @@ load /ionedata/AdminBoundary2020/gadm36_level0raster5minVer0.mat
 
 % some special cases:  south sudan  - replace with sudan income
 
+CountryList={};
 
 
 for j=ii;
     idx=strmatch(a.code{j},gadm0codes);
-    
+
     if numel(idx)==1
         Outline=Outline | raster0==idx;
     end
-% special case ... if sudan, also include south sudan
+    % special case ... if sudan, also include south sudan
 
-if isequal(a.code{j},'SDN')
-    idx=strmatch('SSD',gadm0codes);
-    Outline=Outline | raster0==idx;
-end
-    
-    
+    if isequal(a.code{j},'SDN')
+        idx=strmatch('SSD',gadm0codes);
+        Outline=Outline | raster0==idx;
+    end
+
+
 end
 
 Outline=logical(Outline);

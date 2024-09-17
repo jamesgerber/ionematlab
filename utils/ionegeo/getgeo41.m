@@ -2,6 +2,10 @@ function [g0,g1,g2,g3,g]=getgeo41(ISO);
 % getgeo41 get harmonized geo data from GADM4.1
 %
 %   [g0,g1,g2,g3,g]=getgeo41;
+
+
+
+
 persistent savethings
 
 if isempty(savethings)
@@ -16,8 +20,8 @@ if isempty(savethings)
     g2.raster2lml=g2.raster2(landmasklogical);
     g3.raster3lml=g3.raster3(landmasklogical);
 
-g3=rmfield(g3,'countrynames2');
-g3=rmfield(g3,'uniqueadminunitcode2');
+    g3=rmfield(g3,'countrynames2');
+    g3=rmfield(g3,'uniqueadminunitcode2');
 
     for j=1:numel(g1.namelist1)
         g1.namecodes1{j}=[g1.countrynames{j} ' ' g1.namelist1{j}];

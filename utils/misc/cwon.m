@@ -1,7 +1,10 @@
 function cwondir=cwon;
 
-cwondir=  '/Users/jsgerber/CWON2023YieldModelingSandbox/';
+cwondir= cwondirlocation;
+
+% look for a cwondirlocation in documents.  it's a script.  bad, I know.
+
 
 if nargout==0
-    evalin('base','cd ~/CWON2023YieldModelingSandbox/');
+    evalin('base',['cd ' cwondir]);
 end

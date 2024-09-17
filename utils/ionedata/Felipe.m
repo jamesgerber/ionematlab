@@ -27,7 +27,8 @@ function correctRaster = Felipe(raster)
 % thinsurf(Felipe(xbad3))
 %
 % Written by Sam Stiffman
-% Last Edited 1/7/2019
+% Original:   1/7/2019
+% Last Edit:  9/17/2019
 
 
 %%%%%% Constants do not change %%%%%%
@@ -56,23 +57,22 @@ waterValue = raster(end/2, end/2);
 % make water 0 all over the map if it is not already
 if waterValue ~= 0
     indexesOfWater = (raster == waterValue);
-    tempRaster = raster(~indexesOfWater);
+    tempRaster = raster;
+    tempRaster(indexesOfWater) = 0;
 else
     tempRaster=raster;
 end
-
+% tempRaster = raster;
 % To figure out what orientation match the map with a logical earth map at
 % each orientation and see which one matches best
 % The way this works is the landmaskLogical will 0 out any value that
-% matches with the map we are working with, this will mean the array with
-% the minimum amount of values will be the best match
-correctLogical = ~landmasklogical(RASTER_10_MINUTES);
+% does not match with the map we are working with, this will mean the array with
+% the maximum amount of values will be the best match, because this one has
+% the most land 
+% correctLogical = landmasklogical(RASTER_10_MINUTES);
+% 
 
-% If resolution is not the resolution of the raster the landmask logical needs to be scaled
-if rasterSize ~= size(correctLogical)
-    correctLogical = imresize(correctLogical, size(raster));
-    disp(size(correctLogical))
-end
+correctLogical = landmasklogical(raster);
     upsideDown = fliplr(correctLogical);
     flippedUpsidedown = flip(upsideDown);
     flippedNormal = flip(correctLogical);
@@ -88,21 +88,23 @@ end
     FCO = tempRaster(flippedNormal);
     FUD = tempRaster(flippedUpsidedown);
     % S prefix is a sum of all matching values 
-    SCO = sum(CO);
-    SUD = sum(UD);
-    SFCO = sum(FCO);
-    SFUD = sum(FUD);
+    % We take the absolute value so when we take the max negative values
+    % dont mess anything up
+    SCO = sum(abs(CO));
+    SUD = sum(abs(UD));
+    SFCO = sum(abs(FCO));
+    SFUD = sum(abs(FUD));
     
     arrayOfSums = [SCO SUD SFCO SFUD];
    
-    if min(arrayOfSums) == SCO
+    if max(arrayOfSums) == SCO
         % Map is correct orientation no need for an operation
         correctRaster = raster; 
-    elseif min(arrayOfSums) == SUD
+    elseif max(arrayOfSums) == SUD
         correctRaster = fliplr(raster);
-    elseif min(arrayOfSums) == SFCO
+    elseif max(arrayOfSums) == SFCO
         correctRaster = flip(raster);
-    elseif min(arrayOfSums) == SFUD
+    elseif max(arrayOfSums) == SFUD
         correctRaster = flip(fliplr(raster));
     else
         error('MATLAB:arguments:InconsistentDataType', 'Raster not map of Earth');

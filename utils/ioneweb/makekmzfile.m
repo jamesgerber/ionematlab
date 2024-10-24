@@ -54,7 +54,7 @@ function MakeKMZFile(MKS)
 % lores=0;
 % cmap='revsummer';
 % coloraxis=[0 100];
-% BaseTransparency=0.5;
+ BaseTransparency=0.5;
 % kmzfilenamebase='test';
 folderbase='./kmlfolder';
 % KS.header1='filetext';

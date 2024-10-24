@@ -32,6 +32,12 @@ switch AdminLevel
         if numel(idx)==0
             idx=strmatch(strrep(gadmcode,'_1',''),g1.gadm1codesNoSubscript,'exact');
         end
+        if numel(idx)==0
+            idx=strmatch(strrep(gadmcode,'_2','.'),g1.gadm1codesNoSubscript,'exact');
+        end
+        if numel(idx)==0
+            idx=strmatch(strrep(gadmcode,'_1','.'),g1.gadm1codesNoSubscript,'exact');
+        end
 
         if numel(idx)==0
             disp(['prob for ' gadmcode])

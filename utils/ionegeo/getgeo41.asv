@@ -33,17 +33,9 @@ if isempty(savethings)
     end
 
 
+% ghana fix
+ii=strmatch(g2.)
 
-    % ghana fix
-
-    ii=strmatch('GHA',g1.gadm0codes);
-    for m=1:numel(ii);
-        tmp=g1.gadm1codes{ii(m)};
-        g1.gadm1codes{ii(m)}=[tmp(1:3) '.' tmp(4:end)];
-    end
-    for m=1:numel(g1.gadm1codes)
-        g1.gadm1codes_with_subscript_1{m}=strrep(g1.gadm1codes{m},'_2','_1');
-    end
 
     savethings.g0=g0;
     savethings.g1=g1;

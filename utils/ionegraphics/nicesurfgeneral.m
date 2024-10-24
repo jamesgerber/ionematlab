@@ -1511,7 +1511,9 @@ for j=1:length(cmap)
             case 'navy'
                 vec=[0 0 .5];
             case 'teal'
-                vec=[0 0.5 .5];
+                vec=[0 0.5 .5]; 
+            case 'white'
+                vec=[1 1 1];
             case {'g','green'}
                 vec=[0 1 0];
             case 'lime'

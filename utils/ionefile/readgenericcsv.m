@@ -192,9 +192,9 @@ if AttemptNums==0
             end
             
             if NumericFlag==1
-                DS=setfield(DS,ThisName,NumVector);
+                DS=setfield(DS,makesafelocal(ThisName),NumVector);
             else
-                DS=setfield(DS,ThisName,Contents);
+                DS=setfield(DS,makesafelocal(ThisName),Contents);
             end
             origfieldnames{j}=ThisName;
         end
@@ -314,3 +314,11 @@ ii(end+1)=length(xline)+1;
 for j=1:length(ii)-1;
     VC{j}=xline(ii(j)+1 : ii(j+1)-1);
 end
+
+
+function out=makesafelocal(in)
+% remove things that can't be ain a structure name.  functionally like
+% makesafestring but that makes changes that could break something
+
+out=strrep(in,':','');
+out=strrep(out,'?','');

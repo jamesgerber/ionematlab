@@ -61,14 +61,14 @@ end
 fid=fopen(FileName);
 
 for m=1:(HeaderLines-1)
-    x=fgetl(fid);
+    x=fgetl(fid)
     fprintf(1,'%s\n',x);
 end
 
 headerline=fgetl(fid);
 
-disp(['****** here is the headerline: ******'])
-    fprintf(1,'%s\n',headerline);
+%disp(['****** here is the headerline: ******'])
+%    fprintf(1,'%s\n',headerline);
 
 headerline=FixUpHeaderline(headerline);
 

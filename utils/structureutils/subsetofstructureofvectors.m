@@ -19,7 +19,7 @@ function b=subsetofstructureofvectors(a,iikeep,stringfields)
 if nargin<3
     tryStr2double=0;
 else
-    warndlg('have neer tested w2ith 3 inputs')
+    warning('have neer tested w2ith 3 inputs')
     tryStr2double=1;
 end
 

@@ -206,7 +206,16 @@ if numel(idxa)==0 | numel(idxy)==0
     return
 end
         
+% What are proper units
 
+switch CPD.Unit{idxy}
+    case 'kg/ha'
+        FAOYIELDTOTONSPERHA=1000;
+    case 'hg/ha'
+        FAOYIELDTOTONSPERHA=10000;
+    otherwise
+        error
+end
 
 y=YieldValues;
 a=AreaValues;
@@ -218,7 +227,7 @@ try
     % AverageArea=mean(AreaValues);
     %
     
-    AverageYield= sum(y(ii).*a(ii))./sum(a(ii))/1e4;
+    AverageYield= sum(y(ii).*a(ii))./sum(a(ii))/FAOYIELDTOTONSPERHA;
     AverageArea=mean(a(ii));
 catch
     
@@ -246,7 +255,7 @@ catch
     % AverageArea=mean(AreaValues);
     %
     
-    AverageYield= sum(y(ii).*a(ii))./sum(a(ii))/1e4;
+    AverageYield= sum(y(ii).*a(ii))./sum(a(ii))/FAOYIELDTOTONSPERHA;
     AverageArea=mean(a(ii));
     
     

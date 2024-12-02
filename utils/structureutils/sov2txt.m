@@ -1,6 +1,6 @@
-function sov2csv(a,filename,delimiter,startfields,excludefields)
-%sov2csv - write a structure of vectors to a .csv file
-
+function sov2txt(a,filename,delimiter,startfields,excludefields)
+%sov2txt - write a structure of vectors to a .txt file
+% sov2txt(a,filename)
 if nargin<2
     help(mfilename)
     return
@@ -68,43 +68,22 @@ end
 
 
 
-%  WTF this seems completely awful - looks like I had some dumb logic
-%  because i write one less comma then there are fields ... but handled
-%  differently when rewriting below ..
-% fid=fopen(filename,'w');
-% 
-% for m=1:(numel(listOfIdxInclude)-1)
-% 
-%     fprintf(fid,'%s,',allfieldnames{listOfIdxInclude(m)})
-% 
-%     tempfield=getfield(a,allfieldnames{listOfIdxInclude(m)});
-% 
-%     isanumericalfield(m)= isnumeric(tempfield(1));
-% 
-% end
-% fprintf(fid,'%s\n',allfieldnames{listOfIdxInclude(end)});
-% tempfield=getfield(a,allfieldnames{listOfIdxInclude(m)});
-% isanumericalfield(end+1)= isnumeric(tempfield(end)); % this used to be tempfield(1) ... seems like a bug.
-% 
 
 fid=fopen(filename,'w');
 
-for m=1:(numel(listOfIdxInclude))
+for m=1:(numel(listOfIdxInclude)-1)
 
-    fprintf(fid,'%s',allfieldnames{listOfIdxInclude(m)})
+    fprintf(fid,'%s\t',allfieldnames{listOfIdxInclude(m)})
 
     tempfield=getfield(a,allfieldnames{listOfIdxInclude(m)});
 
-    isanumericalfield(m)= isnumeric(tempfield(m));
-
-    if m<numel(listOfIdxInclude)
-        fprintf(fid,',');
-    else
-        fprintf(fid,'\n')
-
-    end
+    isanumericalfield(m)= isnumeric(tempfield(1));
 
 end
+fprintf(fid,'%s\n',allfieldnames{listOfIdxInclude(end)});
+tempfield=getfield(a,allfieldnames{listOfIdxInclude(m)});
+isanumericalfield(end+1)= isnumeric(tempfield(1));
+
 
 
 for j=1:numel(getfield(a,allfieldnames{1}))
@@ -113,9 +92,9 @@ for j=1:numel(getfield(a,allfieldnames{1}))
         thisfield=getfield(a,allfieldnames{listOfIdxInclude(m)});
 
         if isanumericalfield(m)
-            fprintf(fid,'%f,',thisfield(j));
+            fprintf(fid,'%f\t',thisfield(j));
         else
-            fprintf(fid,'%s,',thisfield{j});
+            fprintf(fid,'%s\t',thisfield{j});
         end
     end
     m=m+1;

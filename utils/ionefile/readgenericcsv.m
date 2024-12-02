@@ -256,7 +256,7 @@ if ~isequal(length(getfield(DS,ThisName)),length(getfield(DS,PrevName)))
         
         if isnumeric(lastfield)
             warning([' adding Nan to last element of ' ThisName ]);
-            lastfield(numel(prevfeld))=nan;
+            lastfield(numel(prevfield))=nan;
         elseif iscell(lastfield)
             warning([' adding {''} to last element of ' ThisName ]);
             lastfield(numel(prevfield))={''};

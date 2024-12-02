@@ -83,15 +83,32 @@ switch FAOCropName
         FAOCropName2023='Anise, badian, coriander, cumin, caraway, fennel and juniper berries, raw';
     case 'Agave fibres nes'
         FAOCropName2023='Agave fibres, raw, n.e.c.';
+    case 'Roots and tubers nes'
+        FAOCropName2023='Roots and Tubers, Total';
+
+%  case ''
+%         FAOCropName2023=
+%  case ''
+%         FAOCropName2023=
+%  case ''
+%         FAOCropName2023='Coconuts, in shell'
+% 
+%          case ''
+%         FAOCropName2023=
+% 
+% 'Citrus Fruit, Total'
+% 
+    case 'Cereals nes'
+        FAOCropName2023='Cereals n.e.c.'
     otherwise 
-                Name2023=FAO2023Names(FAOCropName);
+        Name2023=FAO2023Names(FAOCropName);
         FAOCropName2023=Name2023;
 end
 
 
 
-idx=strmatch(FAOCropName2023,CPD.Item,'exact');
-
+%idx=strmatch(FAOCropName2023,CPD.Item,'exact');
+idx=find(strcmp(CPD.Item,FAOCropName2023));
 
 % fuuuck ... need to update FAO cropnames for 2023
 if isempty(idx) & isequal(SAGE3,'USA')
@@ -208,7 +225,7 @@ end
         
 % What are proper units
 
-switch CPD.Unit{idxy}
+switch CPD.Unit{idxy(1)}
     case 'kg/ha'
         FAOYIELDTOTONSPERHA=1000;
     case 'hg/ha'

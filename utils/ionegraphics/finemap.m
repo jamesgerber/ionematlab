@@ -172,9 +172,11 @@ end
 
 map=cmap;
 
-InterpStep=length(map)/Nsteps; % somewhat arbitrary ...
+%InterpStep=length(map)/Nsteps; % somewhat arbitrary ...
+InterpStep=size(map,1)/Nsteps; % somewhat arbitrary ...
 
-x=1:length(map);
+%x=1:length(map);
+x=1:size(map,1);
 xx=1:InterpStep:x(end);
 
 for j=1:3;

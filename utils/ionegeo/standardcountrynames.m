@@ -209,13 +209,13 @@ end
 
 if length(Row)>1
     switch(Input(1:min(6,end)))
-        case {'ISR','israel'}
+        case {'ISR','israel','Israel'}
             Row=Row(1);
             return
         case {'SRM','serbia'}
             Row=Row(2);
             return
-        case {'KOR','kor'};
+        case {'KOR','kor','Korea'};
             Row=Row(2);
             return
         
@@ -225,8 +225,28 @@ if length(Row)>1
     end
 end
 
+
 % now remove constraint of exactness
 Row=strmatch(Input,List);
+
+
+if length(Row)>1
+    switch(Input(1:min(6,end)))
+        case {'ISR','israel','Israel'}
+            Row=Row(1);
+            return
+        case {'SRM','serbia'}
+            Row=Row(2);
+            return
+        case {'KOR','kor','Korea'};
+            Row=Row(2);
+            return
+        
+        otherwise
+            
+            error(['found two exact matches.  problem with input files.'])
+    end
+end
 
 
 if length(Row)==1

@@ -1,6 +1,7 @@
-function lsft
-% lsf list only directories
+function lsfr
+% lsfr list only directories, with -r flag (latest at bottom)
+%
+% See also: lsf
 if isunix
-unix(['ls -Ftr | grep /']);
-%unix(['ls -lF | grep /']);
+    unix(['ls -Ftr | grep /']);
 end

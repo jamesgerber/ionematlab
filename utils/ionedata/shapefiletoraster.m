@@ -86,7 +86,7 @@ if plotflag==1
     hold on
 end
 
-hh=waitbar(0,'working ... ')
+%hh=waitbar(0,'working ... ')
 for j=1:length(S);
     
     if nargin==5
@@ -96,7 +96,7 @@ for j=1:length(S);
 
     S(j);
     % if int(j/length(
-    waitbar(j/length(S),hh);
+ %   waitbar(j/length(S),hh);
     %end
     %for j=120;
     xx=S(j).X;
@@ -186,5 +186,5 @@ for j=1:length(S);
     
 end % end of j loop over countries
 
-delete(hh)
+%delete(hh)
 Raster=Matrix;

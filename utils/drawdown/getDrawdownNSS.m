@@ -12,6 +12,7 @@ NSS.titlefontsize=24;
 NSS.colorbarunitsfontsize=12;
 NSS.titleverticalalignment='cap';
 NSS.colorbarfontweight='normal';
+NSS.mappingtoolbox='on';
 
 
 disp([' OS=nsg(   ,NSS) ']);
@@ -19,3 +20,12 @@ disp([' OS=nsg(   ,NSS) ']);
 
 disp(['maketransparentoceans_noant_nogridlinesnostates_removeislands' ...
     '(''temp.png'',''       .png'',[1 1 1],1);'])
+
+
+disp(['maketransparentOcReg_noant_nogridlinesnostates_removeislands' ...
+    '(''temp.png'',''       .png'',[1 1 1],1,''SEAsia'',''-r300'',''5min'');'])
+
+
+disp(['[filename,DataResolution,PrintResolution,Region]=MakeNiceRegionalFigs'])
+disp(['maketransparentOcReg_noant_nogridlinesnostates_removeislands' ...
+    '(''temp.png'',''       .png'',[1 1 1],1,Region,PrintResolution,DataResolution);'])

@@ -2,12 +2,31 @@ function [long,lat,raster,R,info]=processgeotiff(filename);
 % processgeotiff - load geotiff, put into GLI standard format
 %  [long,lat,raster,R,info]=processgeotiff(filename);
 %
+%  [raster]=processgeotiff(filename);  (1 arg out)
+
 % %example
 %
 %filename='~/Downloads/imageToDriveExample.tif';
 %[long,lat,raster,R,info]=processgeotiff(filename);
 %
 % see also aggregate_to_5min
+
+% first check if this filename exist (because matlab sucks and if
+% it can't find the file within geotiffread it throws a tantrum much like
+% the one I am throwing right now as I write heretical comments like
+% "matlab sucks"
+
+d=dir(filename);
+if isempty(d)
+    disp('this file doesn''t seem to exist')
+    filename
+    long=[];
+    lat=[];
+    raster=[];
+    R=[];
+    info=[];
+    return
+end
 
 [A,R]=geotiffread(filename);
 
@@ -47,4 +66,8 @@ R=R;
 
 if nargout==5
     info=geotiffinfo(filename);
+end
+
+if nargout==1
+    long=raster;
 end

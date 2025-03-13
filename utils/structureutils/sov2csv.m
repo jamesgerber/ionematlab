@@ -1,6 +1,7 @@
 function sov2csv(a,filename,delimiter,startfields,excludefields)
 %sov2csv - write a structure of vectors to a .csv file
-
+%
+%  sov2csv structure filename
 if nargin<2
     help(mfilename)
     return

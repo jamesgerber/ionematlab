@@ -31,19 +31,15 @@ end
 SAGE3;
 
 if isequal(lower(SAGE3),'world')
-    disp(['no code in here to do world'])
+   FAOCode=5000;
+else
+    try
+        FAOCode=SAGE3ToFAOCode(SAGE3,yr);
+    catch
         AverageYield=nan;
-    AverageArea=nan;
-    return
-end
-
-
-try
-    FAOCode=SAGE3ToFAOCode(SAGE3,yr);
-catch
-    AverageYield=nan;
-    AverageArea=nan;
-    return
+        AverageArea=nan;
+        return
+    end
 end
 
 if isempty(FAOCode)
@@ -61,10 +57,11 @@ idx=find(CPDfull.Area_Code==FAOCode);
 CPD=subsetofstructureofvectors(CPDfull,idx);
 
 % limit to crop
-FAOCropName=getFAOCropName(cropname);
+FAOCropName2018=getFAOCropName(cropname);
+FAOCropName2024=getFAOCropName2024(cropname);
 
 
-switch FAOCropName
+switch FAOCropName2018
     case 'Maize'
         FAOCropName2023='Maize (corn)';
     case 'Rice, paddy'
@@ -86,10 +83,10 @@ switch FAOCropName
     case 'Roots and tubers nes'
         FAOCropName2023='Roots and Tubers, Total';
 
+  case 'Flax fibre and tow'
+         FAOCropName2023='Flax, raw or retted'
 %  case ''
-%         FAOCropName2023=
-%  case ''
-%         FAOCropName2023=
+%         FAOCropName2023='Mushrooms and truffles'
 %  case ''
 %         FAOCropName2023='Coconuts, in shell'
 % 
@@ -101,28 +98,26 @@ switch FAOCropName
     case 'Cereals nes'
         FAOCropName2023='Cereals n.e.c.'
     otherwise 
-        Name2023=FAO2023Names(FAOCropName);
+        Name2023=FAO2023Names(FAOCropName2018);
         FAOCropName2023=Name2023;
 end
 
 
+% Cycle through the cropnames ... do any of them match?
 
-%idx=strmatch(FAOCropName2023,CPD.Item,'exact');
 idx=find(strcmp(CPD.Item,FAOCropName2023));
 
-% fuuuck ... need to update FAO cropnames for 2023
-if isempty(idx) & isequal(SAGE3,'USA')
-    idx2=strmatch(FAOCropName,CPDfull.Item,'exact');
-    if numel(idx2)==0
-    %    cropname
-    %    FAOCropName
-        
-        disp(['no FAO Data for ' FAOCropName '(' cropname ') in USA '  ]);
+if isempty(idx)
+    idx=find(strcmp(CPD.Item,FAOCropName2024));
+    if isempty(idx)
+        idx=find(strcmp(CPD.Item,FAOCropName2018));
+        if isempty(idx)
+            disp(['no FAO Data for ' cropname ' '  ]);
+        end
     end
 end
+
 CPD=subsetofstructureofvectors(CPD,idx);
-
-
 
 
 

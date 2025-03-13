@@ -1,7 +1,8 @@
 function [ISOlist,CountryNameList,iilist,iimap]=SEAsia11(m);
 % SEAsia11 - return
 %
-% [ISOlist,CountryNameList,iilist,iimap]=SEAsia11(m);
+% [ISOlist,CountryNameList,iilist,iimap]=SEAsia11;
+% [ISO,CountryName,ii,iimap]=SEAsia11(m);
 
 ISOlist={'BRN',...
 'KHM',...
@@ -29,8 +30,20 @@ for j=1:numel(ISOlist);
 end
 
 if nargin==1
+
+    if m==0;
+        ISOlist='SEAsia';
+        CountryNameList='SoutheastAsia';
+        iilist=find(iimap);
+        return
+    end
+
     ISOlist=ISOlist{m};
     CountryNameList=CountryNameList{m};
-    iilist=iilist{j};
+    iilist=iilist{m};
+
+
+
+
 end
 

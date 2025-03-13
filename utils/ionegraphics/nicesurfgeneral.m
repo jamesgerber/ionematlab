@@ -85,7 +85,8 @@ function OS=NiceSurfGeneral(varargin)
 %   NSS.FrameOff=
 %   NSS.sink='';
 %   NSS.sink='nonagplaces';  % note that this goes well with NSS.states='agplaces'
-%
+%   NSS.figurehandle=[];  % if a handle is passed in nsg clear and than use that
+%   (hack to keep matlab from stealing focus)
 %  Example
 %
 %  S=OpenNetCDF([iddstring '/Crops2000/crops/maize_5min.nc'])
@@ -231,7 +232,16 @@ else
     end
 end
 
-if numel(Data) > 2e7
+% special case for 30 second matrices
+if numel(Data)==933120000;
+    Nresample=10;
+       disp(['resampling'])
+    Long=Long(1:Nresample:end);
+    Lat=Lat(1:Nresample:end);
+    Data=Data(1:Nresample:end,1:Nresample:end);
+end 
+
+if numel(Data) > 4e7
     
     
     Nresample= ceil(numel(Data)/2e7);
@@ -244,6 +254,7 @@ if numel(Data) > 2e7
     Data=Data(1:Nresample:end,1:Nresample:end);
     
 end
+
 
 
 % code to make sure that everything is the right size
@@ -312,7 +323,7 @@ ListOfProperties={
     'sink','modifycolormap','stretchcolormapcentervalue','categoryspecialcolormap',...
     'categoryspeciallegend','colorbarfontsize','colorbarunitsfontsize',...
     'titlefont','titlefontsize','titleoffsetXY','colorbarfontweight',...
-    'titleverticalalignment'};
+    'titleverticalalignment','mappingtoolbox'};
 ListOfProperties=unique(ListOfProperties);
 
 %% set defaults for these properties
@@ -345,6 +356,8 @@ colorbarunitsfontsize=12;
 titlefontsize=14;
 titleverticalalignment='';
 colorbarfontweight='bold';
+mappingtoolbox='on';
+figurehandle=[]; 
 %unitfontsize=12;
 
 %   NSS.modifycolormap='stretch';
@@ -417,7 +430,13 @@ end
 %%
 %  Now all user input is collected.  We can start changing things in response to
 % user-supplied flags
-
+% let's turn on mappingtoolbox (or off)
+switch mappingtoolbox 
+    case 'on'
+        mappingon
+    case 'off'
+        mappingoff
+end
 
 if isequal(filename,'on')
     tstemp=titlestring;
@@ -790,17 +809,20 @@ if numel(Long)==4320 & numel(Lat)<2160
     Data=Data(15:end,:);
 end
 
+if isempty(figurehandle) | ~isgraphics(figurehandle)
+    figurehandle=figure;
+end
 
 if Long(1) <= -179
     % probably using inferlonglat to get here.  Let IonESurf call again.
-    
-%    warning(' Sep, 2018 ... jamie fixing nsg ... not sure why but it was ignoring a passed in long/lat')
-    
+
+    %    warning(' Sep, 2018 ... jamie fixing nsg ... not sure why but it was ignoring a passed in long/lat')
+
     % IonESurf(Data); old code
-    IonESurf(Long,Lat,Data);
-    
+    IonESurf(Long,Lat,Data,'','',figurehandle);
+
 else
-    IonESurf(Long,Lat,Data);
+    IonESurf(Long,Lat,Data,'','',figurehandle);
 end
 
 %% Change projection
@@ -1112,9 +1134,12 @@ if strcmp(categorical,'on')
         uplegend;
         uplegend;
         if ~isempty(filename)
-            OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+            LegFileName=OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
             %    close(Hlegendfig)
 
+            LegFileName=fixextension(LegFileName,'.png');
+            croplegend(LegFileName,strrep(LegFileName,'.png','_cropped.png'));
+            invertplot(strrep(LegFileName,'.png','_cropped.png'));
         end
         figure(Hfig);  % make previous figure current.
         
@@ -1389,7 +1414,7 @@ switch lower(plotarea)
     case {'iowa'}
         longlatbox=[-75 -65 35 45];
         filename=[filename '_iowa'];
-    case {'southeastasia'}
+    case {'southeastasia','seasia'}
         longlatbox=[90 150 -15 +30];
         filename=[filename 'southeastasia'];
     case {'medit2north'}
@@ -1490,7 +1515,12 @@ for j=1:length(cmap)
     thiselement=cmap{j};
     if ~ischar(thiselement)
         newcmap(j,:)=thiselement(:);
+    elseif isequal(thiselement(1),'#')
+            
+    vec=[hex2dec(thiselement(2:3)) hex2dec(thiselement(4:5)) hex2dec(thiselement(6:7)) ]/255;
+    newcmap(j,:)=vec(:);
     else
+
         switch thiselement  %it's the name of a color
             case {'r','red'}
                 vec=[1 0 0];

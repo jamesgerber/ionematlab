@@ -1,14 +1,14 @@
-function FileName=OutputFig(Hfig,FileName,ResFlag,transparent)
-% OutputFig - output a figure as a .png
+function FileName=outputfig(Hfig,FileName,ResFlag,transparent)
+% outputfig - output a figure as a .png
 %
 % SYNTAX
-% OutputFig('Force') will force priting w/o querying user.
-% OutputFig(gcf,'FileName','-r300',1) will make background transparent
-% OutputFig('Force','FileName')
-% OutputFig('Force','FileName','-r150')
-% OutputFig(gcf,'FileName')
+% outputfig('Force') will force priting w/o querying user.
+% outputfig(gcf,'FileName','-r300',1) will make background transparent
+% outputfig('Force','FileName')
+% outputfig('Force','FileName','-r150')
+% outputfig(gcf,'FileName')
 %
-% OutputFig('directoryname/') will force printing w/o querying user and put
+% outputfig('directoryname/') will force printing w/o querying user and put
 % the resulting .png into directory directoryname.  the code looks for the
 % '/' at the end of the name.
 %

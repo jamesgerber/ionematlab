@@ -1,4 +1,4 @@
-function filename=globalarray2geotiff(raster,filename)
+function filename=globalarray2geotiffwithnodatavalue(raster,filename,nodatavalue)
 % globalarray2geotiff - converts a raster into a geotiff file  
 % 
 %  globalarray2geotiff(raster,filename);
@@ -29,5 +29,22 @@ rasterforwriting=raster';
 % old code:
 %geotiffwrite(filename,rasterforwriting,R);
 
+keyboard
+
+%TiffTags.Compression='LZW';
+%geotiffwrite(filename,rasterforwriting,R,'TiffTags',TiffTags);
+
+
+minval=nanmin(raster(:));
+
+nodatainteger=min(floor(minval-100),-9999);
+
+rasterforwriting(isnan(rasterforwriting))=nodatainteger;
+
+
 TiffTags.Compression='LZW';
-geotiffwrite(filename,rasterforwriting,R,'TiffTags',TiffTags);
+geotiffwrite('tmp.tif',rasterforwriting,R,'TiffTags',TiffTags);
+
+
+gdal_calc.py --overwrite --co="COMPRESS=LZW" -A tmp.tif --outfile=tmp_nan.tif --calc="numpy.where(A==-99, numpy.nan, A)" --NoDataValue=nan
+

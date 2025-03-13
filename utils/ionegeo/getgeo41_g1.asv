@@ -1,10 +1,9 @@
-function [g0,ii,countryname,ISO]=getgeo41_g0(ISO);
+function [g1,ii,countryname]=getgeo41_g1(ISO);
 % getgeo41 get harmonized geo data from GADM4.1
 %
-%  [g0]=getgeo41_g0;
+%  [g1]=getgeo41_g1;
 %  [g0]=getgeo41_g0(ISO);
 %  [g0,ii]=getgeo41_g0(ISO);
-%  [g0,ii,countryname,ISO]=getgeo41_g0(ISO);
 
 
 
@@ -12,24 +11,21 @@ function [g0,ii,countryname,ISO]=getgeo41_g0(ISO);
 persistent savethings
 
 if isempty(savethings)
-    g0=load('/Users/jsgerber/DataProducts/ext/GADM/GADM41/gadm41_level0raster5minVer2.mat');
+    g1=load('/Users/jsgerber/DataProducts/ext/GADM/GADM41/gadm41_level1raster5minVer2.mat');
 
-    g0.raster0lml=g0.raster0(landmasklogical);
+    g1.raster1lml=g1.raster1(landmasklogical);
 
-    savethings.g0=g0;
+    savethings.g1=g1;
 
 else
     
-    g0=savethings.g0;
+    g1=savethings.g1;
 
 end
 
 
 
 if nargin==1
-    if isnumeric(ISO)
-        ISO=g0.gadm0codes{ISO};
-    end
     idx=strmatch(ISO,g0.gadm0codes);
     g0=subsetofstructureofvectors(g0,idx);
 end

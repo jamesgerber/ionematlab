@@ -34,14 +34,13 @@ switch Res
         tmp=ones(2160,1080);
     case '5min'
         tmp=ones(4320,2160);
-    case '2.5min'
+    case {'2.5min','5km'}
         tmp=ones(2*4320,2*2160);
     case {'3min','.05deg'}
         tmp=ones(7200,3600);
-    case {'30s','30sec'}
+    case {'30s','30sec','1km'}
         tmp=ones(43200,21600);
     case '1min'
-        warning('warning:  this is going to be really huge');
         tmp=ones(21600,10800);
      otherwise
         error('Don''t know this resolution')

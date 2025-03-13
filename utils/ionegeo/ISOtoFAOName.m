@@ -15,4 +15,6 @@ switch ISO
         faoname='Côte d''Ivoire';
     case 'NLD'
         faoname='Netherlands (Kingdom of the)';
+    case 'TUR'
+        faoname='Türkiye';
 end

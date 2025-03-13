@@ -235,7 +235,9 @@ else
     end
 end
 
-
+if numel(FieldNameStructure.Vector)==1
+    return
+end
 
 %% is final field the same length as the others?
 ThisName=makesafestring(FieldNameStructure.Vector{j});

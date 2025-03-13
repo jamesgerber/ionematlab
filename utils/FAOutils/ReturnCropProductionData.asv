@@ -1,0 +1,18 @@
+function [CPD,verstring]=ReturnCropProductionData;
+% ReturnCropProductionData - FAOstat production data, limit to crops
+
+[c,verstring]=ReturnProductionData;
+
+iianimal=c.Item_Code
+
+c=subsetofstructureofvectors(c,setdiff(1:numel(c.Unit),strmatch('Laying',c.Element)));
+c=subsetofstructureofvectors(c,setdiff(1:numel(c.Unit),strmatch('Milk Animals',c.Element)));
+c=subsetofstructureofvectors(c,setdiff(1:numel(c.Unit),strmatch('Laying',c.Element)));
+c=subsetofstructureofvectors(c,setdiff(1:numel(c.Unit),strmatch('Prod Popultn',c.Element)));
+c=subsetofstructureofvectors(c,setdiff(1:numel(c.Unit),strmatch('Producing Animals/Slaughtered',c.Element)));
+c=subsetofstructureofvectors(c,setdiff(1:numel(c.Unit),strmatch('Stocks',c.Element)));
+c=subsetofstructureofvectors(c,setdiff(1:numel(c.Unit),strmatch('Yield/Carcass Weight',c.Element)));
+
+
+CPD=c;
+

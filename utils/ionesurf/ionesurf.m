@@ -43,6 +43,15 @@ if nargin<5
     TitleStr=InputVariableName;
 end
 
+if isempty(TitleStr)
+        TitleStr=InputVariableName;
+end
+
+if nargin==6
+    clf(hfig,'reset');
+end
+
+
 CanMap=CheckForMappingToolbox;
 
 ExtraCommands='';
@@ -109,6 +118,8 @@ RedData=RedData(:,end:-1:1);
 %global Externalhfig
 %hfig=Externalhfig;
 if ~exist('hfig');
+    hfig=figure;
+elseif isempty(hfig)
     hfig=figure;
 else
     figure(hfig);

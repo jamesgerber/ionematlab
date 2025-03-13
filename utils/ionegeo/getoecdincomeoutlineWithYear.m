@@ -1,10 +1,12 @@
-function [Outline,CountryList]=getoecdincomeoutlineWithYear(incomelevel,year)
+function [Outline,ISOList,CountryNameList]=getoecdincomeoutlineWithYear(incomelevel,year)
 % getOECDincomeoutline - get outlines of OECD income levels
 %
 %   Syntax
 %     Outline=getOECDincomeoutline('high');
 %     [Outline,ISOList]=getoecdincomeoutlineWithYear('high',2017); returns list of
 %     countries (ISO codes)
+%     [Outline,ISOList,NameLIst]=getoecdincomeoutlineWithYear('high',2017); returns list of
+%     countries (ISO codes) along with names
 %
 %  These are the levels
 %   'High income: OECD'
@@ -63,6 +65,8 @@ switch lower(char(incomelevel))
         ii=ii4';
     case {'ii1','hioecd'}
         ii=ii1';
+    otherwise
+        error(['dont know' incomelevel])
 end
 
 
@@ -71,8 +75,9 @@ Outline=(DataMaskLogical==2);  % create big logical array of zeros
 Outline=double(Outline);
 
 ii=ii(:)';
-
-load /ionedata/AdminBoundary2020/gadm36_level0raster5minVer0.mat
+g0=getgeo41_g0;
+gadm0codes=g0.gadm0codes;
+raster0=g0.raster0;
 
 
 % some special cases:  south sudan  - replace with sudan income
@@ -80,11 +85,16 @@ load /ionedata/AdminBoundary2020/gadm36_level0raster5minVer0.mat
 CountryList={};
 
 
+c=0;
 for j=ii;
     idx=strmatch(a.code{j},gadm0codes);
 
     if numel(idx)==1
+        c=c+1;
         Outline=Outline | raster0==idx;
+    
+        ISOList{c}=a.code{j};
+        CountryNameList{c}=g0.namelist0{idx};
     end
     % special case ... if sudan, also include south sudan
 

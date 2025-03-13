@@ -145,6 +145,9 @@ switch cropname
         FAOCropName='Oilseeds nes';
     case 'mixedgrain'
         FAOCropName='Grain, mixed';
+    case 'groundnut'
+        FAOCropName='Groundnuts, excluding shelled';
+
         
         
 end
@@ -157,6 +160,7 @@ if isempty(CPD)
     CPD=subsetofstructureofvectors(CPD,strmatch('Production',CPD.Element));
     dpd=DataProductsDir;
     CPDold=readgenericcsv([dpd '/ext/FAOstat/Production/March18_2021_RevE/Production_Crops_Livestock_E_All_Data_Normalized/Production_Crops_Livestock_E_All_Data_Normalizednq.txt'],1,tab,1);
+        
     CPDold=subsetofstructureofvectors(CPDold,strmatch('World',CPDold.Area));
     CPDold=subsetofstructureofvectors(CPDold,strmatch('Production',CPDold.Element));
 

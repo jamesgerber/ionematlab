@@ -59,6 +59,10 @@ switch numel(DataTemplate)
 %         lml=LandMaskLogical;
 %         data=aggregate_quantity(lml,4);
 %         LogicalVector=(data>=0.5);
+    case 4320*8640 % 5minute
+x=load('~/DataProducts/ext/landmasks/landmask5km.mat');
+LogicalVector=x.landmask5km;  % no idea which is is called a vector.
+
         
     otherwise
         warning('don''t have a landmask at this size.  trying ...')

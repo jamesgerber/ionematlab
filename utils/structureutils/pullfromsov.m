@@ -24,7 +24,8 @@ for j=1:Ncriteria;
     if isnumeric(value);
         ii=find(SOV.(field)==value);
     else
-        ii=strmatch(value,SOV.(field),'exact');
+%        ii=strmatch(value,SOV.(field),'exact');
+        ii=find(strcmp(SOV.(field),value));
     end
 
     SOV=subsetofstructureofvectors(SOV,ii);

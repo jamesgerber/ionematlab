@@ -243,8 +243,25 @@ else
     else
       NumPointsPerDegree=12*numel(RedLat)/2160;
    %     NumPointsPerDegree=1/(RedLat(2)-RedLat(1));
-        R=[NumPointsPerDegree,90,-180];
-        h=meshm(double(RedData.'),R,[50 180],-1);
+        % R=[NumPointsPerDegree,90,-180];
+        % h=meshm(double(RedData.'),R,[50 180],-1);
+
+%% attempt to fix this for 2024b using code from chatGPT
+        % R=[NumPointsPerDegree,90,-180];
+        % h=meshm(double(RedData.'),R,[50 180],-1);
+
+% Define latitude and longitude limits (adjust based on your data)
+latlim = [min(RedLat) max(RedLat)];
+lonlim = [min(RedLong) max(RedLong)];
+
+% Create a geographic raster reference object
+R_geo = georefcells(latlim, lonlim, size(RedData.'));
+
+% Use the new reference object in meshm
+h = meshm(double(RedData.'), R_geo, [50 180], -1);
+
+
+
     end
     shading flat;
 end  

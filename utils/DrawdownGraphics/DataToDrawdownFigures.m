@@ -5,6 +5,9 @@ function DataToDrawdownFigures(raster,NSS,filenameroot,outputfolder,regionlist);
 %
 % Example
 % DataToDrawdownFigures(area2020*100,NSS,'RiceCultivationArea','finalfigsanddata/',{'SEAsia'});
+%
+%  DataToDrawdownFigures(area2020*100,'','RiceCultivationArea','finalfigsanddata/','');
+%   without 2nd argument, just output the data and return
 
 if nargin<4
     outputfolder='figures/';
@@ -16,6 +19,17 @@ mkdir([outputfolder '/regionalfigs'])
 
 if nargin<5
     regionlist={};
+end
+
+% let's output data in front, then if NSS is empty return
+
+% now save data
+extranotes=['produced ' datestr(now) ' in ' pwd ]
+globalarray2geotiffwithnodatavalue(raster,[outputfolder '/data_geotiff/' filenameroot '_data.tif']);
+
+if isempty(NSS)
+    disp(['NSS is empty, returning after outputting data'])
+    return
 end
 
 
@@ -65,12 +79,9 @@ unix(['cp temp.png ' outputfolder filesep filenameroot '_WhiteBackground_NoTitle
 filename=[outputfolder filesep filenameroot '_BlackBackground_NoTitleNoUnits.png'];
 maketransparentoceans_noant_nogridlinesnostates_removeislands('temp.png',filename,[1 1 1],1);
 
-
-
-% now save data
-extranotes=['produced ' datestr(now) ' in ' pwd ]
-globalarray2geotiffwithnodatavalue(raster,[outputfolder '/data_geotiff/' filenameroot '_data.tif']);
+% let's save data for future matlab figure
 save([outputfolder '/data_matlabfigure/' filenameroot '_figdata'],'raster','NSSorig','regionlist','filenameroot','outputfolder','extranotes');
+
 
 
 if numel(regionlist)>0

@@ -24,6 +24,18 @@ filename=fixextension(filename,'.tif');
 
 rasterforwriting=raster';
 
+% let's spit out a warning in case filename is very recent
+a=dir(filename);
+
+if ~isempty(a)
+    ageoffileindays=now-a.datenum;
+
+    if ageoffileindays*24*60*60<60
+        warndlg([' about to write over ' filename ' which is less than 60 seconds old.  Intentional?'])
+    end
+end
+
+
 % default compression is PackBits - it turns out LZW better web graphics,
 % so i'm hardcoding this change here.  oops.  JSG Jan 31, 2025
 % old code:

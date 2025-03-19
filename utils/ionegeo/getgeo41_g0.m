@@ -11,7 +11,7 @@ function [g0,ii,countryname,ISO]=getgeo41_g0(ISO);
 
 persistent savethings
 
-if isempty(savethings)
+if isempty(savethings) 
     g0=load('/Users/jsgerber/DataProducts/ext/GADM/GADM41/gadm41_level0raster5minVer2.mat');
 
     g0.raster0lml=g0.raster0(landmasklogical);

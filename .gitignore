@@ -1,2 +1,8 @@
 .DS_store
-utils/ionedata/aggregate_rate.m~
+*.m~
+.asv
+.gitignore
+.gitignore~
+*.m~
+*.asv
+

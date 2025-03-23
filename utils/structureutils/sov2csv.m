@@ -92,7 +92,7 @@ fid=fopen(filename,'w');
 
 for m=1:(numel(listOfIdxInclude))
 
-    fprintf(fid,'%s',allfieldnames{listOfIdxInclude(m)})
+    fprintf(fid,'%s',allfieldnames{listOfIdxInclude(m)});
 
     tempfield=getfield(a,allfieldnames{listOfIdxInclude(m)});
 
@@ -101,7 +101,7 @@ for m=1:(numel(listOfIdxInclude))
     if m<numel(listOfIdxInclude)
         fprintf(fid,',');
     else
-        fprintf(fid,'\n')
+        fprintf(fid,'\n');
 
     end
 

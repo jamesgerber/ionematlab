@@ -17,6 +17,9 @@ function filename=globalarray2geotiffwithnodatavalue(raster,filename,nodatavalue
  
  R = georefcells(latlim,lonlim,size(raster'));
 
+ if min(size(raster))==1
+     error('something wrong - this is a vector ')
+ end
 
 
 filename=fixextension(filename,'.tif');

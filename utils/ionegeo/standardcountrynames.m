@@ -55,6 +55,8 @@ switch Input
         Input='Vietnam';
     case '"Korea, Republic of"'
         Input='Korea';
+    case 'UK'
+        Input='United Kingdom'
 end
 
 

@@ -4,18 +4,32 @@ function S=CombineStructure(S1,S2,AFieldName)
 % Syntax:
 %  S=CombineStructure(S1,S2,AFieldName);
 %
+% this works on a structure of vectors, not a vector of structures
+%
+%  vector of structures:
+%    1×261 struct array with fields:
+%    ISO
+%    Country_or_Area
+%
+%  structure of vectors:
+%  struct with fields:
+%
+%                   ISO: {1×261 cell}
+%       Country_or_Area: {1×261 cell}
+%
 % EXAMPLE
 %  S1=testdata(4320,2160,1);
 %  S2=testdata(4320,2160,1);
 %  S=CombineStructure(S1,S2,'RandomVector')
 %
+%
+%See also:   vos2sov
 
 a1=fieldnames(S1);
 a2=fieldnames(S2);
 
 if ~isequal(unique(a1),unique(a2))
    error([' fieldnames not equal'])
-   
 end
 
 if nargin==2
@@ -43,7 +57,8 @@ for j=1:length(a1)
           t=t.';
       end
 
-      S1=setfield(S1,a1{j},t);
+     Stemp=setfield(S1,a1{j},t);
+     S1=Stemp;
    end
 end
 

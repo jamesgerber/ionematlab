@@ -8,6 +8,17 @@ function DataToDrawdownFigures(raster,NSS,filenameroot,outputfolder,regionlist);
 %
 %  DataToDrawdownFigures(area2020*100,'','RiceCultivationArea','finalfigsanddata/','');
 %   without 2nd argument, just output the data and return
+%
+%  if outputfolder is empty, return doing nothing (this allows a hack to
+%  run through a script without actually doing the outputs)
+
+
+if isempty(outputfolder)
+    disp(['outputfolder argument is empty, returning']);
+    return
+end
+
+
 
 if nargin<4
     outputfolder='figures/';

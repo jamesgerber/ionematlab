@@ -14,6 +14,12 @@ function out=pullfromsov(SOV,ValueField,varargin);
 %     in behavior when ValueField is empty (odd size(varargin) means 1st
 %     element is that flat)
 %
+
+if nargin==0
+    help(mfilename)
+    return
+end
+  
 Ncriteria=numel(varargin)/2;
 
 

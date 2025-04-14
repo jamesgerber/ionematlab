@@ -96,7 +96,7 @@ for m=1:(numel(listOfIdxInclude))
 
     tempfield=getfield(a,allfieldnames{listOfIdxInclude(m)});
 
-    isanumericalfield(m)= isnumeric(tempfield(m));
+    isanumericalfield(m)= isnumeric(tempfield(1));
 
     if m<numel(listOfIdxInclude)
         fprintf(fid,',');

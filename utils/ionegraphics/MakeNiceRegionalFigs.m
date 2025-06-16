@@ -313,7 +313,7 @@ NewPosition=[218   246   400   752];
       end
 
        
-    case {'seasia','southeastasia','sea','apc','SEAsia'}
+    case {'seasia','southeastasia','sea','apc','SEAsia','SEA'}
       %  NewPosition=[218   618   560   380];
         NewPosition=[762          79         943        1274];
 Region='SEAsia';

@@ -50,6 +50,10 @@ if nargin==0 & nargout==0
     return
 end
 
+if iscell(Input) & numel(Input)==1
+    Input=char(Input)
+end
+
 switch Input
     case 'Viet Nam'
         Input='Vietnam';

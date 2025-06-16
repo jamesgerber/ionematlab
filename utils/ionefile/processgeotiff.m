@@ -16,9 +16,19 @@ function [long,lat,raster,R,info]=processgeotiff(filename);
 % the one I am throwing right now as I write heretical comments like
 % "matlab sucks"
 
+
+% if there is no '.' in the filename, stick .tif on the end.
+if length(find(filename=='.'))==0
+    disp([' no extension on ' filename ', adding ".tif" '])
+    filename=fixextension(filename,'.tif');
+end
+
+%Now making it an error - 
 d=dir(filename);
+
+
 if isempty(d)
-    disp('this file doesn''t seem to exist')
+    error('this file doesn''t seem to exist')
     filename
     long=[];
     lat=[];

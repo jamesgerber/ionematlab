@@ -147,10 +147,10 @@ function OS=NiceSurfGeneral(varargin)
 %   OSS will contain field coloraxis, and no plot will be made.
 %
 %
-%   See Also:  IoneSurf ShowUi HideUI FastSurf
+%   See Also:  ionesurf ShowUi HideUI FastSurf
 
 % desired changes
-%  - fix cvector warning in underlying IonESurf code
+%  - fix cvector warning in underlying ionesurf code
 %  - when resize a map, keep title visible
 %  - when plotarea flag is used, discard extraneous data to make coordinate
 %  rotation faster
@@ -787,7 +787,7 @@ if isequal(plotflag,'off')   %if nargout ~= 0, need to keep going so as to defin
 end
 
 %%%%%  this didn't work because of an incompatibility with AddStates in
-%%%%%  IoneSurf.   The idea here was to only plot a part of the globe so as
+%%%%%  ionesurf.   The idea here was to only plot a part of the globe so as
 %%%%%  to make these mappings faster.
 % Check to see if lat/long is limited
 %if ~isequal(longlatbox,[-180 180 -90 90])
@@ -796,7 +796,7 @@ end
 %    iilong=find(Long >= longlatbox(1) & Long <=longlatbox(2));
 %    jjlat=find(Lat >= longlatbox(3) & Lat <=longlatbox(4));
 %
-%    IonESurf(Long(iilong),Lat(jjlat),Data(iilong,jjlat));
+%    ionesurf(Long(iilong),Lat(jjlat),Data(iilong,jjlat));
 %
 %else
 %
@@ -814,15 +814,15 @@ if isempty(figurehandle) | ~isgraphics(figurehandle)
 end
 
 if Long(1) <= -179
-    % probably using inferlonglat to get here.  Let IonESurf call again.
+    % probably using inferlonglat to get here.  Let ionesurf call again.
 
     %    warning(' Sep, 2018 ... jamie fixing nsg ... not sure why but it was ignoring a passed in long/lat')
 
-    % IonESurf(Data); old code
-    IonESurf(Long,Lat,Data,'','',figurehandle);
+    % ionesurf(Data); old code
+    ionesurf(Long,Lat,Data,'','',figurehandle);
 
 else
-    IonESurf(Long,Lat,Data,'','',figurehandle);
+    ionesurf(Long,Lat,Data,'','',figurehandle);
 end
 
 %% Change projection

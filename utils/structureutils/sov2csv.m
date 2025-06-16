@@ -1,7 +1,14 @@
 function sov2csv(a,filename,delimiter,startfields,excludefields)
 %sov2csv - write a structure of vectors to a .csv file
 %
-%  sov2csv structure filename
+
+% syntax:
+%       sov2csv(a,filename,delimiter,startfields)
+%
+%  will also handle a vos (vector of structures)
+%
+%
+
 if nargin<2
     help(mfilename)
     return
@@ -18,9 +25,15 @@ if nargin<5
     excludefields={};
 end
 
+
+if numel(a) >1
+    disp(['This appears to be a vector of structures (vos) not an sov.  attempting to convert.'])
+    a=vos2sov(a);
+end
+
 allfieldnames=fieldnames(a);
 
-
+D=delimiter;
 % going to reorder the fields
 
 listOfIdxExclude=[];
@@ -99,7 +112,7 @@ for m=1:(numel(listOfIdxInclude))
     isanumericalfield(m)= isnumeric(tempfield(1));
 
     if m<numel(listOfIdxInclude)
-        fprintf(fid,',');
+        fprintf(fid,D);
     else
         fprintf(fid,'\n');
 
@@ -114,9 +127,9 @@ for j=1:numel(getfield(a,allfieldnames{1}))
         thisfield=getfield(a,allfieldnames{listOfIdxInclude(m)});
 
         if isanumericalfield(m)
-            fprintf(fid,'%f,',thisfield(j));
+            fprintf(fid,['%f' D],thisfield(j));
         else
-            fprintf(fid,'%s,',thisfield{j});
+            fprintf(fid,['%s' D],thisfield{j});
         end
     end
     m=m+1;

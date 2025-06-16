@@ -123,13 +123,14 @@ try
     apt=imread(FileNamePT);
 catch
     warning([' did not find one or more of the masks!!'])
-    disp([' you probably need to run maketransparencymasks.m '])
+    disp([' you probably need to run maketransparencymasks_nogridlinesnostates_Regional.m '])
     disp([' The resolution seems to be '  int2str(approxdpi2010)])
         disp([' or '  int2str(approxdpi2012)])
     disp([' Note, however, that due to some matlab quirks, there are different '])
-    disp([' masks made for Matlab2010, Matlab2012, and 15" vs 17" laptops, '])
-    disp([' so you may need to find a friend to make the masks for you.  Jamie '])
-    disp([' has a pretty good collection on malthus '])
+    disp([' masks made for according to monitor size and matlab version '])
+    disp([' and most annoyingly, resolution at which you have the monitor '])
+    disp(['% example maketransparencymasks_nogridlinesnostates_Regional(''r600'',''SEAsia'',''5min'');'])
+
     error(lasterr)
 end
 % 

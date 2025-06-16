@@ -4,7 +4,7 @@ function out=datablank(Val,Res)
 % Syntax
 %
 %    out=datablank(VAL,RES)    RES can be '5min' (default) or '30min',
-%    '15min', '2.5deg', '10min','1min', '1deg', '60min'
+%    '15min', '2.5deg', '10min','1min', '1deg', '60min', {'30s','30sec','1km'}
 %
 %    out=datablank(MATRIX)     will return a MATRIX size matrix of ones
 %    (this syntax is sort of stupid, but it makes the code slightly easier

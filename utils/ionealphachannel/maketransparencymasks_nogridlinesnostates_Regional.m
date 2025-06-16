@@ -30,6 +30,8 @@ if nargin==0
     close all
     maketransparencymasks_nogridlinesnostates_Regional('r600','CONUS','5min');
     maketransparencymasks_nogridlinesnostates_Regional('r600','CONUS','30sec');
+    maketransparencymasks_nogridlinesnostates_Regional('r600','USA','5min');
+    maketransparencymasks_nogridlinesnostates_Regional('r600','USA','30sec');
 
     return
 end

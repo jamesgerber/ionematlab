@@ -71,7 +71,7 @@ switch cropname
 
 
     case 'groundnut'
-        FAOCropName='Groundnuts, excluding shelled';
+        FAOCropName='Groundnuts, with shell';
         
     case 'cotton'
         FAOCropName='Seed cotton, unginned';
@@ -131,13 +131,13 @@ switch cropname
         FAOCropName='Tangerines, mandarins, clementines, satsumas';
    case 'vegetablenes'
         FAOCropName='Vegetables, fresh nes';
-   case 'chestnut'
+    case 'chestnut'
         FAOCropName='Chestnut';
     case 'sourcherry'
         FAOCropName='Cherries, sour';
-      case 'stonefruitnes'
-        FAOCropName='Fruit, stone nes';   
-     case 'chestnut'
+    case 'stonefruitnes'
+        FAOCropName='Fruit, stone nes';
+    case 'chestnut'
         FAOCropName='Chestnut';
     case 'rubber'
         FAOCropName='Rubber, natural';
@@ -145,10 +145,7 @@ switch cropname
         FAOCropName='Oilseeds nes';
     case 'mixedgrain'
         FAOCropName='Grain, mixed';
-    case 'groundnut'
-        FAOCropName='Groundnuts, excluding shelled';
 
-        
         
 end
 

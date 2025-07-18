@@ -348,7 +348,7 @@ Region='SEAsia';
         filenamesuffix='SEAsia';
     otherwise % country specific
         [g0,g1,g2,g3,g]=getgeo41;
-        NewPosition=[218   618   560   380];
+       % NewPosition=[218   618   560   380];
 
         idx=strmatch(Region,g0.gadm0codes)
 
@@ -357,6 +357,12 @@ Region='SEAsia';
 
         ThisYLim=[floor(min(lat2(ii))) ceil(max(lat2(ii)))]+[-1 1];
         ThisXLim=[floor(min(long2(ii))) ceil(max(long2(ii)))]+[-1 1];
+      
+        NewPosition=[100 100 500 ceil(500*diff(ThisYLim)/diff(ThisXLim))*1.2];
+        % add 20% in y because of colorbar
+        
+        
+        
         saveRegionalplottingdatafile=['~/Documents/NiceRegionFigsData/' Region 'PlottingData' DataResolution '.mat'];
 
         if exist(saveRegionalplottingdatafile)==2
@@ -401,9 +407,9 @@ if nargin>2
         tmp=NSS.logicalinclude;
         NSS.logicalinclude=NSS.logicalinclude(ii,jj);
     end
-    nsg(long(ii),lat(jj),raster(ii,jj),NSS);
+    OS=nsg(long(ii),lat(jj),raster(ii,jj),NSS);
 else
-    nsg(long(ii),lat(jj),raster(ii,jj));
+    OS=nsg(long(ii),lat(jj),raster(ii,jj));
 end
 
 ThisFig=gcf;
@@ -411,8 +417,8 @@ ThisFig=gcf;
 % ThisXLim=[90 142];
 
 % the following code is taken from Import case from propagatelimits.m
-set(gca,'XLim',ThisXLim);
-set(gca,'YLim',ThisYLim);
+set(OS.axishandle,'XLim',ThisXLim);
+set(OS.axishandle,'YLim',ThisYLim);
 fud=get(ThisFig,'userdata');
 
 y0=ThisYLim(2)
@@ -421,7 +427,12 @@ x0=mean(ThisXLim);
 if isfield(fud,'titlehandle')
     delete(fud.titlehandle);
 end
-ht=text(x0,y0+dely*0.05,fud.titlestring);
+
+if ~isfield(NSS,'panoplytriangles')
+    ht=text(x0,y0+dely*0.05,fud.titlestring);
+else
+    ht=text(.5,.95,fud.titlestring)
+end
 set(ht,'FontSize',14)
 set(ht,'HorizontalAlignment','center');
 
@@ -450,6 +461,8 @@ else
     outputfig('Force',filename,'-r300');
     PrintResolution='-r300';
 end
+hideui
+print(['wtf' filename],'-dpng','-r600')
 if usermappingpreference==0
     mappingon
 end

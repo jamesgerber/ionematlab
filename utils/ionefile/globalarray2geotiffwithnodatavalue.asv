@@ -24,12 +24,23 @@ filename=fixextension(filename,'.tif');
 
 rasterforwriting=raster';
 
+% let's spit out a warning in case filename is very recent
+a=dir(filename);
+
+if 
+ageoffileindays=now-a.datenum;
+
+if ageoffileindays*24*60*60<60
+    warndlg([' about to write over ' filename ' which is less than 60 seconds old.  Intentional?'])
+end
+
+
 % default compression is PackBits - it turns out LZW better web graphics,
 % so i'm hardcoding this change here.  oops.  JSG Jan 31, 2025
 % old code:
 %geotiffwrite(filename,rasterforwriting,R);
 
-keyboard
+%keyboard
 
 %TiffTags.Compression='LZW';
 %geotiffwrite(filename,rasterforwriting,R,'TiffTags',TiffTags);
@@ -46,5 +57,11 @@ TiffTags.Compression='LZW';
 geotiffwrite('tmp.tif',rasterforwriting,R,'TiffTags',TiffTags);
 
 
-gdal_calc.py --overwrite --co="COMPRESS=LZW" -A tmp.tif --outfile=tmp_nan.tif --calc="numpy.where(A==-99, numpy.nan, A)" --NoDataValue=nan
+% chatGPT helped me with the following line
+%gdal_calc.py --overwrite --co="COMPRESS=LZW" -A tmp.tif --outfile=tmp_nan.tif --calc="numpy.where(A==-99, numpy.nan, A)" --NoDataValue=nan
 
+evalme=['/opt/miniconda3/bin/gdal_calc.py --overwrite --co="COMPRESS=LZW" -A tmp.tif --outfile=' filename ' --calc="numpy.where(A==' int2str(nodatainteger) ', numpy.nan, A)" --NoDataValue=nan'];
+
+%disp(evalme)
+disp(['calling gdal_translate to standardize handling of nans'])
+unix(evalme);

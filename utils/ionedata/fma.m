@@ -1,9 +1,9 @@
 function x=fma(varargin)
-% fma - alias for GetFiveMinGridCellAreas
+% fma - alias for getfivemingridcellareas
 %
 
 if nargin==0;
-    x=GetFiveMinGridCellAreas;
+    x=getfivemingridcellareas;
 else
-    x=GetFiveMinGridCellAreas(varargin{1:end});
+    x=getfivemingridcellareas(varargin{1:end});
 end

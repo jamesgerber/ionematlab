@@ -36,3 +36,24 @@ for j=ii  %j taking on the indices of a where a(j) corresponds to a directory.
     end
 end
 
+
+if ~isequal(getenv('USER'),'jsgerber')
+    error(' I have surely broken this for other users as I transition my utils directory from ionematlab/ to jgutils/')
+end
+
+rmpath([pwd '/ionedata'])
+rmpath([pwd '/ionefile'])
+rmpath([pwd '/ionesurf'])
+rmpath([pwd '/ionealphachannel'])
+rmpath([pwd '/misc'])
+rmpath([pwd '/ionegeo'])
+rmpath([pwd '/ionegraphics'])
+rmpath([pwd '/ionematrix'])
+rmpath([pwd '/structureutils'])
+rmpath([pwd '/zcapnames'])
+rmpath([pwd '/znocapnames'])
+
+wd=pwd;
+cd ../../jamesutils/
+ConnectPaths
+cd(wd)

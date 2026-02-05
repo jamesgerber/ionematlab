@@ -315,7 +315,7 @@ NewPosition=[218   246   400   752];
        
     case {'seasia','southeastasia','sea','apc','SEAsia','SEA'}
       %  NewPosition=[218   618   560   380];
-        NewPosition=[762          79         943        1274];
+        NewPosition=[762          100         707        955];
 Region='SEAsia';
         saveRegionalplottingdatafile=['~/Documents/NiceRegionFigsData/SEAsiaPlottingData' DataResolution '.mat'];
         ThisYLim=[-20, 30];
@@ -462,7 +462,7 @@ else
     PrintResolution='-r300';
 end
 hideui
-print(['wtf' filename],'-dpng','-r600')
+print(['wtf' filename],'-dpng','-r300')
 if usermappingpreference==0
     mappingon
 end

@@ -16,6 +16,8 @@ if nargin==0
     maketransparencymasks_nogridlinesnostates_Regional('r300');
     maketransparencymasks_nogridlinesnostates_Regional('r400');
     maketransparencymasks_nogridlinesnostates_Regional('r500');
+    maketransparencymasks_nogridlinesnostates_Regional('r300','SEAsia','5min');
+    close all
     maketransparencymasks_nogridlinesnostates_Regional('r600','SEAsia','5min');
     maketransparencymasks_nogridlinesnostates_Regional('r600','SEAsia','30sec');
     maketransparencymasks_nogridlinesnostates_Regional('r1200','SEAsia','5min');
@@ -32,6 +34,24 @@ if nargin==0
     maketransparencymasks_nogridlinesnostates_Regional('r600','CONUS','30sec');
     maketransparencymasks_nogridlinesnostates_Regional('r600','USA','5min');
     maketransparencymasks_nogridlinesnostates_Regional('r600','USA','30sec');
+
+    close all
+    maketransparencymasks_nogridlinesnostates_Regional('r600','THA','5min');
+    maketransparencymasks_nogridlinesnostates_Regional('r600','THA','30sec');
+close all
+    maketransparencymasks_nogridlinesnostates_Regional('r600','IND','5min');
+    maketransparencymasks_nogridlinesnostates_Regional('r600','IND','30sec');
+
+close all
+    maketransparencymasks_nogridlinesnostates_Regional('r600','VNM','5min');
+    maketransparencymasks_nogridlinesnostates_Regional('r600','VNM','30sec');
+
+close all
+    maketransparencymasks_nogridlinesnostates_Regional('r600','PHL','5min');
+    maketransparencymasks_nogridlinesnostates_Regional('r600','PHL','30sec');
+close all
+    maketransparencymasks_nogridlinesnostates_Regional('r600','KHM','5min');
+    maketransparencymasks_nogridlinesnostates_Regional('r600','KHM','30sec');
 
     return
 end

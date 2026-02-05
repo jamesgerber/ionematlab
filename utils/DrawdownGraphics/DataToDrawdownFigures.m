@@ -12,7 +12,7 @@ function DataToDrawdownFigures(raster,NSS,filenameroot,outputfolder,regionlist);
 %  if outputfolder is empty, return doing nothing (this allows a hack to
 %  run through a script without actually doing the outputs)
 
-
+set(0,'DefaultFigureVisible','off') 
 if isempty(outputfolder)
     disp(['outputfolder argument is empty, returning']);
     return
@@ -162,6 +162,7 @@ if numel(regionlist)>0
         end
     end
 end
+set(0,'DefaultFigureVisible','on') 
 
-
+commandwindow
 

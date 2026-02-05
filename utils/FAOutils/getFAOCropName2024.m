@@ -151,7 +151,7 @@ end
 
 % section to get to 2024 names
 persistent CPD CPDold
-if isempty(CPD)
+if isempty(CPDold)
     [CPD,verstring]=ReturnProductionData;
     CPD=subsetofstructureofvectors(CPD,strmatch('World',CPD.Area));
     CPD=subsetofstructureofvectors(CPD,strmatch('Production',CPD.Element));
@@ -175,8 +175,6 @@ if numel(idx)>0
 else
     FAOCropName='';
 end
-
-
 
 
 if nargout<2

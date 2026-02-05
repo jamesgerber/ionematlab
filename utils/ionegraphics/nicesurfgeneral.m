@@ -1134,7 +1134,12 @@ if strcmp(categorical,'on')
         uplegend;
         uplegend;
         if ~isempty(filename)
-            LegFileName=OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+            verstr=version("-release")
+            if str2num(verstr(1:4))>=2025
+                set(gcf,'color','w');
+            end
+
+            LegFileName=outputfig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
             %    close(Hlegendfig)
 
             LegFileName=fixextension(LegFileName,'.png');
@@ -1158,7 +1163,7 @@ if strcmp(categorical,'on')
             %             set(gca,'Visible','off','Position',[.13 .11 .45 .25])
             %             set(Hlegendfig,'position',[442   457   260   240])
             %             if ~isempty(filename)
-            %                 OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+            %                 outputfig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
             %             end
             %             figure(Hfig);  % make previous figure current.
         else
@@ -1184,10 +1189,10 @@ if strcmp(categorical,'on')
             %             %delete(Hlegendfig)
             %
             %             if ~isempty(filename)
-            %                 %       OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
+            %                 %       outputfig('Force',[strrep(filename,'.png','') '_categorical_legend'],resolution);
             %
             %                 uplegend;uplegend;
-            %                 OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_ulul'],resolution);
+            %                 outputfig('Force',[strrep(filename,'.png','') '_categorical_legend_ulul'],resolution);
             %
             %             end
             %
@@ -1210,13 +1215,13 @@ if strcmp(categorical,'on')
             %                 legh=legend(hax,bb,categoryvalues);
             %                 drawnow
             %                 set(hax,'visible','off');
-            %                 %      OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
+            %                 %      outputfig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
             %                 uplegend
             %                 uplegend
             %                 uplegend
             %                 uplegend
             %                 drawnow
-            %                 OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred_ulul'],resolution);
+            %                 outputfig('Force',[strrep(filename,'.png','') '_categorical_legend_withred_ulul'],resolution);
             %                 %% now make one with white.
             %                 %  Hfig=gcf;
             %                 Hlegendfig=figure;
@@ -1233,13 +1238,13 @@ if strcmp(categorical,'on')
             %                 drawnow
             %                 legh=legend(hax,bb,categoryvalues);
             %                 set(hax,'visible','off');
-            %                 %      OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
+            %                 %      outputfig('Force',[strrep(filename,'.png','') '_categorical_legend_withred'],resolution);
             %                 uplegend
             %                 uplegend
             %                 uplegend
             %                 uplegend
             %                 drawnow
-            %                 OutputFig('Force',[strrep(filename,'.png','') '_categorical_legend_withwhite_ulul'],resolution);
+            %                 outputfig('Force',[strrep(filename,'.png','') '_categorical_legend_withwhite_ulul'],resolution);
             %
             %                 figure(Hfig)
             %
@@ -1288,7 +1293,11 @@ OS.panoplytriangleaxeshandle=ptaxeshandle;
 
 
 if ~isempty(filename)
-    ActualFileName=OutputFig('Force',filename,resolution);
+    verstr=version("-release")
+    if str2num(verstr(1:4))>=2025
+        set(gcf,'color','w');
+    end
+    ActualFileName=outputfig('Force',filename,resolution);
     OS.ActualFileName=ActualFileName;
     FN=fixextension(ActualFileName,'.png');
     %save to disk

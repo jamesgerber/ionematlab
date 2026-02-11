@@ -37,7 +37,7 @@ for j=ii  %j taking on the indices of a where a(j) corresponds to a directory.
 end
 
 
-if ~isequal(getenv('USER'),'jsgerber')
+if ~(isequal(getenv('USER'),'jsgerber') | isequal(getenv('USER'),'emilycassidy'))
     error(' I have surely broken this for other users as I transition my utils directory from ionematlab/ to jgutils/')
 end
 

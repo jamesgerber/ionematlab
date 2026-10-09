@@ -12,34 +12,64 @@ function DataToDrawdownFigures(raster,NSS,filenameroot,outputfolder,regionlist);
 %  if outputfolder is empty, return doing nothing (this allows a hack to
 %  run through a script without actually doing the outputs)
 
-set(0,'DefaultFigureVisible','off') 
+%set(0,'DefaultFigureVisible','off')  - this was an attempt to have the matlab figures
+% not steal the focus.  Sadly, it doesn't work.
 if isempty(outputfolder)
     disp(['outputfolder argument is empty, returning']);
     return
 end
 
-
+if numel(find(outputfolder=='/'))==0
+    if exist(outputfolder)==7
+        disp(['preparing to write to ' outputfolder])
+    else
+        error('seems like outputfolder and filenameroot reversed. filenameroot comes first.');
+    end
+end
 
 if nargin<4
     outputfolder='figures/';
 end
-mkdir(outputfolder);
-mkdir([outputfolder '/data_geotiff']);
-mkdir([outputfolder '/data_matlabfigure']);
-mkdir([outputfolder '/figs_blackbackground']);
-mkdir([outputfolder '/figs_whitebackground']);
-mkdir([outputfolder '/figs_whitebackground_notitle']);
-mkdir([outputfolder '/figs_blackbackground_notitle']);
-mkdir([outputfolder '/figs_blackbackground_notitlenounits']);
-mkdir([outputfolder '/figs_whitebackground_notitlenounits']);
-mkdir([outputfolder '/FigsStyledFor2026/']);
-mkdir([outputfolder '/regionalfigs'])
-mkdir([outputfolder '/regionalfigs/figs_blackbackground']);
-mkdir([outputfolder '/regionalfigs/figs_whitebackground']);
-mkdir([outputfolder '/regionalfigs/figs_whitebackground_notitle']);
-mkdir([outputfolder '/regionalfigs/figs_blackbackground_notitle']);
-mkdir([outputfolder '/regionalfigs/figs_blackbackground_notitlenounits']);
-mkdir([outputfolder '/regionalfigs/figs_whitebackground_notitlenounits']);
+%% I wrote these lines, they worked for about a year, then google drive problems started:
+% mkdir(outputfolder);
+% mkdir([outputfolder '/data_geotiff']);
+% mkdir([outputfolder '/FigsStyledFor2026/']);
+% mkdir([outputfolder '/data_matlabfigure']);
+% mkdir([outputfolder '/figs_blackbackground']);
+% mkdir([outputfolder '/figs_whitebackground']);
+% mkdir([outputfolder '/figs_whitebackground_notitle']);
+% mkdir([outputfolder '/figs_blackbackground_notitle']);
+% mkdir([outputfolder '/figs_blackbackground_notitlenounits']);
+% mkdir([outputfolder '/figs_whitebackground_notitlenounits']);
+% mkdir([outputfolder '/regionalfigs'])
+% mkdir([outputfolder '/regionalfigs/figs_blackbackground']);
+% mkdir([outputfolder '/regionalfigs/figs_whitebackground']);
+% mkdir([outputfolder '/regionalfigs/figs_whitebackground_notitle']);
+% mkdir([outputfolder '/regionalfigs/figs_blackbackground_notitle']);
+% mkdir([outputfolder '/regionalfigs/figs_blackbackground_notitlenounits']);
+% mkdir([outputfolder '/regionalfigs/figs_whitebackground_notitlenounits']);
+
+% used Claude to rewrite 
+% prompt:  please rewrite these lines of matlab code to have a unix call  instead so unix([' mkdir ' outputfolder ]).   
+% mkdir(outputfolder); (etc)
+
+unix(['mkdir -p "' outputfolder '"']);
+unix(['mkdir -p "' outputfolder '/data_geotiff"']);
+unix(['mkdir -p "' outputfolder '/FigsStyledFor2026/"']);
+unix(['mkdir -p "' outputfolder '/data_matlabfigure"']);
+unix(['mkdir -p "' outputfolder '/figs_blackbackground"']);
+unix(['mkdir -p "' outputfolder '/figs_whitebackground"']);
+unix(['mkdir -p "' outputfolder '/figs_whitebackground_notitle"']);
+unix(['mkdir -p "' outputfolder '/figs_blackbackground_notitle"']);
+unix(['mkdir -p "' outputfolder '/figs_blackbackground_notitlenounits"']);
+unix(['mkdir -p "' outputfolder '/figs_whitebackground_notitlenounits"']);
+unix(['mkdir -p "' outputfolder '/regionalfigs"']);
+unix(['mkdir -p "' outputfolder '/regionalfigs/figs_blackbackground"']);
+unix(['mkdir -p "' outputfolder '/regionalfigs/figs_whitebackground"']);
+unix(['mkdir -p "' outputfolder '/regionalfigs/figs_whitebackground_notitle"']);
+unix(['mkdir -p "' outputfolder '/regionalfigs/figs_blackbackground_notitle"']);
+unix(['mkdir -p "' outputfolder '/regionalfigs/figs_blackbackground_notitlenounits"']);
+unix(['mkdir -p "' outputfolder '/regionalfigs/figs_whitebackground_notitlenounits"']);
 
 if nargin<5
     regionlist={};
@@ -63,8 +93,8 @@ end
 
 if isfield(NSS,'plotflag')
     if isequal(lower(NSS.plotflag),'off');
-        disp(['plotflag=off, returning'])
-   return
+        %disp(['plotflag=off, returning'])
+        %return
     end
 end
 
@@ -90,9 +120,12 @@ if numel(raster)<=prod(2160*4320*4)
 
     OS=nsg(raster,NSS);
     OSwb=OS;
-    unix(['cp temp.png ' outputfolder '/figs_whitebackground' filesep filenameroot '_WhiteBackground.png'])
-    filename=[outputfolder '/figs_blackbackground' filesep filenameroot '_BlackBackground.png'];
-    maketransparentoceans_noant_nogridlinesnostates_removeislands('temp.png',filename,[1 1 1],1);
+    [status,cmdout] = unix(['cp temp.png ' outputfolder '/figs_whitebackground' filesep filenameroot '_WhiteBackground.png'])
+
+    if status==0
+        filename=[outputfolder '/figs_blackbackground' filesep filenameroot '_BlackBackground.png'];
+        maketransparentoceans_noant_nogridlinesnostates_removeislands('temp.png',filename,[1 1 1],1);
+    end
 
     titlestring=''; % need to define for call to python wrappe
     % now remove units
@@ -107,10 +140,11 @@ if numel(raster)<=prod(2160*4320*4)
     NSSnotitle=NSS;
 
     OS=nsg(raster,NSS);
-    unix(['cp temp.png ' outputfolder '/figs_whitebackground_notitle' filesep filenameroot '_WhiteBackground_NoTitle.png'])
-    filename=[outputfolder '/figs_blackbackground_notitle' filesep filenameroot '_BlackBackground_NoTitle.png'];
-    maketransparentoceans_noant_nogridlinesnostates_removeislands('temp.png',filename,[1 1 1],1);
-
+    [status,cmdout] = unix(['cp temp.png ' outputfolder '/figs_whitebackground_notitle' filesep filenameroot '_WhiteBackground_NoTitle.png'])
+  if status==0
+      filename=[outputfolder '/figs_blackbackground_notitle' filesep filenameroot '_BlackBackground_NoTitle.png'];
+      maketransparentoceans_noant_nogridlinesnostates_removeislands('temp.png',filename,[1 1 1],1);
+  end
     % now remove units
     unitsstring='';
     if isfield(NSS,'units')
@@ -123,13 +157,15 @@ if numel(raster)<=prod(2160*4320*4)
     end
     NSSnotitlenounits=NSS;
     OS=nsg(raster,NSS);
-    unix(['cp temp.png ' outputfolder '/figs_whitebackground_notitlenounits' filesep filenameroot '_WhiteBackground_NoTitleNoUnits.png'])
-    filename=[outputfolder '/figs_blackbackground_notitlenounits' filesep filenameroot '_BlackBackground_NoTitleNoUnits.png'];
-    maketransparentoceans_noant_nogridlinesnostates_removeislands('temp.png',filename,[1 1 1],1);
-
+    [status,cmdout] = unix(['cp temp.png ' outputfolder '/figs_whitebackground_notitlenounits' filesep filenameroot '_WhiteBackground_NoTitleNoUnits.png'])
+    if status==0
+        filename=[outputfolder '/figs_blackbackground_notitlenounits' filesep filenameroot '_BlackBackground_NoTitleNoUnits.png'];
+        maketransparentoceans_noant_nogridlinesnostates_removeislands('temp.png',filename,[1 1 1],1);
+    end
     % let's save data for future matlab figure
+    if status==0
     save([outputfolder '/data_matlabfigure/' filenameroot '_figdata'],'raster','NSSorig','regionlist','filenameroot','outputfolder','extranotes');
-
+    end
 % now make an "Alex-style" figure
 
 % make Alex style figs:
@@ -146,7 +182,12 @@ if numel(raster)<=prod(2160*4320*4)
 % fprintf(fid,'DPI = %s\n', PS.DPI);
 
 %need to translate output for panoply triangles into 
-ii=OS.panoplytrianglehandlepatches>0;
+
+if isfield(OS,'panoplytrianglehandlepatches')
+    ii=OS.panoplytrianglehandlepatches>0;
+else
+    ii=[0 0];
+end
 
 if ii(1)
     if ii(2)
@@ -206,6 +247,12 @@ else
 
     PS.cmap_string=RGBlist;
 end
+
+if islogical(raster)
+    raster=single(raster);
+end
+
+
 MakeAlexStyleFigsNew(raster,PS);
 
 % End of python wrapper section
@@ -249,7 +296,7 @@ if numel(regionlist)>0
         end
     end
 end
-set(0,'DefaultFigureVisible','on') 
+%set(0,'DefaultFigureVisible','on') 
 
 commandwindow
 

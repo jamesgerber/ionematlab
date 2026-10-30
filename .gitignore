@@ -1,6 +1,6 @@
 .DS_store
 *.m~
-.asv
+*.asv
 .gitignore
 .gitignore~
 *.m~
